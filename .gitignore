@@ -11,3 +11,6 @@
 /2.Domain/obj
 /3.Infrastructure/obj
 /4.Shared/obj
+/2.Domain/bin/Debug/net9.0-windows7.0
+/3.Infrastructure/bin/Debug/net9.0-windows7.0
+/4.Shared/bin/Debug/net9.0
