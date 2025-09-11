@@ -1,0 +1,127 @@
+﻿@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer;
+@model PT.UI.Models.ContactHomeModel;
+@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+}
+
+<main class="main">
+    <!-- breadcrumb -->
+    <div class="site-breadcrumb" style="background: url(assets/img/cta/01.jpg)">
+        <div class="container">
+            <h2 class="breadcrumb-title">Liên hệ</h2>
+            <ul class="breadcrumb-menu">
+                <li><a href="/">Trang chủ</a></li>
+                <li class="active">Liên hệ</li>
+            </ul>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+    <!-- contact area -->
+    <div class="contact-area py-120">
+        <div class="container">
+
+            <vc:view-module code="LienHe_Info" type="StaticInformation"></vc:view-module>
+
+            <div class="contact-wrapper">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="contact-img">
+                            <img src="assets/img/01.jpg" alt="contact">
+                        </div>
+                    </div>
+                    <div class="col-lg-7 align-self-center">
+                        <div class="contact-form">
+
+                            <vc:view-module code="LienHe_GhiChu" type="StaticInformation"></vc:view-module>
+
+                            <form form-edit method="post" action="@Url.Action("Contact")">
+                                <div class="sumaryValidateForm" asp-validation-summary="All"></div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input required type="text" class="form-control" asp-for="FullName" placeholder="Tên của bản (*)">
+                                            <span class="validate-style" asp-validation-for="FullName"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input required type="email" class="form-control" asp-for="Email" placeholder="Email (*)">
+                                            <span class="validate-style" asp-validation-for="Email"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" maxlength="20" asp-for="Phone" placeholder="Phone">
+                                    <span class="validate-style" asp-validation-for="Phone"></span>
+                                </div>
+                                <div class="form-group">
+                                    <textarea required asp-for="Content" cols="30" rows="5" class="form-control" placeholder="Nội dung  (*)"></textarea>
+                                    <span class="validate-style" asp-validation-for="Content"></span>
+                                </div>
+
+                                <button data-type="0" data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Lưu thay đổi</span>" btnSendLH type="button" class="theme-btn">
+                                    Gửi liên hệ <i class="far fa-paper-plane"></i>
+                                </button>
+                                <input type="hidden" id="g-recaptcha-response" name="capcha" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end contact area -->
+    <!-- map -->
+    <vc:view-module code="LienHe_BanDo" type="StaticInformation"></vc:view-module>
+</main>
+<link href="/content/admin/plugins/alertifyjs/css/alertify.min.css" rel="stylesheet" />
+@section Scripts {
+    <script src="/content/admin/plugins/alertifyjs/alertify.min.js"></script>
+    <script asp-append-version="true" src="/content/admin/js/script.home.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@_authorizeSettings.Value.CapChaDataSitekey"></script>
+
+    <script>
+
+          // Hàm lấy token reCAPTCHA, trả về Promise
+    function getCapchaToken() {
+        return new Promise(function (resolve) {
+            grecaptcha.ready(function () {
+                grecaptcha.execute('@_authorizeSettings.Value.CapChaDataSitekey', { action: 'submit' }).then(function (token) {
+                    $("#g-recaptcha-response").val(token);
+                    resolve(token);
+                });
+            });
+        });
+    }
+
+        $("[btnSendLH]").toSubmit(async function(data){
+            $("[btnSendLH]").prop("disabled", true);
+            await getCapchaToken();
+            // Sau khi có token, plugin sẽ tiếp tục submit như bình thường
+        }, function(rs){
+            if(rs.output == 1)
+            {
+               resetInput();
+            }
+
+            setTimeout(function(){
+                $("[btnSendLH]").prop("disabled", false);
+            }, 6000);
+        });
+
+        function resetInput()
+        {
+            var $form = $("[form-edit]");
+            $form[0].reset(); // Reset tất cả các input, textarea về giá trị mặc định
+        }
+    </script>
+}

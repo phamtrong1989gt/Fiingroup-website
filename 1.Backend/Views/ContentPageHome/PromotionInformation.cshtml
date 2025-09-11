@@ -1,0 +1,70 @@
+﻿@model PT.Domain.Model.ContentPage
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer  Localizer
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+
+}
+<div class="page-content">
+    <div class="section mt-0">
+        <div class="breadcrumbs-wrap">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <a href="/@Model.Language">@Localizer["Home"].Value</a>
+                    <span>@Model.Name</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section page-content-first">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 aside">
+                    <div class="blog-post blog-post-single">
+                        <div class="blog-post-info">
+                            <div>
+                                <h1 class="post-title-detail">@Model.Name</h1>
+                                <div class="post-meta">
+                                    <div class="post-meta-social">
+                                        <partial name="~/Views/Shared/Plugins/_Like.cshtml" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-text">
+                            @Html.Raw(Model.Content)
+                        </div>
+                        @*<div>
+                            <strong class="taglabel">Tags:</strong>
+                            <ul class="tags-list">
+                                @foreach (var item in Model.Tags)
+                                {
+                                    <li><a href="@PT.Shared.Functions.FormatUrl(item.Language,item.Link?.Slug)">@item.Name</a></li>
+                                }
+                            </ul>
+                        </div>*@
+                       
+                    </div>
+                </div>
+                <div class="col-lg-3 aside-left mt-5 mt-lg-0">
+                    @if (language == "vi")
+                    {
+                        <vc:view-module id="2" type="Menu"></vc:view-module>
+                    }
+                    else if (language == "en")
+                    {
+                        <vc:view-module id="40" type="Menu"></vc:view-module>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        loadSDKFacebook();
+    </script>
+}

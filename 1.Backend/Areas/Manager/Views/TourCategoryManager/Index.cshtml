@@ -1,0 +1,107 @@
+﻿@model PT.Domain.Model.UserProfileModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+<div class="block-header">
+    <h2><i class="material-icons">list</i> Quản lý danh mục TOUR <span class="label label-primary label-t">Danh sách</span></h2>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card card-t">
+            <div class="body body-tab" tab-list>
+                <ul class="nav nav-tabs nav-tabs-t" role="tablist">
+                    @foreach (var item in PT.Shared.ListData.ListLanguage)
+                    {
+                        <li role="presentation">
+                            <a class="a-tab-lang" data-tag="#language_@item.Id" tab-link data-url="@Url.Action("Setting",new { language = item.Id })">
+                                <img class="icon-lang" src="@item.Icon" />   @item.Name
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <div class="tab-content tab-content-t" tab-loading>
+                    <div tab-data role="tabpanel" class=" tab-pane fade active in">
+                        <div style="min-height:300px;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/Content/Admin/plugins/nestable/jquery.nestable.js"></script>
+    <link href="~/Content/Admin/plugins/nestable/jquery-nestable.css" rel="stylesheet" />
+    <script src="~/Content/Admin/plugins/ckeditor/ckeditor.js"></script>
+    <script>
+        var serializedData = "[]";
+        $("[button-submit]").toSubmit(function (rs, $this) {
+            if (rs.output > 0) {
+                initData($this.attr("data-language"));
+            }
+        });
+        $("[button-delete]").toDelete(function (rs, $this, returnurl, buttonType) {
+            initData($this.attr("data-language"));
+        });
+        $("[button-open-file-manager]").toButtonOpenFile();
+        $("[button-popup]").toPopup();
+        $("[button-upload]").toUploadFile();
+        $("[tab-list]").toTab();
+        function initData(language) {
+            var $loading = bindLoading("[loading-tree]");
+            $.get("@Url.Action("Categorys")" + "?language=" + language, function (data) {
+                $("#bindCategory").html(data);
+                $('.dd').nestable();
+                $('.dd').on('change', function () {
+                    var $this = $(this);
+                    serializedData = window.JSON.stringify($($this).nestable('serialize'));
+                    statusButtonEdit(true);
+                });
+                $loading.waitMe('hide');
+            });
+        }
+        function initRickText(pathUpload) {
+            pathUpload = pathUpload.replace(/&amp;/g, "&");
+            $("ricktextContent").toRickText({ customConfig: 'configRickText.js', filebrowserUploadUrl: pathUpload });
+        }
+           $("[button-update-status]").toPost(function (rs,$this) {
+            swal({
+                title: "Thông báo!",
+                text: rs.message,
+                type: rs.type,
+                confirmButtonText: "Đóng!"
+            });
+            setTimeout(function () {
+                $this.button('reset');
+                setTimeout(function () {
+                    statusButtonEdit(false);
+                },200);
+            }, 300);
+
+        }, function () {
+            return serializedData;
+            });
+        $(document).on("click", "[button-cancel-status]",function () {
+            initData($(this).attr("data-language"));
+            statusButtonEdit(false);
+        });
+        function statusButtonEdit(status) {
+            $("[button-update-status]").prop("disabled", !status);
+            $("[button-cancel-status]").prop("disabled", !status);
+        }
+        $(document).on("change", "#IsHome", function () {
+            initIsHome();
+        });
+        function initIsHome() {
+            if ($("#IsHome").prop("checked") == "true" || $("#IsHome").prop("checked") == true) {
+                $("#isHomeBanner").show();
+            }
+            else {
+                 $("#isHomeBanner").hide();
+            }
+        }
+    </script>
+}

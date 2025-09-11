@@ -1,0 +1,285 @@
+﻿@model SeoModel
+
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne_3">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#collapseOne_3" aria-expanded="true" aria-controls="collapseOne_3">
+                <i class="material-icons">public</i> Thông tin seo web
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne_3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne_3">
+        <div class="panel-body">
+            <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                <li role="presentation" class="active"><a href="#seo1" data-toggle="tab">Cơ bản</a></li>
+                <li role="presentation"><a href="#seo2" data-toggle="tab">Nâng cao</a></li>
+                <li role="presentation"><a href="#seo3" data-toggle="tab">Mạng xã hội</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="seo1">
+                    <input type="hidden" asp-for="LinkId" />
+                    @if (Model.LinkId > 0)
+                    {
+                        <div class="form-group">
+                            <label class="form-label" asp-for="Slug"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Slug"></span>
+                            <div class="input-group backgrouphost">
+                                <span class="input-group-addon addonurl ">
+                                    @($"{Context.Request.Host}{ViewData["language"]}/")
+                                </span>
+                                @if (Model.Slug != "" && Model.Slug != null)
+                                {
+                                    <input type="text" seo-page-url readonly placeholder="Là ký tự không dấu và ký tự đặc biêt, cách nhau bằng gạch ngang" class="form-control addonurlinput  input-sm form-control-t" asp-for="Slug">
+                                }
+                                else
+                                {
+                                    <input type="text" readonly placeholder="Là ký tự không dấu và ký tự đặc biêt, cách nhau bằng gạch ngang" class="form-control addonurlinput  input-sm form-control-t">
+                                    <input type="hidden" seo-page-url asp-for="Slug" value="dep-zai-khoai-to" />
+                                }
+                                <span class="input-group-addon">
+                                    .html
+                                </span>
+                                @if (Model.Type != CategoryType.Static)
+                                {
+                                    <div class="input-group-addon btn-group-addon btn-group-addon-form-group addoncheck">
+                                        <input onchange="onEnableSlug(this)" type="checkbox" asp-for="ChangeSlug" class="filled-in chk-col-green" />
+                                        <label for="ChangeSlug">Sửa</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label class="form-label" asp-for="Slug"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Slug"></span>
+                            <div class="input-group backgrouphost">
+                                <span class="input-group-addon addonurl ">
+                                    @($"{Context.Request.Host}{ViewData["language"]}/")
+                                </span>
+                                <input type="text" seo-page-url placeholder="Là ký tự không dấu và ký tự đặc biêt, cách nhau bằng gạch ngang" class="form-control addonurlinput  input-sm form-control-t" asp-for="Slug">
+                                <span class="input-group-addon">
+                                    .html
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Title"></label>
+                        <div class="controls">
+                            <textarea seo-page-title rows="3" onkeyup="TextCount('#Title','textTitle',1)" onkeydown="TextCount('#Title','textTitle',1)" class="form-control  input-sm form-control-t" placeholder="Title" asp-for="Title"></textarea>
+                        </div>
+                        <span class="textTitle note-info">Công cụ tìm kiếm hiển thị tiêu đề được giới hạn <span class="text-success">70</span> ký tự, còn lại <span class="text-danger">70</span> ký tự</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Description"></label>
+                        <div class="controls">
+                            <textarea rows="3" seo-page-description onkeyup="TextCount('#Description','textDescription',2)" onkeydown="TextCount('#Description','textDescription',2)" onchange="TextCount('#Description','textDescription',2)" class="form-control  input-sm form-control-t" placeholder="Description" asp-for="Description"></textarea>
+                        </div>
+                        <span class="textDescription note-info">Công cụ tìm kiếm hiển thị tiêu đề được giới hạn <span class="text-success">141</span> ký tự, còn lại <span class="text-danger">141</span> ký tự</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="FocusKeywords"></label> <span asp-validation-for="FocusKeywords"></span>
+                        <div class="controls">
+                            <input type="text" class="form-control input-sm form-control-t" placeholder="Focus Keywords" asp-for="FocusKeywords">
+                        </div>
+                    </div>
+                    <div class="focus-keywords">
+                        <div>Focus Keywords được tìm thấy trong bài viết:</div>
+                        <div id="fk-1">Tên bài viết: <text><span class="fb text-danger">Không</span></text></div>
+                        <div id="fk-2">Title trang: <text><span class="fb text-danger">Không</span></text></div>
+                        <div id="fk-3">Url trang: <text><span class="fb text-danger">Không</span></text></div>
+                        <div id="fk-4">Body trang: <text><span class="fb text-danger">Không</span></text></div>
+                        <div id="fk-5">Meta Description: <text><span class="fb text-danger">Không</span></text></div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="seo2">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="MetaRobotsIndex"></label>
+                        <div class="controls">
+                            <select asp-for="MetaRobotsIndex" class="input-sm form-control-t show-tick">
+                                <option selected="selected" value="index">index (Đánh chỉ số trang Web)</option>
+                                <option value="noindex">noindex (Không đánh chỉ số trang, nhưng vẫn truy vấn đường dẫn URL)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="MetaRobotsFollow"></label>
+                        <div class="controls">
+                            <input type="radio" id="radio_0" asp-for="MetaRobotsFollow" value="follow" class="with-gap radio-col-blue" />
+                            <label for="radio_0" class="labelradio">Follow (Googlebot sẽ đọc liên kết siêu văn bản trong trang và truy vấn, xử lý sau đó)</label>
+                            &nbsp;
+                            <input type="radio" id="radio_2" asp-for="MetaRobotsFollow" value="nofollow" class="with-gap radio-col-green" />
+                            <label for="radio_2" class="labelradio">Nofollow (Googlebot  không phân tích liên kết trong trang)</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="MetaRobotsAdvance"></label>
+                        <div class="controls">
+                            <select multiple asp-for="MetaRobotsAdvance" class="input-sm form-control-t show-tick">
+                                <option value="none">none (Bọ tìm kiếm (Robots) bỏ qua trang này. Tương đương với noindex, nofollow)</option>
+                                <option value="noarchive">noarchive (Không cho máy tìm kiếm lưu vào bộ nhớ bản sao trang Web.)</option>
+                                <option value="nocache">nocache (Chức năng như thẻ noarchive nhưng chỉ áp dụng cho MSN/Live)</option>
+                                <option value="nosnippet">nosnippet (Không cho bọ tìm kiếm hiển thị miêu tả sinppet của trang trong kết quả tìm kiếm và không cho phép chúng hiển thị trong bộ nhớ "cache hay caching")</option>
+                                <option value="nocache">noodp (Ngăn máy tìm kiếm khỏi việc tạo các miêu tả description từ các thư mục danh bạ Web DMOZ như là một phần của snippet trong trang kết quả tìm kiếm)</option>
+                                <option value="noydir">noydir (Ngăn Yahoo khỏi việc trích miêu tả trong danh bạ Web Yahoo! diectory để tạo các phần miêu tả trong kết quả tìm kiếm. Giá trị noydir chỉ áp dụng với Yahoo và không có công cụ tìm kiếm nào khác sử dụng danh bạn Web của Yahoo bởi thế giá trị này không được hỗ trợ cho máy tìm kiếm khác)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="pt-5"></div>
+                    <div class="form-group">
+                        <input type="checkbox" asp-for="IncludeSitemap" class="filled-in chk-col-green" />
+                        <label for="IncludeSitemap" asp-for="IncludeSitemap"></label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Priority"></label>
+                                <div class="controls">
+                                    <select asp-for="Priority" class="input-sm form-control-t show-tick">
+                                        <option value="0.1">0.1</option>
+                                        <option value="0.2">0.2</option>
+                                        <option value="0.3">0.3</option>
+                                        <option value="0.4">0.4</option>
+                                        <option value="0.5">0.5</option>
+                                        <option value="0.6">0.6</option>
+                                        <option value="0.7">0.7</option>
+                                        <option value="0.8">0.8</option>
+                                        <option value="0.9">0.9</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Changefreq"></label>
+                                <div class="controls">
+                                    <select asp-for="Changefreq" class="input-sm form-control-t show-tick">
+                                        <option value="alway">Alway</option>
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                        <option value="yearly">Yearly</option>
+                                        <option value="never">Never</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Lastmod"></label>
+                                <div class="controls">
+                                    <input type="text" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control input-sm form-control-t" asp-for="Lastmod">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Redirect301"></label> <span asp-validation-for="Redirect301"></span>
+                        <div class="controls">
+                            <input type="text" class="form-control input-sm form-control-t" placeholder="301 Redirect" asp-for="Redirect301">
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="seo3">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="FacebookDescription"></label>
+                        <div class="controls">
+                            <textarea rows="2" class="form-control  input-sm form-control-t" placeholder="Title" asp-for="FacebookDescription"></textarea>
+                            <span class="note-info">Nếu bạn không muốn sử dụng meta description để chia sẻ bài đăng lên facebook nhưng muốn có một mô tả khác ở đó, hãy viết nó ở đây</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="FacebookBanner"></label>
+                        <div class="banner imgfull" style="margin-bottom:5px;">
+                            <div class="image">
+                                <img id="imgBanner1" title="Xem chi tiết hình ảnh" onclick="onOpenImg(this)" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" src="@(Model.FacebookBanner??" ")" />
+                            </div>
+                        </div>
+                        <div class="input-group input-group-t">
+                            <div class="input-group-addon btn-group-addon addon-label-file">
+                                <span>Ảnh đính kèm</span>
+                            </div>
+                            <input readonly type="text" class="form-control input-sm form-control-t" asp-for="FacebookBanner">
+                            <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
+                                <a button-open-file-manager data-img="imgBanner1" data-target="FacebookBanner" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                            </div>
+                        </div>
+                        <span class="note-info">Nếu bạn không muốn sử dụng banner để chia sẻ bài đăng lên facebook nhưng muốn có một hình ảnh khác ở đó, hãy chọn file ảnh và tải lên</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="GooglePlusDescription"></label>
+                        <div class="controls">
+                            <textarea rows="2" class="form-control  input-sm form-control-t" placeholder="Description" asp-for="GooglePlusDescription"></textarea>
+                            <span class="note-info">Nếu bạn không muốn sử dụng meta description để chia sẻ bài đăng lên Google+ nhưng muốn có một mô tả khác ở đó, hãy viết nó ở đây</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $("[name='Lastmod']").toDateTimePicker();
+
+        TextCount("#Title", "textTitle", 1);
+        TextCount("#Description", "textDescription", 2);
+        //TextCount("#Keywords", "textKeywords");
+
+        function count_letters(input, input_letter) {
+            var counter = 0;
+            for (var i = 0; i < input.length; i++) {
+                var index_of_sub = input.indexOf(input_letter, i);
+                if (index_of_sub > -1) {
+                    counter++;
+                    i = index_of_sub;
+                }
+            }
+            return counter;
+        }
+
+        checkSeoLetter("[seo-page-name]", "#fk-1 text");
+        checkSeoLetter("[seo-page-title]", "#fk-2 text");
+        checkSeoLetter("[seo-page-url]", "#fk-3 text");
+        checkSeoLetter("[seo-page-content]", "#fk-4 text");
+        checkSeoLetter("[seo-page-description]", "#fk-5 text");
+
+        $("#FocusKeywords").on("change", function () {
+            fCheckSeoLetter("[seo-page-name]", "#fk-1 text");
+            fCheckSeoLetter("[seo-page-title]", "#fk-2 text");
+            fCheckSeoLetter("[seo-page-url]", "#fk-3 text");
+            fCheckSeoLetter("[seo-page-content]", "#fk-4 text");
+            fCheckSeoLetter("[seo-page-description]", "#fk-5 text");
+        });
+
+        function checkSeoLetter(inputCheck, elementBind) {
+            fCheckSeoLetter(inputCheck, elementBind);
+            $(inputCheck).on("change", function () {
+                fCheckSeoLetter(inputCheck, elementBind);
+            });
+        }
+        function fCheckSeoLetter(inputCheck, elementBind) {
+            var noCheck = false;
+            var thisText = $(inputCheck).val().toLowerCase();
+            if (thisText == "" || thisText == null || thisText == undefined) {
+                noCheck = true;
+            }
+            var textKey = $("#FocusKeywords").val().toLowerCase();
+            if (inputCheck == "[seo-page-url]") {
+                thisText = ToSlug(thisText);
+                textKey = ToSlug(textKey);
+            }
+            var count = count_letters(thisText, textKey);
+            if (count > 0 && noCheck == false) {
+                $(elementBind).html("<span class='fb text-success'>Có (" + count + ")</span>");
+            }
+            else {
+                $(elementBind).html("<span class='fb text-success'><span class='fb text-danger'>Không</span></span>");
+            }
+        }
+    </script>
+</div>
+

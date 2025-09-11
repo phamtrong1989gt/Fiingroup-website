@@ -1,0 +1,134 @@
+﻿@model PT.Domain.Model.UserEditManagerModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<form form-edit asp-action="Edit">
+    @Html.AntiForgeryToken()
+    <div class="modal-header">
+        <h4 class="modal-title"><i class="material-icons">edit</i> CẬP NHẬT TÀI KHOẢN QUẢN TRỊ</h4>
+    </div>
+    <button title="Đóng cửa sổ" type="button" class="close btnclose-t" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-body">
+        <div class="divmodal">
+            <div class="row">
+                @*<div class="col-md-2" file-parent>
+                    <div class="labelinfo-t bg-info mb-10">
+                        Ảnh đại diện
+                    </div>
+                    <div class="thumbnail imgfull avatar m-b-10" file-loadding>
+                        <div class="image">
+                            <img file-image alt="avatar" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" src="@(Model.Avatar??" ")" class="img-responsive imgAvatar">
+                        </div>
+                    </div>
+                    <div>
+                        <button file-button data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Chọn ảnh</span>" type="button" class="btn btn-primary btn-sm"><i class="material-icons">file_upload</i> <span>Chọn ảnh</span></button>
+                        <input data-form="[form-edit]" data-url="@Url.Action("UploadAvatar",new { id=Model.Id})" file-input data-id="@Model.Id" type="file" name="dbFile" id="file" class="inputfile hide" />
+                    </div>
+                    <input type="hidden" data-input-form asp-for="Avatar" />
+                </div>*@
+                <div class="col-md-12">
+                    <div class="labelinfo-t bg-info mb-10">
+                        Thông tin chung
+                    </div>
+                    <div class="sumaryValidateForm" asp-validation-summary="All"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Username"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Username"></span>
+                                <div class="controls">
+                                    <input type="text" disabled="disabled" class="form-control input-sm form-control-t" placeholder="Tên tài khoản" asp-for="Username">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" asp-for="DisplayName"></label> <span asp-validation-for="DisplayName"></span>
+                                <div class="controls">
+                                    <input type="text" class="form-control input-sm form-control-t" placeholder="Tên hiển thị" asp-for="DisplayName">
+                                </div>
+                            </div>
+                            <div class="form-group mt-10">
+                                <div class="controls">
+                                    <input type="checkbox" asp-for="IsLock" class="filled-in chk-col-red" />
+                                    <label for="IsLock" asp-for="IsLock"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Email"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Email"></span>
+                                <div class="controls">
+                                    <input type="text" class="form-control input-sm form-control-t" placeholder="Email" asp-for="Email">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" asp-for="PhoneNumber"></label>  <span asp-validation-for="PhoneNumber"></span>
+                                <div class="controls">
+                                    <input type="text" class="form-control input-sm form-control-t" placeholder="Số điện thoại" asp-for="PhoneNumber">
+                                </div>
+                            </div>
+                            <div class="form-group  mt-10">
+                                <div class="controls">
+                                    <a class="linkbutton" data-form="[form-edit]" button-post data-action="@Url.Action("ChangePassword",new { id = Model.Id })" data-loading-text="Đang xử lý phục hồi mật khẩu tài khoản...">Phục hồi mật khẩu tài khoản?</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="labelinfo-t bg-info mb-10">
+                        Quyền tài khoản
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="RoleId"></label> <span asp-validation-for="RoleId"></span>
+                                <select data-live-search="true"  onchange="onChangeRole()" asp-for="RoleId" asp-items="Model.RoleSelectListItem" class="input-sm form-control-t show-tick">
+                                    <option value="">Chọn quyền</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="typeRole">
+                        </div>
+                    </div>
+                    
+                </div>
+                <input type="hidden" name="isChange" value="false" />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="text-align:center;">
+        <a class="btn btn-icon btn-default waves-effect" data-dismiss="modal"><i class="material-icons">reply</i><span>Đóng</span></a>
+        <button button-delete data-action="@Url.Action("Delete",new { id = Model.Id})" data-retur-nurl="@PT.Shared.Functions.FormatReturnUrl(Context.Request.Query["returnurl"], Url.Action("Index"))" data-checked data-role-8 data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Xóa</span>" type="button" class="btn btn-icon  btn-p-t  btn-danger waves-effect"><i class="material-icons">delete_forever</i> <span>Xóa</span></button>
+        <a button-submit data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Lưu thay đổi</span>" class="btn btn-icon bg-indigo waves-effect"><i class="material-icons">save</i> <span>Lưu thay đổi</span></a>
+    </div>
+</form>
+<script>
+    changeTypeRole();
+    $("[name='newPassword']").val("");
+    $("#IsChangePassword").change(function () {
+        onChangePassword();
+    });
+    function onChangePassword() {
+        if ($("#IsChangePassword").prop("checked")) {
+            $("#divChangePassword").show();
+            $("#NewPassword").removeAttr("disabled");
+        }
+        else {
+            $("#divChangePassword").hide();
+            $("#NewPassword").attr("disabled", "disabled");
+        }
+        $("#NewPassword").val("");
+    }
+    function onChangeRole() {
+        $("input[name='isChange']").val(true);
+        changeTypeRole();
+    }
+    function changeTypeRole() {
+        if ($("#RoleId").val() != null && $("#RoleId").val() != undefined && $("#RoleId").val() != "") {
+            $.get("@Url.Action("TypeRole")", { id: $("#RoleId").val(), userId: @Model.Id }, function (data) {
+                $("#typeRole").html(data);
+                $.AdminBSB.select.activate();
+            });
+        }
+    }
+</script>

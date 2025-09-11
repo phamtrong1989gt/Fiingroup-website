@@ -1,0 +1,105 @@
+﻿@model PT.UI.Models.TestimonialHomeModel
+@addTagHelper *, PT.UI
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer  Localizer
+@{
+    Layout = null;
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+
+}
+
+<div class="successform" style="display:none;">
+    <p>@Localizer["MsgSuccess"].Value</p>
+</div>
+<div class="errorformhide" style="display:none;">
+    <p>@Localizer["MsgError"].Value</p>
+</div>
+<form class="contact-form pb-0" method="post" form-testimonials novalidate="novalidate" asp-action="FormTestimonials">
+    @Html.AntiForgeryToken()
+    <div class="row align-items-center" style="position: relative;">
+        <div class="col-auto">
+            <label>@Localizer["ClickForRating"].Value</label>
+        </div>
+        <fieldset class="review-rating">
+            <input type="radio" id="star5" asp-for="Rating" value="5">
+            <label class="full" for="star5" title="5 stars"></label>
+            <input type="radio" id="star4" asp-for="Rating" value="4">
+            <label class="full" for="star4" title="4 stars"></label>
+            <input type="radio" id="star3" asp-for="Rating" value="3">
+            <label class="full" for="star3" title="3 stars"></label>
+            <input type="radio" id="star2" asp-for="Rating" value="2">
+            <label class="full" for="star2" title="2 stars"></label>
+            <input type="radio" id="star1" asp-for="Rating" value="1">
+            <label class="full" for="star1" title="1 star"></label>
+        </fieldset>
+        <span asp-validation-for="Rating"></span>
+    </div>
+    <div class="row mt-1">
+        <div class="col-lg-8">
+            <input type="hidden" asp-for="Language" value="@language" />
+            <div  style="position: relative;">
+                <input type="text" class="form-control" asp-for="FullName" placeholder="@Html.DisplayNameFor(x=>x.FullName)*">
+                <span asp-validation-for="FullName"></span>
+                
+            </div>
+            <div class="mt-15"  style="position: relative;">
+                <input type="text" class="form-control" asp-for="Email" placeholder="@Html.DisplayNameFor(x=>x.Email)*">
+            </div>
+            <div class="mt-15"  style="position: relative;">
+                <textarea class="form-control" asp-for="Content" placeholder="@Html.DisplayNameFor(x=>x.Content)*"></textarea>
+                <span asp-validation-for="Content"></span>
+            </div>
+            <div class="mt-3">
+                <input type="hidden" asp-for="Capcha" />
+                <button type="button" btn-sendtest class="btn btn-hover-fill"><i class="icon-right-arrow"></i><span>@Localizer["SendReview"].Value</span><i class="icon-right-arrow"></i></button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $("[btn-sendtest]").click(function () {
+        var $thisForm = $("[form-testimonials]");
+        initCapcha(function () {
+            if ($thisForm.valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: $thisForm.attr("action"),
+                    data: $thisForm.serialize(),
+                    headers:
+                    {
+                        "RequestVerificationToken": $thisForm.find("input[name='__RequestVerificationToken']").val()
+                    },
+                    success: function (rs) {
+                        if (rs.output == 1) {
+                            $("[name='FullName']").val("");
+                            $("[name='Email']").val("");
+                            $("[name='Content']").val("");
+
+                            $(".successform").show();
+                            $(".errorformhide").hide();
+                        }
+                        else if (rs.output == 99) {
+                            initCapcha();
+                        }
+                        else {
+
+                            $("[name='FullName']").val("");
+                            $("[name='Email']").val("");
+                            $("[name='Content']").val("");
+
+                            $(".errorformhide").show();
+                            $(".successform").hide();
+                        }
+                    },
+                    error: function () {
+                        alert("Vui lòng F5 trình duyệt rồi thử lại!");
+                    },
+                    complete: function (jqxhr, txt_status) {
+                        if (jqxhr.status == 502) {
+                            alertify.notify("Phiên làm việc đã kết thúc F5 trình duyệt rồi thử lại.", "warning", 5);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

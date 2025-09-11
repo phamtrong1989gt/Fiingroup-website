@@ -1,0 +1,98 @@
+﻿@model PT.Domain.Model.TourDayModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.BaseSettings> _baseSettings
+@{
+    Layout = null;
+
+    var fileUpload = new PT.Domain.Model.PluginFileUploadModel
+    {
+        Extention = _baseSettings.Value.ImagesType,
+        InputName = "Photos",
+        MaxSize = _baseSettings.Value.DocumentsMaxSize,
+        UrlUpload = Url.Action("UploadImage", new { id = Model.Id, altId = Model.AltId }),
+        ParentTagName = "file-parent-days",
+        UrlFile = "",
+        FileDatas = Model.PhotoFileDatas,
+        FileDataString = Model.Photos,
+        IsS = true
+    };
+}
+<td></td>
+<td>
+    <form form-edit-grid-day asp-action="CreateTourDay">
+        <input type="hidden" asp-for="TourId" />
+        <div class="sumaryValidateForm" asp-validation-summary="All"></div>
+        <div class="form-group">
+            <label class="form-label" asp-for="Day"></label> <strong class="text-danger">*</strong>
+            <span asp-validation-for="Day"></span>
+            <input type="number" asp-for="Day" class="form-control input-sm form-control-t" placeholder="">
+        </div>
+    </form>
+</td>
+<td>
+    <form form-edit-grid-day asp-action="CreateTourDay">
+        <div class="sumaryValidateForm" asp-validation-summary="All"></div>
+        <div class="form-group">
+            <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
+            <div class="controls">
+                <input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label" asp-for="Details"></label> <span asp-validation-for="Details"></span>
+            <div class="controls">
+                <textarea class="form-control form-control-t" rows="10" placeholder="Mô tả" asp-for="Details"></textarea>
+            </div>
+        </div>
+        <div>
+            <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
+                <input type="checkbox" asp-for="IsCar" class="filled-in chk-col-green" />
+                <label for="IsCar" asp-for="IsCar"></label>
+            </div>
+            <div>
+                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
+                    <input type="checkbox" asp-for="IsCycling" class="filled-in chk-col-green" />
+                    <label for="IsCycling" asp-for="IsCycling"></label>
+                </div>
+
+                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
+                    <input type="checkbox" asp-for="IsCruising" class="filled-in chk-col-green" />
+                    <label for="IsCruising" asp-for="IsCruising"></label>
+                </div>
+
+                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
+                    <input type="checkbox" asp-for="IsFlight" class="filled-in chk-col-green" />
+                    <label for="IsFlight" asp-for="IsFlight"></label>
+                </div>
+
+                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
+                    <input type="checkbox" asp-for="IsLocalBoat" class="filled-in chk-col-green" />
+                    <label for="IsLocalBoat" asp-for="IsLocalBoat"></label>
+                </div>
+
+                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
+                    <input type="checkbox" asp-for="IsLocalTouch" class="filled-in chk-col-green" />
+                    <label for="IsLocalTouch" asp-for="IsLocalTouch"></label>
+                </div>
+
+                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
+                    <input type="checkbox" asp-for="IsHotel" class="filled-in chk-col-green" />
+                    <label for="IsHotel" asp-for="IsHotel"></label>
+                </div>
+            </div>
+            <div>
+                <partial name="_FileUpload" model="@fileUpload" />
+            </div>
+
+        </div>
+    </form>
+</td>
+<td>
+    <form form-edit-grid-day asp-action="CreateTourDay">
+        @Html.AntiForgeryToken()
+        <div class="btn-group btn- group-sm" role="group">
+            <a button-submit data-type="CreateTourDay" data-form="[form-edit-grid-day]" data-loading-text="<i class='material-icons icon-spin iconcontrol'>autorenew</i>" class="btn btn-icon btn-danger waves-effect btncontrolgrid"><i class="material-icons iconcontrol">save</i></a>
+            <a button-table-edit-cancel class="btn btn-icon btn-default waves-effect btncontrolgrid"><i class="material-icons iconcontrol">reply</i></a>
+        </div>
+    </form>
+</td>

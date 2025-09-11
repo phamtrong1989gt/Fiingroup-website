@@ -1,0 +1,24 @@
+﻿@model TabLanguageModel
+@inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
+
+@{
+    var listLanguege = PT.Shared.ListData.ListLanguage;
+    if(!_baseSettings.Value.MultipleLanguage)
+    {
+        listLanguege = listLanguege.Where(xx => xx.Id == _baseSettings.Value.DefaultLanguage).ToList();
+    }
+}
+
+<div @Model.TagFroup>
+    <input grid-input type="hidden" name="language" value="@(Model.Language== null ? _baseSettings.Value.DefaultLanguage: Model.Language)" />
+    <ul class="nav nav-tabs nav-tabs-t tab-lang" role="tablist">
+        @foreach (var item in listLanguege)
+        {
+            <li role="presentation" class="@(Model.Language == null ? (item.Id== _baseSettings.Value.DefaultLanguage ?"active":"") : (item.Id==Model.Language?"active":""))">
+                <a data-val="@item.Id" onclick="@Model.FuntionName" href="@(Model.LinkDefault)_@item.Id" data-toggle="tab">
+                    <img class="icon-lang" src="@item.Icon" />  @item.Name
+                </a>
+            </li>
+        }
+    </ul>
+</div>

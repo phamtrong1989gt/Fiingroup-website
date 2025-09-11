@@ -1,0 +1,21 @@
+﻿@model ComponentModel<Product>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer  Localizer
+@{
+    Layout = null;
+}
+@if (Model.Items.Count() == 0)
+{
+   <span>Không có sản phẩm nào liên quan</span>
+}
+@foreach (var item in Model.Items)
+{
+    string url = @PT.Shared.Functions.FormatUrl(null, item.Link?.Slug);
+    <div class="recent-post-single">
+        <div class="recent-post-img">
+            <img src="@item.Banner" alt="@item.Name">
+        </div>
+        <div class="recent-post-bio">
+            <h6><a href="@url">@item.Name</a></h6>
+        </div>
+    </div>
+}

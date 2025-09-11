@@ -1,0 +1,173 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PT.UI
+@{
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+<form grid-index data-url="@Url.Action("Index")">
+    <div class="row head-v2">
+        <div class="col-md-4">
+            <div class="block-header">
+                <h2><i class="material-icons">brightness_low</i> QUẢN LÝ quyền Action <span class="label label-danger label-t">Danh sách</span></h2>
+                <ol class="breadcrumb breadcrumb-t">
+                    <li>
+                        <a href="/Admin">
+                            Trang điều khiển
+                        </a>
+                    </li>
+                    <li class="active">
+                        Danh sách quyền area
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div search-advance class="input-group mb-0">
+                <div class="input-group-addon input-group-addon-t">
+                    <span class="text-addonsearch">Tìm kiếm</span>
+                </div>
+                <div class="divcansearch">
+                    <a search-menu class="searchExtension" title="Tìm kiếm nâng cao"><i class="material-icons">keyboard_arrow_down</i></a>
+                    <input grid-input type="text" name="key" class="form-control inputsearch keywidth" placeholder="Tìm kiếm theo tên, mã">
+                    <div search-form class="searchExtensionForm">
+                        <a search-close title="Đóng" class="btnCloseSearchEx"><span aria-hidden="true">×</span></a>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group clearfix">
+                                    <label class="form-label">Area</label>
+                                    <div class="controls">
+                                        <select grid-input data-live-search="true" asp-items="@((SelectList)ViewData["RoleAreaSelectList"])" name="areaId" class="input-sm form-control-t show-tick">
+                                            <option selected value="">Tất cả</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="form-label">Controller</label>
+                                    <div class="controls">
+                                        <select grid-input data-live-search="true" name="controllerId" class="input-sm form-control-t show-tick">
+                                            <option selected value="">Tất cả</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span class="input-group-addon btn-group-addon">
+                    <button onclick="getDataGrid(1)" type="button" class="btn bg-indigo waves-effect btn-search mr-10"><i class="material-icons">search</i></button>
+                    <a button-popup data-target="#myModalNormal" asp-action="Create" class="btn btn-icon btn-primary waves-effect"><i class="material-icons">add</i> <span>Thêm mới</span></a>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12">
+            <div grid-loading class="card card-t card-loading">
+                <div class="header bg-indigo">
+                    <h4 grid-num-row class="num-t m-l-20">
+                        Đang tải...
+                    </h4>
+                    <ul class="header-dropdown m-r--5 header-dropdown-t">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">apps</i>
+                            </a>
+                            <ul class="dropdown-menu pull-left">
+                                <li><a href="javascript:void(0);">Đóng lại</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="controlOrderBy">
+                        <div style="width:110px;" class="itemorder selectOrder">
+                            <select grid-input onchange="getDataGrid(1)" data-header="Loại sắp xếp" name="ordertype" class="form-control input-sm form-control-t show-tick">
+                                <option data-icon="glyphicon-sort-by-attributes" value="asc">Tăng dần</option>
+                                <option data-icon="glyphicon-sort-by-attributes-alt" value="desc">Giảm dần</option>
+                            </select>
+                        </div>
+                        <div style="width:210px;" class="itemorder selectOrder">
+                            <select grid-input onchange="getDataGrid(1)" data-header="Xắp xếp theo" name="orderby" class="form-control input-sm form-control-t show-tick">
+                                <option data-icon="glyphicon glyphicon-sort" value="group">Xếp theo controller, thứ tự</option>
+                                <option data-icon="glyphicon glyphicon-sort" value="order">Xếp theo thứ tự</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="body body-t">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-t">
+                            <thead>
+                                <tr>
+                                    <th>Mã</th>
+                                    <th>Tên</th>
+                                    <th>Controller</th>
+                                    <th>Area</th>
+                                    <th>Nhóm</th>
+                                    <th style="width:60px;">Thứ tự</th>
+                                    <th style="width:100px;">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody grid-data></tbody>
+                        </table>
+                    </div>
+                    <div class="pl-20 pr-20 divpagination">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="input-group m-b-0">
+                                    <span class="input-group-addon">
+                                        Bản ghi/trang
+                                    </span>
+                                    <div class="form-line form-line-t form-line-pagesize">
+                                        <select name="limit" onchange="getDataGrid(1)" class="form-control show-tick" grid-input>
+                                            <option selected value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <nav grid-pagination class="pg-t">
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        var _page = 1;
+        $(function () {
+            $("[search-advance]").toSearch();
+            $("[button-popup]").toPopup();
+            $("[grid-index] select[name='areaId']").on("change", function () {
+                var areaId = $("[grid-index] select[name='areaId']").val();
+                var controllerId = $("[grid-index] select[name='controllerId']").val();
+                getController(areaId, controllerId);
+            });
+            getDataGrid(1, true);
+        });
+        function getDataGrid(page, first = false) {
+            _page = page;
+            $("[grid-index]").toGridView(first, page, null, null, function ($data) {
+                getController($data.areaId, $data.controllerId);
+            });
+        }
+        function reGetDataGrid() {
+            getDataGrid(_page, false);
+        }
+            function getController(areaId, controllerId) {
+            $.post('@Url.Action("GetController")', { areaId: areaId, controllerId: controllerId}, function (res) {
+                $("[grid-index] select[name='controllerId']").html(res).selectpicker('refresh');
+            });
+        }
+        $("[button-submit]").toSubmit();
+        $("[button-delete]").toDelete();
+        $("[button-upload]").toUploadFile();
+        $("[button-post]").toPost();
+    </script>
+}

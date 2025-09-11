@@ -1,0 +1,77 @@
+﻿@model PT.Domain.Model.BaseSearchModel<List<PT.Domain.Model.Contact>>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+    int i = 1;
+}
+<tr style="display:none !important;">
+    <td colspan="999999">
+        <input type="hidden" grid-data-page value="@Model.Page" />
+        <input type="hidden" grid-data-totalrows value="@Model.TotalRows" />
+        <input type="hidden" grid-data-limit value="@Model.Limit" />
+    </td>
+</tr>
+@if (Model.TotalRows == 0)
+{
+    <tr>
+        <td colspan="999">Không tìm thấy bản ghi nào</td>
+    </tr>
+}
+@foreach (var item in Model.Data)
+{
+<tr>
+    <td class="text-center">
+        @PT.Shared.Functions.GenSTT(i,Model.Page,Model.Limit)
+    </td>
+    <td>
+        <div>
+            <span class="text-primary text-name">@item.FullName</span>
+        </div>
+        <div>
+            @item.Email
+        </div>
+    </td>
+    <td>
+        @if (item.Type == PT.Domain.Model.Contact.ContactType.TestimonialVideo)
+        {
+            <span>@item.Address</span>
+        }
+        else
+        {
+            @Html.Raw(item.Content.Replace("<script", "xscript").Replace("</script>", "</xscript>"))
+        }
+    </td>
+    <td>@item.CreatedDate.ToStringDateTime()</td>
+    <td>
+        @for (int j = 1; j <= item.Rating; j++)
+        {
+            <i style="display: inline-block; width: 23px;" class="material-icons text-success icon-list">star_rate</i>
+        }
+        @for (int j = 1; j <= 5 - item.Rating; j++)
+        {
+            <i style="display: inline-block; width: 23px;" class="material-icons icon-list">star_border</i>
+        }
+    </td>
+    <td>
+        @if (item.IsHome)
+        {
+            <i class="material-icons text-success icon-list">check</i>
+        }
+        else
+        {
+            <i class="material-icons text-danger icon-list">check</i>
+        }
+    </td>
+    <td>
+        @item.Type.GetDisplayName()
+    </td>
+    <td>
+        <div class="btn-group">
+            <div class="btn-group btn- group-sm" role="group">
+                <a button-popup data-target="#myModalBig" asp-action="Edit" asp-route-id="@item.Id" title="Cập nhật" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
+            </div>
+        </div>
+    </td>
+</tr>
+    i++;
+}

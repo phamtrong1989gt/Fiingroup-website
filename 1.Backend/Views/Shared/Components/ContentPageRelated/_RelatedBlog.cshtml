@@ -1,0 +1,24 @@
+﻿@model ComponentModel<ContentPage>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer  Localizer
+@{
+    Layout = null;
+}
+@if (Model.Items.Count() >0)
+{
+    <div class="side-block">
+        <h3 class="side-block-title">@Model.Title</h3>
+
+        @foreach (var item in Model.Items)
+        {
+            <div class="blog-post post-preview">
+                <div>
+                    <h4 class="post-title"><a  href="@PT.Shared.Functions.FormatUrl(item.Language,item.Link?.Slug)">@item.Name</a></h4>
+                    <div class="post-meta">
+                        @*<div class="post-meta-author text-nowrap">@Localizer["PostBy"].Value: <strong class="author-name">@item.Author</strong></div>*@
+                        @*<div class="post-meta-date text-nowrap"><i class="icon icon-clock3"></i>@item.DatePosted.DateToString()</div>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
