@@ -1,27 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.NetworkInformation;
-using System.Net.WebSockets;
-using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using PT.Base;
 using PT.Domain.Model;
-using PT.Infrastructure;
 using PT.Infrastructure.Interfaces;
 using PT.Infrastructure.Repositories;
 using PT.Shared;
-using PT.UI.Areas.User.Controllers;
-using PT.UI.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.UI.Controllers
 {

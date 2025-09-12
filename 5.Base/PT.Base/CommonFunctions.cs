@@ -21,6 +21,49 @@ namespace PT.Base
             return $"<vc:view-module code=\"{code}\" type=\"{type.ToString()}\"></vc:view-module>";
         }
 
+        public static string GenContentModule(string data, ModuleType type, string code, string language)
+        {
+            string cacheKey = $"{type}_{code}"; // Tạo khóa cache duy nhất
+            string url = "";
+            string newKyTu = "";
+
+            // Xác định URL quản lý
+            if (type == ModuleType.Menu)
+            {
+                url = $"/Admin/Manager/MenuManager?code={code}&language={language}#openPopup";
+            }
+            else if (type == ModuleType.PhotoSlide)
+            {
+                url = $"/Admin/Manager/PhotoSlideManager?code={code}&language={language}#openPopup";
+            }
+            else if (type == ModuleType.StaticInformation)
+            {
+                url = $"/Admin/Manager/StaticInformationManager?code={code}&language={language}#openPopup";
+            }
+            else if (type == ModuleType.AdvertisingBanner)
+            {
+                url = $"/Admin/Manager/AdvertisingBannerManager?code={code}&language={language}#openPopup";
+            }
+            newKyTu += $"<!-- module {code} {type.GetDisplayName()} -->";
+
+            // Tạo nội dung HTML
+            if (!string.IsNullOrEmpty(url))
+            {
+                newKyTu += "<div class='formadmin'>";
+                newKyTu += "<span data-href='" + url + "' class='bindata'></span>";
+                newKyTu += "<div  data-editable data-name=\"main-content\">";
+                newKyTu += data;
+                newKyTu += "</div>";
+                newKyTu += "</div>";
+                newKyTu = Functions.ZipStringHTML(newKyTu);
+            }
+            else
+            {
+                newKyTu = Functions.ZipStringHTML(data);
+            }
+            return newKyTu;
+        }
+
         public static void GenModule(string map, string data, ModuleType type, string code, string language)
         {
             string cacheKey = $"{type}_{code}"; // Tạo khóa cache duy nhất

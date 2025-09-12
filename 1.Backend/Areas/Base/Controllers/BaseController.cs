@@ -13,20 +13,35 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PT.UI.Areas.Base.Controllers
+namespace PT.BE.Areas.Base.Controllers
 {
+    /// <summary>
+    /// Controller cơ sở cho các controller khác kế thừa, cung cấp các hàm dùng chung như quản lý file, log, tag, SEO link, và trả về kết quả chuẩn hóa.
+    /// </summary>
     public class BaseController : Controller
     {
-        
-        protected  string controllerName = "";
-        protected  string tableName = "";
+        /// <summary>
+        /// Tên controller hiện tại (dùng cho log, tracking)
+        /// </summary>
+        protected string controllerName = "";
+        /// <summary>
+        /// Tên bảng dữ liệu liên quan (dùng cho log, tracking)
+        /// </summary>
+        protected string tableName = "";
 
+        /// <summary>
+        /// Thêm dữ liệu file vào hệ thống
+        /// </summary>
+        /// <param name="objectId">Id đối tượng liên kết file</param>
+        /// <param name="path">Đường dẫn file</param>
+        /// <param name="type">Loại danh mục file</param>
+        /// <param name="altId">Id thay thế (nếu có)</param>
         public async Task AddFileData(int objectId, string path, CategoryType type, string altId)
         {
             var iFileDataRepository = (IFileDataRepository)AppHttpContext.Current.RequestServices.GetService(typeof(IFileDataRepository));
-            await iFileDataRepository.AddAsync(new FileData { 
+            await iFileDataRepository.AddAsync(new FileData {
                 CreatedDate = DateTime.Now,
-                ObjectId  = objectId,
+                ObjectId = objectId,
                 Path = path,
                 Type = type,
                 AltId = altId
@@ -34,36 +49,51 @@ namespace PT.UI.Areas.Base.Controllers
             await iFileDataRepository.CommitAsync();
         }
 
-        public async Task UpdateFileData(int objectId,CategoryType type, string altId)
+        /// <summary>
+        /// Cập nhật dữ liệu file liên kết với đối tượng
+        /// </summary>
+        /// <param name="objectId">Id đối tượng</param>
+        /// <param name="type">Loại danh mục file</param>
+        /// <param name="altId">Id thay thế</param>
+        public async Task UpdateFileData(int objectId, CategoryType type, string altId)
         {
             var iFileDataRepository = (IFileDataRepository)AppHttpContext.Current.RequestServices.GetService(typeof(IFileDataRepository));
             var listFiles = await iFileDataRepository.SearchAsync(false, 0, 0, x => x.AltId == altId && x.Type == type);
-            foreach(var item in listFiles)
+            foreach (var item in listFiles)
             {
                 item.ObjectId = objectId;
                 iFileDataRepository.Update(item);
-            }    
+            }
             await iFileDataRepository.CommitAsync();
         }
 
+        /// <summary>
+        /// Xóa dữ liệu file liên kết với đối tượng và xóa file vật lý trên hệ thống
+        /// </summary>
+        /// <param name="objectId">Id đối tượng</param>
+        /// <param name="type">Loại danh mục file</param>
         public async Task RemoveFileData(int objectId, CategoryType type)
         {
             var iFileDataRepository = (IFileDataRepository)AppHttpContext.Current.RequestServices.GetService(typeof(IFileDataRepository));
             var iWebHostEnvironment = (IWebHostEnvironment)AppHttpContext.Current.RequestServices.GetService(typeof(IWebHostEnvironment));
-            var listFiles = await iFileDataRepository.SearchAsync(false, 0, 0, x=> x.ObjectId == objectId && x.Type == type);
-            foreach(var item in listFiles)
+            var listFiles = await iFileDataRepository.SearchAsync(false, 0, 0, x => x.ObjectId == objectId && x.Type == type);
+            foreach (var item in listFiles)
             {
                 var path = $"{iWebHostEnvironment.WebRootPath}/{item.Path}";
-                if(System.IO.File.Exists(path))
+                if (System.IO.File.Exists(path))
                 {
                     System.IO.File.Delete(path);
-                }    
+                }
                 iFileDataRepository.Delete(item);
-            }    
+            }
             await iFileDataRepository.CommitAsync();
         }
 
-        public async  Task AddLog(LogModel input)
+        /// <summary>
+        /// Ghi log thao tác vào hệ thống
+        /// </summary>
+        /// <param name="input">Thông tin log cần ghi</param>
+        public async Task AddLog(LogModel input)
         {
             var iLogRepository = (ILogRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILogRepository));
             var baseSettings = (IOptions<LogSettings>)AppHttpContext.Current.RequestServices.GetService(typeof(IOptions<LogSettings>));
@@ -73,7 +103,7 @@ namespace PT.UI.Areas.Base.Controllers
                 {
                     ObjectId = input.ObjectId,
                     Name = input.Name,
-                    AcctionUser = Newtonsoft.Json.JsonConvert.SerializeObject(new { DataUserInfo.UserId, DataUserInfo.DisplayName , DataUserInfo.UserName , DataUserInfo.Email }),
+                    AcctionUser = Newtonsoft.Json.JsonConvert.SerializeObject(new { DataUserInfo.UserId, DataUserInfo.DisplayName, DataUserInfo.UserName, DataUserInfo.Email }),
                     Object = tableName,
                     ObjectType = controllerName,
                     Type = input.Type,
@@ -81,7 +111,7 @@ namespace PT.UI.Areas.Base.Controllers
                 };
                 if (baseSettings.Value.IsUseMongo)
                 {
-                    // Code mongo
+                    // Code ghi log vào MongoDB nếu cấu hình bật
                 }
                 else
                 {
@@ -91,7 +121,13 @@ namespace PT.UI.Areas.Base.Controllers
             }
         }
 
-        public async Task<object> AddTagLink(string name,string language)
+        /// <summary>
+        /// Thêm tag và liên kết SEO cho đối tượng
+        /// </summary>
+        /// <param name="name">Tên tag</param>
+        /// <param name="language">Ngôn ngữ</param>
+        /// <returns>Thông tin tag vừa thêm</returns>
+        public async Task<object> AddTagLink(string name, string language)
         {
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
             var _iTagRepository = (ITagRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ITagRepository));
@@ -146,6 +182,18 @@ namespace PT.UI.Areas.Base.Controllers
             return new { id = data.Id, name = data.Name };
         }
 
+        /// <summary>
+        /// Thêm liên kết SEO cho đối tượng
+        /// </summary>
+        /// <param name="type">Loại danh mục</param>
+        /// <param name="language">Ngôn ngữ</param>
+        /// <param name="id">Id đối tượng</param>
+        /// <param name="model">Model SEO</param>
+        /// <param name="name">Tên đối tượng</param>
+        /// <param name="area">Khu vực</param>
+        /// <param name="controller">Controller</param>
+        /// <param name="action">Action</param>
+        /// <returns>Id liên kết SEO vừa thêm</returns>
         public async Task<int> AddSeoLink(CategoryType type, string language, int id, SeoModel model, string name, string area, string controller, string action)
         {
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
@@ -178,13 +226,13 @@ namespace PT.UI.Areas.Base.Controllers
                 Language = language,
                 IsStatic = false,
                 Changefreq = model.Changefreq,
-                Lastmod = model.Lastmod??DateTime.Now,
+                Lastmod = model.Lastmod ?? DateTime.Now,
                 Priority = model.Priority.ConvertToDouble(),
                 Delete = model.Delete,
-                Description= model.Description,
+                Description = model.Description,
                 FacebookBanner = model.FacebookBanner,
                 FacebookDescription = model.FacebookDescription,
-                FocusKeywords=model.FocusKeywords,
+                FocusKeywords = model.FocusKeywords,
                 GooglePlusDescription = model.GooglePlusDescription,
                 IncludeSitemap = model.IncludeSitemap,
                 Keywords = model.Keywords,
@@ -192,7 +240,7 @@ namespace PT.UI.Areas.Base.Controllers
                 MetaRobotsFollow = model.MetaRobotsFollow,
                 MetaRobotsIndex = model.MetaRobotsIndex,
                 Redirect301 = model.Redirect301,
-                Title= model.Title,
+                Title = model.Title,
                 Status = model.Status,
                 Area = area,
                 Controller = controller,
@@ -201,15 +249,15 @@ namespace PT.UI.Areas.Base.Controllers
             await _iLinkRepository.AddAsync(dlLug);
             await _iLinkRepository.CommitAsync();
 
-            // Update ánh xạ
-            if(baseSettings.Value.MultipleLanguage)
+            // Nếu cấu hình đa ngôn ngữ, cập nhật ánh xạ
+            if (baseSettings.Value.MultipleLanguage)
             {
                 model.Language = language;
                 model.Type = dlLug.Type;
                 model.LinkId = dlLug.Id;
                 await _iLinkReferenceRepository.ReferenceUpdate(model);
             }
-            // Update memory cache link
+            // Cập nhật cache liên kết SEO
             var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
             var cacheKey = $"Link_{dlLug.Slug}_{language}";
             if (cache.TryGetValue(cacheKey, out Link link))
@@ -220,6 +268,18 @@ namespace PT.UI.Areas.Base.Controllers
             return dlLug.Id;
         }
 
+        /// <summary>
+        /// Cập nhật liên kết SEO cho đối tượng
+        /// </summary>
+        /// <param name="changeSlug">Có thay đổi slug không</param>
+        /// <param name="type">Loại danh mục</param>
+        /// <param name="id">Id đối tượng</param>
+        /// <param name="language">Ngôn ngữ</param>
+        /// <param name="model">Model SEO</param>
+        /// <param name="name">Tên đối tượng</param>
+        /// <param name="area">Khu vực</param>
+        /// <param name="controller">Controller</param>
+        /// <param name="action">Action</param>
         public async Task UpdateSeoLink(bool changeSlug, CategoryType type, int id, string language, SeoModel model, string name, string area, string controller, string action)
         {
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
@@ -266,7 +326,6 @@ namespace PT.UI.Areas.Base.Controllers
                 ktLink.Slug = model.Slug;
             }
             ktLink.Changefreq = model.Changefreq;
-            ktLink.Changefreq = model.Changefreq;
             ktLink.Lastmod = model.Lastmod ?? DateTime.Now;
             ktLink.Priority = model.Priority.ConvertToDouble();
             ktLink.Description = model.Description;
@@ -283,7 +342,6 @@ namespace PT.UI.Areas.Base.Controllers
             ktLink.Title = model.Title;
             ktLink.Status = model.Status;
             ktLink.Name = name;
-
             ktLink.Area = area;
             ktLink.Controller = controller;
             ktLink.Acction = action;
@@ -292,11 +350,10 @@ namespace PT.UI.Areas.Base.Controllers
             if (baseSettings.Value.MultipleLanguage)
             {
                 model.Language = language;
-                // Update ánh xạ
                 await _iLinkReferenceRepository.ReferenceUpdate(model);
             }
 
-            // Update memory cache link
+            // Cập nhật cache liên kết SEO
             var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
             var cacheKey = $"Link_{ktLink.Slug}_{language}";
             if (cache.TryGetValue(cacheKey, out Link link))
@@ -306,6 +363,11 @@ namespace PT.UI.Areas.Base.Controllers
             cache.Set(cacheKey, ktLink, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(60 * 6)));
         }
 
+        /// <summary>
+        /// Xóa liên kết SEO của đối tượng
+        /// </summary>
+        /// <param name="type">Loại danh mục</param>
+        /// <param name="id">Id đối tượng</param>
         public async Task DeleteSeoLink(CategoryType type, int id)
         {
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
@@ -315,13 +377,34 @@ namespace PT.UI.Areas.Base.Controllers
                 _iLinkRepository.Delete(ktLink);
                 await _iLinkRepository.CommitAsync();
             }
-            // Update memory cache link
+            // Cập nhật cache liên kết SEO
             var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
             var cacheKey = $"Link_{ktLink.Slug}_{ktLink.Language}";
             if (cache.TryGetValue(cacheKey, out Link link))
             {
                 cache.Remove(cacheKey);
             }
+        }
+
+        /// <summary>
+        /// Tạo đối tượng ResponseModel chuẩn cho các thao tác CRUD.
+        /// </summary>
+        /// <param name="output">Kết quả thực hiện (1: thành công, 0: cảnh báo, -1: lỗi)</param>
+        /// <param name="message">Thông báo trả về</param>
+        /// <param name="type">Loại thông báo (Success, Warning, Danger...)</param>
+        /// <param name="isClosePopup">Đóng popup sau khi thực hiện</param>
+        /// <param name="isRedirect">Chuyển hướng sau khi thực hiện</param>
+        /// <returns>Đối tượng ResponseModel</returns>
+        protected ResponseModel CreateResponse(int output, string message, string type, bool isClosePopup = false, bool isRedirect = false)
+        {
+            return new ResponseModel
+            {
+                Output = output,
+                Message = message,
+                Type = type,
+                IsClosePopup = isClosePopup,
+                IsRedirect = isRedirect
+            };
         }
     }
 }

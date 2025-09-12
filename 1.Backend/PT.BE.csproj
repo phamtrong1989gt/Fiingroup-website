@@ -58,7 +58,6 @@
     <None Include="Areas\Base\Views\Dashboard\AccessDenied.cshtml" />
     <None Include="Areas\Base\Views\Dashboard\Index.cshtml" />
     <None Include="Areas\Base\Views\FileManager\Manager.cshtml" />
-    <None Include="Areas\Base\Views\Manager\Index.cshtml" />
     <None Include="Areas\Base\Views\Settings\Email.cshtml" />
     <None Include="Areas\Base\Views\Settings\Index.cshtml" />
     <None Include="Areas\Base\Views\Settings\Website.cshtml" />
@@ -180,12 +179,8 @@
     <None Include="Areas\User\Views\UserManager\IndexAjax.cshtml" />
     <None Include="Areas\User\Views\UserManager\TypeRole.cshtml" />
     <None Include="Views\Shared\404.cshtml" />
-    <None Include="Views\Shared\Error.cshtml" />
-    <None Include="Views\Shared\Plugins\_Coment.cshtml" />
-    <None Include="Views\Shared\Plugins\_Like.cshtml" />
     <None Include="Views\Shared\_Admin.cshtml" />
     <None Include="Views\Shared\_CookieConsentPartial.cshtml" />
-    <None Include="Views\Shared\_HomeHead.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_Login.cshtml" />
     <None Include="Views\Shared\_MenuAdmin.cshtml" />
@@ -1572,14 +1567,7 @@
 
 
   <ItemGroup>
-    <Content Update="Views\ContactHome\Testimonials.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Data\" />
+    <Folder Include="Areas\Base\Views\Manager\" />
   </ItemGroup>
 
 </Project>

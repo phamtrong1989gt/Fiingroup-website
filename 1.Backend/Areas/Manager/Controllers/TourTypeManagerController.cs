@@ -13,7 +13,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using PT.Infrastructure;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
     public class TourTypeManagerController : Base.Controllers.BaseController

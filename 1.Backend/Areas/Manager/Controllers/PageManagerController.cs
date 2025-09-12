@@ -16,7 +16,7 @@ using PT.Base;
 using System.IO;
 using System.Net.Http.Headers;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
     public class PageManagerController : Base.Controllers.BaseController

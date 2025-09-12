@@ -19,7 +19,7 @@ using System.Threading;
 using System.Text;
 using PT.Base;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     /// <summary>
     /// Controller quản lý slide ảnh (banner) trong khu vực Quản lý.

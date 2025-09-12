@@ -1,6 +1,6 @@
 ﻿using PT.Domain.Model;
 
-namespace PT.UI.Models
+namespace PT.BE.Models
 {
     public class ProductComponentModel
     {

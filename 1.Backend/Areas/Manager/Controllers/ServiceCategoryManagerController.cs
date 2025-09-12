@@ -12,7 +12,7 @@ using PT.Shared;
 using PT.Base;
 using System.Text;
 
-namespace PT.UI.Areas.User.Controllers
+namespace PT.BE.Areas.User.Controllers
 {
     [Area("Manager")]
     public class ServiceCategoryManagerController : Base.Controllers.BaseController

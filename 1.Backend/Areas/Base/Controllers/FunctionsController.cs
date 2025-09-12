@@ -11,7 +11,7 @@ using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
 
-namespace PT.UI.Areas.Base.Controllers
+namespace PT.BE.Areas.Base.Controllers
 {
     [Area("Base")]
     public class FunctionsController : Controller

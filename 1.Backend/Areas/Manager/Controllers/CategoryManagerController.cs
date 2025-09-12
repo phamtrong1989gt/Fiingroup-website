@@ -13,9 +13,9 @@ using System.Text;
 using System.Net.Http.Headers;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using PT.UI.Areas.Manager.Controllers;
+using PT.BE.Areas.Manager.Controllers;
 
-namespace PT.UI.Areas.User.Controllers
+namespace PT.BE.Areas.User.Controllers
 {
     [Area("Manager")]
     public class CategoryManagerController : Base.Controllers.BaseController

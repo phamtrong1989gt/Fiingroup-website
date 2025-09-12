@@ -11,7 +11,7 @@ using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
     public class AdvertisingBannerManagerController : Base.Controllers.BaseController

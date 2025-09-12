@@ -43,41 +43,5 @@
     },
     // Optionally generate .map file
     "sourceMap": false
-  },
-  {
-
-    "outputFileName": "wwwroot/content/home/site.min.css",
-    "inputFiles": [
-      "wwwroot/Content/Home/vendor/slick/slick.css",
-      "wwwroot/Content/Home/vendor/animate/animate.min.css",
-      "wwwroot/Content/Home/icons/style.css",
-      "wwwroot/Content/Home/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.css",
-      "wwwroot/Content/Home/css/style.css",
-      "wwwroot/Content/Home/color/color.css",
-      "wwwroot/Content/Home/css/custom.css"
-    ]
-  },
-  {
-
-    "outputFileName": "wwwroot/content/home/site.min.js",
-    "inputFiles": [
-      "wwwroot/Content/Home/vendor/cookie/jquery.cookie.js",
-      "wwwroot/Content/Home/vendor/bootstrap-datetimepicker/moment.js",
-      "wwwroot/Content/Home/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js",
-      "wwwroot/Content/Home/vendor/popper/popper.min.js",
-      "wwwroot/Content/Home/vendor/bootstrap/bootstrap.min.js",
-      "wwwroot/Content/Home/vendor/waypoints/jquery.waypoints.min.js",
-      "wwwroot/Content/Home/vendor/waypoints/sticky.min.js",
-      "wwwroot/Content/Home/vendor/imagesloaded/imagesloaded.pkgd.min.js",
-      "wwwroot/Content/Home/vendor/slick/slick.min.js",
-      "wwwroot/Content/Home/vendor/scroll-with-ease/jquery.scroll-with-ease.min.js",
-      "wwwroot/Content/Home/vendor/countTo/jquery.countTo.js",
-      "wwwroot/Content/Home/vendor/isotope/isotope.pkgd.min.js",
-      "wwwroot/Content/Home/js/app.js",
-      "wwwroot/Content/Home/js/app-shop.js",
-      "wwwroot/Content/Home/js/script.home.js"
-
-    ]
   }
-
 ]

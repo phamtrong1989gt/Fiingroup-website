@@ -1,25 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using Microsoft.Net.Http.Headers;
 using System;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication;
-using PT.UI.Controllers;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using static PT.Base.DataUserInfo;
-namespace PT.UI.Areas.User.Controllers
+namespace PT.BE.Areas.User.Controllers
 {
     [Area("User"), Authorize]
     public class AccountController : Controller

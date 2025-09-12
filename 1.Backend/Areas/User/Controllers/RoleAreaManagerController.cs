@@ -15,12 +15,12 @@ using Newtonsoft.Json.Linq;
 using PT.Domain.Model;
 using PT.Infrastructure.Repositories;
 using PT.Infrastructure.Interfaces;
-using PT.UI.Areas.Base.Controllers;
+using PT.BE.Areas.Base.Controllers;
 using PT.Shared;
 using static PT.Base.DataUserInfo;
 using PT.Base;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("User")]
     [IsSupperAdminAuthorizePermission]

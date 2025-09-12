@@ -17,7 +17,7 @@ using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using PT.Base;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
     public class AppointmentManagerController : Base.Controllers.BaseController
