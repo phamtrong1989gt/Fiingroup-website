@@ -35,7 +35,7 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly ILogRepository _iLogRepository;
         // Repository thao tác dữ liệu thông tin tĩnh
         private readonly IStaticInformationRepository _iStaticInformationRepository;
-
+        private readonly IPortalRepository _iPortalRepository;
         /// <summary>
         /// Hàm khởi tạo controller, inject các dịch vụ cần thiết
         /// </summary>
@@ -46,7 +46,8 @@ namespace PT.BE.Areas.Manager.Controllers
             ILogRepository iLogRepository,
             IOptions<LogSettings> logSettings,
             IOptions<EmailSettings> emailSettings,
-            IStaticInformationRepository iStaticInformationRepository
+            IStaticInformationRepository iStaticInformationRepository,
+            IPortalRepository iPortalRepository
         )
         {
             controllerName = "StaticInformationManager";
@@ -57,6 +58,7 @@ namespace PT.BE.Areas.Manager.Controllers
             _iLogRepository = iLogRepository;
             _logSettings = logSettings.Value;
             _iStaticInformationRepository = iStaticInformationRepository;
+            _iPortalRepository = iPortalRepository;
         }
 
         #region [Index]
@@ -84,19 +86,25 @@ namespace PT.BE.Areas.Manager.Controllers
         /// <param name="orderby">Trường sắp xếp (name/id)</param>
         [HttpPost, ActionName("Index")]
         [AuthorizePermission]
-        public async Task<IActionResult> IndexPost(int? id, int? page, int? limit, string key, string code, bool? status, string language = "vi", string ordertype = "asc", string orderby = "name")
+        public async Task<IActionResult> IndexPost(int? id, int? page, int? limit, string key, string code, bool? status, int? portalId, string language = "vi", string ordertype = "asc", string orderby = "name")
         {
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
+            var portals = await _iPortalRepository.SearchAsync(true);
             var data = await _iStaticInformationRepository.SearchPagedListAsync(
                 page ?? 1,
                 limit ?? 10,
                 m => (m.Name.Contains(key) || key == null) &&
                      (m.Code == code || code == null) &&
                      (m.Status == status || status == null) &&
+                     (m.PortalId == portalId || portalId == null) &&
                      (m.Language == language) &&
                      !m.Delete && (m.Id == id || id == null),
                 OrderByExtention(ordertype, orderby));
+            foreach (var item in data.Data)
+            {
+                item.Portal = portals.FirstOrDefault(x=>x.Id == item.PortalId);
+            }
             return View("IndexAjax", data);
         }
 

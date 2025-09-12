@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +29,14 @@ using PT.Infrastructure.Repositories;
 using PT.Shared;
 using PT.UI.SignalR;
 using Serilog;
+using Serilog.Events;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PT.UI
 {
@@ -45,9 +46,13 @@ namespace PT.UI
         {
             Configuration = configuration;
             Serilog.Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Error()
-               .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "logs/log-{Date}.txt"))
-               .CreateLogger();
+            .MinimumLevel.Debug()
+            .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Information).WriteTo.File("logs/info_.log", rollingInterval: RollingInterval.Day))
+            .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Warning).WriteTo.File("logs/warning_.log", rollingInterval: RollingInterval.Day))
+            .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Error).WriteTo.File("logs/error_.log", rollingInterval: RollingInterval.Day))
+            .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Fatal).WriteTo.File("logs/fatal_.log", rollingInterval: RollingInterval.Day))
+            .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Debug).WriteTo.File("logs/debug_.log", rollingInterval: RollingInterval.Day))
+            .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }

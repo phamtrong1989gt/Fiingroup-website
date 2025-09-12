@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using PT.Domain.Seedwork;
 
 namespace PT.Domain.Model
@@ -47,6 +48,8 @@ namespace PT.Domain.Model
         public string Data { get; set; }
 
         public int PortalId { get; set; }
+        [NotMapped]
+        public Portal Portal { get; set; }
     }
 
     /// <summary>

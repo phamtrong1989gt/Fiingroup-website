@@ -162,6 +162,7 @@ namespace PT.UI
             services.AddScoped<IFileDataRepository, FileDataRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+            services.AddScoped<IPortalRepository, PortalRepository>();
             // Đăng ký repository tổng quát
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
             // Cấu hình nén Gzip cho phản hồi

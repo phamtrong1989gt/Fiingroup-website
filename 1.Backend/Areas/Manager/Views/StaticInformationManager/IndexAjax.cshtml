@@ -1,4 +1,5 @@
-﻿@model PT.Domain.Model.BaseSearchModel<List<PT.Domain.Model.StaticInformation>>
+﻿@using PT.BE;
+@model PT.Domain.Model.BaseSearchModel<List<PT.Domain.Model.StaticInformation>>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = null;
@@ -23,7 +24,7 @@
     <td class="text-center">@PT.Shared.Functions.GenSTT(i, Model.Page, Model.Limit)</td>
     <td><span class="text-primary text-name">@item.Name</span></td>
     <td><span class="text-danger">@item.Code</span></td>
-    <td><span class="text-info">@item.PortalId</span></td>
+    <td><span class="text-info">@item.Portal?.Name</span></td>
     <td>
         <div class="btn-group">
             <div class="btn-group btn- group-sm" role="group">

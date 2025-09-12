@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0-windows7.0</TargetFramework>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
     <!--<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>-->
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
@@ -52,6 +52,10 @@
     <None Remove="wwwroot\wp-content\**" />
     <None Remove="wwwroot\wp-includes\**" />
     <None Remove="wwwroot\wp-json\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -1542,14 +1546,13 @@
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
-	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.1" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.9" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	  <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
-	  <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-	  <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+	  <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
+	  <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
 
