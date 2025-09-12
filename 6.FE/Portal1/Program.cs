@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace PT.UI
@@ -14,16 +10,7 @@ namespace PT.UI
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
-        }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-               // .UseSetting("https_port", "443")
-                .ConfigureLogging((hostingContext, config) =>
-                {
-                    config.ClearProviders();
-                })
+            var builder = Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.SetBasePath(hostingContext.HostingEnvironment.ContentRootPath);
@@ -41,7 +28,16 @@ namespace PT.UI
                     config.AddJsonFile("appsettings.Paypal.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("appsettings.Log.json", optional: true, reloadOnChange: true);
                 })
-                .UseStartup<Startup>()
-            ;
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.ClearProviders();
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+
+            builder.Build().Run();
+        }
     }
 }
