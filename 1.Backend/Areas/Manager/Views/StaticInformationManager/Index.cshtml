@@ -31,9 +31,16 @@
                 <div class="input-group-addon input-group-addon-t">
                     <span class="text-addonsearch">Tìm kiếm</span>
                 </div>
+                <div class="input-group-addon">
+                    <select grid-input name="status" class="form-control ms form-tag">
+						<option value="">Tất cả</option>
+						<option value="true">Sử dụng</option>
+						<option value="false">Không sử dụng</option>
+                    </select>
+                </div>
                 <div class="divcansearch">
                     <input grid-input type="text" name="key" class="form-control inputsearch keywidth" placeholder="Tìm theo tên, mã">
-                    <div search-form class="searchExtensionForm">
+                  @*   <div search-form class="searchExtensionForm">
                         <a search-close title="Đóng" class="btnCloseSearchEx"><span aria-hidden="true">×</span></a>
                         <div class="row">
                             <div class="col-md-12">
@@ -52,7 +59,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> *@
                     <a search-menu class="searchExtension" title="Tìm kiếm nâng cao"><i class="material-icons">keyboard_arrow_down</i></a>
                 </div>
                 <span class="input-group-addon btn-group-addon">
@@ -204,7 +211,7 @@
         function getDataGrid(page, first = false) {
             _page = page;
             $("[grid-index]").toGridView(first, page, function () {
-                if (decodeURIComponent(location.hash.substr(1)) == "openPopup") {
+                if (decodeURIComponent(location?.hash?.substr(1)) == "openPopup") {
                     try {
                         $("[data-open-edit]")[0].click();
                     } catch (e) {
