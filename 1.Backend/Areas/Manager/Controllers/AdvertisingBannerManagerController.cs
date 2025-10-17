@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using PT.Base;
 using PT.Domain.Model;
@@ -20,6 +21,7 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly ILogger<AdvertisingBannerManagerController> _logger;
         private readonly IBannerRepository _bannerRepository;
         private readonly IBannerItemRepository _bannerItemRepository;
+        private readonly IPortalRepository _portalRepository;
 
         private const string TokenUrl = "[Url]";
         private const string TokenTarget = "[Target]";
@@ -31,7 +33,8 @@ namespace PT.BE.Areas.Manager.Controllers
             ILogger<AdvertisingBannerManagerController> logger,
             IWebHostEnvironment hostingEnvironment,
             IBannerRepository bannerRepository,
-            IBannerItemRepository bannerItemRepository)
+            IBannerItemRepository bannerItemRepository,
+            IPortalRepository portalRepository)
         {
             controllerName = "AdvertisingBannerManager";
             tableName = "Banner";
@@ -39,18 +42,24 @@ namespace PT.BE.Areas.Manager.Controllers
             _hostingEnvironment = hostingEnvironment;
             _bannerRepository = bannerRepository;
             _bannerItemRepository = bannerItemRepository;
+            _portalRepository = portalRepository;
         }
 
         #region Index
 
         [AuthorizePermission]
-        public IActionResult Index() => View();
+        public async Task<IActionResult> Index()
+        {
+            var portals = await _portalRepository.SearchAsync(true,0,0);
+            ViewBag.PortalSelectList = new SelectList(portals, "Id", "Name");
+            return View();
+        }
 
         [HttpPost, ActionName("Index")]
         [AuthorizePermission]
         public async Task<IActionResult> IndexPost(
             int? id, int? page, int? limit, bool? status, string code, string key, string language = "vi",
-            string ordertype = "asc", string orderby = "name")
+            string ordertype = "asc", string orderby = "name", int? portalId = null)
         {
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
@@ -61,6 +70,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 m =>
                     (string.IsNullOrEmpty(key) || m.Name.Contains(key)) &&
                     m.Language == language &&
+                    (m.PortalId == portalId || portalId == null) &&
                     m.Type == BannerType.Advertising &&
                     !m.Delete &&
                     (id == null || m.Id == id) &&
@@ -68,6 +78,12 @@ namespace PT.BE.Areas.Manager.Controllers
                     (status == null || m.Status == status),
                 GetOrderBy(orderby, ordertype)
             );
+
+            var portals = await _portalRepository.SearchAsync(true,0,0);
+            foreach(var item in data.Data)
+            {
+                item.Portal = portals.FirstOrDefault(p => p.Id == item.PortalId);
+            }
 
             data.ReturnUrl = Url.Action("Index", new { page, limit, key, ordertype, orderby });
             return View("IndexAjax", data);
@@ -92,8 +108,13 @@ namespace PT.BE.Areas.Manager.Controllers
 
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult Create(string language = "vi") =>
-            View(new BannerModel { Language = language });
+        public async Task<IActionResult> Create(string language = "vi")
+        {
+            var model = new BannerModel { Language = language };
+            var portals = await _portalRepository.SearchAsync(true, 0, 0);
+            model.PortalSelectList = new SelectList(portals, "Id", "Name");
+            return View(model);
+        }
 
         [HttpPost, ActionName("Create")]
         [AuthorizePermission("Index")]
@@ -121,13 +142,21 @@ namespace PT.BE.Areas.Manager.Controllers
                     ClassActive = model.ClassActive,
                     Code = model.Code
                 };
+                banner.PortalId = model.PortalId;
 
                 await _bannerRepository.AddAsync(banner);
                 await _bannerRepository.CommitAsync();
 
+                // Sinh nội dung và lưu vào trường Content để tái sử dụng
+                var content = await UpdateGroupBanner(banner);
+                banner.Content = content;
+                banner.PortalId = model.PortalId;
+                _bannerRepository.Update(banner);
+                await _bannerRepository.CommitAsync();
+
                 CommonFunctions.GenModule(
                     _hostingEnvironment.WebRootPath,
-                    await UpdateGroupBanner(banner),
+                    content,
                     ModuleType.AdvertisingBanner,
                     banner.Code,
                     banner.Language);
@@ -162,6 +191,8 @@ namespace PT.BE.Areas.Manager.Controllers
                 return View("404");
 
             var model = MapModel<BannerModel>.Go(banner);
+            var portals = await _portalRepository.SearchAsync(true, 0, 0);
+            model.PortalSelectList = new SelectList(portals, "Id", "Name");
             return View(model);
         }
 
@@ -190,13 +221,19 @@ namespace PT.BE.Areas.Manager.Controllers
                 banner.Language = model.Language;
                 banner.Template = model.Template;
                 banner.ClassActive = model.ClassActive;
+                banner.PortalId = model.PortalId;
 
+                _bannerRepository.Update(banner);
+                await _bannerRepository.CommitAsync();
+
+                var content = await UpdateGroupBanner(banner);
+                banner.Content = content;
                 _bannerRepository.Update(banner);
                 await _bannerRepository.CommitAsync();
 
                 CommonFunctions.GenModule(
                     _hostingEnvironment.WebRootPath,
-                    await UpdateGroupBanner(banner),
+                    content,
                     ModuleType.AdvertisingBanner,
                     banner.Code,
                     banner.Language);
@@ -277,12 +314,14 @@ namespace PT.BE.Areas.Manager.Controllers
                 _bannerItemRepository.Delete(item);
                 var parentBanner = await _bannerRepository.SingleOrDefaultAsync(true, x => x.Id == item.BannerId);
 
-                CommonFunctions.GenModule(
-                    _hostingEnvironment.WebRootPath,
-                    await UpdateGroupBanner(parentBanner),
-                    ModuleType.AdvertisingBanner,
-                    parentBanner.Code,
-                    parentBanner?.Language);
+                if (parentBanner != null)
+                {
+                    var content = await UpdateGroupBanner(parentBanner);
+                    parentBanner.Content = content;
+                    _bannerRepository.Update(parentBanner);
+                    await _bannerRepository.CommitAsync();
+                    CommonFunctions.TriggerCacheModuleClear(content, ModuleType.AdvertisingBanner, parentBanner.Code, parentBanner?.Language, parentBanner.PortalId);
+                }
 
                 await _bannerItemRepository.CommitAsync();
 
@@ -392,12 +431,14 @@ namespace PT.BE.Areas.Manager.Controllers
 
                 var parentBanner = await _bannerRepository.SingleOrDefaultAsync(true, x => x.Id == item.BannerId);
 
-                CommonFunctions.GenModule(
-                    _hostingEnvironment.WebRootPath,
-                    await UpdateGroupBanner(parentBanner),
-                    ModuleType.AdvertisingBanner,
-                    parentBanner.Code,
-                    parentBanner?.Language);
+                if (parentBanner != null)
+                {
+                    var content = await UpdateGroupBanner(parentBanner);
+                    parentBanner.Content = content;
+                    _bannerRepository.Update(parentBanner);
+                    await _bannerRepository.CommitAsync();
+                    CommonFunctions.TriggerCacheModuleClear(content, ModuleType.AdvertisingBanner, parentBanner.Code, parentBanner?.Language, parentBanner.PortalId);
+                }
 
                 await AddLog(new LogModel
                 {
@@ -544,7 +585,9 @@ namespace PT.BE.Areas.Manager.Controllers
                         .Replace(TokenName, item.Name));
                 }
             }
-            return (group.Template ?? string.Empty).Replace(TokenContent, sb.ToString());
+            var output = (group.Template ?? string.Empty).Replace(TokenContent, sb.ToString());
+            group.Content = output;
+            return output;
         }
 
         #region Response Helpers

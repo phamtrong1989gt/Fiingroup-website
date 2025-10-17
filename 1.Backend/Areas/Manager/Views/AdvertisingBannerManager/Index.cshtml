@@ -2,6 +2,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PT.UI
 @inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.BaseSettings> _baseSettings;
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     Layout = "~/Views/Shared/_Admin.cshtml";
@@ -62,6 +63,18 @@
                     <a search-menu class="searchExtension" title="Tìm kiếm nâng cao" aria-label="Tìm kiếm nâng cao">
                         <i class="material-icons">keyboard_arrow_down</i>
                     </a>
+                </div>
+                <div style="display:inline-block; margin-right:8px;">
+                    <select grid-input name="portalId" class="form-control input-sm form-control-t show-tick" onchange="getDataGrid(1)">
+                        <option value="">Tất cả portal</option>
+                        @if (ViewBag.PortalSelectList != null)
+                        {
+                            foreach (SelectListItem p in (IEnumerable<SelectListItem>)ViewBag.PortalSelectList)
+                            {
+                                <option value="@p.Value">@p.Text</option>
+                            }
+                        }
+                    </select>
                 </div>
                 <span class="input-group-addon btn-group-addon">
                     <button onclick="getDataGrid(1)" type="button" class="btn bg-indigo waves-effect btn-search" aria-label="Tìm kiếm">

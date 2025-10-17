@@ -6,7 +6,19 @@
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
+	  <MvcRazorCompileOnBuild>false</MvcRazorCompileOnBuild>
+	  <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
   </PropertyGroup>
+
+	<!--<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<MvcRazorCompileOnBuild>false</MvcRazorCompileOnBuild>
+		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<MvcRazorCompileOnBuild>true</MvcRazorCompileOnBuild>
+		<MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
+	</PropertyGroup>-->
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>True</Optimize>
@@ -15,6 +27,7 @@
   <ItemGroup>
     <Compile Remove="1223\**" />
     <Compile Remove="logs\**" />
+    <Compile Remove="Views\Shared\Plugins\**" />
     <Compile Remove="wwwroot\Content\Home\color\**" />
     <Compile Remove="wwwroot\Content\Home\form\**" />
     <Compile Remove="wwwroot\Content\Home\icons\**" />
@@ -25,6 +38,7 @@
     <Compile Remove="wwwroot\wp-json\**" />
     <Content Remove="1223\**" />
     <Content Remove="logs\**" />
+    <Content Remove="Views\Shared\Plugins\**" />
     <Content Remove="wwwroot\Content\Home\color\**" />
     <Content Remove="wwwroot\Content\Home\form\**" />
     <Content Remove="wwwroot\Content\Home\icons\**" />
@@ -35,6 +49,7 @@
     <Content Remove="wwwroot\wp-json\**" />
     <EmbeddedResource Remove="1223\**" />
     <EmbeddedResource Remove="logs\**" />
+    <EmbeddedResource Remove="Views\Shared\Plugins\**" />
     <EmbeddedResource Remove="wwwroot\Content\Home\color\**" />
     <EmbeddedResource Remove="wwwroot\Content\Home\form\**" />
     <EmbeddedResource Remove="wwwroot\Content\Home\icons\**" />
@@ -45,6 +60,7 @@
     <EmbeddedResource Remove="wwwroot\wp-json\**" />
     <None Remove="1223\**" />
     <None Remove="logs\**" />
+    <None Remove="Views\Shared\Plugins\**" />
     <None Remove="wwwroot\Content\Home\color\**" />
     <None Remove="wwwroot\Content\Home\form\**" />
     <None Remove="wwwroot\Content\Home\icons\**" />
@@ -181,12 +197,8 @@
     <None Include="Areas\User\Views\UserManager\IndexAjax.cshtml" />
     <None Include="Areas\User\Views\UserManager\TypeRole.cshtml" />
     <None Include="Views\Shared\404.cshtml" />
-    <None Include="Views\Shared\Error.cshtml" />
-    <None Include="Views\Shared\Plugins\_Coment.cshtml" />
-    <None Include="Views\Shared\Plugins\_Like.cshtml" />
     <None Include="Views\Shared\_Admin.cshtml" />
     <None Include="Views\Shared\_CookieConsentPartial.cshtml" />
-    <None Include="Views\Shared\_HomeHead.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_Login.cshtml" />
     <None Include="Views\Shared\_MenuAdmin.cshtml" />

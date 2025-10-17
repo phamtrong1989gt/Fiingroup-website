@@ -33,13 +33,7 @@
                             <input asp-for="Language" type="hidden" />
                             <div class="sumaryValidateForm" asp-validation-summary="All"></div>
                             <div class="row">
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label class="form-label" asp-for="Code"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Code"></span>
-                                        <div class="controls">
-                                            <input type="text" class="form-control input-sm form-control-t" asp-for="Code">
-                                        </div>
-                                    </div>
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
                                         <div class="controls">
@@ -47,7 +41,26 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-label" asp-for="Code"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Code"></span>
+                                        <div class="controls">
+                                            <input type="text" class="form-control input-sm form-control-t" asp-for="Code">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="form-label" asp-for="PortalId"></label> <strong class="text-danger">*</strong> <span asp-validation-for="PortalId"></span>
+                                        <div class="controls">
+                                            <select asp-for="PortalId" asp-items="Model.PortalSelectList" class="input-sm form-control-t show-tick">
+                                                <option value="">Chọn</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label class="form-label" asp-for="ClassActive"></label> <span asp-validation-for="ClassActive"></span>
                                         <div class="controls">

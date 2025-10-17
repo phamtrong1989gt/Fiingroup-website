@@ -22,21 +22,34 @@
     <div class="modal-body">
         <div class="divmodal">
             <div class="row">
-            
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label class="form-label" asp-for="Code"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Code"></span>
-                        <div class="controls">
-                            <input type="text" class="form-control input-sm form-control-t" asp-for="Code">
-                        </div>
-                    </div>
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
                         <div class="controls">
                             <input type="text" class="form-control input-sm form-control-t" asp-for="Name">
                         </div>
                     </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Code"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Code"></span>
+                        <div class="controls">
+                            <input type="text" class="form-control input-sm form-control-t" asp-for="Code">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="PortalId"></label> <strong class="text-danger">*</strong> <span asp-validation-for="PortalId"></span>
+                        <div class="controls">
+                            <select asp-for="PortalId" asp-items="ViewBag.PortalSelectList" class="input-sm form-control-t show-tick">
+                                <option value="">Chọn</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-md-2">
                     <div class="form-group">
                         <label class="form-label" asp-for="ClassActive"></label> <span asp-validation-for="ClassActive"></span>
                         <div class="controls">
@@ -44,12 +57,11 @@
                         </div>
                     </div>
                 </div>
-               
             </div>
             <div class="form-group">
                 <label class="form-label" asp-for="Template"></label> <span asp-validation-for="Template"></span>
                 <div class="controls">
-                    <textarea  class="form-control form-control-t" rows="3" asp-for="Template"></textarea>
+                    <textarea class="form-control form-control-t" rows="3" asp-for="Template"></textarea>
                 </div>
                 <div class="help-block">Sử dụng biểu mẫu <strong>[ClassActive] [I] [Note] [Url] [Target] [Name] [Img] [Alt] [For][/For] [ForPage][/ForPage]</strong></div>
             </div>

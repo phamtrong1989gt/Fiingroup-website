@@ -1,7 +1,9 @@
-﻿using PT.Domain.Seedwork;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PT.Domain.Seedwork;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace PT.Domain.Model
@@ -19,9 +21,13 @@ namespace PT.Domain.Model
         public string HasChildrentClass1 { get; set; }
         public string HasChildrentClass2 { get; set; }
         public string HasChildrentClass3 { get; set; }
+        public string Content { get; set; }
         public bool Status { get; set; }
         public bool Delete { get; set; }
         public string Language { get; set; }
+        public int PortalId { get; set; } = 0;
+        [NotMapped]
+        public Portal Portal { get; set; }
     }
     public class MenuModel
     {
@@ -52,5 +58,10 @@ namespace PT.Domain.Model
         public bool Status { get; set; }
         public bool Delete { get; set; }
         public string Language { get; set; }
+        [Display(Name = "Sử dụng dữ liệu này")]
+        [Required(ErrorMessage = "Cổng")]
+        public int PortalId { get; set; }
+
+        public SelectList PortalSelectList { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PT.Domain.Seedwork;
 
 namespace PT.Domain.Model
@@ -97,6 +98,8 @@ namespace PT.Domain.Model
 
         [Display(Name = "Sử dụng dữ liệu này")]
         [Required(ErrorMessage = "Cổng")]
-        public int PortalId { get; set; }   
+        public int PortalId { get; set; }
+
+        public SelectList PortalSelectList { get; set; }
     }
 }

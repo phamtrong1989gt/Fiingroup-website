@@ -1,28 +1,43 @@
 ﻿// -------------------
 // Lưu ý: Các phần chú thích dưới đây được viết bằng tiếng Việt để giúp bạn dễ hiểu hơn về chức năng của từng đoạn mã.
 // -------------------
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using System.Linq;
 using PT.Shared;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
-using System.Threading;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using PT.Base;
+using System.Threading;
+using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.BE.Areas.Manager.Controllers
 {
     /// <summary>
-    /// Controller quản lý slide ảnh (banner) trong khu vực Quản lý.
+    /// Controller quản lý Slide hình ảnh (PhotoSlide) trong khu vực Quản trị (Area = Manager).
+    /// 
+    /// Mô tả chung:
+    /// - Cung cấp các action để thực hiện CRUD cho nhóm banner (Banner) có kiểu Slide và
+    ///   quản lý các BannerItem (hình ảnh con).
+    /// - Hỗ trợ phân biệt dữ liệu theo `PortalId` (dùng cho multi-portal / multi-site).
+    /// - Sinh `Content` (HTML) từ template của Banner và các BannerItem, lưu vào trường `Banner.Content`
+    ///   để tái sử dụng (giảm chi phí sinh lại) và gọi clear cache / generate module khi thay đổi.
+    /// 
+    /// Lưu ý cho người bàn giao:
+    /// - Các action liên quan tới thay đổi items sẽ rebuild `Content` cho banner cha và lưu lại
+    ///   vào database, đồng thời gọi `CommonFunctions.TriggerCacheModuleClear` để cập nhật cache.
+    /// - Nếu mở rộng lên nhiều level hoặc cấu trúc template phức tạp hơn, hãy kiểm tra kỹ hàm
+    ///   `UpdateGroupBanner` và `LopUpdateGroupBanner` vì đây là nơi thực hiện thay token.
+    /// - Các repository được inject qua constructor: `IBannerRepository`, `IBannerItemRepository`, `IPortalRepository`.
     /// </summary>
     [Area("Manager")]
     public class PhotoSlideManagerController : Base.Controllers.BaseController
@@ -35,6 +50,8 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly IBannerRepository _iBannerRepository;
         // Repository quản lý item của banner
         private readonly IBannerItemRepository _iBannerItemRepository;
+        // Repository quản lý portal (dùng để phân biệt website)
+        private readonly IPortalRepository _iPortalRepository;
 
         /// <summary>
         /// Hàm khởi tạo controller PhotoSlideManagerController.
@@ -47,7 +64,8 @@ namespace PT.BE.Areas.Manager.Controllers
             ILogger<PhotoSlideManagerController> logger,
             IWebHostEnvironment iHostingEnvironment,
             IBannerRepository iBannerRepository,
-            IBannerItemRepository iBannerItemRepository
+            IBannerItemRepository iBannerItemRepository,
+            IPortalRepository iPortalRepository
         )
         {
             // Gán tên controller và bảng dữ liệu
@@ -58,15 +76,20 @@ namespace PT.BE.Areas.Manager.Controllers
             _iHostingEnvironment = iHostingEnvironment;
             _iBannerRepository = iBannerRepository;
             _iBannerItemRepository = iBannerItemRepository;
+            _iPortalRepository = iPortalRepository;
         }
+
 
         #region [Index]
         /// <summary>
         /// Hiển thị giao diện quản lý slide ảnh.
         /// </summary>
         [AuthorizePermission]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            // Lấy danh sách portal để hiển thị bộ lọc portal trên giao diện quản trị
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            ViewBag.PortalSelectList = new SelectList(portals, "Id", "Name");
             // Trả về view mặc định cho quản lý slide ảnh
             return View();
         }
@@ -85,7 +108,7 @@ namespace PT.BE.Areas.Manager.Controllers
         /// <param name="orderby">Trường sắp xếp.</param>
         [HttpPost, ActionName("Index")]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> IndexPost(int? id, int? page, int? limit, string code, string key, bool? status, string language = "vi", string ordertype = "asc", string orderby = "name")
+        public async Task<IActionResult> IndexPost(int? id, int? page, int? limit, string code, string key, bool? status, string language = "vi", string ordertype = "asc", string orderby = "name", int? portalId = null)
         {
             // Kiểm tra tham số phân trang, nếu sai thì gán giá trị mặc định
             page = page < 0 ? 1 : page;
@@ -96,12 +119,20 @@ namespace PT.BE.Areas.Manager.Controllers
                 limit ?? 10,
                     m => (m.Name.Contains(key) || key == null) &&
                         (m.Language == language) &&
+                        (m.PortalId == portalId || portalId == null) &&
                         (m.Status == status || status == null) &&
                         (m.Code == code || code == null) &&
                         m.Type == BannerType.Slide &&
                         !m.Delete
                         && (m.Id==id || id==null),
                 OrderByExtention(ordertype, orderby));
+            // Gắn portal entity cho từng banner trả về để hiển thị tên portal trên UI
+            var portals = await _iPortalRepository.SearchAsync(true);
+            foreach (var item in data.Data)
+            {
+                item.Portal = portals.FirstOrDefault(x => x.Id == item.PortalId);
+            }
+            data.ReturnUrl = Url.Action("Index", new { page, limit, key, ordertype, orderby });
             // Trả về view ajax với dữ liệu đã lọc
             return View("IndexAjax", data);
         }
@@ -145,6 +176,11 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 Language = language
             };
+            // Gắn danh sách portal để người quản trị chọn (nếu hệ thống có nhiều portal)
+            // Lưu ý: ở đây dùng .Result vì action GET, nhưng nếu muốn tránh block thread có thể
+            // chuyển sang async/await hoàn toàn. View sẽ lấy SelectList từ ViewBag.
+            var portals = _iPortalRepository.SearchAsync(true,0,0).Result;
+            ViewBag.PortalSelectList = new SelectList(portals, "Id", "Name");
             // Trả về view tạo mới banner
             return View(dl);
         }
@@ -178,14 +214,18 @@ namespace PT.BE.Areas.Manager.Controllers
                         Template = use.Template,
                         Type = BannerType.Slide,
                         ClassActive = use.ClassActive,
-                        Code = use.Code
+                        Code = use.Code,
+                        PortalId = use.PortalId
                     };
                     // Thêm banner vào database
                     await _iBannerRepository.AddAsync(data);
                     await _iBannerRepository.CommitAsync();
-
                     // Tạo module cho banner mới
-                    CommonFunctions.GenModule(_iHostingEnvironment.WebRootPath, await UpdateGroupBanner(data), ModuleType.PhotoSlide, data.Code,data.Language);
+                    var content = await UpdateGroupBanner(data);
+                    data.Content = content;
+                    _iBannerRepository.Update(data);
+                    await _iBannerRepository.CommitAsync();
+                    CommonFunctions.TriggerCacheModuleClear(content, ModuleType.PhotoSlide, data.Code,data.Language, data.PortalId);
 
                     // Ghi log thao tác thêm mới
                     await AddLog(new LogModel
@@ -230,6 +270,9 @@ namespace PT.BE.Areas.Manager.Controllers
             }
             // Map dữ liệu sang model để hiển thị lên view
             var model = MapModel<BannerModel>.Go(dl);
+            // Đưa danh sách portal vào ViewBag để view select danh sách portal
+            var portals = await _iPortalRepository.SearchAsync(true,0,0);
+            ViewBag.PortalSelectList = new SelectList(portals, "Id", "Name");
             return View(model);
         }
 
@@ -266,13 +309,18 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Template = use.Template;
                     dl.Code = use.Code;
                     dl.ClassActive = use.ClassActive;
+                    dl.PortalId = use.PortalId;
 
                     // Lưu thay đổi vào database
                     _iBannerRepository.Update(dl);
                     await _iBannerRepository.CommitAsync();
 
                     // Cập nhật module cho banner
-                    CommonFunctions.GenModule(_iHostingEnvironment.WebRootPath, await UpdateGroupBanner(dl), ModuleType.PhotoSlide, dl.Code,dl.Language);
+                    var content = await UpdateGroupBanner(dl);
+                    dl.Content = content;
+                    _iBannerRepository.Update(dl);
+                    await _iBannerRepository.CommitAsync();
+                    CommonFunctions.TriggerCacheModuleClear(content, ModuleType.PhotoSlide, dl.Code,dl.Language, dl.PortalId);
 
                     // Ghi log thao tác cập nhật
                     await AddLog(new LogModel
@@ -320,10 +368,14 @@ namespace PT.BE.Areas.Manager.Controllers
                 kt.Delete = true;
 
                 // Cập nhật lại group banner
-                await UpdateGroupBanner(kt);
+                var contentDelete = await UpdateGroupBanner(kt);
+                kt.Content = contentDelete;
+                _iBannerRepository.Update(kt);
 
                 // Lưu thay đổi vào database
                 await _iBannerRepository.CommitAsync();
+
+                CommonFunctions.TriggerCacheModuleClear(null, ModuleType.PhotoSlide, kt.Code, kt.Language, kt.PortalId);
 
                 // Ghi log thao tác xóa
                 await AddLog(new LogModel
@@ -369,12 +421,15 @@ namespace PT.BE.Areas.Manager.Controllers
                 _iBannerItemRepository.Delete(kt);
                 // Lấy thông tin banner cha để cập nhật lại module
                 var dataParrent = await _iBannerRepository.SingleOrDefaultAsync(true, x => x.Id == kt.BannerId);
-                CommonFunctions.GenModule(_iHostingEnvironment.WebRootPath, await UpdateGroupBanner(dataParrent), ModuleType.PhotoSlide, dataParrent.Code, dataParrent?.Language);
+                if(dataParrent != null)
+                {
+                    var content = await UpdateGroupBanner(dataParrent);
+                    dataParrent.Content = content;
+                    _iBannerRepository.Update(dataParrent);
+                    CommonFunctions.TriggerCacheModuleClear(null, ModuleType.PhotoSlide, dataParrent.Code, dataParrent.Language, dataParrent.PortalId);
+                    await _iBannerRepository.CommitAsync();
+                }
                 await _iBannerItemRepository.CommitAsync();
-
-                // Cập nhật lại group banner
-                await UpdateGroupBanner(await _iBannerRepository.SingleOrDefaultAsync(true,x=>x.Id==kt.BannerId));
-
                 // Ghi log thao tác xóa
                 await AddLog(new LogModel
                 {
@@ -531,7 +586,6 @@ namespace PT.BE.Areas.Manager.Controllers
                         Template = use.Template,
                         Target = use.Target,
                         Content = use.Content
-
                     };
                     // Thêm item vào database
                     await _iBannerItemRepository.AddAsync(data);
@@ -539,9 +593,15 @@ namespace PT.BE.Areas.Manager.Controllers
 
                     // Lấy thông tin banner cha để cập nhật lại module
                     var dataParrent = await _iBannerRepository.SingleOrDefaultAsync(true, x => x.Id == data.BannerId);
-
-                    CommonFunctions.GenModule(_iHostingEnvironment.WebRootPath, await UpdateGroupBanner(dataParrent), ModuleType.PhotoSlide, dataParrent.Code, dataParrent?.Language);
-
+                    if(dataParrent != null)
+                    {
+                        var content = await UpdateGroupBanner(dataParrent);
+                        dataParrent.Content = content;
+                        _iBannerRepository.Update(dataParrent);
+                        await _iBannerRepository.CommitAsync();
+                        CommonFunctions.TriggerCacheModuleClear(content, ModuleType.PhotoSlide, dataParrent.Code, dataParrent.Language, dataParrent.PortalId);
+                    }    
+                  
                     // Ghi log thao tác thêm mới
                     await AddLog(new LogModel
                     {
@@ -619,10 +679,17 @@ namespace PT.BE.Areas.Manager.Controllers
                     // Lưu thay đổi vào database
                     _iBannerItemRepository.Update(dl);
                     await _iBannerItemRepository.CommitAsync();
-
+                    // Lấy thông tin banner cha để cập nhật lại module
                     // Lấy thông tin banner cha để cập nhật lại module
                     var dataParrent = await _iBannerRepository.SingleOrDefaultAsync(true, x => x.Id == dl.BannerId);
-                    CommonFunctions.GenModule(_iHostingEnvironment.WebRootPath, await UpdateGroupBanner(dataParrent), ModuleType.PhotoSlide, dataParrent.Code, dataParrent?.Language);
+                    if (dataParrent != null)
+                    {
+                        var content = await UpdateGroupBanner(dataParrent);
+                        dataParrent.Content = content;
+                        _iBannerRepository.Update(dataParrent);
+                        await _iBannerRepository.CommitAsync();
+                        CommonFunctions.TriggerCacheModuleClear(content, ModuleType.PhotoSlide, dataParrent.Code, dataParrent.Language, dataParrent.PortalId);
+                    }
 
                     // Ghi log thao tác cập nhật
                     await AddLog(new LogModel
@@ -721,7 +788,10 @@ namespace PT.BE.Areas.Manager.Controllers
             // Lấy danh sách item đang sử dụng của banner
             var list = (await _iBannerItemRepository.SearchAsync(true, 0, 0, m => m.BannerId == dlGroup.Id && m.Status == true)).OrderBy(m => m.Order).ToList();
             // Áp dụng template lên danh sách item
-            return LopUpdateGroupBanner(list,dlGroup);
+            var output = LopUpdateGroupBanner(list,dlGroup);
+            // Lưu nội dung đã sinh vào trường Content để dùng lại (tiết kiệm thao tác sinh lại)
+            dlGroup.Content = output;
+            return output;
         }
 
         /// <summary>

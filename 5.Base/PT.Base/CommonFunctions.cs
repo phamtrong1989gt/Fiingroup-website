@@ -64,6 +64,13 @@ namespace PT.Base
             return newKyTu;
         }
 
+        public static void TriggerCacheModuleClear(string data, ModuleType type, string code, string language, int portalId)
+        {
+            // Call API đến FE để FE Lấy Cache Mới
+            string cacheKey = $"{type}_{code}_{language}_{portalId}";
+            return;
+        }
+
         public static void GenModule(string map, string data, ModuleType type, string code, string language)
         {
             string cacheKey = $"{type}_{code}"; // Tạo khóa cache duy nhất

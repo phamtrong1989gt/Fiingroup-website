@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using System.Linq;
 using PT.Shared;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
-using PT.Base;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.BE.Areas.Manager.Controllers
 {
@@ -67,8 +68,10 @@ namespace PT.BE.Areas.Manager.Controllers
         /// </summary>
         /// <param name="language">Ngôn ngữ hiển thị (mặc định: "vi")</param>
         [AuthorizePermission]
-        public IActionResult Index(string language = "vi")
+        public async Task<IActionResult> Index(string language = "vi")
         {
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
             return View();
         }
 
@@ -138,7 +141,7 @@ namespace PT.BE.Areas.Manager.Controllers
         /// <param name="parrentId">Id cha (nếu có)</param>
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult Create(string language = "vi", int parrentId = 0)
+        public async Task<IActionResult> Create(string language = "vi", int parrentId = 0)
         {
             // StaticInformationModel: Model dùng để tạo mới thông tin tĩnh
             // Các thuộc tính:
@@ -153,6 +156,8 @@ namespace PT.BE.Areas.Manager.Controllers
                 Language = language
             };
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            dl.PortalSelectList = new SelectList(portals, "Id", "Name");
             return View(dl);
         }
 
@@ -170,7 +175,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 if (ModelState.IsValid)
                 {
                     // Kiểm tra mã đã tồn tại chưa
-                    var checkCode = await _iStaticInformationRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && !m.Delete && m.PortalId != use.PortalId);
+                    var checkCode = await _iStaticInformationRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && !m.Delete && m.PortalId != use.PortalId && m.Language != use.Language);
                     if (checkCode != null)
                     {
                         return CreateResponse(0, "Mã đã tồn tại, vui lòng kiểm tra lại.", ResponseTypeMessage.Warning);
@@ -196,7 +201,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     };
                     await _iStaticInformationRepository.AddAsync(data);
                     await _iStaticInformationRepository.CommitAsync();
-                    CommonFunctions.GenModule(_iHostingEnvironment.WebRootPath, data.Content, ModuleType.StaticInformation, data.Code, data.Language);
+                    CommonFunctions.TriggerCacheModuleClear(data.Content, ModuleType.StaticInformation, data.Code, data.Language, data.PortalId);
                     await AddLog(new LogModel
                     {
                         ObjectId = data.Id,
@@ -232,6 +237,8 @@ namespace PT.BE.Areas.Manager.Controllers
                 return View("404");
             }
             var model = MapModel<StaticInformationModel>.Go(dl);
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            model.PortalSelectList = new SelectList(portals, "Id", "Name");
             return View(model);
         }
 
@@ -252,7 +259,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 if (ModelState.IsValid)
                 {
                     // Kiểm tra mã đã tồn tại chưa (trừ chính bản ghi đang sửa)
-                    var checkCode = await _iStaticInformationRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && m.Id != id && !m.Delete && m.PortalId != use.PortalId);
+                    var checkCode = await _iStaticInformationRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && m.Id != id && !m.Delete && m.PortalId != use.PortalId && m.Language != use.Language);
                     if (checkCode != null)
                     {
                         return CreateResponse(0, "Mã đã tồn tại, vui lòng kiểm tra lại.", ResponseTypeMessage.Warning);
@@ -274,7 +281,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     _iStaticInformationRepository.Update(dl);
                     await _iStaticInformationRepository.CommitAsync();
 
-                    CommonFunctions.GenModule(_iHostingEnvironment.WebRootPath, dl.Content, ModuleType.StaticInformation, dl.Code, dl.Language);
+                    CommonFunctions.TriggerCacheModuleClear(dl.Content, ModuleType.StaticInformation, dl.Code, dl.Language, dl.PortalId);
 
                     await AddLog(new LogModel
                     {
@@ -312,9 +319,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 {
                     return CreateResponse(0, "thông tin tĩnh không tồn tại, vui lòng thử lại.", ResponseTypeMessage.Warning, true);
                 }
-
-                CommonFunctions.GenModule(_iHostingEnvironment.WebRootPath, "", ModuleType.StaticInformation, kt.Code, kt.Language);
-
+                CommonFunctions.TriggerCacheModuleClear(null, ModuleType.StaticInformation, kt.Code, kt.Language, kt.PortalId);
                 kt.Delete = true;
                 await _iStaticInformationRepository.CommitAsync();
 
