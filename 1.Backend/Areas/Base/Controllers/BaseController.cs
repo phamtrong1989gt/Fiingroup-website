@@ -194,15 +194,14 @@ namespace PT.BE.Areas.Base.Controllers
         /// <param name="controller">Controller</param>
         /// <param name="action">Action</param>
         /// <returns>Id liên kết SEO vừa thêm</returns>
-        public async Task<int> AddSeoLink(CategoryType type, string language, int id, SeoModel model, string name, string area, string controller, string action)
+        public async Task<int> AddSeoLink(CategoryType type, string language, int id, SeoModel model, string name, string area, string controller, string action, int portalId = 1)
         {
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
             var _iLinkReferenceRepository = (ILinkReferenceRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkReferenceRepository));
             var baseSettings = (IOptions<BaseSettings>)AppHttpContext.Current.RequestServices.GetService(typeof(IOptions<BaseSettings>));
-
             if (id > 0)
             {
-                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == model.Slug && x.ObjectId != id && x.Language == language);
+                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == model.Slug && x.ObjectId != id && x.Language == language && x.PortalId == portalId);
                 if (ktLug)
                 {
                     model.Slug = $"{model.Slug}-{DateTime.Now:yyyyMMddHHmmss}";
@@ -210,7 +209,7 @@ namespace PT.BE.Areas.Base.Controllers
             }
             else
             {
-                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == model.Slug && x.Language == language);
+                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == model.Slug && x.Language == language && x.PortalId == portalId);
                 if (ktLug)
                 {
                     model.Slug = $"{model.Slug}-{DateTime.Now:yyyyMMddHHmmss}";
@@ -244,7 +243,8 @@ namespace PT.BE.Areas.Base.Controllers
                 Status = model.Status,
                 Area = area,
                 Controller = controller,
-                Acction = action
+                Acction = action,
+                PortalId = portalId
             };
             await _iLinkRepository.AddAsync(dlLug);
             await _iLinkRepository.CommitAsync();
@@ -316,7 +316,8 @@ namespace PT.BE.Areas.Base.Controllers
                     Status = model.Status,
                     Area = area,
                     Controller = controller,
-                    Acction = action
+                    Acction = action,
+                    PortalId = model.PortalId ?? 0
                 };
                 await _iLinkRepository.AddAsync(ktLink);
                 await _iLinkRepository.CommitAsync();

@@ -16,6 +16,11 @@ namespace PT.Base
             return $"<vc:view-module id=\"{id}\" type=\"{type.ToString()}\"></vc:view-module>";
         }
 
+        public static string GetStringModule(ModuleType type, string code, string language, int portalId)
+        {
+            return $"<vc:view-module code=\"{code}\" type=\"{type.ToString()}\" language=\"{language}\" portalId=\"{portalId}\"></vc:view-module>";
+        }
+
         public static string GetStringModule(ModuleType type, string code)
         {
             return $"<vc:view-module code=\"{code}\" type=\"{type.ToString()}\"></vc:view-module>";

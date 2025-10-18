@@ -25,11 +25,11 @@
         <td class="text-center">@PT.Shared.Functions.GenSTT(i, Model.Page, Model.Limit)</td>
         <td><span class="text-primary text-name">@item.Name</span></td>
         <td>@item.Code</td>
-    <td>@item.Portal?.Name</td>
+        <td>@item.Portal?.Name</td>
         <td>
             <div class="btn-group">
                 <div class="btn-group btn- group-sm" role="group">
-                    <a onclick="onCopyClipboard('@PT.Base.CommonFunctions.GetStringModule(PT.Domain.Model.ModuleType.AdvertisingBanner,item.Code)')" title="Lấy link" class="btn bg-blue waves-effect btncontrolgrid"><i class="material-icons iconcontrol">link</i></a>
+                    <a onclick="onCopyClipboard('@PT.Base.CommonFunctions.GetStringModule(PT.Domain.Model.ModuleType.AdvertisingBanner,item.Code,item.Language,item.PortalId)')" title="Lấy link" class="btn bg-blue waves-effect btncontrolgrid"><i class="material-icons iconcontrol">link</i></a>
                     <a button-popup data-open-edit data-target="#myModalBig" asp-action="Edit" asp-route-id="@item.Id" title="Cập nhật" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
                 </div>
             </div>

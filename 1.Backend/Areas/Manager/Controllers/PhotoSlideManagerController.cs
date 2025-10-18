@@ -198,7 +198,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 if (ModelState.IsValid)
                 {
                     // Kiểm tra mã banner đã tồn tại chưa
-                    var checkCode = await _iBannerRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && m.Type == BannerType.Slide);
+                    var checkCode = await _iBannerRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && m.Type == BannerType.Slide && m.Language == use.Language && m.PortalId == use.PortalId);
                     if (checkCode != null)
                     {
                         // Nếu mã đã tồn tại thì trả về cảnh báo
@@ -296,9 +296,11 @@ namespace PT.BE.Areas.Manager.Controllers
                     {
                         return new ResponseModel() { Output = 0, Message = "Dữ liệu không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                     }
-                    // Kiểm tra mã đã tồn tại ở banner khác chưa
-                    var checkCode = await _iBannerRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && m.Type == BannerType.Slide && m.Id != id);
-                    if (checkCode != null) {
+                    // Kiểm tra mã banner đã tồn tại chưa
+                    var checkCode = await _iBannerRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && m.Type == BannerType.Slide && m.Language == use.Language && m.PortalId == use.PortalId && m.Id != id);
+                    if (checkCode != null)
+                    {
+                        // Nếu mã đã tồn tại thì trả về cảnh báo
                         return new ResponseModel() { Output = 0, Message = "Mã slide ảnh đã tồn tại, vui lòng chọn mã khác.", Type = ResponseTypeMessage.Warning };
                     }
 

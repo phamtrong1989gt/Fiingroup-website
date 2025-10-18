@@ -27,7 +27,7 @@
     <td>
         <div class="btn-group">
             <div class="btn-group btn- group-sm" role="group">
-                <a onclick="onCopyClipboard('@PT.Base.CommonFunctions.GetStringModule(PT.Domain.Model.ModuleType.Menu,item.Code)')" title="Lấy link" class="btn bg-blue waves-effect btncontrolgrid"><i class="material-icons iconcontrol">link</i></a>
+                    <a onclick="onCopyClipboard('@PT.Base.CommonFunctions.GetStringModule(PT.Domain.Model.ModuleType.Menu, item.Code, item.Language, item.PortalId)')" title="Lấy link" class="btn bg-blue waves-effect btncontrolgrid"><i class="material-icons iconcontrol">link</i></a>
                 <a button-popup data-open-edit data-target="#myModalBig" asp-action="Edit" asp-route-id="@item.Id" title="Cập nhật" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
             </div>
         </div>

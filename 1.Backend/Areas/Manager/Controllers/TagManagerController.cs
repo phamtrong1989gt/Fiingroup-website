@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PT.Base;
@@ -8,6 +9,7 @@ using PT.Infrastructure.Interfaces;
 using PT.Infrastructure.Repositories;
 using PT.Shared;
 using System;
+using System.ClientModel.Primitives;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -24,13 +26,14 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly ITagRepository _tagRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IFileRepository _fileRepository;
-
+        private readonly IPortalRepository _iPortalRepository;
         public TagManagerController(
             ILogger<TagManagerController> logger,
             IOptions<BaseSettings> baseSettings,
             ILinkRepository linkRepository,
             ITagRepository tagRepository,
             IWebHostEnvironment webHostEnvironment,
+            IPortalRepository iPortalRepository,
             IFileRepository fileRepository)
         {
             controllerName = "TagManager";
@@ -41,6 +44,7 @@ namespace PT.BE.Areas.Manager.Controllers
             _tagRepository = tagRepository;
             _webHostEnvironment = webHostEnvironment;
             _fileRepository = fileRepository;
+            _iPortalRepository = iPortalRepository;
         }
 
         #region [Index]
@@ -57,6 +61,7 @@ namespace PT.BE.Areas.Manager.Controllers
             int? limit,
             string key,
             bool? status,
+            int? portalId,
             string language = "vi",
             string ordertype = "asc",
             string orderby = "name")
@@ -70,10 +75,15 @@ namespace PT.BE.Areas.Manager.Controllers
                 m => (string.IsNullOrEmpty(key) || m.Name.Contains(key))
                     && m.Language == language
                     && (m.Status == status || status == null)
+                    && (m.PortalId == portalId || portalId == null)
                     && !m.Delete,
                 OrderByExtension(ordertype, orderby));
 
-            data.ReturnUrl = Url.Action("Index", new { page, limit, key, status, ordertype, orderby });
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            foreach (var item in data.Data)
+            {
+                item.Portal = portals.FirstOrDefault(p => p.Id == item.PortalId);
+            }
             return View("IndexAjax", data);
         }
 
@@ -94,7 +104,7 @@ namespace PT.BE.Areas.Manager.Controllers
         #region [Create]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult Create(string language = "vi")
+        public async Task<IActionResult> Create(string language = "vi")
         {
             var model = new TagModel
             {
@@ -102,6 +112,8 @@ namespace PT.BE.Areas.Manager.Controllers
                 Type = CategoryType.Tag
             };
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            model.PortalSelectList = new SelectList(portals, "Id", "Name");
             return View(model);
         }
 
@@ -113,6 +125,23 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    // Kiểm tra trùng tên tag (Create)
+                    var normalizedName = (model.Name ?? string.Empty).Trim().ToLowerInvariant();
+                    var portalIdToCheck = model.PortalId ?? 0;
+                    var exists = await _tagRepository.AnyAsync(t =>
+                        !t.Delete
+                        && t.PortalId == portalIdToCheck
+                        && t.Name != null
+                        && t.Name.ToLower() == normalizedName);
+                    if (exists)
+                    {
+                        return new ResponseModel
+                        {
+                            Output = 0,
+                            Message = "Tên tag đã tồn tại, vui lòng chọn tên khác.",
+                            Type = ResponseTypeMessage.Warning
+                        };
+                    }
                     await _tagRepository.BeginTransaction();
                     var tag = new Tag
                     {
@@ -121,12 +150,13 @@ namespace PT.BE.Areas.Manager.Controllers
                         Banner = model.Banner,
                         Content = model.Content,
                         Status = model.Status,
-                        Language = model.Language
+                        Language = model.Language,
+                        PortalId = model.PortalId ?? 0
                     };
                     await _tagRepository.AddAsync(tag);
                     await _tagRepository.CommitAsync();
 
-                    await AddSeoLink(CategoryType.Tag, tag.Language, tag.Id, MapModel<SeoModel>.Go(model), tag.Name, "", "TagHome", "Details");
+                    await AddSeoLink(CategoryType.Tag, tag.Language, tag.Id, MapModel<SeoModel>.Go(model), tag.Name, "", "TagHome", "Details", tag.PortalId);
                     await UpdateFileData(tag.Id, CategoryType.Tag, altId);
                     await AddLog(new LogModel
                     {
@@ -147,7 +177,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 return new ResponseModel
                 {
                     Output = 0,
-                    Message = "Bạn chưa nhập đầy đủ thông tin",
+                    Message = string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList()),
                     Type = ResponseTypeMessage.Warning
                 };
             }
@@ -198,6 +228,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 model.LinkId = link.Id;
                 model.Slug = link.Slug;
                 model.Type = link.Type;
+                model.PortalId = link.PortalId;
             }
             return View(model);
         }
@@ -210,6 +241,26 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    // Kiểm tra trùng tên tag (Edit) - exclude bản ghi hiện tại
+                    var normalizedName = (model.Name ?? string.Empty).Trim().ToLowerInvariant();
+                    var portalIdToCheck = model.PortalId ?? 0;
+                    var exists = await _tagRepository.AnyAsync(t =>
+                        !t.Delete
+                        && t.PortalId == portalIdToCheck
+                        && t.Id != id
+                        && t.Name != null
+                        && t.Name.ToLower() == normalizedName);
+
+                    if (exists)
+                    {
+                        return new ResponseModel
+                        {
+                            Output = 0,
+                            Message = "Tên tag đã tồn tại trên cổng này, vui lòng chọn tên khác.",
+                            Type = ResponseTypeMessage.Warning
+                        };
+                    }
+
                     await _tagRepository.BeginTransaction();  
                     var tag = await _tagRepository.SingleOrDefaultAsync(false, m => m.Id == id);
                     if (tag == null || tag.Delete)
@@ -225,6 +276,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     tag.Status = model.Status;
                     tag.Banner = model.Banner;
                     tag.Content = model.Content;
+                    tag.PortalId = model.PortalId ?? 0;
                     _tagRepository.Update(tag);
                     await _tagRepository.CommitAsync();
 

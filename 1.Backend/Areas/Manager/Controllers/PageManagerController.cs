@@ -29,6 +29,7 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly IContentPageTagRepository _iContentPageTagRepository;
         private readonly IWebHostEnvironment _iWebHostEnvironment;
         private readonly IFileRepository _iFileRepository;
+        private readonly IPortalRepository _iPortalRepository;
 
         public PageManagerController(
             ILogger<PageManagerController> logger,
@@ -38,7 +39,8 @@ namespace PT.BE.Areas.Manager.Controllers
             ITagRepository iTagRepository,
             IContentPageTagRepository iContentPageTagRepository,
             IWebHostEnvironment iWebHostEnvironment,
-            IFileRepository iFileRepository
+            IFileRepository iFileRepository,
+            IPortalRepository iPortalRepository
         )
         {
             controllerName = "PageManager";
@@ -51,6 +53,7 @@ namespace PT.BE.Areas.Manager.Controllers
             _iContentPageTagRepository = iContentPageTagRepository;
             _iWebHostEnvironment = iWebHostEnvironment;
             _iFileRepository = iFileRepository;
+            _iPortalRepository = iPortalRepository;
         }
 
         #region [Index]
@@ -135,6 +138,12 @@ namespace PT.BE.Areas.Manager.Controllers
             };
             dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
+            // Lấy danh sách portal để hiển thị trong dropdown trên trang quản lý
+            // Tham số: true = only active, 0,0 = không phân trang
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
+            ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
+            // Trả về view chính. Dữ liệu bảng sẽ được nạp bằng Ajax gọi IndexPost
             return View(dl);
         }
 

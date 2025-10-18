@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
+using PT.Infrastructure.Repositories;
 using PT.Shared;
 using System;
 using System.Collections.Generic;
@@ -182,6 +183,11 @@ namespace PT.BE.Areas.Manager.Controllers
                         // Trả về warning cho UI để người dùng đổi mã khác
                         return new ResponseModel() { Output = 0, Message = "Mã menu đã tồn tại, vui lòng chọn mã khác.", Type = ResponseTypeMessage.Warning };
                     }
+                    var exists = await _iMenuRepository.SingleOrDefaultAsync(
+                        false, m => m.Code == use.Code && m.Language == use.Language && m.PortalId == use.PortalId && !m.Delete);
+
+                    if (exists != null)
+                        return ResponseHepper.Warning("Mã Banner đã tồn tại, vui lòng kiểm tra lại.");
 
                     // Tạo entity Menu từ model nhận vào. Lưu ý: chưa gán Content (nội dung HTML)
                     // Content sẽ được sinh dựa trên template và menu item hiện có (thường rỗng khi mới tạo)
@@ -280,11 +286,11 @@ namespace PT.BE.Areas.Manager.Controllers
                     }
 
                     // Kiểm tra trùng code trên các record khác
-                    var ktCode = await _iMenuRepository.SingleOrDefaultAsync(true, m => m.Code == use.Code && m.Id != dl.Id);
-                    if (ktCode != null)
-                    {
-                        return new ResponseModel() { Output = 0, Message = "Mã menu đã tồn tại, vui lòng chọn mã khác.", Type = ResponseTypeMessage.Warning };
-                    }
+                    var exists = await _iMenuRepository.SingleOrDefaultAsync(
+                            false, m => m.Code == use.Code && m.Language == use.Language && m.PortalId == use.PortalId && !m.Delete && m.Id != id);
+
+                    if (exists != null)
+                        return ResponseHepper.Warning("Mã Banner đã tồn tại, vui lòng kiểm tra lại.");
 
                     // Gán lại các trường từ model vào entity
                     dl.Name = use.Name;

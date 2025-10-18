@@ -44,16 +44,6 @@
                     {
                         Model.ReferenceLinkIdEN = 0;
                     }
-
-                    // if (objectIt != null && Model.Language != "it")
-                    // {
-                    //     selectListLinkIt.Add(new SelectListItem { Value = objectIt.Id.ToString(), Text = objectIt.Name, Selected = true });
-                    //     Model.ReferenceLinkIdIT = objectIt.Id;
-                    // }
-                    // else
-                    // {
-                    //     Model.ReferenceLinkIdIT = 0;
-                    // }
                 }
                 <table class="table  table-bordered table-t" style="border: 1px solid #ddd;">
                     <thead>
@@ -98,42 +88,6 @@
                                 </td>
                             </tr>
                         }
-
-                        @if (Model.Language != "en")
-                        {
-                            <tr>
-                                <td>Phiên bản Tiếng Anh</td>
-                                <td>
-                                    <select data-size="5" data-live-search="true" asp-items="@selectListLinkEn" data-action="@Url.Action("SearchLink", "Functions", new { area = "Base" })" asp-for="ReferenceLinkIdEN" class="input-sm form-control-t show-tick  with-ajax">
-                                        <option selected value="0">Chọn bài viết phiên bản Tiếng Anh </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="form-group" style="margin-top:10px;">
-                                        <input type="checkbox" asp-for="IsAutoEn" class="filled-in chk-col-green" />
-                                        <label for="IsAutoEn" asp-for="IsAutoEn"></label>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-
-                   @*      @if (Model.Language != "it")
-                        {
-                            <tr>
-                                <td>Phiên bản Tiếng Anh</td>
-                                <td>
-                                    <select data-size="5" data-live-search="true" asp-items="@selectListLinkIt" data-action="@Url.Action("SearchLink", "Functions", new { area = "Base" })" asp-for="ReferenceLinkIdIT" class="input-sm form-control-t show-tick  with-ajax">
-                                        <option selected value="0">Chọn bài viết phiên bản Tiếng Ý </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="form-group" style="margin-top:10px;">
-                                        <input type="checkbox" asp-for="IsAutoIt" class="filled-in chk-col-green" />
-                                        <label for="IsAutoIt" asp-for="IsAutoIt"></label>
-                                    </div>
-                                </td>
-                            </tr>
-                        } *@
                     </tbody>
                 </table>
                 <span class="note-info">Chú ý: Khi chọn tự động ánh xạ với ngôn ngữ tương ứng thì các trang sẽ được tự động ánh xạ qua lại với nhau, dẫn đến ta không cần phải vào trang ngôn ngữ khác để chọn lại, checkbox này chỉ có tác dụng là xác nhận hành động không phải là giá trị cấu hình lưu trữ.</span>
