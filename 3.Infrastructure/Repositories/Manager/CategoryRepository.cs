@@ -224,7 +224,8 @@ namespace PT.Infrastructure.Repositories
                     Type = x.data.Type,
                     Summary = x.data.Summary,
                     Banner2 = x.data.Banner2,
-                    IsHome = x.data.IsHome
+                    IsHome = x.data.IsHome,
+                    PortalId = x.data.PortalId
                 }).AsQueryable();
 
             if (Take > 0)
@@ -304,7 +305,8 @@ namespace PT.Infrastructure.Repositories
                     Type = x.data.Type,
                     Summary = x.data.Summary,
                     Banner2 = x.data.Banner2,
-                    IsHome = x.data.IsHome
+                    IsHome = x.data.IsHome,
+                    PortalId = x.data.PortalId
                 }).AsQueryable();
            
             if (asNoTracking)

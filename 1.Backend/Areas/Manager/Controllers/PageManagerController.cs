@@ -58,13 +58,15 @@ namespace PT.BE.Areas.Manager.Controllers
 
         #region [Index]
         [AuthorizePermission]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
             return View();
         }
         [HttpPost, ActionName("Index")]
         [AuthorizePermission]
-        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, string language ="vi", string ordertype = "asc", string orderby = "name")
+        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language ="vi", string ordertype = "asc", string orderby = "name")
         {
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
@@ -76,6 +78,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     m =>(m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key)) && 
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
+                        (m.PortalId== portalId || portalId == null) &&
                         m.Type==CategoryType.Page &&
                         !m.Delete,
                 OrderByExtention(ordertype, orderby), 
@@ -96,19 +99,14 @@ namespace PT.BE.Areas.Manager.Controllers
                     Tags = x.Tags,
                     Type = x.Type,
                     Link = x.Link,
-                    IsHome = x.IsHome
+                    IsHome = x.IsHome,
+                    PortalId = x.PortalId
                 });
-                data.ReturnUrl =  Url.Action("Index", 
-                    new {
-                        page,
-                        limit,
-                        key,
-                        categoryId,
-                        tagId,
-                        status,
-                        ordertype,
-                        orderby
-            });
+            var portals = await _iPortalRepository.SearchAsync(true);
+            foreach (var item in data.Data)
+            {
+                item.Portal = portals.FirstOrDefault(x => x.Id == item.PortalId);
+            }
             return View("IndexAjax", data);
         }
         private Func<IQueryable<ContentPage>, IOrderedQueryable<ContentPage>> OrderByExtention(string ordertype, string orderby)
@@ -142,7 +140,7 @@ namespace PT.BE.Areas.Manager.Controllers
             // Tham số: true = only active, 0,0 = không phân trang
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
-            ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
+            dl.PortalSelectList = new SelectList(portals, "Id", "Name");
             // Trả về view chính. Dữ liệu bảng sẽ được nạp bằng Ajax gọi IndexPost
             return View(dl);
         }
@@ -231,6 +229,11 @@ namespace PT.BE.Areas.Manager.Controllers
             var blogTagIds = (await _iContentPageTagRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x=>x.TagId).ToList();
             model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
             model.TagIds = blogTagIds;
+            model.PortalId = dl.PortalId;
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
+            model.PortalSelectList = new SelectList(portals, "Id", "Name");
+
             return View(model);
         }
         [HttpPost, ActionName("Edit")]

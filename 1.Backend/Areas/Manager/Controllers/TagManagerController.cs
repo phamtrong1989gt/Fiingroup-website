@@ -230,6 +230,9 @@ namespace PT.BE.Areas.Manager.Controllers
                 model.Type = link.Type;
                 model.PortalId = link.PortalId;
             }
+            model.PortalId = tag.PortalId;
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            model.PortalSelectList = new SelectList(portals, "Id", "Name");
             return View(model);
         }
 

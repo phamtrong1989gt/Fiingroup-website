@@ -22,7 +22,7 @@ namespace PT.Domain.Model
         [Display(Name = "Liên kết thân thiện/Permalink")]
         [Required(ErrorMessage = "{0} không được để rỗng")]
         [RegularExpression(@"^.*[a-z0-9-/]$", ErrorMessage = "{0} chỉ bao gồm ký tự (a-z), (0-9), (-,/)")]
-        [Remote("IsSlug", "Functions", "Base", ErrorMessage = "{0} đã tồn tại, vui lòng thay đổi hoặc thêm một số ký tự khác bao gồm (a-z), (0-9), (-,/)", AdditionalFields = "Id,Language")]
+        [Remote("IsSlug", "Functions", "Base", ErrorMessage = "{0} đã tồn tại, vui lòng thay đổi hoặc thêm một số ký tự khác bao gồm (a-z), (0-9), (-,/)", AdditionalFields = "Id,Language,PortalId")]
         public string Slug { get; set; }
         public double? Price { get; set; }
         public bool ChangeSlug { get; set; }

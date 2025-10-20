@@ -31,6 +31,7 @@ namespace PT.Domain.Model
         public DateTime DatePosted { get; set; }
         public bool Status { get; set; }
         public bool Delete { get; set; }
+        public int PortalId { get; set; } = 1;
         public double? Price { get; set; }
         [NotMapped]
         public  Link Link { get; set; }
@@ -51,6 +52,9 @@ namespace PT.Domain.Model
 
         [NotMapped]
         public List<LinkReference> LinkReferences { get; set; }
+
+        [NotMapped]
+        public Portal Portal { get; set; }
 
     }
     public class BlogModel :SeoModel
@@ -100,6 +104,7 @@ namespace PT.Domain.Model
         public string ReferenceString { get; set; }
 
         public string ContentPageReferenceIds { get; set; }
+        public SelectList PortalSelectList { get; set; }
     }
 
     public class ServiceModel:SeoModel
@@ -149,6 +154,7 @@ namespace PT.Domain.Model
         [Display(Name = "Tags")]
         public List<int> TagIds { get; set; }
         public MultiSelectList TagSelectList { get; set; }
+        public SelectList PortalSelectList { get; set; }
         public CategoryType SlugType { get; set; } = CategoryType.Page;
     }
   

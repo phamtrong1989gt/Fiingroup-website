@@ -4,10 +4,10 @@ namespace PT.Domain.Model
 {
     public enum CategoryType
     {
-        [Display(Name ="Danh mục tin tức")]
+        [Display(Name ="Tin bài")]
         CategoryBlog = 1,
 
-        [Display(Name = "Danh mục dịch vụ")]
+        [Display(Name = "Dịch vụ")]
         CategoryService = 8,
 
         [Display(Name = "Tag")]
@@ -49,7 +49,7 @@ namespace PT.Domain.Model
         [Display(Name = "Tour style")]
         TourStyle = 15,
 
-        [Display(Name = "Danh mục sản phẩm")]
+        [Display(Name = "Sản phẩm")]
         CategoryProduct = 16,
 
         [Display(Name = "Sản phẩm")]

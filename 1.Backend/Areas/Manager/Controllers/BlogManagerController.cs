@@ -32,6 +32,7 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly IContentPageReferenceRepository _iContentPageReferenceRepository;
         private readonly IWebHostEnvironment _iWebHostEnvironment;
         private readonly IFileRepository _iFileRepository;
+        private readonly IPortalRepository _iPortalRepository;
 
         public BlogManagerController(
             ILogger<BlogManagerController> logger,
@@ -45,7 +46,8 @@ namespace PT.BE.Areas.Manager.Controllers
             IContentPageRelatedRepository iContentPageRelatedRepository,
             IContentPageReferenceRepository iContentPageReferenceRepository,
             IWebHostEnvironment iWebHostEnvironment,
-            IFileRepository iFileRepository
+            IFileRepository iFileRepository,
+            IPortalRepository iPortalRepository
         )
         {
             controllerName = "BlogManager";
@@ -62,6 +64,7 @@ namespace PT.BE.Areas.Manager.Controllers
             _iContentPageReferenceRepository = iContentPageReferenceRepository;
             _iWebHostEnvironment = iWebHostEnvironment;
             _iFileRepository = iFileRepository;
+            _iPortalRepository = iPortalRepository;
         }
 
         #region [Index]
@@ -73,7 +76,7 @@ namespace PT.BE.Areas.Manager.Controllers
 
         [HttpPost, ActionName("Index")]
         [AuthorizePermission]
-        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, string language = "vi", string ordertype = "asc", string orderby = "name")
+        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language = "vi", string ordertype = "asc", string orderby = "name")
         {
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
@@ -85,6 +88,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 m => (m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key)) && m.Type == CategoryType.Blog &&
                     (m.Language == language) &&
                     (m.Status == status || status == null) &&
+                    (m.PortalId == portalId || portalId  == null) &&
                     !m.Delete,
                 OrderByExtention(ordertype, orderby), x => new ContentPage
                 {
@@ -104,9 +108,14 @@ namespace PT.BE.Areas.Manager.Controllers
                     Tags = x.Tags,
                     Type = x.Type,
                     Link = x.Link,
-                    IsHome = x.IsHome
+                    IsHome = x.IsHome,
+                    PortalId = x.PortalId
                 });
-
+            var portals = await _iPortalRepository.SearchAsync(true);
+            foreach (var item in data.Data)
+            {
+                item.Portal = portals.FirstOrDefault(x => x.Id == item.PortalId);
+            }
             return View("IndexAjax", data);
         }
         private Func<IQueryable<ContentPage>, IOrderedQueryable<ContentPage>> OrderByExtention(string ordertype, string orderby) =>
@@ -128,6 +137,9 @@ namespace PT.BE.Areas.Manager.Controllers
             };
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
             dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
+            dl.PortalSelectList = new SelectList(portals, "Id", "Name");
             return View(dl);
         }
         [HttpPost, ActionName("Create")]
@@ -149,7 +161,8 @@ namespace PT.BE.Areas.Manager.Controllers
                         Type = CategoryType.Blog,
                         Summary = use.Summary,
                         DatePosted = use.DatePosted,
-                        Author = use.Author
+                        Author = use.Author,
+                        PortalId = use.PortalId ?? 1,
                     };
 
                     await _iContentPageRepository.AddAsync(data);
@@ -226,6 +239,11 @@ namespace PT.BE.Areas.Manager.Controllers
             model.ReferenceString = Newtonsoft.Json.JsonConvert.SerializeObject(listReference);
 
             model.CategoryIds = string.Join(",", (await _iContentPageCategoryRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x => x.CategoryId));
+
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
+            model.PortalSelectList = new SelectList(portals, "Id", "Name");
+            model.PortalId = dl.PortalId;
             return View(model);
         }
         [HttpPost, ActionName("Edit")]
@@ -248,6 +266,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Summary = use.Summary;
                     dl.DatePosted = use.DatePosted;
                     dl.Author = use.Author;
+                    dl.PortalId = use.PortalId ?? 1;
                     _iContentPageRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
 
@@ -396,10 +415,10 @@ namespace PT.BE.Areas.Manager.Controllers
 
         #region [Tree Category]
         [HttpPost, Authorize]
-        public async Task<List<TreeRoleModel>> TreeCategory(int id, string language = "vi")
+        public async Task<List<TreeRoleModel>> TreeCategory(int id, string language = "vi", int portalId = 1)
         {
             var listCurent = await _iContentPageCategoryRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id);
-            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => !x.Delete && x.Status && x.Type == CategoryType.CategoryBlog && x.Language == language);
+            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => !x.Delete && x.Status && x.Type == CategoryType.CategoryBlog && x.Language == language && x.PortalId ==portalId);
             var abc = listCategory.Select(x =>
            new TreeRoleModel
            {

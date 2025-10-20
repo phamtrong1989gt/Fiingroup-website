@@ -50,7 +50,8 @@ namespace PT.Infrastructure.Repositories
                     Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
-                    Status = x.data.Status
+                    Status = x.data.Status,
+                    PortalId = x.data.PortalId
                 }).AsQueryable();
             var list = await query.Skip((page - 1) * limit).Take(limit).AsNoTracking().ToListAsync();
 

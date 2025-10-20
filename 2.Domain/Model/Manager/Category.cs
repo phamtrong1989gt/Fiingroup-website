@@ -45,6 +45,7 @@ namespace PT.Domain.Model
 
         [NotMapped]
         public BaseSearchModel<List<Product>> Products { get; set; }
+        public int PortalId { get; set; }
     }
     public class CategoryModel:SeoModel
     {
@@ -66,7 +67,6 @@ namespace PT.Domain.Model
         public bool IsHome { get; set; }
         [Display(Name = "Ảnh đại diện dịch vụ tiêu biểu")]
         public string Banner2 { get; set; }
-
-
+        public SelectList PortalSelectList { get; set; }
     }
 }

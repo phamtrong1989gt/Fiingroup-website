@@ -52,16 +52,16 @@ namespace PT.BE.Areas.Base.Controllers
             return File(memory, Functions.GetContentType(path), Path.GetFileName(path));
         }
         [HttpGet, Authorize]
-        public async Task<JsonResult> IsSlug(string slug, int id, string language)
+        public async Task<JsonResult> IsSlug(string slug, int id, string language, int portalId)
         {
             if(id > 0)
             {
-                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == slug && x.ObjectId != id && x.Language == language);
+                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == slug && x.ObjectId != id && x.Language == language && x.PortalId == portalId);
                 return Json(!ktLug);
             }
             else
             {
-                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == slug && x.Language== language);
+                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == slug && x.Language== language && x.PortalId == portalId);
                 return Json(!ktLug);
             }
         }

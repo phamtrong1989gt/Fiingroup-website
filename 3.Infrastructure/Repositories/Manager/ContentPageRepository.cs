@@ -160,7 +160,8 @@ namespace PT.Infrastructure.Repositories
                     IsHome = x.data.IsHome,
                     StartDate = x.data.StartDate,
                     EndDate=x.data.EndDate,
-                    CategoryId=x.data.CategoryId
+                    CategoryId=x.data.CategoryId,
+                    PortalId = x.data.PortalId
                     
                 }).AsQueryable();
 
