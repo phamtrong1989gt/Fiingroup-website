@@ -44,13 +44,11 @@
     <None Include="Views\Shared\Error.cshtml" />
     <None Include="Views\Shared\Plugins\_Coment.cshtml" />
     <None Include="Views\Shared\Plugins\_Like.cshtml" />
-    <None Include="Views\Shared\_Admin.cshtml" />
     <None Include="Views\Shared\_CookieConsentPartial.cshtml" />
     <None Include="Views\Shared\_HomeHead.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_Login.cshtml" />
     <None Include="Views\Shared\_MenuAdmin.cshtml" />
-    <None Include="Views\Shared\_TabLanguage.cshtml" />
     <None Include="Views\Shared\_AdvertisingHomepage.cshtml" />
     <None Include="Views\_ViewImports.cshtml" />
     <None Include="Views\_ViewStart.cshtml" />

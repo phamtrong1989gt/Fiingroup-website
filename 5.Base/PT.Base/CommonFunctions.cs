@@ -134,7 +134,7 @@ namespace PT.Base
         {
             string cacheKey = $"{type}_{id}"; // Tạo khóa cache duy nhất
             string url = "";
-            string NewKyTu = "";
+            string newKyTu = "";
 
             // Xác định URL quản lý
             if (type == ModuleType.Menu)
@@ -157,24 +157,19 @@ namespace PT.Base
             // Tạo nội dung HTML
             if (!string.IsNullOrEmpty(url))
             {
-                NewKyTu += "<div class='formadmin' data-editable data-name=\"main-content\">";
-                NewKyTu += "<span data-href='" + url + "' class='bindata'></span>";
-                NewKyTu += data;
-                NewKyTu += "</div>";
-                NewKyTu = Functions.ZipStringHTML(NewKyTu);
+                newKyTu += "<div class='formadmin' data-editable data-name=\"main-content\">";
+                newKyTu += "<span data-href='" + url + "' class='bindata'></span>";
+                newKyTu += data;
+                newKyTu += "</div>";
+                newKyTu = Functions.ZipStringHTML(newKyTu);
             }
             else
             {
-                NewKyTu = Functions.ZipStringHTML(data);
+                newKyTu = Functions.ZipStringHTML(data);
             }
 
             // Lưu vào cache
-            _cache.Set(cacheKey, NewKyTu, TimeSpan.FromHours(24)); // Lưu cache với thời gian hết hạn là 24 giờ
-
-            // Lưu vào file HTML
-            string filePath = $"{map}/{type.ToString()}_{id}.html";
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath)); // Đảm bảo thư mục tồn tại
-            File.WriteAllText(filePath, NewKyTu);
+            _cache.Set(cacheKey, newKyTu, TimeSpan.FromHours(24)); // Lưu cache với thời gian hết hạn là 24 giờ
         }
 
         public static string GetModuleFromCacheOrFile(string map, ModuleType type, string code)
