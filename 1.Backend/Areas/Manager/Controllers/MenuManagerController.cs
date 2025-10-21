@@ -151,7 +151,7 @@ namespace PT.BE.Areas.Manager.Controllers
         #region [Create]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Create(string language = "vi")
+        public async Task<IActionResult> Create(int portalId, string language = "vi")
         {
             var dl = new MenuModel
             {
@@ -161,6 +161,8 @@ namespace PT.BE.Areas.Manager.Controllers
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             dl.PortalSelectList = new SelectList(portals, "Id", "Name");
+            dl.PortalId = portalId;
+            dl.PortalName = portals.FirstOrDefault(x => x.Id == portalId)?.Name;
             return View(dl);
         }
         /// <summary>
@@ -261,7 +263,7 @@ namespace PT.BE.Areas.Manager.Controllers
             var model = MapModel<MenuModel>.Go(dl);
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
-            // Trả về view edit với model đã được map sẵn
+            model.PortalName = portals.FirstOrDefault(x => x.Id == dl.PortalId)?.Name;
             return View(model);
         }
         /// <summary>

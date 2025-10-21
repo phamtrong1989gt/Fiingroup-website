@@ -105,6 +105,16 @@ namespace PT.Domain.Model
 
         public string ContentPageReferenceIds { get; set; }
         public SelectList PortalSelectList { get; set; }
+
+        public List<PortalSharedModel> PortalShareds { get; set; }
+
+        public List<int> SharedPortalIds { get; set; }
+    }
+    public class PortalSharedModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool Selected { get; set; }
     }
 
     public class ServiceModel:SeoModel

@@ -48,7 +48,7 @@
                 <table class="table  table-bordered table-t" style="border: 1px solid #ddd;">
                     <thead>
                         <tr>
-                            <th style="width:130px;">Ngôn ngữ</th>
+                            <th style="width:200px;">Ngôn ngữ</th>
                             <th>Tên trang</th>
                             <th style="width:230px;">Hành động</th>
                         </tr>
@@ -60,7 +60,7 @@
                                 <td>Phiên bản Tiếng Việt</td>
                                 <td>
                                     <select data-size="5" data-live-search="true" asp-items="@selectListLinkVi" data-action="@Url.Action("SearchLink", "Functions", new { area = "Base" })" asp-for="ReferenceLinkIdVI" class="input-sm form-control-t show-tick  with-ajax">
-                                        <option selected value="0">Chọn bài viết phiên bản Tiếng Việt Nam</option>
+                                        <option selected value="0">Chọn bài viết</option>
                                     </select>
                                 </td>
                                 <td>
@@ -96,12 +96,14 @@
                     $("#ReferenceLinkIdVI").toSelectAutocomplete({}, function ($data) {
                         $data.language = "vi";
                         $data.type = "@Model.Type";
+                        $data.portalId = @Model.PortalId;
                         return $data;
                     });
 
                     $("#ReferenceLinkIdEN").toSelectAutocomplete({}, function ($data) {
                         $data.language = "en";
-                         $data.type = "@Model.Type";
+                        $data.type = "@Model.Type";
+                        $data.portalId = @Model.PortalId;
                         return $data;
                     });
 

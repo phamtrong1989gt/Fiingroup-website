@@ -28,6 +28,8 @@ namespace PT.Domain.Model
         public int PortalId { get; set; } = 0;
         [NotMapped]
         public Portal Portal { get; set; }
+        [NotMapped]
+        public string PortalName { get; set; }
     }
     public class MenuModel
     {
@@ -63,5 +65,6 @@ namespace PT.Domain.Model
         public int PortalId { get; set; }
 
         public SelectList PortalSelectList { get; set; }
+        public string PortalName { get; set; }
     }
 }

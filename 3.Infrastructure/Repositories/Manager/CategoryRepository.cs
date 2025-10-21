@@ -208,7 +208,7 @@ namespace PT.Infrastructure.Repositories
             }
           
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.CategoryBlog || x.Type == CategoryType.CategoryService || x.Type == CategoryType.CategoryTour).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => (x.Type == CategoryType.CategoryBlog || x.Type == CategoryType.CategoryService || x.Type == CategoryType.CategoryTour) && x.Delete == false).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,

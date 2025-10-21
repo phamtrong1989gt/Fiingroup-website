@@ -51,22 +51,11 @@
                             <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-10">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
                                                 <div class="controls">
                                                     <input type="text" seo-page-name onkeydown="GenSlug()" onkeyup="GenSlug()" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label class="form-label" asp-for="PortalId"></label> <strong class="text-danger">*</strong> <span asp-validation-for="PortalId"></span>
-                                                <div class="controls">
-                                                    <select disabled asp-for="PortalId" asp-items="Model.PortalSelectList" class="input-sm form-control-t show-tick">
-                                                        <option value="">Chọn</option>
-                                                    </select>
-                                                    <input type="hidden" asp-for="PortalId" />
                                                 </div>
                                             </div>
                                         </div>
@@ -175,6 +164,27 @@
                     </div>
                     <div>
                         <partial name="_FileUploadSingle" model="@fileUploadSingleBanner" />
+                    </div>
+                    <div class="labelinfo-t bg-info mb-10">
+                        CẤU HÌNH CỔNG
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Cổng chính</label> <strong class="text-danger">*</strong> <span asp-validation-for="PortalId"></span>
+                            <div class="controls">
+                                <select disabled asp-for="PortalId" asp-items="Model.PortalSelectList" class="input-sm form-control-t show-tick">
+                                    <option value="">Chọn</option>
+                                </select>
+                                <input type="hidden" asp-for="PortalId" />
+                            </div>
+                        </div>
+                        @foreach (var item in Model.PortalShareds)
+                        {
+                            <div class="form-group">
+                                <input type="checkbox" id="PortalId_@item.Id" name="SharedPortalIds" value="@item.Id" class="filled-in chk-col-red" @(item.Selected ? "checked=\"checked\" disabled=\"disabled\"" : "") />
+                                <label for="PortalId_@item.Id">Chia sẻ cho <strong class="text-name">@item.Name</strong></label>
+                            </div>
+                        }
                     </div>
                     <div class="labelinfo-t bg-info mb-10">
                         DANH MỤC TIN

@@ -4,6 +4,7 @@
 @inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.BaseSettings> _baseSettings;
 @{
     Layout = "~/Views/Shared/_Admin.cshtml";
+    var portals = (SelectList)ViewData["PortalSelectList"];
 }
 <div grid-index data-url="@Url.Action("index")">
     <div class="row head-v2">
@@ -41,7 +42,7 @@
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="form-label">Cổng</label>
                             <div class="controls">
-                                <select grid-input name="portalId" asp-items="@((SelectList)ViewData["PortalSelectList"])" class="input-sm form-control-t show-tick">
+                                <select grid-input name="portalId" asp-items="@portals" class="input-sm form-control-t show-tick">
                                     <option value="">Tất cả</option>
                                 </select>
                             </div>
@@ -92,18 +93,25 @@
                                         <i class="material-icons">add</i><span>Thêm mới</span> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu drcontrol">
-                                        @foreach (var item in PT.Shared.ListData.ListLanguage)
+                                        @foreach (var portal in portals)
                                         {
-                                            <li><a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
+                                            <li><strong class="label-portal">@portal.Text</strong></li>
+                                            @foreach (var item in PT.Shared.ListData.ListLanguage)
+                                            {
+                                                <li> <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-portalId="@portal.Value" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
+                                            }
                                         }
                                     </ul>
                                 </div>
                             }
                             else
                             {
-                                <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
-                                    <i class="material-icons">add</i><span>Thêm menu</span>
-                                </a>
+                                @foreach (var portal in portals)
+                                {
+                                    <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
+                                        <i class="material-icons">add</i><span> Thêm @portal.Text</span>
+                                    </a>
+                                }
                             }
                         </div>
                     </div>
@@ -366,7 +374,7 @@
             })
         }
         function bindTag(language, setvalue = "") {
-            $.get("@Url.Action("SearchTag")?language=" + language, function (data) {
+            $.get("@Url.Action("SearchTag")?language=" + language + "&portalId=" + $("#portalId").val(), function (data) {
                     $("[name='tagId']").empty();
                     $("[name='tagId']").append("<option value=''>Tất cả</option>")
                     for (i = 0; i < data.length; i++) {

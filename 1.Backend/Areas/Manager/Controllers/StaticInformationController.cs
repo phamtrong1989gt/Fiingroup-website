@@ -141,7 +141,7 @@ namespace PT.BE.Areas.Manager.Controllers
         /// <param name="parrentId">Id cha (nếu có)</param>
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Create(string language = "vi", int parrentId = 0)
+        public async Task<IActionResult> Create(int portalId, string language = "vi", int parrentId = 0)
         {
             // StaticInformationModel: Model dùng để tạo mới thông tin tĩnh
             // Các thuộc tính:
@@ -158,6 +158,8 @@ namespace PT.BE.Areas.Manager.Controllers
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             dl.PortalSelectList = new SelectList(portals, "Id", "Name");
+            dl.PortalId = portalId;
+            dl.PortalName = portals.FirstOrDefault(x => x.Id == portalId)?.Name;
             return View(dl);
         }
 
@@ -237,8 +239,10 @@ namespace PT.BE.Areas.Manager.Controllers
                 return View("404");
             }
             var model = MapModel<StaticInformationModel>.Go(dl);
+     
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
+            model.PortalName = portals.FirstOrDefault(x => x.Id == model.PortalId)?.Name;
             return View(model);
         }
 

@@ -105,11 +105,13 @@ namespace PT.BE.Areas.Manager.Controllers
 
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Create(string language = "vi")
+        public async Task<IActionResult> Create(int portalId,string language = "vi")
         {
             var model = new BannerModel { Language = language };
             var portals = await _portalRepository.SearchAsync(true, 0, 0);
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
+            model.PortalId = portalId;
+            model.PortalName = portals.FirstOrDefault(x => x.Id == portalId)?.Name;
             return View(model);
         }
 
@@ -137,9 +139,9 @@ namespace PT.BE.Areas.Manager.Controllers
                     Template = model.Template ?? TokenContent,
                     Type = BannerType.Advertising,
                     ClassActive = model.ClassActive,
-                    Code = model.Code
+                    Code = model.Code,
+                    PortalId = model.PortalId
                 };
-                banner.PortalId = model.PortalId;
 
                 await _bannerRepository.AddAsync(banner);
                 await _bannerRepository.CommitAsync();
@@ -186,6 +188,7 @@ namespace PT.BE.Areas.Manager.Controllers
             var model = MapModel<BannerModel>.Go(banner);
             var portals = await _portalRepository.SearchAsync(true, 0, 0);
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
+            model.PortalName = portals.FirstOrDefault(x => x.Id == banner.PortalId)?.Name;
             return View(model);
         }
 

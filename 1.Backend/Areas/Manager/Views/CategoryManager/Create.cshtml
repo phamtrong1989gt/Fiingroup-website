@@ -26,7 +26,7 @@
     <input asp-for="Language" type="hidden" />    <input type="hidden" name="altId" value="@altId" />
     <div class="sumaryValidateForm" asp-validation-summary="All"></div>
     <div class="modal-header">
-        <h4 class="modal-title"><i class="material-icons">edit</i> THÊM DANH MỤC - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name</span></h4>
+        <h4 class="modal-title"><i class="material-icons">edit</i> THÊM DANH MỤC - <span class="text-warning">@Model.PortalName</span> - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name </span></h4>
     </div>
     <button title="Đóng cửa sổ" type="button" class="close btnclose-t" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -64,16 +64,7 @@
                                 <div class="panel-body">
 
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label class="form-label" asp-for="PortalId"></label> <strong class="text-danger">*</strong> <span asp-validation-for="PortalId"></span>
-                                                <div class="controls">
-                                                    <select asp-for="PortalId" asp-items="Model.PortalSelectList" class="input-sm form-control-t show-tick">
-                                                        <option value="">Chọn</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <input type="hidden" asp-for="PortalId" />
                                         <div class="col-md-2">
                                             @if (Model.ParentId == 0)
                                             {
@@ -83,7 +74,7 @@
                                                         <select required data-live-search="true" asp-for="Type" class="input-sm form-control-t show-tick">
                                                             <option value="">Chọn</option>
                                                             <option value="@PT.Domain.Model.CategoryType.CategoryBlog">@PT.Domain.Model.CategoryType.CategoryBlog.GetDisplayName()</option>
-                                                            <option value="@PT.Domain.Model.CategoryType.Service">@PT.Domain.Model.CategoryType.Service.GetDisplayName()</option>
+                                                            <option value="@PT.Domain.Model.CategoryType.CategoryService">@PT.Domain.Model.CategoryType.CategoryService.GetDisplayName()</option>
                                                             <option value="@PT.Domain.Model.CategoryType.CategoryProduct">@PT.Domain.Model.CategoryType.CategoryProduct.GetDisplayName()</option>
                                                         </select>
                                                     </div>
@@ -114,7 +105,7 @@
                                 </div>
                             </div>
                         </div>
-                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type,LinkId = Model.LinkId })" />
+                        @* <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type, LinkId = Model.LinkId, PortalId = Model.PortalId ?? 0 })" /> *@
                         <partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
                     </div>
                 </div>

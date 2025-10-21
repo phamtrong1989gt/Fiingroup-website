@@ -101,5 +101,6 @@ namespace PT.Domain.Model
         public int PortalId { get; set; }
 
         public SelectList PortalSelectList { get; set; }
+        public string PortalName { get; set; }
     }
 }

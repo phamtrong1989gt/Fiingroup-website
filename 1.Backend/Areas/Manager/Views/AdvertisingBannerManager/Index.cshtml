@@ -9,12 +9,7 @@
     var status = Context.Request.Query["status"].ToString();
     var isMultiLang = _baseSettings.Value.MultipleLanguage;
     var defaultLang = _baseSettings.Value.DefaultLanguage;
-    var statusOptions = new[]
-    {
-        new { Id = "radio_0", Value = "", Label = "Tất cả", Class = "radio-col-blue" },
-        new { Id = "radio_2", Value = "true", Label = "Sử dụng", Class = "radio-col-green" },
-        new { Id = "radio_3", Value = "false", Label = "Không sử dụng", Class = "radio-col-red" }
-    };
+    var portals = (SelectList)ViewData["PortalSelectList"];
 }
 
 <div grid-index data-url="@Url.Action("index")">
@@ -83,18 +78,25 @@
                                         <i class="material-icons">add</i><span>Thêm mới</span> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu drcontrol">
-                                        @foreach (var item in PT.Shared.ListData.ListLanguage)
+                                        @foreach (var portal in portals)
                                         {
-                                            <li><a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
+                                            <li><strong class="label-portal">@portal.Text</strong></li>
+                                            @foreach (var item in PT.Shared.ListData.ListLanguage)
+                                            {
+                                                <li> <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-portalId="@portal.Value" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
+                                            }
                                         }
                                     </ul>
                                 </div>
                             }
                             else
                             {
-                                <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
-                                    <i class="material-icons">add</i><span>Thêm menu</span>
-                                </a>
+                                @foreach (var portal in portals)
+                                {
+                                    <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
+                                        <i class="material-icons">add</i><span> Thêm @portal.Text</span>
+                                    </a>
+                                }
                             }
                         </div>
                     </div>

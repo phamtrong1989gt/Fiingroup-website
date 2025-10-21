@@ -7,6 +7,13 @@ using System.Text;
 
 namespace PT.Domain.Model
 {
+    // Sẽ chứa link tất cả các phiên bản của 1 nội dung ví dụ 1 row chính nó, 1 row của những phiên bản còn lại
+    public class LinkDataModel
+    {
+        public string Link { get; set; }
+        public string Language { get; set; }
+
+    }
     public class SeoModel: LinkReferenceBaseModel
     {
        
@@ -59,5 +66,7 @@ namespace PT.Domain.Model
         [Display(Name = "Cổng")]
         [Required(ErrorMessage = "{0} không được để rỗng")]
         public int? PortalId { get; set; }
+        public string PortalName { get; set; }
+
     }
 }

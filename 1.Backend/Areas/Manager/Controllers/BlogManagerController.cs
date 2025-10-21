@@ -69,8 +69,10 @@ namespace PT.BE.Areas.Manager.Controllers
 
         #region [Index]
         [AuthorizePermission]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
             return View();
         }
 
@@ -129,7 +131,7 @@ namespace PT.BE.Areas.Manager.Controllers
         #region [Create]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Create(string language = "vi")
+        public async Task<IActionResult> Create(string language = "vi", int portalId = 1)
         {
             var dl = new BlogModel
             {
@@ -137,9 +139,8 @@ namespace PT.BE.Areas.Manager.Controllers
             };
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
             dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
-            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
-            // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
-            dl.PortalSelectList = new SelectList(portals, "Id", "Name");
+            dl.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId))?.Name;
+            dl.PortalId = portalId;
             return View(dl);
         }
         [HttpPost, ActionName("Create")]
@@ -244,6 +245,13 @@ namespace PT.BE.Areas.Manager.Controllers
             // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
             model.PortalId = dl.PortalId;
+
+            var currentShared = await _iContentPageRepository.ContentPageSharedGets(model.Id);
+            model.PortalShareds = portals.Where(x=>x.Id != model.PortalId).Select(x=> new PortalSharedModel { Id = x.Id, Name = x.Name, Selected = false}).ToList();
+            foreach(var item in model.PortalShareds)
+            {
+                item.Selected = currentShared.Any(x => (x.ParentPortalId == item.Id) || ( x.SharedPortalId == item.Id));
+            }
             return View(model);
         }
         [HttpPost, ActionName("Edit")]
@@ -254,6 +262,7 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    await _iContentPageRepository.BeginTransaction();
                     var dl = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
                     if (dl == null || (dl != null && dl.Delete))
                     {
@@ -276,6 +285,10 @@ namespace PT.BE.Areas.Manager.Controllers
                     await UpdateTag(id, use.TagIds);
                     await UpdateRelated(id, use.ContentPageRelatedIds);
                     await UpdateReference(id, use.ContentPageReferenceIds);
+
+                    await _iContentPageRepository.ContentPageSharedAdds(dl.Id, dl.PortalId, use.SharedPortalIds);
+                    await _iContentPageRepository.ContentPageSharedRefeshContent(dl.Id);
+
                     await AddLog(new LogModel
                     {
                         ObjectId = dl.Id,
@@ -283,7 +296,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         Name = $"Cập nhật tin tức \"{dl.Name}\".",
                         Type = LogType.Edit
                     });
-
+                    await _iContentPageRepository.CommitTransaction();
                     return new ResponseModel() { Output = 1, Message = "Cập nhật tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
                 return new ResponseModel() { Output = -2, Message = "Bạn chưa nhập đầy đủ thông tin hoặc liên kết thân thiện/Permalink đã tồn tại, vui lòng thay thêm ký tự bất kỳ đằng sau.", Type = ResponseTypeMessage.Warning };
@@ -296,6 +309,7 @@ namespace PT.BE.Areas.Manager.Controllers
         }
         #endregion
 
+     
         private async Task UpdateRelated(int blogId, string strData)
         {
             var list = new List<int>();
@@ -435,11 +449,11 @@ namespace PT.BE.Areas.Manager.Controllers
 
         #region [Tags]
         [HttpPost, AuthorizePermission("Index"), ActionName("AddTag")]
-        public async Task<object> AddTag(string name, string language)
+        public async Task<object> AddTag(string name, string language, int portalId = 1)
         {
             try
             {
-                return await AddTagLink(name, language);
+                return await AddTagLink(name, language, portalId);
             }
             catch (Exception ex)
             {
@@ -472,9 +486,9 @@ namespace PT.BE.Areas.Manager.Controllers
 
         #region [Select tag]
         [HttpGet, Authorize]
-        public async Task<object> SearchTag(string language = "vi")
+        public async Task<object> SearchTag(string language = "vi", int portalId = 1)
         {
-            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
+            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete && x.PortalId == portalId, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
         }
         #endregion
 

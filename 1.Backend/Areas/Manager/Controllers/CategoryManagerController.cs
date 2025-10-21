@@ -7,6 +7,7 @@ using PT.Base;
 using PT.BE.Areas.Manager.Controllers;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
+using PT.Infrastructure.Repositories;
 using PT.Shared;
 using System;
 using System.Collections.Generic;
@@ -88,7 +89,7 @@ namespace PT.BE.Areas.User.Controllers
         /// </summary>
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Create(string language = "vi", int parrentId = 0)
+        public async Task<IActionResult> Create(int portalId,string language = "vi", int parrentId = 0)
         {
             var dl = new CategoryModel
             {
@@ -100,6 +101,8 @@ namespace PT.BE.Areas.User.Controllers
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             dl.PortalSelectList = new SelectList(portals, "Id", "Name");
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
+            dl.PortalId = portalId;
+            dl.PortalName = portals.FirstOrDefault(x => x.Id == portalId)?.Name;
             return View(dl);
         }
         /// <summary>
@@ -120,7 +123,7 @@ namespace PT.BE.Areas.User.Controllers
                 if (!ModelState.IsValid)
                     // Nếu dữ liệu không hợp lệ theo DataAnnotation đã khai báo trên model -> trả về cảnh báo
                     return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
-
+                await _iCategoryRepository.BeginTransaction();
                 // --- Bước 1: Chuẩn hoá dữ liệu đầu vào để kiểm tra trùng lặp ---
                 // Trim khoảng trắng hai đầu và dùng tên này để so sánh với dữ liệu trong DB
                 var name = (use.Name ?? string.Empty).Trim();
@@ -162,9 +165,10 @@ namespace PT.BE.Areas.User.Controllers
                 // Thêm SEO link, cập nhật file và ghi log
                 // --- Bước 4: Cập nhật SEO/link, file liên quan và ghi log ---
                 // Thêm liên kết SEO cho đối tượng mới (tạo slug, link nếu cần)
-                await AddSeoLink(data.Type, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "CategoryHome", "Details");
+                await AddSeoLink(data.Type, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "CategoryHome", "Details", data.PortalId);
                 // Cập nhật file (nếu người dùng upload trước khi lưu)
                 await UpdateFileData(data.Id, data.Type, altId);
+                await _iCategoryRepository.CommitTransaction();
                 // Ghi log hành động tạo
                 await AddLog(new LogModel
                 {
@@ -226,6 +230,7 @@ namespace PT.BE.Areas.User.Controllers
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
             model.PortalId = dl.PortalId;
+            model.PortalName = portals.FirstOrDefault(x => x.Id == dl.PortalId)?.Name;
             return View(model);
         }
         /// <summary>
@@ -246,7 +251,7 @@ namespace PT.BE.Areas.User.Controllers
                 var dl = await _iCategoryRepository.SingleOrDefaultAsync(false, m => m.Id == id);
                 if (dl == null)
                     return new ResponseModel() { Output = 0, Message = "Dữ liệu không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
-
+               await  _iCategoryRepository.BeginTransaction();
                 var name = (use.Name ?? string.Empty).Trim();
                 var portalId = use.PortalId ?? 1;
                 var candidates = await _iCategoryRepository.SearchAsync(false, 0, 0, x => x.Language == use.Language && x.PortalId == portalId && x.Type == use.Type && !x.Delete);
@@ -260,8 +265,10 @@ namespace PT.BE.Areas.User.Controllers
                 dl.Summary = use.Summary;
                 _iCategoryRepository.Update(dl);
                 await _iCategoryRepository.CommitAsync();
-
                 await UpdateSeoLink(use.ChangeSlug, dl.Type, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "CategoryHome", "Details");
+                _iCategoryRepository.Update(dl);
+                await _iCategoryRepository.CommitAsync();
+                await _iCategoryRepository.CommitTransaction();
                 await AddLog(new LogModel
                 {
                     ObjectId = dl.Id,
@@ -327,8 +334,9 @@ namespace PT.BE.Areas.User.Controllers
         /// </summary>
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult Setting(string language = "vi")
+        public async Task<IActionResult> Setting(string language = "vi")
         {
+            ViewData["portals"] = await _iPortalRepository.SearchAsync();
             return View(nameof(Setting), language);
         }
         [HttpGet]
@@ -343,7 +351,6 @@ namespace PT.BE.Areas.User.Controllers
         public async Task<ResponseModel> SettingPost([FromBody]string data)
         {
             try
-
             {
                 var listItem = ConverData(Newtonsoft.Json.JsonConvert.DeserializeObject<List<DataSortModel>>(data));
                 var listItemIds = listItem.Select(x => x.Id).ToList();

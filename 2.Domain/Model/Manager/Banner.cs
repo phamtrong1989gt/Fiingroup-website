@@ -61,5 +61,6 @@ namespace PT.Domain.Model
         [Display(Name = "Cổng (Portal)")]
         public int PortalId { get; set; }
         public SelectList PortalSelectList { get; set; }
+        public string PortalName { get; set; }
     }
 }

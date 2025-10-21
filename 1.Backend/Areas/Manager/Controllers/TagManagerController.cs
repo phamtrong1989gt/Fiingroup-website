@@ -49,8 +49,12 @@ namespace PT.BE.Areas.Manager.Controllers
 
         #region [Index]
         [AuthorizePermission]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            // Lấy danh sách portal để hiển thị bộ lọc portal trên giao diện quản trị
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            ViewBag.PortalSelectList = new SelectList(portals, "Id", "Name");
+            // Trả về view mặc định cho quản lý slide ảnh
             return View();
         }
 
@@ -104,7 +108,7 @@ namespace PT.BE.Areas.Manager.Controllers
         #region [Create]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Create(string language = "vi")
+        public async Task<IActionResult> Create(int portalId, string language = "vi")
         {
             var model = new TagModel
             {
@@ -114,6 +118,8 @@ namespace PT.BE.Areas.Manager.Controllers
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
+            model.PortalName = portals.FirstOrDefault(x => x.Id == portalId)?.Name;
+            model.PortalId = portalId;
             return View(model);
         }
 
@@ -233,6 +239,7 @@ namespace PT.BE.Areas.Manager.Controllers
             model.PortalId = tag.PortalId;
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
+            model.PortalName = portals.FirstOrDefault(x => x.Id == model.PortalId)?.Name;
             return View(model);
         }
 

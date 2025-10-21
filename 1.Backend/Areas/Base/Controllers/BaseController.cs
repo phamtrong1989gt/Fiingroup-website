@@ -127,7 +127,7 @@ namespace PT.BE.Areas.Base.Controllers
         /// <param name="name">Tên tag</param>
         /// <param name="language">Ngôn ngữ</param>
         /// <returns>Thông tin tag vừa thêm</returns>
-        public async Task<object> AddTagLink(string name, string language)
+        public async Task<object> AddTagLink(string name, string language, int portalId = 1)
         {
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
             var _iTagRepository = (ITagRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ITagRepository));
@@ -141,15 +141,16 @@ namespace PT.BE.Areas.Base.Controllers
                 Type = CategoryType.Tag,
                 Slug = Functions.ToUrlSlug(name),
                 Language = language,
-                Name = name
+                Name = name,
+                PortalId = portalId
             };
-            var check = await _iTagRepository.SingleOrDefaultAsync(true, x => x.Name.ToLower() == use.Name.ToLower() && x.Language == use.Language);
+            var check = await _iTagRepository.SingleOrDefaultAsync(true, x => x.Name.ToLower() == use.Name.ToLower().Trim() && x.Language == use.Language && x.PortalId == use.PortalId);
             if (check != null)
             {
                 return new { id = check.Id, name = check.Name };
             }
 
-            var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == use.Slug && x.Language == language);
+            var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == use.Slug && x.Language == language && x.PortalId == portalId);
             if (ktLug)
             {
                 for (int i = 1; i <= 30; i++)
@@ -172,12 +173,13 @@ namespace PT.BE.Areas.Base.Controllers
                 Name = use.Name,
                 Delete = false,
                 Status = true,
-                Language = use.Language
+                Language = use.Language,
+                PortalId = use.PortalId ?? 1
             };
             await _iTagRepository.AddAsync(data);
             await _iTagRepository.CommitAsync();
             var seoModel = MapModel<SeoModel>.Go(use);
-            await AddSeoLink(CategoryType.Tag, data.Language, data.Id, seoModel, name, "", "TagHome", "Details");
+            await AddSeoLink(CategoryType.Tag, data.Language, data.Id, seoModel, name, "", "TagHome", "Details", portalId);
 
             return new { id = data.Id, name = data.Name };
         }
@@ -196,6 +198,7 @@ namespace PT.BE.Areas.Base.Controllers
         /// <returns>Id liên kết SEO vừa thêm</returns>
         public async Task<int> AddSeoLink(CategoryType type, string language, int id, SeoModel model, string name, string area, string controller, string action, int portalId = 1)
         {
+            // Check cả slug đã delete, path delete sẽ tự động redrirect về trang chủ
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
             var _iLinkReferenceRepository = (ILinkReferenceRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkReferenceRepository));
             var baseSettings = (IOptions<BaseSettings>)AppHttpContext.Current.RequestServices.GetService(typeof(IOptions<BaseSettings>));
@@ -259,7 +262,7 @@ namespace PT.BE.Areas.Base.Controllers
             }
             // Cập nhật cache liên kết SEO
             var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
-            var cacheKey = $"Link_{dlLug.Slug}_{language}";
+            var cacheKey = $"Link_{dlLug.Slug}_{language}_{dlLug.PortalId}";
             if (cache.TryGetValue(cacheKey, out Link link))
             {
                 cache.Remove(cacheKey);
@@ -324,6 +327,39 @@ namespace PT.BE.Areas.Base.Controllers
             }
             else if (changeSlug)
             {
+                // nếu thay đổi slug thì phải tạo 1 link mới với Slug cũ trạng thái xóa và redirect 301 về Slug mới
+                var dlLugOld = new Link
+                {
+                    Slug = ktLink.Slug,
+                    Name = ktLink.Name,
+                    Type = ktLink.Type,
+                    ObjectId = ktLink.ObjectId,
+                    Language = ktLink.Language,
+                    IsStatic = false,
+                    Changefreq = ktLink.Changefreq,
+                    Lastmod = DateTime.Now,
+                    Priority = ktLink.Priority,
+                    Delete = true,
+                    Description = ktLink.Description,
+                    FacebookBanner = ktLink.FacebookBanner,
+                    FacebookDescription = ktLink.FacebookDescription,
+                    FocusKeywords = ktLink.FocusKeywords,
+                    GooglePlusDescription = ktLink.GooglePlusDescription,
+                    IncludeSitemap = ktLink.IncludeSitemap,
+                    Keywords = ktLink.Keywords,
+                    MetaRobotsAdvance = ktLink.MetaRobotsAdvance,
+                    MetaRobotsFollow = ktLink.MetaRobotsFollow,
+                    MetaRobotsIndex = ktLink.MetaRobotsIndex,
+                    Redirect301 = $"/{language}/{model.Slug}.html",
+                    Title = ktLink.Title,
+                    Status = false,
+                    Area = ktLink.Area,
+                    Controller = ktLink.Controller,
+                    Acction = ktLink.Acction,
+                    PortalId = ktLink.PortalId
+                };
+                await _iLinkRepository.AddAsync(dlLugOld);
+                await _iLinkRepository.CommitAsync();
                 ktLink.Slug = model.Slug;
             }
             ktLink.Changefreq = model.Changefreq;
@@ -356,7 +392,7 @@ namespace PT.BE.Areas.Base.Controllers
 
             // Cập nhật cache liên kết SEO
             var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
-            var cacheKey = $"Link_{ktLink.Slug}_{language}";
+            var cacheKey = $"Link_{ktLink.Slug}_{language}_{ktLink.PortalId}";
             if (cache.TryGetValue(cacheKey, out Link link))
             {
                 cache.Remove(cacheKey);
@@ -375,12 +411,15 @@ namespace PT.BE.Areas.Base.Controllers
             var ktLink = await _iLinkRepository.SingleOrDefaultAsync(false, x => x.ObjectId == id && x.Type == type);
             if (ktLink != null)
             {
-                _iLinkRepository.Delete(ktLink);
+                ktLink.Delete = true;
+                ktLink.Redirect301 = "/"+ktLink.Language;
+                _iLinkRepository.Update(ktLink);
+                // Thay vì xóa hẳn thì sẽ đánh dấu đã xóa và auto redirect 301 về trang chủ
                 await _iLinkRepository.CommitAsync();
             }
             // Cập nhật cache liên kết SEO
             var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
-            var cacheKey = $"Link_{ktLink.Slug}_{ktLink.Language}";
+            var cacheKey = $"Link_{ktLink.Slug}_{ktLink.Language}_{ktLink.PortalId}";
             if (cache.TryGetValue(cacheKey, out Link link))
             {
                 cache.Remove(cacheKey);

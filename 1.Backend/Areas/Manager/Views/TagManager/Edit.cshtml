@@ -30,7 +30,7 @@
     <input asp-for="Language" type="hidden" />
     <div class="sumaryValidateForm" asp-validation-summary="All"></div>
     <div class="modal-header">
-        <h4 class="modal-title"><i class="material-icons">edit</i> CẬP NHẬT Tag - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name</span></h4>
+        <h4 class="modal-title"><i class="material-icons">edit</i> CẬP NHẬT Tag - <span class="text-warning">@Model.PortalName</span> - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name </span></h4>
     </div>
     <button title="Đóng cửa sổ" type="button" class="close btnclose-t" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -67,27 +67,17 @@
                             <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-10">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
                                                 <div class="controls">
                                                     <input type="text" seo-page-name onkeydown="GenSlug()" onkeyup="GenSlug()" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
                                                 </div>
                                             </div>
+                                            <input type="hidden" asp-for="PortalId" />
+
                                         </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label class="form-label" asp-for="PortalId"></label> <strong class="text-danger">*</strong> <span asp-validation-for="PortalId"></span>
-                                                <div class="controls">
-                                                    <select disabled asp-for="PortalId" asp-items="Model.PortalSelectList" class="input-sm form-control-t show-tick">
-                                                        <option value="">Chọn</option>
-                                                    </select>
-                                                    <input type="hidden" asp-for="PortalId" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
+									</div>
                                         <label class="form-label" asp-for="Content"></label> <span asp-validation-for="Content"></span>
                                         <div class="controls">
                                             <textarea id="ricktextContent" seo-page-content class="form-control form-control-t" rows="3" placeholder="Mô tả" asp-for="Content"></textarea>
@@ -97,7 +87,7 @@
                                 </div>
                             </div>
                         </div>
-                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type,LinkId = Model.LinkId })" />
+                    <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language = Model.Language, Type = Model.Type, LinkId = Model.LinkId, PortalId = Model.PortalId ?? 0 })" />
                         <partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
                     </div>
                 </div>

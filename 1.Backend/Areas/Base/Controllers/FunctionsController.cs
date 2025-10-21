@@ -74,10 +74,10 @@ namespace PT.BE.Areas.Base.Controllers
             });
         }
         [HttpPost, Authorize]
-        public async Task<List<SelectListItem>> SearchLink(string q, string language, CategoryType type)
+        public async Task<List<SelectListItem>> SearchLink(string q, string language, CategoryType type, int portalId)
         {
-            return (await _iLinkRepository.SearchAsync(true, 0, 20, x => x.Name.ToLower().Contains(q.ToLower()) && !x.Delete && x.Status && x.Type == type && x.Language == language, x => x.OrderBy(y => y.Name),
-               x => new Link { Id = x.Id, Name = x.Name, Delete = x.Delete, Status = x.Status, Language = x.Language, Type = x.Type })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
+            return (await _iLinkRepository.SearchAsync(true, 0, 20, x => x.Name.ToLower().Contains(q.ToLower()) && !x.Delete && x.Status && x.Type == type && x.Language == language && x.PortalId == portalId, x => x.OrderBy(y => y.Name),
+               x => new Link { Id = x.Id, Name = x.Name, Delete = x.Delete, Status = x.Status, Language = x.Language, Type = x.Type, PortalId = x.PortalId })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
         }
     }
 }

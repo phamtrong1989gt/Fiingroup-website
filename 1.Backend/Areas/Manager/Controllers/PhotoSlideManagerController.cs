@@ -169,19 +169,21 @@ namespace PT.BE.Areas.Manager.Controllers
         /// <param name="language">Ngôn ngữ banner mới.</param>
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult Create(string language = "vi")
+        public IActionResult Create(int portalId, string language = "vi")
         {
             // Khởi tạo model banner với ngôn ngữ truyền vào
             var dl = new BannerModel
             {
-                Language = language
+                Language = language,
+                PortalId = portalId
             };
             // Gắn danh sách portal để người quản trị chọn (nếu hệ thống có nhiều portal)
             // Lưu ý: ở đây dùng .Result vì action GET, nhưng nếu muốn tránh block thread có thể
             // chuyển sang async/await hoàn toàn. View sẽ lấy SelectList từ ViewBag.
             var portals = _iPortalRepository.SearchAsync(true,0,0).Result;
             ViewBag.PortalSelectList = new SelectList(portals, "Id", "Name");
-            // Trả về view tạo mới banner
+            dl.PortalId = portalId;
+            dl.PortalName = portals.FirstOrDefault(x => x.Id == portalId)?.Name;
             return View(dl);
         }
 
@@ -273,6 +275,7 @@ namespace PT.BE.Areas.Manager.Controllers
             // Đưa danh sách portal vào ViewBag để view select danh sách portal
             var portals = await _iPortalRepository.SearchAsync(true,0,0);
             ViewBag.PortalSelectList = new SelectList(portals, "Id", "Name");
+            model.PortalName = portals.FirstOrDefault(x => x.Id == dl.PortalId)?.Name;
             return View(model);
         }
 

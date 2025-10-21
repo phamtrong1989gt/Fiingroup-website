@@ -21,7 +21,7 @@ namespace PT.Domain.Model
         public string Content { get; set; }
         public string Banner { get; set; }
         public string Banner2 { get; set; }
-
+        public string LinkData { get; set; }
         public int Order { get; set; }
         [MaxLength(10)]
         public string Language { get; set; }

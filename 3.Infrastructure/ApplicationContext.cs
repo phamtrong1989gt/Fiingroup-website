@@ -64,6 +64,7 @@ namespace PT.Infrastructure
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategorys { get; set; }
         public DbSet<Portal> Portals { get; set; }
+        public DbSet<ContentPageShared> ContentPageShareds { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -119,6 +120,7 @@ namespace PT.Infrastructure
             builder.Entity<Product>().ToTable("Product");
             builder.Entity<ProductCategory>().ToTable("ProductCategory");
             builder.Entity<Portal>().ToTable("Portal");
+            builder.Entity<ContentPageShared>().ToTable("ContentPageShared").HasKey(c => new { c.ParentContentPageId, c.ParentPortalId, c.SharedContentPageId, c.SharedPortalId });
         }
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {

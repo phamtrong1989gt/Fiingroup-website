@@ -40,7 +40,7 @@ namespace PT.Infrastructure.Repositories
                 }
             }
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.Tag), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.Tag && x.Delete == false), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Tag
                 {
                     Link = y,

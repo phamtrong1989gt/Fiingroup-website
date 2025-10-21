@@ -30,7 +30,7 @@
     <input asp-for="Language" type="hidden" />
     <div class="sumaryValidateForm" asp-validation-summary="All"></div>
     <div class="modal-header">
-        <h4 class="modal-title"><i class="material-icons">edit</i> THÊM MỚI TIN TỨC - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name</span></h4>
+        <h4 class="modal-title"><i class="material-icons">edit</i> THÊM MỚI TIN TỨC  - <span class="text-warning">@Model.PortalName</span> - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name </span></h4>
     </div>
     <button title="Đóng cửa sổ" type="button" class="close btnclose-t" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -51,21 +51,12 @@
                             <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-10">
+                                        <div class="col-md-12">
+                                            <input type="hidden" asp-for="PortalId" />
                                             <div class="form-group">
                                                 <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
                                                 <div class="controls">
                                                     <input type="text" seo-page-name onkeydown="GenSlug()" onkeyup="GenSlug()" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label class="form-label" asp-for="PortalId"></label> <strong class="text-danger">*</strong> <span asp-validation-for="PortalId"></span>
-                                                <div class="controls">
-                                                    <select asp-for="PortalId" asp-items="Model.PortalSelectList" class="input-sm form-control-t show-tick" onchange="portalChange()">
-                                                        <option value="">Chọn</option>
-                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -231,7 +222,6 @@
     portalChange();
     function portalChange()
     {
-        alert();
-       getTreeCategory($("[form-edit] [name='Language']").val(), 0, $("[form-edit] [name='portalId']").val());
+       getTreeCategory($("[form-edit] [name='Language']").val(), 0, @Model.PortalId);
     }
 </script>
