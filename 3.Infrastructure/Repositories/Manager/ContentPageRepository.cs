@@ -64,7 +64,6 @@ namespace PT.Infrastructure.Repositories
                         targetContent.Banner = sourceContent.Banner;
                         targetContent.Content = sourceContent.Content;
                         targetContent.DatePosted = sourceContent.DatePosted;
-                        targetContent.Delete = sourceContent.Delete;
                         targetContent.Name = sourceContent.Name;
                         targetContent.Price = sourceContent.Price;
                         targetContent.ServiceId = sourceContent.ServiceId;
@@ -109,7 +108,6 @@ namespace PT.Infrastructure.Repositories
                     Banner = parentContentPage.Banner,
                     Content = parentContentPage.Content,
                     DatePosted = parentContentPage.DatePosted,
-                    Delete = parentContentPage.Delete,
                     Name = parentContentPage.Name,
                     Language = parentContentPage.Language,
                     Price = parentContentPage.Price,
@@ -225,7 +223,6 @@ namespace PT.Infrastructure.Repositories
                    Banner = x.data.Banner,
                    Content = x.data.Content,
                    DatePosted = x.data.DatePosted,
-                   Delete = x.data.Delete,
                    Name = x.data.Name,
                    Language = x.data.Language,
                    Price = x.data.Price,
@@ -319,7 +316,6 @@ namespace PT.Infrastructure.Repositories
                     Banner =x.data.Banner,
                     Content=x.data.Content,
                     DatePosted=x.data.DatePosted,
-                    Delete=x.data.Delete,
                     Name=x.data.Name,
                     Language=x.data.Language,
                     Price=x.data.Price,
@@ -421,7 +417,6 @@ namespace PT.Infrastructure.Repositories
                     Banner = x.data.Banner,
                     Content = x.data.Content,
                     DatePosted = x.data.DatePosted,
-                    Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
                     Price = x.data.Price,

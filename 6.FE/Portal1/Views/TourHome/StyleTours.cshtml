@@ -8,7 +8,7 @@
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 100, x=>x.Type == CategoryType.CategoryTour && x.Language == language && x.Status && !x.Delete, x=> x.OrderBy(m=>m.Id).ThenByDescending(m => m.Order));
+    var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 100, x=>x.Type == CategoryType.CategoryTour && x.Language == language && x.Status, x=> x.OrderBy(m=>m.Id).ThenByDescending(m => m.Order));
 }
 <section class="parallax-window" style="
         background-image: url(@(string.IsNullOrEmpty(Model.Banner) ? "/Content/Home/img/du-lich-viet-nam.jpg" : Model.Banner));

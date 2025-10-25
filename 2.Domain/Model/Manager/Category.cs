@@ -26,7 +26,6 @@ namespace PT.Domain.Model
         [MaxLength(10)]
         public string Language { get; set; }
         public bool Status { get; set; }
-        public bool Delete { get; set; }
         [NotMapped]
         public virtual Link Link { get; set; }
         [NotMapped]
@@ -46,6 +45,9 @@ namespace PT.Domain.Model
         [NotMapped]
         public BaseSearchModel<List<Product>> Products { get; set; }
         public int PortalId { get; set; }
+
+        [NotMapped]
+        public string FullPath { get; set; }
     }
     public class CategoryModel:SeoModel
     {

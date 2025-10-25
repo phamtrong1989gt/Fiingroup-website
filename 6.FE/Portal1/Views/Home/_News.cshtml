@@ -8,7 +8,7 @@
 @{
     Layout = null;
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    var list = await _iContentPageRepository.SearchAdvanceAsync(CategoryType.Blog, 0, 4, null, null, m => m.Status && !m.Delete && m.DatePosted <= DateTime.Now && m.Language == language && (m.Type == CategoryType.Blog),
+    var list = await _iContentPageRepository.SearchAdvanceAsync(CategoryType.Blog, 0, 4, null, null, m => m.Status && m.DatePosted <= DateTime.Now && m.Language == language && (m.Type == CategoryType.Blog),
                                                                                 m => m.OrderByDescending(x => x.DatePosted),
                                                                                    select: a => new ContentPage
                                                                                    {

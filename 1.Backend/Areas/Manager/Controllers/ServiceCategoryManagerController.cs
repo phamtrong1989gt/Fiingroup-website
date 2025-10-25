@@ -83,7 +83,6 @@ namespace PT.BE.Areas.User.Controllers
                         Name = use.Name,
                         Banner = use.Banner,
                         Content = use.Content,
-                        Delete = false,
                         Status = use.Status,
                         Summary = use.Summary,
                         Language = use.Language,
@@ -243,7 +242,7 @@ namespace PT.BE.Areas.User.Controllers
         [HttpGet]
         public async Task<string> Categorys(string language)
         {
-            var list = await _iCategoryRepository.FindByLinkReference(0, 0, x => x.Language == language && !x.Delete && x.Type == CategoryType.CategoryService);
+            var list = await _iCategoryRepository.FindByLinkReference(0, 0, x => x.Language == language && x.Type == CategoryType.CategoryService);
             return ShowTree(list, 0);
         }
         [HttpPost, ActionName("Setting")]

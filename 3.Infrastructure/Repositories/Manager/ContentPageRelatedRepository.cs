@@ -43,7 +43,6 @@ namespace PT.Infrastructure.Repositories
                    Banner = x.data.Banner,
                    Content = x.data.Content,
                    DatePosted = x.data.DatePosted,
-                   Delete = x.data.Delete,
                    Name = x.data.Name,
                    Language = x.data.Language,
                    Price = x.data.Price,

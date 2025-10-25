@@ -42,6 +42,7 @@ namespace PT.BE.Areas.User.Controllers
         private readonly IWebHostEnvironment _iWebHostEnvironment;
         private readonly IFileRepository _iFileRepository;
         private readonly IPortalRepository _iPortalRepository;
+        private readonly IContentPageCategoryRepository _iContentPageCategoryRepository;
         /// <summary>
         /// Hàm khởi tạo controller, inject các repository và service cần thiết.
         /// </summary>
@@ -59,7 +60,8 @@ namespace PT.BE.Areas.User.Controllers
             ILinkRepository iLinkRepository,
             IWebHostEnvironment iWebHostEnvironment,
             IFileRepository iFileRepository,
-            IPortalRepository iPortalRepository
+            IPortalRepository iPortalRepository,
+            IContentPageCategoryRepository iContentPageCategoryRepository
             )
         {
             _logger = logger;
@@ -69,6 +71,7 @@ namespace PT.BE.Areas.User.Controllers
             _iWebHostEnvironment = iWebHostEnvironment;
             _iFileRepository = iFileRepository;
             _iPortalRepository = iPortalRepository;
+            _iContentPageCategoryRepository = iContentPageCategoryRepository;
         }
 
         /// <summary>
@@ -132,7 +135,7 @@ namespace PT.BE.Areas.User.Controllers
 
                 // --- Bước 2: Kiểm tra trùng lặp ---
                 // Lấy danh sách các category có cùng language, portal và type (điều kiện đơn giản để tránh expression phức tạp)
-                var candidates = await _iCategoryRepository.SearchAsync(false, 0, 0, x => x.Language == use.Language && x.PortalId == portalId && x.Type == use.Type && !x.Delete);
+                var candidates = await _iCategoryRepository.SearchAsync(false, 0, 0, x => x.Language == use.Language && x.PortalId == portalId && x.Type == use.Type);
                 // So sánh tên trên bộ dữ liệu đã tải về bằng cách dùng so sánh không phân biệt hoa/thường
                 if (candidates.Any(x => string.Equals((x.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
                     // Nếu tồn tại -> trả về cảnh báo cho client
@@ -148,8 +151,6 @@ namespace PT.BE.Areas.User.Controllers
                     Name = name,
                     Banner = use.Banner,
                     Content = use.Content,
-                    // Mặc định là chưa xóa
-                    Delete = false,
                     Status = use.Status,
                     Language = use.Language,
                     Order = maxOrder + 1,
@@ -199,7 +200,7 @@ namespace PT.BE.Areas.User.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var dl = await _iCategoryRepository.SingleOrDefaultAsync(true, m => m.Id == id);
-            if (dl == null || dl.Delete == true)
+            if (dl == null)
                 return View("404");
 
             var model = MapModel<CategoryModel>.Go(dl);
@@ -254,7 +255,7 @@ namespace PT.BE.Areas.User.Controllers
                await  _iCategoryRepository.BeginTransaction();
                 var name = (use.Name ?? string.Empty).Trim();
                 var portalId = use.PortalId ?? 1;
-                var candidates = await _iCategoryRepository.SearchAsync(false, 0, 0, x => x.Language == use.Language && x.PortalId == portalId && x.Type == use.Type && !x.Delete);
+                var candidates = await _iCategoryRepository.SearchAsync(false, 0, 0, x => x.Language == use.Language && x.PortalId == portalId && x.Type == use.Type);
                 if (candidates.Any(x => x.Id != id && string.Equals((x.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
                     return new ResponseModel() { Output = 0, Message = "Danh mục đã tồn tại trên hệ thống, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
 
@@ -298,13 +299,24 @@ namespace PT.BE.Areas.User.Controllers
         {
             try
             {
+                await _iCategoryRepository.BeginTransaction();
                 var kt = await _iCategoryRepository.SingleOrDefaultAsync(false, m => m.Id == id);
                 if (kt == null)
                 {
                     return new ResponseModel() { Output = 0, Message = "Danh mục không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                 }
+                // Kiểm tra xem item có dữ liệu con không, nếu có thì không cho xóa
+                var hasChild = await _iCategoryRepository.AnyAsync(x => x.ParentId == id);
+                if (hasChild)
+                {
+                    return new ResponseModel() { Output = 0, Message = "Danh mục đang có danh mục con, vui lòng xóa danh mục con trước khi xóa danh mục này.", Type = ResponseTypeMessage.Warning };
+                }
+                // 
                 _iCategoryRepository.Delete(kt);
                 await _iCategoryRepository.CommitAsync();
+
+                _iContentPageCategoryRepository.DeleteWhere(x=>x.CategoryId == id);
+                await _iContentPageCategoryRepository.CommitAsync();
                 await DeleteSeoLink(kt.Type, kt.Id);
                 await RemoveFileData(id, kt.Type);
                 await AddLog(new LogModel
@@ -314,7 +326,7 @@ namespace PT.BE.Areas.User.Controllers
                     Name = $"Xóa danh mục  tin tức \"{kt.Name}\".",
                     Type = LogType.Delete
                 });
-
+                await _iCategoryRepository.CommitTransaction();
                 return new ResponseModel() { Output = 1, Message = "Xóa danh mục thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
             }
             catch (Exception ex)
@@ -342,8 +354,12 @@ namespace PT.BE.Areas.User.Controllers
         [HttpGet]
         public async Task<string> Categorys(string language)
         {
-            var list = await _iCategoryRepository.FindByLinkReference(0, 0, x => x.Language == language && !x.Delete);
+            var list = await _iCategoryRepository.FindByLinkReference(0, 0, x => x.Language == language);
             var portals = await _iPortalRepository.SearchAsync();
+            foreach(var item in list)
+            {
+                item.FullPath = await _iPortalRepository.GetFullPathAsync(item.PortalId, item.Link?.Slug ?? string.Empty, portals, item.Language, _baseSettings.Value.MultipleLanguage);
+            }
             return ShowTree(list, 0, portals);
         }
         [HttpPost, ActionName("Setting")]
@@ -431,7 +447,7 @@ namespace PT.BE.Areas.User.Controllers
                     //
                     str.Append($"{item.Name}");
                     str.Append($"<span class='can-span-category'>{BindReferenLanguage(new Tuple<List<LinkReference>, string, string, bool>(item.LinkReferences, item.Language, Url.Action("Edit", new { id = "#id#" }), false))}</span>");
-                    str.Append($"<span class=\"button-icon\"><a title='Đến trang' target='_blank' href=\"{Functions.FormatUrl(item.Language, item.Link?.Slug)}\" title=\"Lấy đường dẫn\"><i class=\"material-icons iconcontrol text-info\">link</i></a><a onclick=\"onCopyClipboard('{Functions.FormatUrl(item.Language, item.Link?.Slug)}')\" title=\"Lấy đường dẫn\"><i class=\"material-icons iconcontrol text-danger\">share</i></a>");
+                    str.Append($"<span class=\"button-icon\"><a title='Đến trang' target='_blank' href=\"{item.FullPath}\" title=\"Lấy đường dẫn\"><i class=\"material-icons iconcontrol text-info\">link</i></a><a onclick=\"onCopyClipboard('{item.FullPath}')\" title=\"Lấy đường dẫn\"><i class=\"material-icons iconcontrol text-danger\">share</i></a>");
                     str.Append($"<a button-popup  data-target=\"#myModalBig\" href='{Url.Action("Edit", new { id = item.Id, language = item.Language })}'  title=\"Cập nhật\"><i class=\"material-icons iconcontrol text-primary\">edit</i></a><span>");
                     str.Append("</div>");
                     str.Append(ShowTree(list, item.Id, portals));

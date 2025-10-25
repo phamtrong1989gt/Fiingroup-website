@@ -374,7 +374,8 @@
             })
         }
         function bindTag(language, setvalue = "") {
-            $.get("@Url.Action("SearchTag")?language=" + language + "&portalId=" + $("#portalId").val(), function (data) {
+         
+             $.get("@Url.Action("SearchTag")?language=" + language + "&portalId=" + ( $("#portalId").val() ?? ''), function (data) {
                     $("[name='tagId']").empty();
                     $("[name='tagId']").append("<option value=''>Tất cả</option>")
                     for (i = 0; i < data.length; i++) {

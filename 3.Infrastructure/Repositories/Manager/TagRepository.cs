@@ -47,7 +47,6 @@ namespace PT.Infrastructure.Repositories
                     Id = x.data.Id,
                     Banner = x.data.Banner,
                     Content = x.data.Content,
-                    Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
                     Status = x.data.Status,

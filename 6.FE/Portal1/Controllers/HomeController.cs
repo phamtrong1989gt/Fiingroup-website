@@ -107,14 +107,13 @@ namespace PT.UI.Controllers
                          //&& m.Type == CategoryType.Blog
                          && (m.Language == language)
                          && m.Status
-                         && !m.Delete, x => x.OrderByDescending(mbox => mbox.DatePosted), x => new ContentPage
+                         , x => x.OrderByDescending(mbox => mbox.DatePosted), x => new ContentPage
                          {
                              Category = x.Category,
                              Id = x.Id,
                              Author = x.Author,
                              Banner = x.Banner,
                              DatePosted = x.DatePosted,
-                             Delete = x.Delete,
                              Name = x.Name,
                              Language = x.Language,
                              Status = x.Status,

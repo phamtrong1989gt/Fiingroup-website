@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     int i = 1;
-    var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status && !x.Delete && x.Language== language && x.Type == CategoryType.CategoryService, null, x => new Category { Id = x.Id, Status = x.Status, Delete = x.Delete, Type = x.Type, Name = x.Name, Language = x.Language , ParentId= x.ParentId },true);
+    var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status  && x.Language== language && x.Type == CategoryType.CategoryService, null, x => new Category { Id = x.Id, Status = x.Status, Type = x.Type, Name = x.Name, Language = x.Language , ParentId= x.ParentId },true);
 }
 <div class="page-content">
     <div class="section mt-0">

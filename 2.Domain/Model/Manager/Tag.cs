@@ -99,7 +99,6 @@ namespace PT.Domain.Model
 
         [MaxLength(10)]
         public string Language { get; set; }
-        public bool Delete { get; set; }
         [NotMapped]
         public virtual Link Link { get; set; }
         [NotMapped]
@@ -108,6 +107,9 @@ namespace PT.Domain.Model
         public List<LinkReference> LinkReferences { get; set; }
         [NotMapped]
         public Portal Portal { get; set; }
+
+        [NotMapped]
+        public string FullPath { get; set; }
     }
     public class TagModel:SeoModel
     {

@@ -154,7 +154,7 @@
                                 </div>
                             </div>
                         </div>
-                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type,LinkId = Model.LinkId })" />
+                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type,LinkId = Model.LinkId, PortalId = Model.PortalId })" />
                         <partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
                     </div>
                 </div>
@@ -172,9 +172,7 @@
                         <div class="form-group">
                             <label class="form-label">Cổng chính</label> <strong class="text-danger">*</strong> <span asp-validation-for="PortalId"></span>
                             <div class="controls">
-                                <select disabled asp-for="PortalId" asp-items="Model.PortalSelectList" class="input-sm form-control-t show-tick">
-                                    <option value="">Chọn</option>
-                                </select>
+                                <input type="text"  class="form-control input-sm form-control-t" disabled value="@Model.PortalName">
                                 <input type="hidden" asp-for="PortalId" />
                             </div>
                         </div>
@@ -233,12 +231,12 @@
 </form>
 
 <script>
-    paseRelated(@Html.Raw(Model.RelatedString));
-    paseReference(@Html.Raw(Model.ReferenceString));
-    initRickText("@Url.Action("UploadImage", new { type = 1, id = Model.Id})");
-    getTreeCategory($("[form-edit] [name='Language']").val(),@Model.Id,@(Model.PortalId ?? 1));
-      $("[name='DatePosted']").toDateTimePicker();
-    $("[name='Lastmod']").toDateTimePicker();
-    initAutoComplate();
-    initAutoComplate2();
+    // paseRelated(@Html.Raw(Model.RelatedString));
+    // paseReference(@Html.Raw(Model.ReferenceString));
+    // initRickText("@Url.Action("UploadImage", new { type = 1, id = Model.Id})");
+    // getTreeCategory($("[form-edit] [name='Language']").val(),@(Model.Id),@(Model.PortalId ?? 1));
+    // $("[name='DatePosted']").toDateTimePicker();
+    // $("[name='Lastmod']").toDateTimePicker();
+    // initAutoComplate();
+    // initAutoComplate2();
 </script>

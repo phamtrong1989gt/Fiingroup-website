@@ -38,6 +38,7 @@ namespace PT.Domain.Model
         [Display(Name = "Tự động ánh xạ với trang này")]
         public bool IsAutoIt { get; set; } = true;
 
-        public int PortalId { get; set; }
+        [Display(Name = "Cổng")]
+        public int? PortalId { get; set; }
     }
 }

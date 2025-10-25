@@ -351,7 +351,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<List<TreeRoleModel>> TreeCategory(int id, string language="vi")
         {
             var listCurent = await _iTourCategoryRepository.SearchAsync(true, 0, 0, x => x.TourId == id);
-            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => !x.Delete && x.Status && x.Type == CategoryType.CategoryTour && x.Language==language);
+            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x =>  x.Status && x.Type == CategoryType.CategoryTour && x.Language==language);
             var abc  = listCategory.Select(x => 
             new TreeRoleModel {
                 Id = x.Id.ToString(),
@@ -369,7 +369,7 @@ namespace PT.BE.Areas.Manager.Controllers
         [HttpGet, Authorize]
         public async Task<object> SearchCategory(string language = "vi")
         {
-            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Language == language && x.Status && !x.Delete && x.Type == CategoryType.CategoryTour);
+            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Language == language && x.Status  && x.Type == CategoryType.CategoryTour);
             return GenSelectCategory(listCategory, 0, 0);
         }
         [NonAction]

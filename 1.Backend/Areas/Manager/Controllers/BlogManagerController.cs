@@ -90,8 +90,8 @@ namespace PT.BE.Areas.Manager.Controllers
                 m => (m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key)) && m.Type == CategoryType.Blog &&
                     (m.Language == language) &&
                     (m.Status == status || status == null) &&
-                    (m.PortalId == portalId || portalId  == null) &&
-                    !m.Delete,
+                    (m.PortalId == portalId || portalId  == null) 
+                    ,
                 OrderByExtention(ordertype, orderby), x => new ContentPage
                 {
                     Category = x.Category,
@@ -99,7 +99,6 @@ namespace PT.BE.Areas.Manager.Controllers
                     Author = x.Author,
                     Banner = x.Banner,
                     DatePosted = x.DatePosted,
-                    Delete = x.Delete,
                     Name = x.Name,
                     Language = x.Language,
                     Price = x.Price,
@@ -138,7 +137,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 Language = language
             };
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
-            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
+            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             dl.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId))?.Name;
             dl.PortalId = portalId;
             return View(dl);
@@ -156,7 +155,6 @@ namespace PT.BE.Areas.Manager.Controllers
                         Name = use.Name,
                         Banner = use.Banner,
                         Content = use.Content,
-                        Delete = false,
                         Status = use.Status,
                         Language = use.Language,
                         Type = CategoryType.Blog,
@@ -201,7 +199,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var dl = await _iContentPageRepository.SingleOrDefaultAsync(true, m => m.Id == id);
-            if (dl == null || (dl != null && dl.Delete && dl.Type == CategoryType.Blog))
+            if (dl == null)
             {
                 return View("404");
             }
@@ -229,10 +227,10 @@ namespace PT.BE.Areas.Manager.Controllers
                 model.Slug = ktLink.Slug;
             }
             var blogTagIds = (await _iContentPageTagRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x => x.TagId).ToList();
-            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
+            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             model.TagIds = blogTagIds;
 
-            var listRelated = (await _iContentPageRelatedRepository.GetContentPageAsync(id, 0, 0, x => !x.Delete, x => x.OrderBy(m => m.DatePosted), x => new ContentPage { Id = x.Id, DatePosted = x.DatePosted, Delete = x.Delete, Status = x.Status, Name = x.Name })).Select(x => new { id = x.Id, text = x.Name });
+            var listRelated = (await _iContentPageRelatedRepository.GetContentPageAsync(id, 0, 0, null, x => x.OrderBy(m => m.DatePosted), x => new ContentPage { Id = x.Id, DatePosted = x.DatePosted, Status = x.Status, Name = x.Name })).Select(x => new { id = x.Id, text = x.Name });
             model.ContentPageRelatedIds = string.Join(',', listRelated.Select(x => x.id));
             model.RelatedString = Newtonsoft.Json.JsonConvert.SerializeObject(listRelated);
 
@@ -264,7 +262,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 {
                     await _iContentPageRepository.BeginTransaction();
                     var dl = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                    if (dl == null || (dl != null && dl.Delete))
+                    if (dl == null)
                     {
                         return new ResponseModel() { Output = 0, Message = "Dữ liệu không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                     }
@@ -400,11 +398,10 @@ namespace PT.BE.Areas.Manager.Controllers
             try
             {
                 var kt = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                if (kt == null || (kt != null && kt.Delete && kt.Type == CategoryType.Blog))
+                if (kt == null)
                 {
                     return new ResponseModel() { Output = 0, Message = "Tin tức không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                 }
-                kt.Delete = true;
                 await _iContentPageRepository.CommitAsync();
 
                 await DeleteSeoLink(CategoryType.Blog, kt.Id);
@@ -432,7 +429,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<List<TreeRoleModel>> TreeCategory(int id, string language = "vi", int portalId = 1)
         {
             var listCurent = await _iContentPageCategoryRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id);
-            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => !x.Delete && x.Status && x.Type == CategoryType.CategoryBlog && x.Language == language && x.PortalId ==portalId);
+            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x =>  x.Status && x.Type == CategoryType.CategoryBlog && x.Language == language && x.PortalId ==portalId);
             var abc = listCategory.Select(x =>
            new TreeRoleModel
            {
@@ -467,7 +464,7 @@ namespace PT.BE.Areas.Manager.Controllers
         [HttpGet, Authorize]
         public async Task<object> SearchCategory(string language = "vi")
         {
-            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Language == language && x.Status && !x.Delete && x.Type == CategoryType.CategoryBlog);
+            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Language == language && x.Status && x.Type == CategoryType.CategoryBlog);
             return GenSelectCategory(listCategory, 0, 0);
         }
         [NonAction]
@@ -486,9 +483,9 @@ namespace PT.BE.Areas.Manager.Controllers
 
         #region [Select tag]
         [HttpGet, Authorize]
-        public async Task<object> SearchTag(string language = "vi", int portalId = 1)
+        public async Task<object> SearchTag(int? portalId, string language = "vi")
         {
-            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete && x.PortalId == portalId, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
+            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && (x.PortalId == portalId || portalId == null), x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
         }
         #endregion
 
@@ -496,8 +493,8 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<List<SelectListItem>> SearchContentPage(string q, int top = 10, string language = "vi")
         {
             top = top > 100 ? 100 : top;
-            return (await _iContentPageRepository.SearchAsync(true, 0, top, x => x.Name.ToLower().Contains(q.ToLower()) && !x.Delete && x.Status && (x.Type == CategoryType.Blog || x.Type == CategoryType.Service) && x.Language == language, x => x.OrderBy(y => y.Name),
-                x => new ContentPage { Id = x.Id, Name = x.Name, Delete = x.Delete, Status = x.Status, Language = x.Language, Type = x.Type })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
+            return (await _iContentPageRepository.SearchAsync(true, 0, top, x => x.Name.ToLower().Contains(q.ToLower()) &&  x.Status && (x.Type == CategoryType.Blog || x.Type == CategoryType.Service) && x.Language == language, x => x.OrderBy(y => y.Name),
+                x => new ContentPage { Id = x.Id, Name = x.Name,  Status = x.Status, Language = x.Language, Type = x.Type })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
         }
 
         #region [Upload file]

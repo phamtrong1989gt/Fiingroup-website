@@ -6,7 +6,7 @@
 @{
     Layout = null;
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    Model.ServiceSelectList = new SelectList(await _iCategoryRepository.SearchAsync(true, 0, 0, x => !x.Delete && x.Status && x.Type == CategoryType.CategoryService && x.Language == language), "Id", "Name");
+    Model.ServiceSelectList = new SelectList(await _iCategoryRepository.SearchAsync(true, 0, 0, x =>  x.Status && x.Type == CategoryType.CategoryService && x.Language == language), "Id", "Name");
 
 }
 <form form-book-2 action="/@language/ContactHome/Booking" form-contact-book-2 method="post" novalidate="novalidate">

@@ -32,7 +32,7 @@ namespace PT.UI.Controllers
             objectLink.Title = $"{ objectLink.Title }{ ((page == null) ? "" : (language == "vi" ? $" - trang {page}" : $" - page {page}"))}";
             ViewData["linkData"] = objectLink;
 
-            var dl = await _iTagRepository.SingleOrDefaultAsync(true, x => x.Id == id && x.Status && !x.Delete);
+            var dl = await _iTagRepository.SingleOrDefaultAsync(true, x => x.Id == id && x.Status);
             if (dl == null)
             {
                 return View("_Home404");
@@ -43,7 +43,7 @@ namespace PT.UI.Controllers
                    10,
                    null,
                    id,
-                   m => m.Status && !m.Delete,
+                   m => m.Status,
                    x => x.OrderByDescending(mbox => mbox.DatePosted), x => new ContentPage
                    {
                        Category = x.Category,
@@ -51,7 +51,6 @@ namespace PT.UI.Controllers
                        Author = x.Author,
                        Banner = x.Banner,
                        DatePosted = x.DatePosted,
-                       Delete = x.Delete,
                        Name = x.Name,
                        Language = x.Language,
                        Price = x.Price,

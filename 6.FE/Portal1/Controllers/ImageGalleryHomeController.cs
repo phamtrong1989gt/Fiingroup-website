@@ -48,7 +48,7 @@ namespace PT.UI.Controllers
             ViewData["Description"] = dl.Description;
             ViewData["Keywords"] = dl.Keywords;
             dl.ListImage = await _iImageRepository.SearchPagedListAsync(page??1, 20, x => x.ImageGalleryId == id && (x.CategoryId== c || c==null),x=>x.OrderByDescending(m=>m.Id));
-            dl.Categorys = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status && !x.Delete && x.Language == language && x.Type == CategoryType.CategoryService, x => x.OrderBy(m => m.Order));
+            dl.Categorys = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status  && x.Language == language && x.Type == CategoryType.CategoryService, x => x.OrderBy(m => m.Order));
 
             int totalPage = (dl.ListImage.TotalRows % dl.ListImage.Limit > 0) ? (dl.ListImage.TotalRows / dl.ListImage.Limit + 1) : (dl.ListImage.TotalRows / dl.ListImage.Limit);
             if (totalPage >= 2)

@@ -36,7 +36,6 @@ namespace PT.Infrastructure.Repositories
                              Link = y,
                              Id = x.tag.Id,
                              Banner = x.tag.Banner,
-                             Delete = x.tag.Delete,
                              Name = x.tag.Name,
                              Language = x.tag.Language,
                              Status = x.tag.Status,

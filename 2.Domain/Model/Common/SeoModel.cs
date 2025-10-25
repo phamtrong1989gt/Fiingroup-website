@@ -62,10 +62,7 @@ namespace PT.Domain.Model
         public string GooglePlusDescription { get; set; }
 
         public bool IsStatic { get; set; }
-
-        [Display(Name = "Cổng")]
-        [Required(ErrorMessage = "{0} không được để rỗng")]
-        public int? PortalId { get; set; }
+      
         public string PortalName { get; set; }
 
     }

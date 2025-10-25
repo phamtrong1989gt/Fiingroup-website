@@ -30,7 +30,6 @@ namespace PT.Domain.Model
         public string Author { get; set; }
         public DateTime DatePosted { get; set; }
         public bool Status { get; set; }
-        public bool Delete { get; set; }
         public int PortalId { get; set; } = 1;
         public double? Price { get; set; }
         [NotMapped]
@@ -55,6 +54,9 @@ namespace PT.Domain.Model
 
         [NotMapped]
         public Portal Portal { get; set; }
+
+        [NotMapped]
+        public string FullPath { get; set; }
 
     }
     public class BlogModel :SeoModel

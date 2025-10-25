@@ -79,8 +79,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
                         (m.PortalId== portalId || portalId == null) &&
-                        m.Type==CategoryType.Page &&
-                        !m.Delete,
+                        m.Type==CategoryType.Page,
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {
                     Category = x.Category,
@@ -88,7 +87,6 @@ namespace PT.BE.Areas.Manager.Controllers
                     Author = x.Author,
                     Banner = x.Banner,
                     DatePosted = x.DatePosted,
-                    Delete = x.Delete,
                     Name = x.Name,
                     Language = x.Language,
                     Price = x.Price,
@@ -128,13 +126,13 @@ namespace PT.BE.Areas.Manager.Controllers
         #region [Create]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Create(string language = "vi")
+        public async Task<IActionResult> Create(int? portalId,string language = "vi")
         {
             var dl = new PageModel
             {
                 Language = language
             };
-            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
+            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
             // Lấy danh sách portal để hiển thị trong dropdown trên trang quản lý
             // Tham số: true = only active, 0,0 = không phân trang
@@ -142,6 +140,8 @@ namespace PT.BE.Areas.Manager.Controllers
             // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
             dl.PortalSelectList = new SelectList(portals, "Id", "Name");
             // Trả về view chính. Dữ liệu bảng sẽ được nạp bằng Ajax gọi IndexPost
+            dl.PortalId = portalId ?? 1;
+            dl.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId))?.Name;
             return View(dl);
         }
 
@@ -158,12 +158,12 @@ namespace PT.BE.Areas.Manager.Controllers
                         Name = use.Name,
                         Banner = use.Banner,
                         Content = use.Content,
-                        Delete = false,
                         Status = use.Status,
                         Language = use.Language,
                         Type = CategoryType.Page,
                         Summary = use.Summary,
-                        DatePosted =  DateTime.Now
+                        DatePosted = DateTime.Now,
+                        PortalId = use.PortalId ?? 1
                     };
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
@@ -199,7 +199,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var dl = await _iContentPageRepository.SingleOrDefaultAsync(true, m => m.Id == id);
-            if (dl == null || (dl != null && dl.Delete && dl.Type==CategoryType.Page))
+            if (dl == null)
             {
                 return View("404");
             }
@@ -227,15 +227,16 @@ namespace PT.BE.Areas.Manager.Controllers
                 model.Slug = ktLink.Slug;
             }
             var blogTagIds = (await _iContentPageTagRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x=>x.TagId).ToList();
-            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
+            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             model.TagIds = blogTagIds;
-            model.PortalId = dl.PortalId;
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
-
+            model.PortalId = dl.PortalId;
+            model.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == dl.PortalId))?.Name;
             return View(model);
         }
+
         [HttpPost, ActionName("Edit")]
         [AuthorizePermission("Index")]
         public async Task<ResponseModel> EditPost(PageModel use, int id)
@@ -245,7 +246,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 if (ModelState.IsValid)
                 {
                     var dl = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                    if (dl == null || (dl != null && dl.Delete))
+                    if (dl == null)
                     {
                         return new ResponseModel() { Output = 0, Message = "Dữ liệu không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                     }
@@ -308,13 +309,12 @@ namespace PT.BE.Areas.Manager.Controllers
             try
             {
                 var kt = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                if (kt == null || (kt != null && kt.Delete && kt.Type==CategoryType.Page))
+                if (kt == null)
                 {
                     return new ResponseModel() { Output = 0, Message = "Trang nội dung không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                 }
-                kt.Delete = true;
+                
                 await _iContentPageRepository.CommitAsync();
-
                 await DeleteSeoLink(CategoryType.Page, kt.Id);
                 await RemoveFileData(id, CategoryType.Page);
                 await AddLog(new LogModel
@@ -355,7 +355,7 @@ namespace PT.BE.Areas.Manager.Controllers
         [HttpGet, Authorize]
         public async Task<object> SearchTag(string language = "vi")
         {
-            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete })).Select(x=> new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
+            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status })).Select(x=> new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
         }
         #endregion
 

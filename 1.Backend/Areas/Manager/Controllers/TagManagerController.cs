@@ -27,6 +27,7 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IFileRepository _fileRepository;
         private readonly IPortalRepository _iPortalRepository;
+        private readonly IContentPageTagRepository _iContentPageTagRepository;
         public TagManagerController(
             ILogger<TagManagerController> logger,
             IOptions<BaseSettings> baseSettings,
@@ -34,6 +35,7 @@ namespace PT.BE.Areas.Manager.Controllers
             ITagRepository tagRepository,
             IWebHostEnvironment webHostEnvironment,
             IPortalRepository iPortalRepository,
+            IContentPageTagRepository contentPageTagRepository,
             IFileRepository fileRepository)
         {
             controllerName = "TagManager";
@@ -45,6 +47,7 @@ namespace PT.BE.Areas.Manager.Controllers
             _webHostEnvironment = webHostEnvironment;
             _fileRepository = fileRepository;
             _iPortalRepository = iPortalRepository;
+            _iContentPageTagRepository = contentPageTagRepository;
         }
 
         #region [Index]
@@ -80,13 +83,15 @@ namespace PT.BE.Areas.Manager.Controllers
                     && m.Language == language
                     && (m.Status == status || status == null)
                     && (m.PortalId == portalId || portalId == null)
-                    && !m.Delete,
+                   ,
                 OrderByExtension(ordertype, orderby));
 
-            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            var portals = await _iPortalRepository.SearchAsync(true,0,0);
             foreach (var item in data.Data)
             {
                 item.Portal = portals.FirstOrDefault(p => p.Id == item.PortalId);
+                // Use repository helper that accepts existing portals list to avoid extra DB queries
+                item.FullPath = await _iPortalRepository.GetFullPathAsync(item.PortalId, item.Link?.Slug ?? string.Empty, portals, item.Language, _baseSettings.Value.MultipleLanguage);
             }
             return View("IndexAjax", data);
         }
@@ -131,12 +136,12 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    await _tagRepository.BeginTransaction();
                     // Kiểm tra trùng tên tag (Create)
                     var normalizedName = (model.Name ?? string.Empty).Trim().ToLowerInvariant();
                     var portalIdToCheck = model.PortalId ?? 0;
                     var exists = await _tagRepository.AnyAsync(t =>
-                        !t.Delete
-                        && t.PortalId == portalIdToCheck
+                        t.PortalId == portalIdToCheck
                         && t.Name != null
                         && t.Name.ToLower() == normalizedName);
                     if (exists)
@@ -148,11 +153,9 @@ namespace PT.BE.Areas.Manager.Controllers
                             Type = ResponseTypeMessage.Warning
                         };
                     }
-                    await _tagRepository.BeginTransaction();
                     var tag = new Tag
                     {
                         Name = model.Name,
-                        Delete = false,
                         Banner = model.Banner,
                         Content = model.Content,
                         Status = model.Status,
@@ -207,7 +210,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var tag = await _tagRepository.SingleOrDefaultAsync(true, m => m.Id == id);
-            if (tag == null || tag.Delete)
+            if (tag == null)
             {
                 return View("404");
             }
@@ -251,12 +254,12 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    await _tagRepository.BeginTransaction();
                     // Kiểm tra trùng tên tag (Edit) - exclude bản ghi hiện tại
                     var normalizedName = (model.Name ?? string.Empty).Trim().ToLowerInvariant();
                     var portalIdToCheck = model.PortalId ?? 0;
                     var exists = await _tagRepository.AnyAsync(t =>
-                        !t.Delete
-                        && t.PortalId == portalIdToCheck
+                        t.PortalId == portalIdToCheck
                         && t.Id != id
                         && t.Name != null
                         && t.Name.ToLower() == normalizedName);
@@ -271,9 +274,8 @@ namespace PT.BE.Areas.Manager.Controllers
                         };
                     }
 
-                    await _tagRepository.BeginTransaction();  
                     var tag = await _tagRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                    if (tag == null || tag.Delete)
+                    if (tag == null)
                     {
                         return new ResponseModel
                         {
@@ -338,7 +340,7 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 await _tagRepository.BeginTransaction();
                 var tag = await _tagRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                if (tag == null || tag.Delete)
+                if (tag == null)
                 {
                     return new ResponseModel
                     {
@@ -347,11 +349,13 @@ namespace PT.BE.Areas.Manager.Controllers
                         Type = ResponseTypeMessage.Warning
                     };
                 }
-                tag.Delete = true;
+                _tagRepository.Delete(tag);
                 await _tagRepository.CommitAsync();
+                // Xóa hết bảng liên quan
+                _iContentPageTagRepository.DeleteWhere(x=>x.TagId == id);
+                await _iContentPageTagRepository.CommitAsync();
                 await DeleteSeoLink(CategoryType.Tag, tag.Id);
                 await RemoveFileData(id, CategoryType.Tag);
-
                 await AddLog(new LogModel
                 {
                     ObjectId = tag.Id,
@@ -385,6 +389,10 @@ namespace PT.BE.Areas.Manager.Controllers
         #endregion
 
         #region [Upload file]
+        /// <summary>
+        /// Upload image cho category: validate extension, kích thước, resize nếu cần và ghi file metadata.
+        /// - Trả về ResponseModel hoặc CKEditor response tuỳ type.
+        /// </summary>
         [HttpPost, ActionName("UploadImage")]
         [AuthorizePermission("Index")]
         public async Task<object> UploadImagePost(string altId, int id, int type = 0)
@@ -392,9 +400,8 @@ namespace PT.BE.Areas.Manager.Controllers
             try
             {
                 string[] allowedExtensions = _baseSettings.Value.ImagesType.Split(',');
-                string folder = Functions.GenFolderByDate();
-                string path = Path.Combine(_webHostEnvironment.WebRootPath, "Data", folder);
-                string pathServer = $"/Data{folder}";
+                string path = $"{_webHostEnvironment.WebRootPath}/Data" + Functions.GenFolderByDate();
+                string pathServer = $"/Data" + Functions.GenFolderByDate();
 
                 if (!Directory.Exists(path))
                 {
@@ -404,74 +411,70 @@ namespace PT.BE.Areas.Manager.Controllers
                 var files = Request.Form.Files;
                 foreach (var file in files)
                 {
-                    string fileExt = Path.GetExtension(file.FileName);
-                    if (!allowedExtensions.Contains(fileExt))
+                    if (!allowedExtensions.Contains(Path.GetExtension(file.FileName)))
                     {
-                        return new ResponseModel<FileDataModel>
-                        {
-                            Output = 2,
-                            Message = "Tệp tải lên không đúng định dạng.",
-                            Type = ResponseTypeMessage.Warning
-                        };
+                        return new ResponseModel<FileDataModel>() { Output = 2, Message = "Tệp tải lên không đúng định dạng.", Type = ResponseTypeMessage.Warning };
                     }
-                    if (_baseSettings.Value.ImagesMaxSize < file.Length)
+                    else if (_baseSettings.Value.ImagesMaxSize < file.Length)
                     {
-                        return new ResponseModel<FileDataModel>
-                        {
-                            Output = 3,
-                            Message = "Tệp tải lên vượt quá kích thước cho phép.",
-                            Type = ResponseTypeMessage.Warning
-                        };
-                    }
-
-                    var newFilename = Path.GetFileName(file.FileName);
-                    if (System.IO.File.Exists(Path.Combine(path, file.Name)))
-                    {
-                        newFilename = $"{Path.GetFileName(file.FileName)}_{id}_{DateTime.Now:yyyyMMddHHmmss}";
-                    }
-
-                    string pathFile = Path.Combine(path, newFilename);
-                    string pathServerFile = $"{pathServer}{newFilename}";
-
-                    using var image = System.Drawing.Image.FromStream(file.OpenReadStream());
-                    if (image.Width > _baseSettings.Value.ImageMaxWith)
-                    {
-                        _fileRepository.ResizeImage(file, pathFile, _baseSettings.Value.ImageMaxWith, false);
+                        return new ResponseModel<FileDataModel>() { Output = 3, Message = "Tệp tải lên vượt quá kích thước cho phép.", Type = ResponseTypeMessage.Warning };
                     }
                     else
                     {
-                        using var stream = new FileStream(pathFile, FileMode.Create);
-                        await file.CopyToAsync(stream);
-                    }
-
-                    await AddFileData(id, pathServerFile, CategoryType.Tag, altId);
-
-                    if (type == 1)
-                    {
-                        return new FileDataCKEditerModel
+                        var newFilename = Path.GetFileName(file.FileName);
+                        if (System.IO.File.Exists(path + file.Name))
                         {
-                            FileName = Path.GetFileName(pathServerFile),
-                            Number = 200,
-                            Uploaded = 1,
-                            Url = pathServerFile
-                        };
-                    }
-                    else
-                    {
-                        return new ResponseModel<FileDataModel>
+                            newFilename = $"{Path.GetFileName(file.FileName)}_{id}_{DateTime.Now:yyyyMMddHHmmss}";
+                        }
+
+                        string pathFile = ContentDispositionHeaderValue
+                        .Parse(file.ContentDisposition)
+                        .FileName
+                        .Trim('"');
+
+                        pathFile = $"{path}{newFilename}";
+                        pathServer = $"{pathServer}{newFilename}";
+
+                        using var image = System.Drawing.Image.FromStream(file.OpenReadStream());
+                        if (image.Width > _baseSettings.Value.ImageMaxWith)
                         {
-                            Output = 1,
-                            Message = "Tải tệp lên thành công.",
-                            Type = ResponseTypeMessage.Success,
-                            Data = new FileDataModel
+                            _fileRepository.ResizeImage(file, pathFile, _baseSettings.Value.ImageMaxWith, false);
+                        }
+                        else
+                        {
+                            using var stream = new FileStream(pathFile, FileMode.Create);
+                            await file.CopyToAsync(stream);
+                        }
+
+                        await AddFileData(id, pathServer, CategoryType.Tag, altId);
+
+                        if (type == 1)
+                        {
+                            return new FileDataCKEditerModel()
                             {
-                                CreatedDate = DateTime.Now,
-                                CreatedUser = DataUserInfo.UserId,
-                                Path = pathServerFile,
-                                FileName = Path.GetFileName(pathServerFile)
-                            },
-                            IsClosePopup = false
-                        };
+                                FileName = Path.GetFileName(pathServer),
+                                Number = 200,
+                                Uploaded = 1,
+                                Url = pathServer
+                            };
+                        }
+                        else
+                        {
+                            return new ResponseModel<FileDataModel>()
+                            {
+                                Output = 1,
+                                Message = "Tải tệp lên thành công.",
+                                Type = ResponseTypeMessage.Success,
+                                Data = new FileDataModel
+                                {
+                                    CreatedDate = DateTime.Now,
+                                    CreatedUser = DataUserInfo.UserId,
+                                    Path = pathServer,
+                                    FileName = Path.GetFileName(pathServer)
+                                },
+                                IsClosePopup = false
+                            };
+                        }
                     }
                 }
             }
@@ -479,13 +482,7 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
             }
-            return new ResponseModel<FileDataModel>
-            {
-                Output = -1,
-                Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại.",
-                Type = ResponseTypeMessage.Danger,
-                Status = false
-            };
+            return new ResponseModel<FileDataModel>() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại.", Type = ResponseTypeMessage.Danger, Status = false };
         }
         #endregion
     }

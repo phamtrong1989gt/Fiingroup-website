@@ -63,8 +63,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     m =>(m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key)) && 
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
-                        m.Type==CategoryType.PromotionInformation &&
-                        !m.Delete,
+                        m.Type==CategoryType.PromotionInformation,
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {
                     Category = x.Category,
@@ -72,7 +71,6 @@ namespace PT.BE.Areas.Manager.Controllers
                     Author = x.Author,
                     Banner = x.Banner,
                     DatePosted = x.DatePosted,
-                    Delete = x.Delete,
                     Name = x.Name,
                     Language = x.Language,
                     Price = x.Price,
@@ -126,7 +124,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 Language = language,
                 Type =CategoryType.PromotionInformation
             };
-            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
+            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
             return View(dl);
         }
@@ -143,7 +141,6 @@ namespace PT.BE.Areas.Manager.Controllers
                         Name = use.Name,
                         Banner = use.Banner,
                         Content = use.Content,
-                        Delete = false,
                         Status = use.Status,
                         Language = use.Language,
                         Type = CategoryType.PromotionInformation,
@@ -185,7 +182,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var dl = await _iContentPageRepository.SingleOrDefaultAsync(true, m => m.Id == id);
-            if (dl == null || (dl != null && dl.Delete))
+            if (dl == null || (dl != null))
             {
                 return View("404");
             }
@@ -214,7 +211,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 model.Type = ktLink.Type;
             }
             var blogTagIds = (await _iContentPageTagRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x=>x.TagId).ToList();
-            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
+            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
 
             model.TagIds = blogTagIds;
             return View(model);
@@ -228,7 +225,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 if (ModelState.IsValid)
                 {
                     var dl = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                    if (dl == null || (dl != null && dl.Delete))
+                    if (dl == null || (dl != null))
                     {
                         return new ResponseModel() { Output = 0, Message = "Dữ liệu không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                     }
@@ -294,11 +291,10 @@ namespace PT.BE.Areas.Manager.Controllers
             try
             {
                 var kt = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                if (kt == null || (kt != null && kt.Delete && kt.Type==CategoryType.PromotionInformation))
+                if (kt == null || (kt != null && kt.Type==CategoryType.PromotionInformation))
                 {
                     return new ResponseModel() { Output = 0, Message = "trang thông tin khuyến mãi không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                 }
-                kt.Delete = true;
                 await _iContentPageRepository.CommitAsync();
 
                 await DeleteSeoLink(CategoryType.PromotionInformation, kt.Id);
@@ -341,7 +337,7 @@ namespace PT.BE.Areas.Manager.Controllers
         [HttpGet, Authorize]
         public async Task<object> SearchTag(string language = "vi")
         {
-            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete })).Select(x=> new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
+            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status })).Select(x=> new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
         }
         #endregion
     }

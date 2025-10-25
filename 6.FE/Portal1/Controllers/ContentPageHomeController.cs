@@ -33,12 +33,12 @@ namespace PT.UI.Controllers
 
             string viewName = "Details";
 
-            var dl = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == id && x.Status && !x.Delete);
+            var dl = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == id && x.Status);
             if( dl == null)
             {
                 return View("_Home404");
             }
-            dl.Tags = await _iContentPageTagRepository.GetTag(0, 0, id, x => x.Status && !x.Delete);
+            dl.Tags = await _iContentPageTagRepository.GetTag(0, 0, id, x => x.Status);
             switch(dl.Type)
             {
                 case CategoryType.Blog:
@@ -63,17 +63,16 @@ namespace PT.UI.Controllers
                     break;
                 case Domain.Model.CategoryType.Service:
                     viewName = "Service";
-                    dl.ServiceCategorys = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status && !x.Delete && x.Type == CategoryType.CategoryService && x.Language==dl.Language);
+                    dl.ServiceCategorys = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status  && x.Type == CategoryType.CategoryService && x.Language==dl.Language);
                     foreach (var item in dl.ServiceCategorys.Where(x=>x.ParentId != 0))
                     {
-                        item.ContentPageCategory = await _iContentPageRepository.SearchAdvanceAsync(CategoryType.Service, 0, 0, item.Id, null, x => x.Status && !x.Delete && x.Type == CategoryType.Service, x => x.OrderByDescending(m => m.DatePosted), x => new ContentPage
+                        item.ContentPageCategory = await _iContentPageRepository.SearchAdvanceAsync(CategoryType.Service, 0, 0, item.Id, null, x => x.Status  && x.Type == CategoryType.Service, x => x.OrderByDescending(m => m.DatePosted), x => new ContentPage
                         {
                             Category = x.Category,
                             Id = x.Id,
                             Author = x.Author,
                             Banner = x.Banner,
                             DatePosted = x.DatePosted,
-                            Delete = x.Delete,
                             Name = x.Name,
                             Language = x.Language,
                             Price = x.Price,
@@ -112,14 +111,13 @@ namespace PT.UI.Controllers
                 null,
                 m => (m.Name.Contains(k) || k == null || m.Content.Contains(k) || m.Summary.Contains(k)) 
                 && m.Type == CategoryType.FAQ 
-                && (m.Language == language) && m.Status  && !m.Delete, x=>x.OrderByDescending(m=>m.DatePosted), x => new ContentPage
+                && (m.Language == language) && m.Status, x=>x.OrderByDescending(m=>m.DatePosted), x => new ContentPage
                 {
                     Category = x.Category,
                     Id = x.Id,
                     Author = x.Author,
                     Banner = x.Banner,
                     DatePosted = x.DatePosted,
-                    Delete = x.Delete,
                     Name = x.Name,
                     Language = x.Language,
                     Price = x.Price,

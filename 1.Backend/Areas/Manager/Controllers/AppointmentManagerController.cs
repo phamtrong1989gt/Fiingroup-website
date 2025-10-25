@@ -107,7 +107,7 @@ namespace PT.BE.Areas.Manager.Controllers
             var model = MapModel<ContactAppointmentModel>.Go(dl);
             model.AppointmentStatus = dl.AppointmentStatus;
             model.Service = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == dl.ServiceId);
-            model.ServiceSelectList = new SelectList(await _iContentPageRepository.SearchAsync(true, 0, 0, x => !x.Delete && x.Status && x.Type==CategoryType.Service && x.Language == "vi"), "Id", "Name");
+            model.ServiceSelectList = new SelectList(await _iContentPageRepository.SearchAsync(true, 0, 0, x =>  x.Status && x.Type==CategoryType.Service && x.Language == "vi"), "Id", "Name");
             model.EmployeeSelectList = new SelectList(await _iEmployeeRepository.SearchAsync(true, 0, 0, x => x.Status && !x.Delete && x.Language == "vi"), "Id", "FullName");
             return View(model);
         }
@@ -159,7 +159,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<object> SearchService(string q, int top = 20, string languegu = "vi", bool? isSearch = false)
         {
             top = top > 100 ? 20 : top;
-            var listData = (await _iContentPageRepository.SearchAsync(true, 0, 0, x => x.Name.Contains(q) && x.Language == languegu && x.Status && !x.Delete && x.Type == CategoryType.Service)).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
+            var listData = (await _iContentPageRepository.SearchAsync(true, 0, 0, x => x.Name.Contains(q) && x.Language == languegu && x.Status  && x.Type == CategoryType.Service)).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
             var list = new List<SelectListItem>();
             if (isSearch == true)
             {

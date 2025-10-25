@@ -29,7 +29,7 @@ namespace PT.Component
             {
                 var items = await _contentPageRelatedRepository.GetContentPageAsync(
                     contentPageId, 0, take,
-                    m => m.Status && !m.Delete && m.DatePosted <= DateTime.Now && m.Language == language,
+                    m => m.Status && m.DatePosted <= DateTime.Now && m.Language == language,
                     m => m.OrderByDescending(x => x.DatePosted),
                     a => new ContentPage
                     {

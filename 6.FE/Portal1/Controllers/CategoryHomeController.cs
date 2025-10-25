@@ -72,7 +72,7 @@ namespace PT.UI.Controllers
             objectLink.Title = string.IsNullOrEmpty(objectLink.Title) ? objectLink.Name : objectLink.Title;
 
             string viewName = "_404";
-            var dl = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == id && x.Status && !x.Delete);
+            var dl = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == id && x.Status);
             if (dl == null)
             {
                 return View("_Home404");
@@ -123,7 +123,7 @@ namespace PT.UI.Controllers
             {
                 viewName = "Products";
 
-                dl.ChildrentCategorys = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status && !x.Delete && x.Type == CategoryType.CategoryProduct);
+                dl.ChildrentCategorys = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status && x.Type == CategoryType.CategoryProduct);
 
                 dl.Products = await _iProductRepository.SearchPagedListAsync(
                   page ?? 1,
@@ -177,14 +177,13 @@ namespace PT.UI.Controllers
                       && m.Type == CategoryType.Blog
                       && (m.Language == language)
                       && m.Status
-                      && !m.Delete, x => x.OrderByDescending(mbox => mbox.DatePosted), x => new ContentPage
+                      , x => x.OrderByDescending(mbox => mbox.DatePosted), x => new ContentPage
                       {
                           Category = x.Category,
                           Id = x.Id,
                           Author = x.Author,
                           Banner = x.Banner,
                           DatePosted = x.DatePosted,
-                          Delete = x.Delete,
                           Name = x.Name,
                           Language = x.Language,
                           Status = x.Status,
@@ -217,17 +216,16 @@ namespace PT.UI.Controllers
                 {
                     ViewData["linkData"] = objectLink;
                     viewName = "Services";
-                    dl.ChildrentCategorys = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status && !x.Delete && x.ParentId == id && x.Type == CategoryType.CategoryService);
+                    dl.ChildrentCategorys = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status  && x.ParentId == id && x.Type == CategoryType.CategoryService);
                     foreach (var item in dl.ChildrentCategorys)
                     {
-                        item.ContentPageCategory = await _iContentPageRepository.SearchAdvanceAsync(CategoryType.Service, 0, 0, item.Id, null, x => x.Status && !x.Delete && x.Type == CategoryType.Service, x => x.OrderByDescending(m => m.DatePosted), x => new ContentPage
+                        item.ContentPageCategory = await _iContentPageRepository.SearchAdvanceAsync(CategoryType.Service, 0, 0, item.Id, null, x => x.Status  && x.Type == CategoryType.Service, x => x.OrderByDescending(m => m.DatePosted), x => new ContentPage
                         {
                             Category = x.Category,
                             Id = x.Id,
                             Author = x.Author,
                             Banner = x.Banner,
                             DatePosted = x.DatePosted,
-                            Delete = x.Delete,
                             Name = x.Name,
                             Language = x.Language,
                             Price = x.Price,
@@ -257,14 +255,13 @@ namespace PT.UI.Controllers
                                   && m.Type == CategoryType.Service
                                   && (m.Language == language)
                                   && m.Status
-                                  && !m.Delete, x => x.OrderByDescending(m => m.DatePosted), x => new ContentPage
+                                  , x => x.OrderByDescending(m => m.DatePosted), x => new ContentPage
                                   {
                                       Category = x.Category,
                                       Id = x.Id,
                                       Author = x.Author,
                                       Banner = x.Banner,
                                       DatePosted = x.DatePosted,
-                                      Delete = x.Delete,
                                       Name = x.Name,
                                       Language = x.Language,
                                       Price = x.Price,

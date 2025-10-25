@@ -171,7 +171,6 @@ namespace PT.BE.Areas.Base.Controllers
             var data = new Tag
             {
                 Name = use.Name,
-                Delete = false,
                 Status = true,
                 Language = use.Language,
                 PortalId = use.PortalId ?? 1
@@ -260,14 +259,6 @@ namespace PT.BE.Areas.Base.Controllers
                 model.LinkId = dlLug.Id;
                 await _iLinkReferenceRepository.ReferenceUpdate(model);
             }
-            // Cập nhật cache liên kết SEO
-            var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
-            var cacheKey = $"Link_{dlLug.Slug}_{language}_{dlLug.PortalId}";
-            if (cache.TryGetValue(cacheKey, out Link link))
-            {
-                cache.Remove(cacheKey);
-            }
-            cache.Set(cacheKey, dlLug, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(60 * 6)));
             return dlLug.Id;
         }
 
@@ -389,15 +380,6 @@ namespace PT.BE.Areas.Base.Controllers
                 model.Language = language;
                 await _iLinkReferenceRepository.ReferenceUpdate(model);
             }
-
-            // Cập nhật cache liên kết SEO
-            var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
-            var cacheKey = $"Link_{ktLink.Slug}_{language}_{ktLink.PortalId}";
-            if (cache.TryGetValue(cacheKey, out Link link))
-            {
-                cache.Remove(cacheKey);
-            }
-            cache.Set(cacheKey, ktLink, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(60 * 6)));
         }
 
         /// <summary>
@@ -416,13 +398,6 @@ namespace PT.BE.Areas.Base.Controllers
                 _iLinkRepository.Update(ktLink);
                 // Thay vì xóa hẳn thì sẽ đánh dấu đã xóa và auto redirect 301 về trang chủ
                 await _iLinkRepository.CommitAsync();
-            }
-            // Cập nhật cache liên kết SEO
-            var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
-            var cacheKey = $"Link_{ktLink.Slug}_{ktLink.Language}_{ktLink.PortalId}";
-            if (cache.TryGetValue(cacheKey, out Link link))
-            {
-                cache.Remove(cacheKey);
             }
         }
 

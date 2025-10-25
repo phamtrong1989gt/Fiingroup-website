@@ -87,13 +87,13 @@ namespace PT.Infrastructure
             builder.Entity<IdentityUserToken<int>>().ToTable("UserToken", "adm");
             builder.Entity<IdentityUserClaim<int>>().ToTable("UserClaim", "adm");
             builder.Entity<Log>().ToTable("Log", "adm").HasIndex(x => new { x.Type, x.ObjectType, x.ActionTime});
-            builder.Entity<Category>().ToTable("Category").HasIndex(x => new { x.Type, x.Delete, x.Status, x.Language });
+            builder.Entity<Category>().ToTable("Category").HasIndex(x => new { x.Type,  x.Status, x.Language });
             builder.Entity<Link>().ToTable("Link").HasIndex(x => new { x.Type, x.Delete, x.Status, x.Language,x.ObjectId,x.IsStatic,x.IncludeSitemap });
-            builder.Entity<ContentPage>().ToTable("ContentPage").HasIndex(x => new { x.Type, x.Delete, x.Status, x.Language, x.DatePosted });
+            builder.Entity<ContentPage>().ToTable("ContentPage").HasIndex(x => new { x.Type, x.Status, x.Language, x.DatePosted });
             builder.Entity<ContentPageCategory>().ToTable("ContentPageCategory").HasIndex(x => new { x.CategoryId,x.ContentPageId});
             builder.Entity<ContentPageRelated>().ToTable("ContentPageRelated").HasIndex(x => new { x.ContentPageId });
             builder.Entity<ContentPageTag>().ToTable("ContentPageTag").HasIndex(x => new { x.ContentPageId });
-            builder.Entity<Tag>().ToTable("Tag").HasIndex(x => new { x.Delete, x.Status, x.Language });
+            builder.Entity<Tag>().ToTable("Tag").HasIndex(x => new { x.Status, x.Language });
             builder.Entity<Employee>().ToTable("Employee").HasIndex(x => new { x.Delete, x.Status, x.Language });
             builder.Entity<Customer>().ToTable("Customer").HasIndex(x => new {  x.Delete, x.Status});
             builder.Entity<Contact>().ToTable("Contact").HasIndex(x => new { x.Type, x.Delete, x.Status, x.Language,x.IsHome });

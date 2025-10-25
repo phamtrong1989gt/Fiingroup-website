@@ -25,7 +25,7 @@ namespace PT.Component
             {
                 var items = await _contentPageRepository.SearchAdvanceAsync(
                     model.Type, 0, model.Take, model.CategoryId, model.TagId,
-                    m => m.Status && !m.Delete
+                    m => m.Status 
                         && m.DatePosted <= DateTime.Now
                         && m.Language == model.Language
                         && m.Type == model.Type

@@ -92,7 +92,7 @@
 								</div>
 							</div>
 						</div>
-						<partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language = Model.Language, Type = Model.Type, LinkId = Model.LinkId })" />
+						<partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language = Model.Language, Type = Model.Type, LinkId = Model.LinkId, PortalId = Model.PortalId ?? 1 })" />
 						<partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
 					</div>
 				</div>
