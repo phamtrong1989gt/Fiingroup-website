@@ -10,6 +10,18 @@ namespace PT.Domain.Model
         [Display(Name = "Dịch vụ")]
         CategoryService = 8,
 
+        [Display(Name = "Hỗ trợ dòng chảy")]
+        CategoryFlowSupportService = 100,
+
+        [Display(Name = "Sự kiện")]
+        CategoryEvent = 110,
+
+        [Display(Name = "Ấn phẩm")]
+        CategoryPublications = 120,
+
+        [Display(Name = "Báo cáo")]
+        CategoryReport = 130,
+
         [Display(Name = "Tag")]
         Tag = 2,
 
@@ -54,5 +66,17 @@ namespace PT.Domain.Model
 
         [Display(Name = "Sản phẩm")]
         Product = 17,
+
+        [Display(Name = "Hỗ trợ dòng chảy")]
+        FlowSupportService = 101,
+
+        [Display(Name = "Sự kiện")]
+        Event = 111,
+
+        [Display(Name = "Ấn phẩm")]
+        Publications = 121,
+
+        [Display(Name = "Báo cáo")]
+        Report = 131,
     }
 }

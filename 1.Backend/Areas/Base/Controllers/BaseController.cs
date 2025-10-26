@@ -274,19 +274,18 @@ namespace PT.BE.Areas.Base.Controllers
         /// <param name="area">Khu vực</param>
         /// <param name="controller">Controller</param>
         /// <param name="action">Action</param>
-        public async Task UpdateSeoLink(bool changeSlug, CategoryType type, int id, string language, SeoModel model, string name, string area, string controller, string action)
+        public async Task UpdateSeoLink(bool changeSlug, CategoryType oldType, CategoryType newType, int id, string language, SeoModel model, string name, string area, string controller, string action)
         {
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
             var _iLinkReferenceRepository = (ILinkReferenceRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkReferenceRepository));
             var baseSettings = (IOptions<BaseSettings>)AppHttpContext.Current.RequestServices.GetService(typeof(IOptions<BaseSettings>));
-
-            var ktLink = await _iLinkRepository.SingleOrDefaultAsync(false, x => x.ObjectId == id && x.Type == type);
+            var ktLink = await _iLinkRepository.SingleOrDefaultAsync(false, x => x.ObjectId == id && x.Type == oldType);
             if (ktLink == null)
             {
                 ktLink = new Link
                 {
                     Slug = model.Slug,
-                    Type = type,
+                    Type = newType,
                     Name = name,
                     ObjectId = id,
                     Language = language,
@@ -323,7 +322,7 @@ namespace PT.BE.Areas.Base.Controllers
                 {
                     Slug = ktLink.Slug,
                     Name = ktLink.Name,
-                    Type = ktLink.Type,
+                    Type = newType,
                     ObjectId = ktLink.ObjectId,
                     Language = ktLink.Language,
                     IsStatic = false,
@@ -353,6 +352,7 @@ namespace PT.BE.Areas.Base.Controllers
                 await _iLinkRepository.CommitAsync();
                 ktLink.Slug = model.Slug;
             }
+            ktLink.Type = newType;
             ktLink.Changefreq = model.Changefreq;
             ktLink.Lastmod = model.Lastmod ?? DateTime.Now;
             ktLink.Priority = model.Priority.ConvertToDouble();
@@ -373,7 +373,6 @@ namespace PT.BE.Areas.Base.Controllers
             ktLink.Area = area;
             ktLink.Controller = controller;
             ktLink.Acction = action;
-
             await _iLinkRepository.CommitAsync();
             if (baseSettings.Value.MultipleLanguage)
             {
@@ -381,7 +380,6 @@ namespace PT.BE.Areas.Base.Controllers
                 await _iLinkReferenceRepository.ReferenceUpdate(model);
             }
         }
-
         /// <summary>
         /// Xóa liên kết SEO của đối tượng
         /// </summary>

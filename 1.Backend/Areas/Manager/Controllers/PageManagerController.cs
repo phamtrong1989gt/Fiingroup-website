@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using System.Linq;
+using PT.Infrastructure.Repositories;
 using PT.Shared;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
-using PT.Base;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace PT.BE.Areas.Manager.Controllers
 {
@@ -153,6 +154,7 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    await _iContentPageRepository.BeginTransaction();
                     var data = new ContentPage
                     {
                         Name = use.Name,
@@ -172,7 +174,7 @@ namespace PT.BE.Areas.Manager.Controllers
 
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateFileData(data.Id, CategoryType.Page, altId);
-
+                    await _iContentPageRepository.CommitTransaction();
                     await AddLog(new LogModel
                     {
                         ObjectId = data.Id,
@@ -245,6 +247,7 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    await _iContentPageRepository.BeginTransaction();
                     var dl = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
                     if (dl == null)
                     {
@@ -260,7 +263,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     _iContentPageRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
 
-                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Page, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPageHome", "Details");
+                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Page, CategoryType.Page, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPageHome", "Details");
 
                     await UpdateTag(id, use.TagIds);
                     await AddLog(new LogModel
@@ -270,7 +273,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         Name = $"Cập nhật Trang nội dung \"{dl.Name}\".",
                         Type = LogType.Edit
                     });
-
+                    await _iContentPageRepository.CommitTransaction();
                     return new ResponseModel() { Output = 1, Message = "Cập nhật Trang nội dung thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
                 return new ResponseModel() { Output = -2, Message = "Bạn chưa nhập đầy đủ thông tin.", Type = ResponseTypeMessage.Warning };
@@ -308,15 +311,17 @@ namespace PT.BE.Areas.Manager.Controllers
         {
             try
             {
+                await _iContentPageRepository.BeginTransaction();
                 var kt = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
                 if (kt == null)
                 {
                     return new ResponseModel() { Output = 0, Message = "Trang nội dung không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                 }
-                
+                _iContentPageRepository.Delete(kt);
                 await _iContentPageRepository.CommitAsync();
                 await DeleteSeoLink(CategoryType.Page, kt.Id);
                 await RemoveFileData(id, CategoryType.Page);
+
                 await AddLog(new LogModel
                 {
                     ObjectId = kt.Id,
@@ -324,7 +329,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     Name = $"Xóa Trang nội dung \"{kt.Name}\".",
                     Type = LogType.Delete
                 });
-
+                await _iContentPageRepository.CommitTransaction();
                 return new ResponseModel() { Output = 1, Message = "Xóa Trang nội dung thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
             }
             catch (Exception ex)

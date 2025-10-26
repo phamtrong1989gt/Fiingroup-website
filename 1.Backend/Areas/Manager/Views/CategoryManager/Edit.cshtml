@@ -64,24 +64,23 @@
                                     <div class="row">
                                         <input type="hidden" asp-for="PortalId" />
                                         <div class="col-md-2">
-                                            @if (Model.ParentId == 0)
-                                            {
-                                                <div class="form-group">
-                                                    <label class="form-label" asp-for="Type"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Type"></span>
-                                                    <div class="controls">
-                                                        <select disabled data-live-search="true" asp-for="Type" class="input-sm form-control-t show-tick">
-                                                            <option value="">Chọn</option>
-                                                            <option value="@PT.Domain.Model.CategoryType.CategoryBlog">@PT.Domain.Model.CategoryType.CategoryBlog.GetDisplayName()</option>
-                                                            <option value="@PT.Domain.Model.CategoryType.CategoryService">@PT.Domain.Model.CategoryType.CategoryService.GetDisplayName()</option>
-                                                            <option value="@PT.Domain.Model.CategoryType.CategoryProduct">@PT.Domain.Model.CategoryType.CategoryProduct.GetDisplayName()</option>
-                                                        </select>
-                                                    </div>
+                                            <div class="form-group">
+                                                <label class="form-label" asp-for="Type"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Type"></span>
+                                                <div class="controls">
+                                                    <select data-live-search="true" asp-for="Type" class="input-sm form-control-t show-tick">
+                                                        <option value="">Chọn</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryBlog">@PT.Domain.Model.CategoryType.CategoryBlog.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryService">@PT.Domain.Model.CategoryType.CategoryService.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryProduct">@PT.Domain.Model.CategoryType.CategoryProduct.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryFlowSupportService">@PT.Domain.Model.CategoryType.CategoryFlowSupportService.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryEvent">@PT.Domain.Model.CategoryType.CategoryEvent.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryPublications">@PT.Domain.Model.CategoryType.CategoryPublications.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryReport">@PT.Domain.Model.CategoryType.CategoryReport.GetDisplayName()</option>
+                                                    </select>
                                                 </div>
-                                                <input type="hidden" asp-for="Type" />
-                                            }
+                                            </div>
                                         </div>
                                     </div>
-
                                     <div class="form-group">
                                         <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
                                         <div class="controls">

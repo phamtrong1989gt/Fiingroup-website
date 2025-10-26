@@ -117,6 +117,8 @@ namespace PT.BE.Areas.User.Controllers
         /// 4. Tạo/điền SEO link và cập nhật file liên quan.
         /// 5. Ghi log.
         /// </summary>
+        /// 
+     
         [HttpPost, ActionName("Create")]
         [AuthorizePermission("Index")]
         public async Task<ResponseModel> CreatePost(CategoryModel use, string altId)
@@ -189,6 +191,8 @@ namespace PT.BE.Areas.User.Controllers
         }
         #endregion
 
+       
+
         #region [Edit]
         /// <summary>
         /// Hiển thị form Edit danh mục.
@@ -259,6 +263,9 @@ namespace PT.BE.Areas.User.Controllers
                 if (candidates.Any(x => x.Id != id && string.Equals((x.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
                     return new ResponseModel() { Output = 0, Message = "Danh mục đã tồn tại trên hệ thống, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
 
+                await UpdateSeoLink(use.ChangeSlug, dl.Type, use.Type, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "CategoryHome", "Details");
+
+                dl.Type = use.Type;
                 dl.Name = name;
                 dl.Banner = use.Banner;
                 dl.Content = use.Content;
@@ -266,7 +273,6 @@ namespace PT.BE.Areas.User.Controllers
                 dl.Summary = use.Summary;
                 _iCategoryRepository.Update(dl);
                 await _iCategoryRepository.CommitAsync();
-                await UpdateSeoLink(use.ChangeSlug, dl.Type, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "CategoryHome", "Details");
                 _iCategoryRepository.Update(dl);
                 await _iCategoryRepository.CommitAsync();
                 await _iCategoryRepository.CommitTransaction();

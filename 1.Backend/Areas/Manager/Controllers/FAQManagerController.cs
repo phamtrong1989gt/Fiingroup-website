@@ -244,7 +244,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     _iContentPageRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
 
-                    await UpdateSeoLink(use.ChangeSlug, CategoryType.FAQ, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "ContentPageHome", "Details");
+                    await UpdateSeoLink(use.ChangeSlug, CategoryType.FAQ, CategoryType.FAQ, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "ContentPageHome", "Details");
 
                     await UpdateTag(id, use.TagIds);
 

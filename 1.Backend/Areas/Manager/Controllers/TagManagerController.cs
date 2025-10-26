@@ -125,6 +125,7 @@ namespace PT.BE.Areas.Manager.Controllers
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
             model.PortalName = portals.FirstOrDefault(x => x.Id == portalId)?.Name;
             model.PortalId = portalId;
+            model.PrefixSlug = "tags";
             return View(model);
         }
 
@@ -238,6 +239,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 model.Slug = link.Slug;
                 model.Type = link.Type;
                 model.PortalId = link.PortalId;
+                model.PrefixSlug = "tags";
             }
             model.PortalId = tag.PortalId;
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
@@ -292,7 +294,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     _tagRepository.Update(tag);
                     await _tagRepository.CommitAsync();
 
-                    await UpdateSeoLink(model.ChangeSlug, CategoryType.Tag, tag.Id, tag.Language, MapModel<SeoModel>.Go(model), tag.Name, "", "TagHome", "Details");
+                    await UpdateSeoLink(model.ChangeSlug, CategoryType.Tag, CategoryType.Tag, tag.Id, tag.Language, MapModel<SeoModel>.Go(model), tag.Name, "", "TagHome", "Details");
 
                     await AddLog(new LogModel
                     {

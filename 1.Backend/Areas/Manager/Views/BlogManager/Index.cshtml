@@ -451,5 +451,53 @@
             });
         }
 
+              // Đồng bộ dropdown với jstree: chọn/check node, sau đó vô hiệu hóa node và các nút cha để tránh thay đổi
+        function updateTreeBySelect(selectedId) {
+            var tree = $('#using_json_2').jstree(true);
+            if (!tree) return;
+
+            // Bật (enable) tất cả các nút trước
+            try {
+                var all = tree.get_json('#', { flat: true }).map(function (n) { return n.id; });
+                // if (all && all.length) {
+                //     tree.enable_node(all);
+                //     tree.uncheck_node(all);
+                //     tree.deselect_all(true);
+                // }
+            } catch (e) { }
+
+            if (!selectedId || selectedId == '') {
+                // Không chọn gì -> giữ tree ở trạng thái enable và xóa CategoryIds
+                $("[name='CategoryIds']").val("");
+                return;
+            }
+
+            var nodeId = selectedId.toString();
+            var node = tree.get_node(nodeId);
+            if (!node) return;
+
+            // Lấy node được chọn và tất cả các nút cha (không bao gồm root '#')
+            var parents = (node.parents || []).filter(function (p) { return p !== '#'; });
+            var toSelect = [nodeId].concat(parents);
+
+            // Đánh dấu check node được chọn (để jstree tự động cascade lên các nút cha)
+            try {
+                tree.select_node(nodeId);
+            } catch (e) { }
+            // Vô hiệu hóa (disable) node và các nút cha để tránh thay đổi
+            toSelect.forEach(function (id) {
+                try { tree.disable_node(id); } catch (e) { }
+            });
+
+            // Cập nhật trườngẩ CategoryIds bằng các id đã được check
+            try {
+                var checked = tree.get_checked();
+                $("[name='CategoryIds']").val(checked.join(','));
+            } catch (e) {
+                $("[name='CategoryIds']").val(toSelect.join(','));
+            }
+        }
+
+
     </script>
 }

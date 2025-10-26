@@ -232,7 +232,7 @@ namespace PT.BE.Areas.Setting.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    await UpdateSeoLink(use.ChangeSlug, dl.Type, dl.ObjectId, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, dl.Area, dl.Controller, dl.Acction);
+                    await UpdateSeoLink(use.ChangeSlug, dl.Type, dl.Type, dl.ObjectId, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, dl.Area, dl.Controller, dl.Acction);
                     await AddLog(new LogModel
                     {
                         ObjectId = dl.Id,

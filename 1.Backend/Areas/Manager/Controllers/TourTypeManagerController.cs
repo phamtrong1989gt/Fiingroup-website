@@ -199,7 +199,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iTourTypeRepository.CommitAsync();
 
                  
-                    await UpdateSeoLink(use.ChangeSlug, CategoryType.TourType, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "TourTypeHome", "Tours");
+                    await UpdateSeoLink(use.ChangeSlug, CategoryType.TourType, CategoryType.TourType, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "TourTypeHome", "Tours");
 
                     await _iTourTypeRepository.CommitTransaction();
 

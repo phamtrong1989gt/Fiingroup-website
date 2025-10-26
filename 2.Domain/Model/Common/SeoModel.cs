@@ -64,6 +64,7 @@ namespace PT.Domain.Model
         public bool IsStatic { get; set; }
       
         public string PortalName { get; set; }
+        public string PrefixSlug { get; set; }
 
     }
 }

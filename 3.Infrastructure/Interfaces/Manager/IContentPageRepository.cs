@@ -9,7 +9,7 @@ namespace PT.Infrastructure.Interfaces
 {
     public interface IContentPageRepository : IGenericRepository<ContentPage>
     {
-
+        Task ContentPageSharedDelete(int contentPageId);
         Task ContentPageSharedRefeshContent(int contentPageId);
         Task ContentPageSharedAdds(int parentContentPageId, int parrentPortalId, List<int> sharedIds);
         Task<List<ContentPageShared>> ContentPageSharedGets(int contentPageId);

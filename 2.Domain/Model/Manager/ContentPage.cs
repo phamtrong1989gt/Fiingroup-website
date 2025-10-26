@@ -62,7 +62,7 @@ namespace PT.Domain.Model
     public class BlogModel :SeoModel
     {
         public int Id { get; set; }
-        [Display(Name = "Danh mục tin")]
+        [Display(Name = "Danh mục chính")]
         public int CategoryId { get; set; }
 
         [Display(Name="Tên bài viết")]
@@ -111,6 +111,7 @@ namespace PT.Domain.Model
         public List<PortalSharedModel> PortalShareds { get; set; }
 
         public List<int> SharedPortalIds { get; set; }
+        public SelectList CategorySelectList { get; set; }
     }
     public class PortalSharedModel
     {

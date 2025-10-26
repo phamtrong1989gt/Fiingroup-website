@@ -47,6 +47,15 @@ namespace PT.Infrastructure.Repositories
             }    
     
         }
+        public async Task ContentPageSharedDelete(int contentPageId)
+        {
+            var sharedContents = _context.ContentPageShareds.Where(x => x.ParentContentPageId == contentPageId || x.SharedContentPageId == contentPageId);
+            if(sharedContents != null)
+            {
+                _context.ContentPageShareds.RemoveRange(sharedContents);
+                await _context.SaveChangesAsync();
+            }
+        }
 
         public async Task ContentPageSharedRefeshContent(int contentPageId)
         {
@@ -290,7 +299,7 @@ namespace PT.Infrastructure.Repositories
             }
             if (categoryId != null)
             {
-                query = query.Where(x => _context.ContentPageCategorys.Any(m=>m.ContentPageId==x.Id && m.CategoryId==categoryId)).AsQueryable();
+                query = query.Where(x => x.CategoryId == categoryId || _context.ContentPageCategorys.Any(m=>m.ContentPageId==x.Id && m.CategoryId==categoryId)).AsQueryable();
             }
             if (orderBy != null)
             {

@@ -25,5 +25,7 @@ namespace PT.Infrastructure.Interfaces
         Task<List<Category>> GetChildrent(int parentId, string language, CategoryType type);
         Task<List<ContentPageCategoryTreeModel>> CurrentTreeContent(int contentPageId, IEnumerable<CategoryType> linkTypes);
         List<PT.Domain.Model.CategoryTreeModel> GetCategoryAncestors(PT.Domain.Model.CategoryTreeModel category, List<PT.Domain.Model.CategoryTreeModel> allCategories);
+        List<CategoryType> GetCategoryPrefixedTypes();
+        CategoryType CategoryTypeCategoryToContentPage(CategoryType categoryType);
     }
 }

@@ -145,10 +145,6 @@
     <None Include="Areas\Manager\Views\PhotoSlideManager\EditItem.cshtml" />
     <None Include="Areas\Manager\Views\PhotoSlideManager\Index.cshtml" />
     <None Include="Areas\Manager\Views\PhotoSlideManager\IndexAjax.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceCategoryManager\Create.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceCategoryManager\Edit.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceCategoryManager\Index.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceCategoryManager\Setting.cshtml" />
     <None Include="Areas\Manager\Views\StaticInformationManager\Create.cshtml" />
     <None Include="Areas\Manager\Views\StaticInformationManager\Edit.cshtml" />
     <None Include="Areas\Manager\Views\StaticInformationManager\Index.cshtml" />

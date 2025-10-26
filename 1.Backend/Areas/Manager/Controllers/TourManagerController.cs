@@ -300,7 +300,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Order = use.Order;
                     _iTourRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
-                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Tour, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "TourHome", "Details");
+                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Tour, CategoryType.Tour, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "TourHome", "Details");
                     await UpdateCategory(id, use.CategoryIds);
                     await _iTourRepository.CommitTransaction();
 
