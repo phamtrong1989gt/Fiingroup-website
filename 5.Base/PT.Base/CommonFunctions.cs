@@ -18,7 +18,7 @@ namespace PT.Base
 
         public static string GetStringModule(ModuleType type, string code, string language, int portalId)
         {
-            return $"<vc:view-module code=\"{code}\" type=\"{type.ToString()}\" language=\"{language}\" portalId=\"{portalId}\"></vc:view-module>";
+            return $"@await Component.InvokeAsync(\"ViewModule\", new {{ type = ModuleType.{type}, code = \"{code}\", language = language, portalId = portalId }})";
         }
 
         public static string GetStringModule(ModuleType type, string code)
