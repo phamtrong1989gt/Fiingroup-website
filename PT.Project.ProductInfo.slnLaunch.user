@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "6.FE\\Portal1\\PT.UI.csproj",
+        "Path": "6.FE\\Portal2\\PT.UI.csproj",
         "Action": "Start"
       }
     ]
