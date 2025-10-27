@@ -11,7 +11,7 @@
 	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 	var listLanguage = PT.Shared.ListData.ListLanguage;
 	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
-
+	var portalId = 2;
 	var homeModel = new HomeModel
 	{
 		Domain = domain,
@@ -68,8 +68,11 @@
 
 		<!-- footer area -->
 		<div class="footter hidden-login">
-			<vc:view-module code="HomeFooter" type="StaticInformation"></vc:view-module>
-			<vc:view-module code="HomeHomeBanQuyen" type="StaticInformation"></vc:view-module>
+			@* <vc:view-module code="HomeFooter" type="StaticInformation" language="@language" portalId="@portalId"></vc:view-module>
+			<vc:view-module code="HomeFooterMenu" type="StaticInformation" language="@language" portalId="@portalId"></vc:view-module> *@
+			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeFooter", language = language, portalId = portalId })
+			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeFooterMenu", language = language, portalId = portalId })
+
 		</div>
 		<!-- footer area end -->
 		<!-- scroll-top -->
