@@ -30,7 +30,7 @@ namespace PT.Component
             _iStaticInformationRepository = iStaticInformationRepository;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ModuleType type, string code, string language = "vi", int? portalId = 1)
+        public async Task<IViewComponentResult> InvokeAsync(ModuleType type, string code, string language = "vi", int portalId = 1)
         {
             try
             {

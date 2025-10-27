@@ -4,6 +4,8 @@
 @inject Microsoft.Extensions.Options.IOptions<List<SeoSettings>> seoSettings
 @inject Microsoft.Extensions.Options.IOptions<BindContentSettings> bindContentSettings
 @inject Microsoft.Extensions.Options.IOptions<AuthorizeSettings> _authorizeSettings;
+@inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
+
 @inject IViewLocalizer Localizer
 
 @{
@@ -11,7 +13,7 @@
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var listLanguage = PT.Shared.ListData.ListLanguage;
     var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
-
+    var portalId = _baseSettings.Value.PortalId;
     var homeModel = new HomeModel
             {
                 Domain = domain,
@@ -59,15 +61,15 @@
     <!-- preloader end -->
     <!-- header area -->
     <header class="header">
-        <vc:view-module code="Main_Menu_2" type="Menu"></vc:view-module>
+        @* <vc:view-module code="Main_Menu_2" type="Menu"></vc:view-module> *@
     </header>
     <!-- header area end -->
     @RenderBody()
 
     <!-- footer area -->
     <footer class="footer-area">
-        <vc:view-module code="HomeFooter" type="StaticInformation"></vc:view-module>
-        <vc:view-module code="HomeHomeBanQuyen" type="StaticInformation"></vc:view-module>
+      @*   <vc:view-module code="HomeFooter" type="StaticInformation"></vc:view-module>
+        <vc:view-module code="HomeHomeBanQuyen" type="StaticInformation"></vc:view-module> *@
     </footer>
     <!-- footer area end -->
     <!-- scroll-top -->
