@@ -53,7 +53,7 @@ namespace PT.UI.Controllers
             return Redirect($"/");
         }
 
-        public IActionResult Index(string linkData)
+        public IActionResult Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();

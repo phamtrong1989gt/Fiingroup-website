@@ -6,11 +6,12 @@
 @inject IViewLocalizer Localizer;
 @using System.Linq.Expressions;
 @using PT.UI.Models
+@inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
 
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-
+    int portalId = _baseSettings.Value.PortalId;
     var cplModel = new ContentPageComponentModel()
     {
         CategoryId = 1002,
@@ -38,5 +39,4 @@
         View = "_News"
     };
 }
-
-<vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module>
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "Home Test", language = language, portalId = 2 })

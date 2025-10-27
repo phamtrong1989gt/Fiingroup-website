@@ -1,42 +1,30 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.ResponseCaching;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure;
 using PT.Infrastructure.Interfaces;
 using PT.Infrastructure.Repositories;
 using PT.Shared;
-using PT.UI.SignalR;
 using Serilog;
 using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace PT.UI
 {
@@ -202,7 +190,7 @@ namespace PT.UI
             {
                 //options.EnableForHttps = true;
                 options.Providers.Add<GzipCompressionProvider>();
-                options.MimeTypes = new string[]{
+                options.MimeTypes = [
                         "text/plain",
                         "text/css",
                         "application/javascript",
@@ -213,7 +201,7 @@ namespace PT.UI
                         "text/json",
                         "image/svg+xml",
                         "application/atom+xml"
-                    };
+                    ];
             });
        
             //Content/Admin/plugins/signalr

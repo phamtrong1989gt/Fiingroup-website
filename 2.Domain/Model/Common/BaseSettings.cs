@@ -79,5 +79,6 @@ namespace PT.Domain.Model
         public string RootDomin { get; set; }
         public int ImageMaxWith { get; set; }
         public bool IsHttps { get; set; }
+        public int PortalId { get; set; }
     }
 }
