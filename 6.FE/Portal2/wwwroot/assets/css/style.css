@@ -716,12 +716,8 @@ a {
 }
 
 #HoTro {
-    background: url('../Data/bghotro.png') no-repeat top;
-    /*background-size: cover;*/
-    /*background-position: -30% center;*/
-    /*background-position: bottom 10px right 20px;
-    background-position: right 3em bottom 10px;*/
-    background-position: bottom 30% right;
+   /* background: url('../Data/bghotro.png') no-repeat top;
+    background-position: bottom 30% right;*/
 }
 
 .hotro-list {
