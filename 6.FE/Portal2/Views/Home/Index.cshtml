@@ -10,6 +10,7 @@
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var portalId = 2;
 
     // var cplModel = new ContentPageComponentModel()
     // {
@@ -40,3 +41,10 @@
 }
 
 @* <vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module> *@
+
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSlider", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeHeSinhThai", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderDauAn", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderOurClients", language = language, portalId = portalId })
+<partial name="_Register" />

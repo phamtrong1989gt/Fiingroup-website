@@ -1,14 +1,16 @@
 [
   {
-    "Name": "New Profile",
+    "Name": "DuyHK",
     "Projects": [
       {
-        "Path": "1.Backend\\PT.UI.csproj",
-        "Action": "Start"
+        "Path": "6.FE\\Portal2\\PT.UI.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express"
       },
       {
-        "Path": "6.FE\\Portal2\\PT.UI.csproj",
-        "Action": "Start"
+        "Path": "1.Backend\\PT.UI.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express"
       }
     ]
   }

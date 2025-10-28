@@ -895,7 +895,9 @@ a:hover {
     background: url('../Data/solution_bg4.png') no-repeat top;
     background-size: cover;
 }
-#carouselFiin h1{font-size:56px;}
+#carouselFiin h1 {
+    font-size: 56px;
+}
 #carouselFiin p{font-size:32px;}
 
 @media (min-width: 1400px) {

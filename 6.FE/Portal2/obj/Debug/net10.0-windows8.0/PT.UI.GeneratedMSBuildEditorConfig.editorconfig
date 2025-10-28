@@ -31,56 +31,16 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/About.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBYm91dC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/BannerHomePage.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxCYW5uZXJIb21lUGFnZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/Contact.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb250YWN0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/DayTours.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEYXlUb3Vycy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/DayToursDetails.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEYXlUb3Vyc0RldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/FAQ.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGQVEuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/Galleries.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxHYWxsZXJpZXMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/Search.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTZWFyY2guY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/Service.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTZXJ2aWNlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/Testimonials.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxUZXN0aW1vbmlhbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/_News.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfTmV3cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/_ToursStyle.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfVG91cnNTdHlsZS5jc2h0bWw=
+[D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Home/_Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUmVnaXN0ZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/DUYHK/Project/2025/Fiingroup-website/6.FE/Portal2/Views/Shared/404.cshtml]

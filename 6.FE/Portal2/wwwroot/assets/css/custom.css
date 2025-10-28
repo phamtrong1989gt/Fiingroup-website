@@ -316,6 +316,77 @@
     .price-title:hover, .why-title:hover, #WhatWe .col-sm-4:hover, .hotro-list .col-sm-5:hover, .hotro-list .col-sm-7:hover, .testimonial-card:hover {
         transform: translateY(-10px);
     }
+.testimonial-card {
+    background: #F2FAFF;
+    overflow: hidden;
+    padding: 15px;
+}
+
+    .testimonial-card .client {
+        margin-top: 20px;
+    }
+
+        .testimonial-card .client .name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0f2a44;
+        }
+
+        .testimonial-card .client .role {
+            color: #7a8aa0;
+            font-size: 10px;
+            font-weight: 400;
+        }
+
+    .testimonial-card .quote {
+        position: relative;
+        font-size: 12px;
+        line-height: 1.7;
+        color: #234;
+        font-weight: 400;
+        text-align: justify;
+    }
+
+.testimonial-media {
+    position: relative;
+    height: 100%;
+    background: #eef6ff;
+    display: grid;
+    place-items: center;
+}
+
+    .testimonial-media .img {
+        width: 139px !important;
+        height: 198px;
+        object-fit: cover;
+    }
+
+    .testimonial-media .imgtop {
+        width: 20px !important;
+        height: 23px;
+        display: flow;
+        margin: 0 0 -12% -78%;
+        z-index: 9;
+        float: left;
+    }
+
+    .testimonial-media .imgbotton {
+        width: 56px !important;
+        height: 63px;
+        display: flow;
+        margin: -28% -56% 0 0;
+        z-index: 9;
+        float: left;
+    }
+
+.brand-mini {
+    float: right;
+}
+
+    .brand-mini img {
+        width: auto !important;
+        height: 28px;
+    }
 
 @media (max-width: 767px) {
     .ifmap iframe {
