@@ -135,31 +135,3 @@
 2025-10-29 15:35:02.496 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
 2025-10-29 15:35:02.497 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
 2025-10-29 15:35:02.551 +07:00 [DBG] Script injected: /_framework/aspnetcore-browser-refresh.js
-2025-10-29 15:36:12.967 +07:00 [DBG] Middleware loaded: DOTNET_MODIFIABLE_ASSEMBLIES=null, __ASPNETCORE_BROWSER_TOOLS=true
-2025-10-29 15:36:15.098 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
-2025-10-29 15:36:15.116 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
-2025-10-29 15:36:15.161 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
-2025-10-29 15:36:15.161 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
-2025-10-29 15:36:15.185 +07:00 [DBG] Script injected: /_framework/aspnetcore-browser-refresh.js
-2025-10-29 15:36:15.296 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
-2025-10-29 15:36:15.298 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
-2025-10-29 15:36:34.088 +07:00 [DBG] Middleware loaded: DOTNET_MODIFIABLE_ASSEMBLIES=null, __ASPNETCORE_BROWSER_TOOLS=true
-2025-10-29 15:36:36.193 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
-2025-10-29 15:36:36.224 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
-2025-10-29 15:36:36.279 +07:00 [DBG] Script injected: /_framework/aspnetcore-browser-refresh.js
-2025-10-29 15:36:36.730 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
-2025-10-29 15:36:36.731 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
-2025-10-29 15:36:36.760 +07:00 [DBG] Script injected: /_framework/aspnetcore-browser-refresh.js
-2025-10-29 15:36:38.910 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
-2025-10-29 15:36:38.910 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
-2025-10-29 15:36:40.023 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
-2025-10-29 15:36:40.023 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
-2025-10-29 15:36:40.046 +07:00 [DBG] Script injected: /_framework/aspnetcore-browser-refresh.js
-2025-10-29 15:37:55.944 +07:00 [DBG] Middleware loaded: DOTNET_MODIFIABLE_ASSEMBLIES=null, __ASPNETCORE_BROWSER_TOOLS=true
-2025-10-29 15:38:04.776 +07:00 [DBG] Middleware loaded: DOTNET_MODIFIABLE_ASSEMBLIES=null, __ASPNETCORE_BROWSER_TOOLS=true
-2025-10-29 15:38:06.899 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
-2025-10-29 15:38:06.931 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
-2025-10-29 15:38:06.989 +07:00 [DBG] Script injected: /_framework/aspnetcore-browser-refresh.js
-2025-10-29 15:38:07.363 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
-2025-10-29 15:38:07.364 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
-2025-10-29 15:38:07.445 +07:00 [DBG] Script injected: /_framework/aspnetcore-browser-refresh.js
