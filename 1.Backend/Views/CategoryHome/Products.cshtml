@@ -1,0 +1,110 @@
+﻿@model PT.Domain.Model.Category
+
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject ICategoryRepository _iCategoryRepository;
+@inject IViewLocalizer Localizer
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var listCategory = await _iCategoryRepository.GetAll(language, new List<CategoryType> { CategoryType.CategoryProduct });
+    var currentCategory = listCategory.FirstOrDefault(x => x.CategoryId == Model.Id);
+    var ancestors = _iCategoryRepository.GetCategoryAncestors(currentCategory, listCategory);
+}
+<style>
+    .label-tag
+    {
+        display: inline-block;
+        font-size: 11px;
+        background: #43aee5;
+        color: #fff;
+        padding: 0px 6px;
+        border-radius: 3px;
+        font-weight: normal;
+    }
+</style>
+<main class="main">
+    <!-- breadcrumb -->
+    <div class="site-breadcrumb" style="background: url(assets/img/cta/01.jpg)">
+        <div class="container">
+            <h2 class="breadcrumb-title" style="text-transform:uppercase;">@Model.Name</h2>
+            <ul class="breadcrumb-menu">
+                <li><a href="/">Trang chủ</a></li>
+                @foreach (var parent in ancestors)
+                {
+                    <li><a href="@parent.Path">@parent.CategoryName</a></li>
+                }
+                <li class="active">@Model.Name</li>
+            </ul>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+    <!-- blog area -->
+    <div class="blog-area py-120">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-xl-3 col-lg-3">
+                    <div class="service-sidebar">
+                        <div class="widget category">
+                            <h4 class="widget-title">Danh mục sản phẩm</h4>
+                            <div class="category-list">
+                                @if (listCategory.Where(x => x.ParentId == Model.Id).Count() <= 0)
+                                {
+                                    <span>Không có danh mục con</span>
+                                }
+                                @foreach (var level1 in listCategory.Where(x => x.ParentId == Model.Id))
+                                {
+                                    <a href="@level1.Path"><i class="far fa-arrow-right"></i> @level1.CategoryName</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-9 col-lg-9">
+                    <div class="row">
+                        @if (Model.Products.Data.Count <= 0)
+                        {
+                            <span>Không tìm thấy sản phẩm nào liên quan</span>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model.Products.Data)
+                            {
+                                string url = @PT.Shared.Functions.FormatUrl("", item.Link?.Slug);
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="blog-item wow fadeInUp" data-wow-delay=".25s">
+                                        <div class="blog-item-img">
+                                            <img class="news-img" src="@item.Banner" alt="@item.Name">
+                                        </div>
+                                        <div class="blog-item-info">
+                                            <h4 class="blog-title">
+                                                <a href="@url">@item.Name</a>
+                                            
+                                            </h4>
+                                        </div>
+                                        <div style="margin-bottom: 10px;line-height: 17px;">
+                                            @foreach (var category in item.Categorys)
+                                            {
+                                                <span class="label-tag">@category.Name</span>
+                                            }
+                                        </div>
+                                        <div class="text-danger">Giá: Liên hệ</div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="pagination-area">
+                        <div aria-label="Page navigation example">
+                            <ul class="pagination">
+                                @Html.Raw(PT.Shared.Functions.GenPageList("", Model.Products.Page, Model.Products.TotalRows, Model.Products.Limit, null, "page-item"))
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

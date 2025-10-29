@@ -1,0 +1,32 @@
+﻿@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer  Localizer
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+}
+
+<div class="page-head">
+    <div class="page-head__bg" style="background-image: url(assets/img/Banner-final.jpg)">
+        <div class="page-head__title">About US</div>
+        <div class="page-head__breadcrumb">
+            <ul class="uk-breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li><span>About US</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<vc:view-module id="1004" type="StaticInformation"></vc:view-module>
+
+<vc:view-module id="1005" type="StaticInformation"></vc:view-module>
+
+<vc:view-module id="2" type="StaticInformation"></vc:view-module>
+<style>
+    #isoBaner
+    {
+        width: 100% !important;
+        height: auto !important;
+    }
+</style>

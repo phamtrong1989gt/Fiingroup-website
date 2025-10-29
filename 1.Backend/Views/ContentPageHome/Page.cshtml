@@ -1,0 +1,31 @@
+﻿@model PT.Domain.Model.ContentPage
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer  Localizer
+@inject ICategoryRepository _iCategoryRepository;
+@inject IContentPageReferenceRepository _iContentPageReferenceRepository;
+@using PT.Shared;
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+}
+
+<main class="main">
+    <!-- breadcrumb -->
+    <div class="site-breadcrumb" style="background: url(assets/img/cta/01.jpg)">
+        <div class="container">
+            <h2 class="breadcrumb-title" style="text-transform:uppercase;">@Model.Name</h2>
+            <ul class="breadcrumb-menu">
+                <li><a href="/">Trang chủ</a></li>
+                <li class="active">@Model.Name</li>
+            </ul>
+        </div>
+    </div>
+    <!-- breadcrumb end -->
+    <!-- terms of service -->
+    <div class="py-120">
+        <div class="container">
+            @Html.Raw(Model.Content)
+        </div>
+    </div>
+</main>

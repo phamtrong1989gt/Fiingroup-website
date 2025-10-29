@@ -1,0 +1,33 @@
+﻿@model ComponentModel<ContentPage>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer  Localizer
+@addTagHelper *, PT.UI
+@using PT.Domain.Model;
+@{
+    Layout = null;
+    var firstItem = Model.Items.FirstOrDefault();
+}
+<div class="row">
+    @foreach (var item in Model.Items)
+    {
+        string url = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
+        <div class="col-md-6 col-lg-4">
+            <div class="blog-item wow fadeInUp" data-wow-delay=".25s">
+                <div class="blog-item-img">
+                    <img class="news-img" src="@item.Banner" alt="@item.Name">
+                </div>
+                <div class="blog-item-info">
+                    @*  <div class="blog-item-meta">
+                                <ul>
+                                    <li><a href="#"><i class="far fa-user-circle"></i> By Alicia Davis</a></li>
+                                    <li><a href="#"><i class="far fa-calendar-alt"></i> February 20, 2024</a></li>
+                                </ul>
+                            </div> *@
+                    <h4 class="blog-title">
+                        <a href="@url">@item.Name</a>
+                    </h4>
+                    @* <a class="theme-btn" href="@url">Xem<i class="fas fa-arrow-right"></i></a> *@
+                </div>
+            </div>
+        </div>
+    }
+</div>

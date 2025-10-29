@@ -1,0 +1,91 @@
+﻿@model PT.Domain.Model.Product
+
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@using PT.UI.Models
+@inject IViewLocalizer Localizer
+@inject ICategoryRepository _iCategoryRepository;
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var listCategory = await _iCategoryRepository.GetAll(language, new List<CategoryType> { CategoryType.CategoryProduct });
+    var currentCategory = listCategory.FirstOrDefault(x => x.CategoryId == Model.Id);
+    var ancestors = _iCategoryRepository.GetCategoryAncestors(currentCategory, listCategory);
+    var images = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FileDataModel>>(Model.Images);
+    var firstImage = images.FirstOrDefault();
+}
+
+
+<main class="main">
+
+    <div class="site-breadcrumb" style="background: url(assets/img/cta/01.jpg)">
+        <div class="container">
+            <h2 class="breadcrumb-title" style="text-transform:uppercase;">@Model.Name</h2>
+            <ul class="breadcrumb-menu">
+                <li><a href="/">Home</a></li>
+                <li class="active">@Model.Name</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="blog-area py-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-3">
+                    <div class="service-sidebar">
+                        <div class="widget category">
+                            <h4 class="widget-title">Danh mục sản phẩm</h4>
+                            <div class="category-list">
+                                @foreach (var level1 in listCategory.Where(x => x.ParentId == 0))
+                                {
+                                    @foreach (var level2 in listCategory.Where(x => x.ParentId == level1.CategoryId))
+                                    {
+                                        <a href="@level2.Path"><i class="far fa-arrow-right"></i> @level2.CategoryName</a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget service-download">
+                        <h4 class="widget-title">Đính kèm</h4>
+                        <a href="#"><i class="far fa-file-pdf"></i> Catalog</a>
+                    </div>
+
+                    <div class="widget recent-post">
+                        <h5 class="widget-title">Sản phẩm liên quan</h5>
+                        @* <vc:content-page model="tinLienQuanModel"></vc:content-page> *@
+                        <vc:product-related model="@(new ProductComponentModel() { CurrentId = Model.Id, Language = language, Take = 5, View = "_Recent" })"></vc:product-related>
+                    </div>
+                </div>
+
+                <div class="col-xl-9 col-lg-9">
+                    <h1 class="blog-details-title mb-20">@Model.Name</h1>
+                    <div class="product-images" style="margin-bottom:20px;">
+                        <div class="main-image text-center mb-3" style="background:#eee;">
+                            <img id="mainProductImage" src="@firstImage.Path" alt="Ảnh sản phẩm" style="max-width:100%;max-height:400px;" />
+                        </div>
+                        <div class="thumb-list d-flex justify-content-center" style="background:#eee;">
+                            @for (int i = 0; i < images.Count; i++)
+                            {
+                                <img src="@images[i].Path" class="img-thumb m-1" style="width:80px;height:80px;object-fit:cover;cursor:pointer;border:1px solid #ccc;" onclick="showProductImage('@images[i].Path')" />
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        @Html.Raw(Model.Content)
+                    </div>
+
+                    <div>
+                        @Html.Raw(Model.Specification)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    function showProductImage(url) {
+        document.getElementById('mainProductImage').src = url;
+    }
+</script>
