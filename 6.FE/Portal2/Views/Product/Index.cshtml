@@ -11,41 +11,11 @@
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = 2;
-
-    // var cplModel = new ContentPageComponentModel()
-    // {
-    //     CategoryId = 1002,
-    //     ContentPageId = 0,
-    //     Href = "",
-    //     Language = language,
-    //     TagId = null,
-    //     Take = 6,
-    //     Title = "",
-    //     Type = CategoryType.Blog,
-    //     View = "_News"
-    // };
-
-
-    // var datbModel = new ContentPageComponentModel()
-    // {
-    //     CategoryId = 2005,
-    //     ContentPageId = 0,
-    //     Href = "",
-    //     Language = language,
-    //     TagId = null,
-    //     Take = 6,
-    //     Title = "",
-    //     Type = CategoryType.Blog,
-    //     View = "_News"
-    // };
 }
 
-@* <vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module> *@
-
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSlider", language = language, portalId = portalId })
-@* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerHeSinhThai", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeHeSinhThai", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderDauAn", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderOurClients", language = language, portalId = portalId }) *@
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "ProductSlider", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductCoGi", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductTaiSao", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductBaoCao", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductNenTang", language = language, portalId = portalId }))
 @Html.Partial("~/Views/Home/_Register.cshtml")
