@@ -569,8 +569,10 @@ D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\rjsmrazor.dswa.cache.json
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\rjsmcshtml.dswa.cache.json
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\scopedcss\bundle\PT.UI.styles.css
+D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\n9jofea2sh-{0}-ja0qpje36p-ja0qpje36p.gz
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\e0w8pizzy2-{0}-isc7u9n7qi-isc7u9n7qi.gz
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\y2vxcdgc7q-{0}-wxwxrej6pw-wxwxrej6pw.gz
+D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\80727vsjks-{0}-ob9ya5qic5-ob9ya5qic5.gz
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\gi0nu33d5i-{0}-1ksmhwc5pe-1ksmhwc5pe.gz
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\946woc425z-{0}-rtovyevdvf-rtovyevdvf.gz
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\lasdrrn8i3-{0}-m0lnerr9i8-m0lnerr9i8.gz
@@ -745,5 +747,3 @@ D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\PT.UI.pdb
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\PT.UI.genruntimeconfig.cache
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\ref\PT.UI.dll
-D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\n9jofea2sh-{0}-ja0qpje36p-ja0qpje36p.gz
-D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\80727vsjks-{0}-58h4jhbetw-58h4jhbetw.gz
