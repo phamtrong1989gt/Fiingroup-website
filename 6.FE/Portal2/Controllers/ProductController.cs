@@ -21,40 +21,32 @@ using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using PT.Infrastructure.Repositories;
 using PT.Shared;
 
 namespace PT.UI.Controllers
 {
-    public class ProductHomeController : Controller
+    public class ProductController : Controller
     {
         private readonly IOptions<List<SeoSettings>> _seoSettings;
         private readonly ILinkRepository _iLinkRepository;
         private readonly IOptions<BaseSettings> _baseSettings;
         private readonly IWebHostEnvironment _iHostingEnvironment;
-        private readonly IProductRepository _iProductRepository;
+        private readonly IContentPageRepository _iContentPageRepository;
         private readonly ILinkReferenceRepository _iLinkReferenceRepository;
-        public ProductHomeController(IOptions<List<SeoSettings>> seoSettings, ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository, IProductRepository iProductRepository)
+        public ProductController(IOptions<List<SeoSettings>> seoSettings, ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository)
         {
             _seoSettings = seoSettings;
             _iLinkRepository = iLinkRepository;
             _baseSettings = baseSettings;
             _iHostingEnvironment = iHostingEnvironment;
-            _iProductRepository = iProductRepository;
+            _iContentPageRepository = iContentPageRepository;
             _iLinkReferenceRepository = iLinkReferenceRepository;
         }
 
-        public async Task<IActionResult> Details(int id, string language, string linkData)
+        public IActionResult Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-
-            string viewName = "Details";
-            var dl = await _iProductRepository.SingleOrDefaultAsync(true, x => x.Id == id && x.Status && !x.Delete);
-            if (dl == null)
-            {
-                return View("_Home404");
-            }
-            return View(viewName, dl);
+            return View();
         }
     }
 }
