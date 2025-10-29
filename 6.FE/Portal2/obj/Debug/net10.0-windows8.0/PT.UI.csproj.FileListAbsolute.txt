@@ -746,4 +746,4 @@ D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\PT.UI.genruntimeconfig.cache
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\ref\PT.UI.dll
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\n9jofea2sh-{0}-ja0qpje36p-ja0qpje36p.gz
-D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\80727vsjks-{0}-k33r8k3w68-k33r8k3w68.gz
+D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\obj\Debug\net10.0-windows8.0\compressed\80727vsjks-{0}-58h4jhbetw-58h4jhbetw.gz

@@ -1,0 +1,858 @@
+2025-10-29 09:02:01.918 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-29 09:02:02.050 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-29 09:02:02.050 +07:00 [INF] Hosting environment: Development
+2025-10-29 09:02:02.050 +07:00 [INF] Content root path: D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2
+2025-10-29 09:02:03.539 +07:00 [INF] Executed DbCommand (48ms) [Parameters=[@__slug_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__baseSettings_Value_PortalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [l].[Id], [l].[Acction], [l].[Area], [l].[Changefreq], [l].[Controller], [l].[Delete], [l].[Description], [l].[FacebookBanner], [l].[FacebookDescription], [l].[FocusKeywords], [l].[GooglePlusDescription], [l].[IncludeSitemap], [l].[IsStatic], [l].[Keywords], [l].[Language], [l].[Lastmod], [l].[MetaRobotsAdvance], [l].[MetaRobotsFollow], [l].[MetaRobotsIndex], [l].[Name], [l].[ObjectId], [l].[Parrams], [l].[PortalId], [l].[Priority], [l].[Redirect301], [l].[Slug], [l].[Status], [l].[Title], [l].[Type]
+FROM [Link] AS [l]
+WHERE [l].[Slug] = @__slug_0 AND [l].[Language] = @__language_1 AND [l].[PortalId] = @__baseSettings_Value_PortalId_2
+2025-10-29 09:02:03.645 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-29 09:02:03.705 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-29 09:02:03.775 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-29 09:02:03.805 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 09:02:03.827 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-29 09:02:03.844 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 09:02:03.857 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-29 09:02:03.869 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-29 09:02:03.900 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-29 09:02:03.939 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 09:02:03.956 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-29 09:02:03.970 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 09:02:03.982 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 09:02:03.996 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-29 09:02:04.062 +07:00 [INF] Executed ViewResult - view Index executed in 364.8714ms.
+2025-10-29 09:02:04.066 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 420.1588ms
+2025-10-29 09:02:04.083 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 2180.9265ms
+2025-10-29 09:02:04.160 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-29 09:02:04.163 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 2.7247ms
+2025-10-29 09:02:04.222 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-29 09:02:04.227 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - null null
+2025-10-29 09:02:04.235 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bghotro.png - null null
+2025-10-29 09:02:04.270 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - null null
+2025-10-29 09:02:04.273 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bghotro.png - 404 null null 37.9442ms
+2025-10-29 09:02:04.273 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - 404 null null 45.6725ms
+2025-10-29 09:02:04.273 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - 404 null null 6.3918ms
+2025-10-29 09:02:04.274 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bghotro.png, Response status code: 404
+2025-10-29 09:02:04.274 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgvideo.jpg, Response status code: 404
+2025-10-29 09:02:04.274 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgour.png, Response status code: 404
+2025-10-29 09:02:04.320 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 98.791ms
+2025-10-29 09:02:04.891 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/favicon.ico - null null
+2025-10-29 09:02:04.893 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/favicon.ico - 404 null null 2.0049ms
+2025-10-29 09:02:04.893 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/favicon.ico, Response status code: 404
+2025-10-29 09:02:04.907 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - null null
+2025-10-29 09:02:04.908 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - 404 null null 1.7194ms
+2025-10-29 09:02:04.909 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/img/logo/favicon.png, Response status code: 404
+2025-10-29 14:05:09.102 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-29 14:05:09.212 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-29 14:05:09.213 +07:00 [INF] Hosting environment: Development
+2025-10-29 14:05:09.213 +07:00 [INF] Content root path: D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2
+2025-10-29 14:05:10.713 +07:00 [INF] Executed DbCommand (46ms) [Parameters=[@__slug_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__baseSettings_Value_PortalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [l].[Id], [l].[Acction], [l].[Area], [l].[Changefreq], [l].[Controller], [l].[Delete], [l].[Description], [l].[FacebookBanner], [l].[FacebookDescription], [l].[FocusKeywords], [l].[GooglePlusDescription], [l].[IncludeSitemap], [l].[IsStatic], [l].[Keywords], [l].[Language], [l].[Lastmod], [l].[MetaRobotsAdvance], [l].[MetaRobotsFollow], [l].[MetaRobotsIndex], [l].[Name], [l].[ObjectId], [l].[Parrams], [l].[PortalId], [l].[Priority], [l].[Redirect301], [l].[Slug], [l].[Status], [l].[Title], [l].[Type]
+FROM [Link] AS [l]
+WHERE [l].[Slug] = @__slug_0 AND [l].[Language] = @__language_1 AND [l].[PortalId] = @__baseSettings_Value_PortalId_2
+2025-10-29 14:05:10.818 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-29 14:05:10.877 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-29 14:05:10.942 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-29 14:05:10.974 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 14:05:10.999 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-29 14:05:11.014 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 14:05:11.027 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-29 14:05:11.039 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-29 14:05:11.071 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-29 14:05:11.111 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 14:05:11.129 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-29 14:05:11.142 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 14:05:11.154 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-29 14:05:11.166 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-29 14:05:11.226 +07:00 [INF] Executed ViewResult - view Index executed in 357.1194ms.
+2025-10-29 14:05:11.229 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 410.409ms
+2025-10-29 14:05:11.263 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 2176.5354ms
+2025-10-29 14:05:11.293 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-29 14:05:11.295 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 2.1271ms
+2025-10-29 14:05:11.326 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-29 14:05:11.328 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - null null
+2025-10-29 14:05:11.337 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - null null
+2025-10-29 14:05:11.337 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bghotro.png - null null
+2025-10-29 14:05:11.375 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - 404 null null 47.1495ms
+2025-10-29 14:05:11.376 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgvideo.jpg, Response status code: 404
+2025-10-29 14:05:11.378 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - 404 null null 40.447ms
+2025-10-29 14:05:11.378 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bghotro.png - 404 null null 40.4477ms
+2025-10-29 14:05:11.378 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bghotro.png, Response status code: 404
+2025-10-29 14:05:11.378 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgour.png, Response status code: 404
+2025-10-29 14:05:11.415 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 88.6605ms
+2025-10-29 14:05:16.450 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-10-29 14:05:16.452 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - 404 null null 1.8844ms
+2025-10-29 14:05:16.452 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-10-29 14:05:18.755 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-29 14:05:18.764 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-29 14:05:18.766 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-29 14:05:18.776 +07:00 [INF] Executed ViewResult - view Index executed in 10.9517ms.
+2025-10-29 14:05:18.777 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 12.7946ms
+2025-10-29 14:05:18.779 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 24.2494ms
+2025-10-29 14:05:18.818 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-10-29 14:05:18.819 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - 404 null null 1.2662ms
+2025-10-29 14:05:18.819 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-10-29 14:05:18.832 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css - null null
+2025-10-29 14:05:18.833 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css - null null
+2025-10-29 14:05:18.836 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/style.css - null null
+2025-10-29 14:05:18.832 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css - null null
+2025-10-29 14:05:18.833 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css - null null
+2025-10-29 14:05:18.873 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/vi.png - null null
+2025-10-29 14:05:18.878 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/jquery.min.js - null null
+2025-10-29 14:05:18.882 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/custom.css - null null
+2025-10-29 14:05:18.921 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.css - null null
+2025-10-29 14:05:18.921 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/en.svg - null null
+2025-10-29 14:05:18.954 +07:00 [INF] Sending file. Request path: '/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\css\font-awesome.min.css'
+2025-10-29 14:05:18.954 +07:00 [INF] Sending file. Request path: '/Data/en.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\en.svg'
+2025-10-29 14:05:18.954 +07:00 [INF] Sending file. Request path: '/assets/css/style.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\style.css'
+2025-10-29 14:05:18.954 +07:00 [INF] Sending file. Request path: '/Data/vi.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\vi.png'
+2025-10-29 14:05:18.955 +07:00 [INF] Sending file. Request path: '/assets/lib/fancybox/dist/jquery.fancybox.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\fancybox\dist\jquery.fancybox.min.css'
+2025-10-29 14:05:18.955 +07:00 [INF] Sending file. Request path: '/assets/js/jquery.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.min.js'
+2025-10-29 14:05:18.954 +07:00 [INF] Sending file. Request path: '/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap.min.css'
+2025-10-29 14:05:18.955 +07:00 [INF] Sending file. Request path: '/assets/css/custom.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\custom.css'
+2025-10-29 14:05:18.954 +07:00 [INF] Sending file. Request path: '/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\OwlCarousel2-2.3.4\dist\assets\owl.theme.default.min.css'
+2025-10-29 14:05:18.955 +07:00 [INF] Sending file. Request path: '/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\OwlCarousel2-2.3.4\dist\assets\owl.carousel.min.css'
+2025-10-29 14:05:18.955 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/vi.png - 200 381 image/png 81.5189ms
+2025-10-29 14:05:18.956 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/en.svg - 200 null image/svg+xml 35.3048ms
+2025-10-29 14:05:18.956 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css - 200 null text/css 123.6497ms
+2025-10-29 14:05:18.956 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css - 200 null text/css 123.6544ms
+2025-10-29 14:05:18.962 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.css - 200 null text/css 40.667ms
+2025-10-29 14:05:18.962 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/custom.css - 200 null text/css 76.9956ms
+2025-10-29 14:05:18.960 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/style.css - 200 null text/css 126.5927ms
+2025-10-29 14:05:18.966 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css - 200 null text/css 137.3031ms
+2025-10-29 14:05:18.966 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/jquery.min.js - 200 93100 text/javascript 88.0502ms
+2025-10-29 14:05:18.962 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css - 200 null text/css 130.7319ms
+2025-10-29 14:05:18.966 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why1.png - null null
+2025-10-29 14:05:18.966 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/banner.png - null null
+2025-10-29 14:05:18.967 +07:00 [INF] Sending file. Request path: '/Data/why1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why1.png'
+2025-10-29 14:05:18.967 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why1.png - 200 14212 image/png 0.8766ms
+2025-10-29 14:05:19.001 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why2.png - null null
+2025-10-29 14:05:19.001 +07:00 [INF] Sending file. Request path: '/Data/why2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why2.png'
+2025-10-29 14:05:19.001 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why2.png - 200 11775 image/png 0.948ms
+2025-10-29 14:05:19.005 +07:00 [INF] Sending file. Request path: '/Data/banner.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\banner.png'
+2025-10-29 14:05:19.017 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/banner.png - 200 717328 image/png 50.0788ms
+2025-10-29 14:05:19.022 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js - null null
+2025-10-29 14:05:19.023 +07:00 [INF] Sending file. Request path: '/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\js\bootstrap.bundle.min.js'
+2025-10-29 14:05:19.025 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js - 200 80502 text/javascript 3.7314ms
+2025-10-29 14:05:19.030 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/bootstrap.js?v=5.5.9 - null null
+2025-10-29 14:05:19.031 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/owl.carousel.min.js?v=5.5.9 - null null
+2025-10-29 14:05:19.032 +07:00 [INF] Sending file. Request path: '/assets/js/bootstrap.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\bootstrap.js'
+2025-10-29 14:05:19.032 +07:00 [INF] Sending file. Request path: '/assets/js/owl.carousel.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\owl.carousel.min.js'
+2025-10-29 14:05:19.032 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/site.js?v=1.0 - null null
+2025-10-29 14:05:19.033 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/bootstrap.js?v=5.5.9 - 200 27674 text/javascript 2.1928ms
+2025-10-29 14:05:19.033 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/owl.carousel.min.js?v=5.5.9 - 200 42772 text/javascript 1.8867ms
+2025-10-29 14:05:19.033 +07:00 [INF] Sending file. Request path: '/assets/js/site.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\site.js'
+2025-10-29 14:05:19.033 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/site.js?v=1.0 - 200 1676 text/javascript 1.0117ms
+2025-10-29 14:05:19.034 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/waypoints.min.js - null null
+2025-10-29 14:05:19.034 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/jquery.counterup.min.js - null null
+2025-10-29 14:05:19.035 +07:00 [INF] Sending file. Request path: '/assets/js/jquery.counterup.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.counterup.min.js'
+2025-10-29 14:05:19.035 +07:00 [INF] Sending file. Request path: '/assets/js/waypoints.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\waypoints.min.js'
+2025-10-29 14:05:19.035 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/jquery.counterup.min.js - 200 1067 text/javascript 1.2506ms
+2025-10-29 14:05:19.035 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/waypoints.min.js - 200 8044 text/javascript 1.3682ms
+2025-10-29 14:05:19.036 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-29 14:05:19.036 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.js - null null
+2025-10-29 14:05:19.036 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/logo.svg - null null
+2025-10-29 14:05:19.037 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 0.811ms
+2025-10-29 14:05:19.037 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why3.png - null null
+2025-10-29 14:05:19.037 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why4.png - null null
+2025-10-29 14:05:19.037 +07:00 [INF] Sending file. Request path: '/Data/logo.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logo.svg'
+2025-10-29 14:05:19.037 +07:00 [INF] Sending file. Request path: '/Data/why3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why3.png'
+2025-10-29 14:05:19.037 +07:00 [INF] Sending file. Request path: '/assets/lib/fancybox/dist/jquery.fancybox.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\fancybox\dist\jquery.fancybox.min.js'
+2025-10-29 14:05:19.037 +07:00 [INF] Sending file. Request path: '/Data/why4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why4.png'
+2025-10-29 14:05:19.037 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why3.png - 200 9778 image/png 0.7071ms
+2025-10-29 14:05:19.037 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why4.png - 200 10694 image/png 0.7097ms
+2025-10-29 14:05:19.038 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why5.png - null null
+2025-10-29 14:05:19.039 +07:00 [INF] Sending file. Request path: '/Data/why5.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why5.png'
+2025-10-29 14:05:19.039 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why5.png - 200 11621 image/png 0.9257ms
+2025-10-29 14:05:19.039 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why6.png - null null
+2025-10-29 14:05:19.040 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/logo.svg - 200 null image/svg+xml 4.0967ms
+2025-10-29 14:05:19.040 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.js - 200 68265 text/javascript 4.2732ms
+2025-10-29 14:05:19.040 +07:00 [INF] Sending file. Request path: '/Data/why6.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why6.png'
+2025-10-29 14:05:19.040 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why6.png - 200 12886 image/png 1.3731ms
+2025-10-29 14:05:19.042 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/banner-hotro.jpg - null null
+2025-10-29 14:05:19.046 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-01.png - null null
+2025-10-29 14:05:19.046 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/iconht.svg - null null
+2025-10-29 14:05:19.047 +07:00 [INF] Sending file. Request path: '/Data/iconht.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\iconht.svg'
+2025-10-29 14:05:19.047 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/iconht.svg - 200 null image/svg+xml 1.0637ms
+2025-10-29 14:05:19.047 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-02.png - null null
+2025-10-29 14:05:19.048 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-03.png - null null
+2025-10-29 14:05:19.050 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-04.png - null null
+2025-10-29 14:05:19.051 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner1.png - null null
+2025-10-29 14:05:19.051 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner2.png - null null
+2025-10-29 14:05:19.051 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner3.png - null null
+2025-10-29 14:05:19.052 +07:00 [INF] Sending file. Request path: '/Data/partner2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner2.png'
+2025-10-29 14:05:19.052 +07:00 [INF] Sending file. Request path: '/Data/partner3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner3.png'
+2025-10-29 14:05:19.052 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner4.png - null null
+2025-10-29 14:05:19.053 +07:00 [INF] Sending file. Request path: '/Data/partner4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner4.png'
+2025-10-29 14:05:19.053 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner5.png - null null
+2025-10-29 14:05:19.053 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner2.png - 200 21264 image/png 2.0509ms
+2025-10-29 14:05:19.053 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner3.png - 200 33087 image/png 2.0207ms
+2025-10-29 14:05:19.053 +07:00 [INF] Sending file. Request path: '/Data/partner5.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner5.png'
+2025-10-29 14:05:19.054 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner4.png - 200 32296 image/png 1.5024ms
+2025-10-29 14:05:19.054 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/acb.png - null null
+2025-10-29 14:05:19.054 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner6.png - null null
+2025-10-29 14:05:19.054 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner5.png - 200 30141 image/png 1.2927ms
+2025-10-29 14:05:19.054 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/icon_our1.svg - null null
+2025-10-29 14:05:19.055 +07:00 [INF] Sending file. Request path: '/Data/partner6.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner6.png'
+2025-10-29 14:05:19.055 +07:00 [INF] Sending file. Request path: '/Data/acb.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\acb.png'
+2025-10-29 14:05:19.055 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/acb.png - 200 3193 image/png 0.8817ms
+2025-10-29 14:05:19.055 +07:00 [INF] Sending file. Request path: '/Data/icon_our1.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our1.svg'
+2025-10-29 14:05:19.056 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/icon_our1.svg - 200 null image/svg+xml 1.2383ms
+2025-10-29 14:05:19.056 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner6.png - 200 30965 image/png 2.4876ms
+2025-10-29 14:05:19.057 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our1.jpg - null null
+2025-10-29 14:05:19.057 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/icon_our2.svg - null null
+2025-10-29 14:05:19.058 +07:00 [INF] Sending file. Request path: '/Data/icon_our2.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our2.svg'
+2025-10-29 14:05:19.059 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/icon_our2.svg - 200 null image/svg+xml 1.3119ms
+2025-10-29 14:05:19.060 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/baoviet.png - null null
+2025-10-29 14:05:19.061 +07:00 [INF] Sending file. Request path: '/Data/baoviet.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\baoviet.png'
+2025-10-29 14:05:19.062 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/baoviet.png - 200 5265 image/png 1.2658ms
+2025-10-29 14:05:19.062 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our2.jpg - null null
+2025-10-29 14:05:19.063 +07:00 [INF] Sending file. Request path: '/Data/our2.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our2.jpg'
+2025-10-29 14:05:19.063 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our2.jpg - 200 29114 image/jpeg 1.3036ms
+2025-10-29 14:05:19.064 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bg-dangky.jpg - null null
+2025-10-29 14:05:19.064 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our3.jpg - null null
+2025-10-29 14:05:19.064 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/logoft.svg - null null
+2025-10-29 14:05:19.065 +07:00 [INF] Sending file. Request path: '/Data/logoft.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logoft.svg'
+2025-10-29 14:05:19.065 +07:00 [INF] Sending file. Request path: '/Data/our3.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our3.jpg'
+2025-10-29 14:05:19.066 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our3.jpg - 200 35684 image/jpeg 2.0637ms
+2025-10-29 14:05:19.066 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/logoft.svg - 200 null image/svg+xml 2.0354ms
+2025-10-29 14:05:19.066 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-29 14:05:19.066 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bgtop.jpg - null null
+2025-10-29 14:05:19.068 +07:00 [INF] Sending file. Request path: '/Data/bgtop.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bgtop.jpg'
+2025-10-29 14:05:19.068 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bgtop.jpg - 200 6785 image/jpeg 1.3047ms
+2025-10-29 14:05:19.107 +07:00 [INF] Sending file. Request path: '/Data/our1.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our1.jpg'
+2025-10-29 14:05:19.107 +07:00 [INF] Sending file. Request path: '/Data/bg-dangky.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bg-dangky.jpg'
+2025-10-29 14:05:19.109 +07:00 [INF] Sending file. Request path: '/Data/partner1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner1.png'
+2025-10-29 14:05:19.109 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our1.jpg - 200 39329 image/jpeg 51.9632ms
+2025-10-29 14:05:19.110 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner1.png - 200 81892 image/png 59.6832ms
+2025-10-29 14:05:19.111 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - null null
+2025-10-29 14:05:19.111 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bg-what.jpg - null null
+2025-10-29 14:05:19.111 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - null null
+2025-10-29 14:05:19.111 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0 - null null
+2025-10-29 14:05:19.136 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bg-dangky.jpg - 200 46525 image/jpeg 72.3201ms
+2025-10-29 14:05:19.137 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - 404 null null 68.6338ms
+2025-10-29 14:05:19.137 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - 404 null null 26.018ms
+2025-10-29 14:05:19.137 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgour.png, Response status code: 404
+2025-10-29 14:05:19.137 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgvideo.jpg, Response status code: 404
+2025-10-29 14:05:19.137 +07:00 [INF] Sending file. Request path: '/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\fonts\fontawesome-webfont.woff2'
+2025-10-29 14:05:19.139 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0 - 200 77160 font/woff2 32.5326ms
+2025-10-29 14:05:19.148 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 81.5309ms
+2025-10-29 14:05:19.150 +07:00 [INF] Sending file. Request path: '/Data/hotro-03.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-03.png'
+2025-10-29 14:05:19.153 +07:00 [INF] Sending file. Request path: '/Data/hotro-04.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-04.png'
+2025-10-29 14:05:19.161 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-03.png - 200 367140 image/png 112.6907ms
+2025-10-29 14:05:19.161 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-04.png - 200 414739 image/png 111.4106ms
+2025-10-29 14:05:19.172 +07:00 [INF] Sending file. Request path: '/Data/bg-what.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bg-what.jpg'
+2025-10-29 14:05:19.173 +07:00 [INF] Sending file. Request path: '/Data/hotro-01.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-01.png'
+2025-10-29 14:05:19.173 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bg-what.jpg - 200 45463 image/jpeg 104.5902ms
+2025-10-29 14:05:19.177 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-01.png - 200 307413 image/png 130.7399ms
+2025-10-29 14:05:19.207 +07:00 [INF] Sending file. Request path: '/Data/hotro-02.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-02.png'
+2025-10-29 14:05:19.208 +07:00 [INF] Sending file. Request path: '/Data/banner-hotro.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\banner-hotro.jpg'
+2025-10-29 14:05:19.214 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/banner-hotro.jpg - 200 306351 image/jpeg 172.2511ms
+2025-10-29 14:05:19.217 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-02.png - 200 360391 image/png 169.4549ms
+2025-10-29 14:05:19.758 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/favicon.ico - null null
+2025-10-29 14:05:19.759 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/favicon.ico - 404 null null 1.3331ms
+2025-10-29 14:05:19.759 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/favicon.ico, Response status code: 404
+2025-10-29 14:05:19.782 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - null null
+2025-10-29 14:05:19.783 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - 404 null null 1.1606ms
+2025-10-29 14:05:19.783 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/img/logo/favicon.png, Response status code: 404
+2025-10-29 14:06:24.760 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-29 14:06:24.777 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-29 14:06:24.780 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-29 14:06:24.783 +07:00 [INF] Executed ViewResult - view Index executed in 3.3ms.
+2025-10-29 14:06:24.784 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 5.9673ms
+2025-10-29 14:06:24.784 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 25.0001ms
+2025-10-29 14:06:24.818 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css - null null
+2025-10-29 14:06:24.818 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css - null null
+2025-10-29 14:06:24.846 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/style.css - null null
+2025-10-29 14:06:24.850 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css - null null
+2025-10-29 14:06:24.852 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/vi.png - null null
+2025-10-29 14:06:24.853 +07:00 [INF] Sending file. Request path: '/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\css\font-awesome.min.css'
+2025-10-29 14:06:24.853 +07:00 [INF] Sending file. Request path: '/assets/css/style.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\style.css'
+2025-10-29 14:06:24.855 +07:00 [INF] Sending file. Request path: '/Data/vi.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\vi.png'
+2025-10-29 14:06:24.856 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/custom.css - null null
+2025-10-29 14:06:24.856 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css - null null
+2025-10-29 14:06:24.856 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/vi.png - 200 381 image/png 3.8695ms
+2025-10-29 14:06:24.856 +07:00 [INF] Sending file. Request path: '/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\OwlCarousel2-2.3.4\dist\assets\owl.carousel.min.css'
+2025-10-29 14:06:24.856 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/jquery.min.js - null null
+2025-10-29 14:06:24.856 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/en.svg - null null
+2025-10-29 14:06:24.859 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.css - null null
+2025-10-29 14:06:24.859 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css - 200 null text/css 9.1638ms
+2025-10-29 14:06:24.859 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/style.css - 200 null text/css 12.6345ms
+2025-10-29 14:06:24.859 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css - 200 null text/css 41.756ms
+2025-10-29 14:06:24.859 +07:00 [INF] Sending file. Request path: '/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\OwlCarousel2-2.3.4\dist\assets\owl.theme.default.min.css'
+2025-10-29 14:06:24.862 +07:00 [INF] Sending file. Request path: '/Data/en.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\en.svg'
+2025-10-29 14:06:24.862 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css - 200 null text/css 6.2727ms
+2025-10-29 14:06:24.862 +07:00 [INF] Sending file. Request path: '/assets/css/custom.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\custom.css'
+2025-10-29 14:06:24.862 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/en.svg - 200 null image/svg+xml 6.4369ms
+2025-10-29 14:06:24.862 +07:00 [INF] Sending file. Request path: '/assets/js/jquery.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.min.js'
+2025-10-29 14:06:24.862 +07:00 [INF] Sending file. Request path: '/assets/lib/fancybox/dist/jquery.fancybox.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\fancybox\dist\jquery.fancybox.min.css'
+2025-10-29 14:06:24.863 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/custom.css - 200 null text/css 7.3615ms
+2025-10-29 14:06:24.863 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.css - 200 null text/css 4.3729ms
+2025-10-29 14:06:24.864 +07:00 [INF] Sending file. Request path: '/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap.min.css'
+2025-10-29 14:06:24.865 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css - 200 null text/css 47.3913ms
+2025-10-29 14:06:24.865 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/jquery.min.js - 200 93100 text/javascript 8.9247ms
+2025-10-29 14:06:24.897 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why1.png - null null
+2025-10-29 14:06:24.897 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/banner.png - null null
+2025-10-29 14:06:24.898 +07:00 [INF] Sending file. Request path: '/Data/why1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why1.png'
+2025-10-29 14:06:24.898 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why1.png - 200 14212 image/png 0.7896ms
+2025-10-29 14:06:24.900 +07:00 [INF] Sending file. Request path: '/Data/banner.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\banner.png'
+2025-10-29 14:06:24.910 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/banner.png - 200 717328 image/png 12.9431ms
+2025-10-29 14:06:24.917 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why2.png - null null
+2025-10-29 14:06:24.917 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js - null null
+2025-10-29 14:06:24.918 +07:00 [INF] Sending file. Request path: '/Data/why2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why2.png'
+2025-10-29 14:06:24.918 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why2.png - 200 11775 image/png 0.7477ms
+2025-10-29 14:06:24.918 +07:00 [INF] Sending file. Request path: '/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\js\bootstrap.bundle.min.js'
+2025-10-29 14:06:24.920 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js - 200 80502 text/javascript 2.5438ms
+2025-10-29 14:06:24.928 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/bootstrap.js?v=5.5.9 - null null
+2025-10-29 14:06:24.928 +07:00 [INF] Sending file. Request path: '/assets/js/bootstrap.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\bootstrap.js'
+2025-10-29 14:06:24.929 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/bootstrap.js?v=5.5.9 - 200 27674 text/javascript 1.4494ms
+2025-10-29 14:06:24.930 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/owl.carousel.min.js?v=5.5.9 - null null
+2025-10-29 14:06:24.930 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/site.js?v=1.0 - null null
+2025-10-29 14:06:24.930 +07:00 [INF] Sending file. Request path: '/assets/js/site.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\site.js'
+2025-10-29 14:06:24.930 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/waypoints.min.js - null null
+2025-10-29 14:06:24.930 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/site.js?v=1.0 - 200 1676 text/javascript 0.7848ms
+2025-10-29 14:06:24.930 +07:00 [INF] Sending file. Request path: '/assets/js/owl.carousel.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\owl.carousel.min.js'
+2025-10-29 14:06:24.931 +07:00 [INF] Sending file. Request path: '/assets/js/waypoints.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\waypoints.min.js'
+2025-10-29 14:06:24.931 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/waypoints.min.js - 200 8044 text/javascript 1.1301ms
+2025-10-29 14:06:24.932 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/owl.carousel.min.js?v=5.5.9 - 200 42772 text/javascript 2.2895ms
+2025-10-29 14:06:24.932 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/jquery.counterup.min.js - null null
+2025-10-29 14:06:24.932 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.js - null null
+2025-10-29 14:06:24.932 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-29 14:06:24.933 +07:00 [INF] Sending file. Request path: '/assets/js/jquery.counterup.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.counterup.min.js'
+2025-10-29 14:06:24.933 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/jquery.counterup.min.js - 200 1067 text/javascript 0.7399ms
+2025-10-29 14:06:24.933 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 0.6113ms
+2025-10-29 14:06:24.933 +07:00 [INF] Sending file. Request path: '/assets/lib/fancybox/dist/jquery.fancybox.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\fancybox\dist\jquery.fancybox.min.js'
+2025-10-29 14:06:24.934 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/logo.svg - null null
+2025-10-29 14:06:24.935 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.js - 200 68265 text/javascript 2.9346ms
+2025-10-29 14:06:24.935 +07:00 [INF] Sending file. Request path: '/Data/logo.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logo.svg'
+2025-10-29 14:06:24.936 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/logo.svg - 200 null image/svg+xml 1.5937ms
+2025-10-29 14:06:24.936 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why3.png - null null
+2025-10-29 14:06:24.936 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why4.png - null null
+2025-10-29 14:06:24.936 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why5.png - null null
+2025-10-29 14:06:24.937 +07:00 [INF] Sending file. Request path: '/Data/why3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why3.png'
+2025-10-29 14:06:24.937 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why3.png - 200 9778 image/png 0.911ms
+2025-10-29 14:06:24.937 +07:00 [INF] Sending file. Request path: '/Data/why5.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why5.png'
+2025-10-29 14:06:24.937 +07:00 [INF] Sending file. Request path: '/Data/why4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why4.png'
+2025-10-29 14:06:24.937 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why5.png - 200 11621 image/png 0.627ms
+2025-10-29 14:06:24.937 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why4.png - 200 10694 image/png 0.7211ms
+2025-10-29 14:06:24.938 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why6.png - null null
+2025-10-29 14:06:24.939 +07:00 [INF] Sending file. Request path: '/Data/why6.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why6.png'
+2025-10-29 14:06:24.939 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why6.png - 200 12886 image/png 1.1295ms
+2025-10-29 14:06:24.940 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/banner-hotro.jpg - null null
+2025-10-29 14:06:24.940 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-01.png - null null
+2025-10-29 14:06:24.940 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/iconht.svg - null null
+2025-10-29 14:06:24.941 +07:00 [INF] Sending file. Request path: '/Data/iconht.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\iconht.svg'
+2025-10-29 14:06:24.941 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/iconht.svg - 200 null image/svg+xml 0.9639ms
+2025-10-29 14:06:24.942 +07:00 [INF] Sending file. Request path: '/Data/banner-hotro.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\banner-hotro.jpg'
+2025-10-29 14:06:24.942 +07:00 [INF] Sending file. Request path: '/Data/hotro-01.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-01.png'
+2025-10-29 14:06:24.946 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-02.png - null null
+2025-10-29 14:06:24.947 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-03.png - null null
+2025-10-29 14:06:24.948 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-04.png - null null
+2025-10-29 14:06:24.949 +07:00 [INF] Sending file. Request path: '/Data/hotro-02.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-02.png'
+2025-10-29 14:06:24.949 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner1.png - null null
+2025-10-29 14:06:24.949 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner2.png - null null
+2025-10-29 14:06:24.949 +07:00 [INF] Sending file. Request path: '/Data/partner2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner2.png'
+2025-10-29 14:06:24.950 +07:00 [INF] Sending file. Request path: '/Data/hotro-03.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-03.png'
+2025-10-29 14:06:24.950 +07:00 [INF] Sending file. Request path: '/Data/partner1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner1.png'
+2025-10-29 14:06:24.950 +07:00 [INF] Sending file. Request path: '/Data/hotro-04.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-04.png'
+2025-10-29 14:06:24.951 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-01.png - 200 307413 image/png 11.1995ms
+2025-10-29 14:06:24.953 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner3.png - null null
+2025-10-29 14:06:24.953 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner4.png - null null
+2025-10-29 14:06:24.954 +07:00 [INF] Sending file. Request path: '/Data/partner4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner4.png'
+2025-10-29 14:06:24.954 +07:00 [INF] Sending file. Request path: '/Data/partner3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner3.png'
+2025-10-29 14:06:24.955 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner5.png - null null
+2025-10-29 14:06:24.956 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner6.png - null null
+2025-10-29 14:06:24.957 +07:00 [INF] Sending file. Request path: '/Data/partner5.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner5.png'
+2025-10-29 14:06:24.957 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/acb.png - null null
+2025-10-29 14:06:24.957 +07:00 [INF] Sending file. Request path: '/Data/partner6.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner6.png'
+2025-10-29 14:06:24.957 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/icon_our1.svg - null null
+2025-10-29 14:06:24.957 +07:00 [INF] Sending file. Request path: '/Data/acb.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\acb.png'
+2025-10-29 14:06:24.958 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/acb.png - 200 3193 image/png 0.8233ms
+2025-10-29 14:06:24.958 +07:00 [INF] Sending file. Request path: '/Data/icon_our1.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our1.svg'
+2025-10-29 14:06:24.958 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/icon_our1.svg - 200 null image/svg+xml 0.9718ms
+2025-10-29 14:06:24.959 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our1.jpg - null null
+2025-10-29 14:06:24.959 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/icon_our2.svg - null null
+2025-10-29 14:06:24.960 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/baoviet.png - null null
+2025-10-29 14:06:24.960 +07:00 [INF] Sending file. Request path: '/Data/our1.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our1.jpg'
+2025-10-29 14:06:24.960 +07:00 [INF] Sending file. Request path: '/Data/icon_our2.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our2.svg'
+2025-10-29 14:06:24.960 +07:00 [INF] Sending file. Request path: '/Data/baoviet.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\baoviet.png'
+2025-10-29 14:06:24.960 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/icon_our2.svg - 200 null image/svg+xml 1.2691ms
+2025-10-29 14:06:24.961 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/baoviet.png - 200 5265 image/png 0.6428ms
+2025-10-29 14:06:24.964 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our2.jpg - null null
+2025-10-29 14:06:24.964 +07:00 [INF] Sending file. Request path: '/Data/our2.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our2.jpg'
+2025-10-29 14:06:24.966 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our3.jpg - null null
+2025-10-29 14:06:24.966 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner1.png - 200 81892 image/png 17.4913ms
+2025-10-29 14:06:24.966 +07:00 [INF] Sending file. Request path: '/Data/our3.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our3.jpg'
+2025-10-29 14:06:24.966 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bg-dangky.jpg - null null
+2025-10-29 14:06:24.967 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/logoft.svg - null null
+2025-10-29 14:06:24.967 +07:00 [INF] Sending file. Request path: '/Data/bg-dangky.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bg-dangky.jpg'
+2025-10-29 14:06:24.967 +07:00 [INF] Sending file. Request path: '/Data/logoft.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logoft.svg'
+2025-10-29 14:06:24.968 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner5.png - 200 30141 image/png 12.5133ms
+2025-10-29 14:06:24.968 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-29 14:06:24.969 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our1.jpg - 200 39329 image/jpeg 9.9693ms
+2025-10-29 14:06:24.973 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner2.png - 200 21264 image/png 23.9729ms
+2025-10-29 14:06:24.973 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner4.png - 200 32296 image/png 19.7893ms
+2025-10-29 14:06:24.973 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner6.png - 200 30965 image/png 16.9642ms
+2025-10-29 14:06:24.973 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/logoft.svg - 200 null image/svg+xml 6.2173ms
+2025-10-29 14:06:24.978 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our3.jpg - 200 35684 image/jpeg 12.6509ms
+2025-10-29 14:06:24.973 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner3.png - 200 33087 image/png 19.4899ms
+2025-10-29 14:06:24.973 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our2.jpg - 200 29114 image/jpeg 9.3644ms
+2025-10-29 14:06:24.978 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bgtop.jpg - null null
+2025-10-29 14:06:24.973 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bg-dangky.jpg - 200 46525 image/jpeg 6.4371ms
+2025-10-29 14:06:24.982 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/banner-hotro.jpg - 200 306351 image/jpeg 41.7444ms
+2025-10-29 14:06:24.982 +07:00 [INF] Sending file. Request path: '/Data/bgtop.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bgtop.jpg'
+2025-10-29 14:06:24.982 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bgtop.jpg - 200 6785 image/jpeg 4.2625ms
+2025-10-29 14:06:24.984 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-03.png - 200 367140 image/png 37.0819ms
+2025-10-29 14:06:24.985 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-04.png - 200 414739 image/png 36.9847ms
+2025-10-29 14:06:24.985 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - null null
+2025-10-29 14:06:24.985 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - 404 null null 0.8198ms
+2025-10-29 14:06:24.985 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgvideo.jpg, Response status code: 404
+2025-10-29 14:06:24.986 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-02.png - 200 360391 image/png 39.9394ms
+2025-10-29 14:06:24.992 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - null null
+2025-10-29 14:06:24.992 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bg-what.jpg - null null
+2025-10-29 14:06:24.993 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - 404 null null 0.8413ms
+2025-10-29 14:06:24.993 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgour.png, Response status code: 404
+2025-10-29 14:06:24.993 +07:00 [INF] Sending file. Request path: '/Data/bg-what.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bg-what.jpg'
+2025-10-29 14:06:24.995 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bg-what.jpg - 200 45463 image/jpeg 2.6471ms
+2025-10-29 14:06:24.995 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0 - null null
+2025-10-29 14:06:24.996 +07:00 [INF] Sending file. Request path: '/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\fonts\fontawesome-webfont.woff2'
+2025-10-29 14:06:24.998 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0 - 200 77160 font/woff2 2.8281ms
+2025-10-29 14:06:24.998 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 29.5512ms
+2025-10-29 14:06:25.546 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/favicon.ico - null null
+2025-10-29 14:06:25.547 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/favicon.ico - 404 null null 1.0212ms
+2025-10-29 14:06:25.547 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/favicon.ico, Response status code: 404
+2025-10-29 14:06:25.553 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - null null
+2025-10-29 14:06:25.554 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - 404 null null 0.4913ms
+2025-10-29 14:06:25.554 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/img/logo/favicon.png, Response status code: 404
+2025-10-29 14:06:34.712 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-29 14:06:34.720 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-29 14:06:34.720 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-29 14:06:34.725 +07:00 [INF] Executed ViewResult - view Index executed in 4.3593ms.
+2025-10-29 14:06:34.725 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 5.0226ms
+2025-10-29 14:06:34.726 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 13.5898ms
+2025-10-29 14:06:34.764 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css - null null
+2025-10-29 14:06:34.764 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css - null null
+2025-10-29 14:06:34.764 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/style.css - null null
+2025-10-29 14:06:34.764 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css - null null
+2025-10-29 14:06:34.764 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css - null null
+2025-10-29 14:06:34.765 +07:00 [INF] Sending file. Request path: '/assets/css/style.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\style.css'
+2025-10-29 14:06:34.765 +07:00 [INF] Sending file. Request path: '/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\OwlCarousel2-2.3.4\dist\assets\owl.carousel.min.css'
+2025-10-29 14:06:34.765 +07:00 [INF] Sending file. Request path: '/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\OwlCarousel2-2.3.4\dist\assets\owl.theme.default.min.css'
+2025-10-29 14:06:34.765 +07:00 [INF] Sending file. Request path: '/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\css\font-awesome.min.css'
+2025-10-29 14:06:34.765 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css - 200 null text/css 1.12ms
+2025-10-29 14:06:34.765 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css - 200 null text/css 0.6573ms
+2025-10-29 14:06:34.765 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/custom.css - null null
+2025-10-29 14:06:34.766 +07:00 [INF] Sending file. Request path: '/assets/css/custom.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\custom.css'
+2025-10-29 14:06:34.766 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/style.css - 200 null text/css 2.3249ms
+2025-10-29 14:06:34.766 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css - 200 null text/css 2.4691ms
+2025-10-29 14:06:34.766 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.css - null null
+2025-10-29 14:06:34.767 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/custom.css - 200 null text/css 1.1125ms
+2025-10-29 14:06:34.767 +07:00 [INF] Sending file. Request path: '/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap.min.css'
+2025-10-29 14:06:34.767 +07:00 [INF] Sending file. Request path: '/assets/lib/fancybox/dist/jquery.fancybox.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\fancybox\dist\jquery.fancybox.min.css'
+2025-10-29 14:06:34.767 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.css - 200 null text/css 1.0952ms
+2025-10-29 14:06:34.768 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css - 200 null text/css 4.0401ms
+2025-10-29 14:06:34.769 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/jquery.min.js - null null
+2025-10-29 14:06:34.769 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/en.svg - null null
+2025-10-29 14:06:34.769 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/vi.png - null null
+2025-10-29 14:06:34.769 +07:00 [INF] Sending file. Request path: '/Data/en.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\en.svg'
+2025-10-29 14:06:34.769 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/en.svg - 200 null image/svg+xml 0.6461ms
+2025-10-29 14:06:34.769 +07:00 [INF] Sending file. Request path: '/Data/vi.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\vi.png'
+2025-10-29 14:06:34.769 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/vi.png - 200 381 image/png 0.3944ms
+2025-10-29 14:06:34.770 +07:00 [INF] Sending file. Request path: '/assets/js/jquery.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.min.js'
+2025-10-29 14:06:34.772 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/jquery.min.js - 200 93100 text/javascript 2.9989ms
+2025-10-29 14:06:34.780 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/banner.png - null null
+2025-10-29 14:06:34.781 +07:00 [INF] Sending file. Request path: '/Data/banner.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\banner.png'
+2025-10-29 14:06:34.783 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why1.png - null null
+2025-10-29 14:06:34.783 +07:00 [INF] Sending file. Request path: '/Data/why1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why1.png'
+2025-10-29 14:06:34.783 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why1.png - 200 14212 image/png 0.4835ms
+2025-10-29 14:06:34.789 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why2.png - null null
+2025-10-29 14:06:34.790 +07:00 [INF] Sending file. Request path: '/Data/why2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why2.png'
+2025-10-29 14:06:34.790 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why2.png - 200 11775 image/png 0.6024ms
+2025-10-29 14:06:34.790 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/banner.png - 200 717328 image/png 10.2222ms
+2025-10-29 14:06:34.793 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js - null null
+2025-10-29 14:06:34.794 +07:00 [INF] Sending file. Request path: '/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\js\bootstrap.bundle.min.js'
+2025-10-29 14:06:34.795 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js - 200 80502 text/javascript 2.0934ms
+2025-10-29 14:06:34.796 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/bootstrap.js?v=5.5.9 - null null
+2025-10-29 14:06:34.797 +07:00 [INF] Sending file. Request path: '/assets/js/bootstrap.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\bootstrap.js'
+2025-10-29 14:06:34.797 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/bootstrap.js?v=5.5.9 - 200 27674 text/javascript 1.211ms
+2025-10-29 14:06:34.804 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/owl.carousel.min.js?v=5.5.9 - null null
+2025-10-29 14:06:34.804 +07:00 [INF] Sending file. Request path: '/assets/js/owl.carousel.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\owl.carousel.min.js'
+2025-10-29 14:06:34.804 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/site.js?v=1.0 - null null
+2025-10-29 14:06:34.805 +07:00 [INF] Sending file. Request path: '/assets/js/site.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\site.js'
+2025-10-29 14:06:34.805 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/site.js?v=1.0 - 200 1676 text/javascript 0.4253ms
+2025-10-29 14:06:34.805 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/owl.carousel.min.js?v=5.5.9 - 200 42772 text/javascript 1.6287ms
+2025-10-29 14:06:34.809 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/waypoints.min.js - null null
+2025-10-29 14:06:34.809 +07:00 [INF] Sending file. Request path: '/assets/js/waypoints.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\waypoints.min.js'
+2025-10-29 14:06:34.810 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/waypoints.min.js - 200 8044 text/javascript 0.6368ms
+2025-10-29 14:06:34.811 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/jquery.counterup.min.js - null null
+2025-10-29 14:06:34.811 +07:00 [INF] Sending file. Request path: '/assets/js/jquery.counterup.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.counterup.min.js'
+2025-10-29 14:06:34.811 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/jquery.counterup.min.js - 200 1067 text/javascript 0.4332ms
+2025-10-29 14:06:34.814 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.js - null null
+2025-10-29 14:06:34.815 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-29 14:06:34.815 +07:00 [INF] Sending file. Request path: '/assets/lib/fancybox/dist/jquery.fancybox.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\fancybox\dist\jquery.fancybox.min.js'
+2025-10-29 14:06:34.815 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 0.4009ms
+2025-10-29 14:06:34.816 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.js - 200 68265 text/javascript 1.7252ms
+2025-10-29 14:06:34.820 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/logo.svg - null null
+2025-10-29 14:06:34.821 +07:00 [INF] Sending file. Request path: '/Data/logo.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logo.svg'
+2025-10-29 14:06:34.821 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/logo.svg - 200 null image/svg+xml 0.9081ms
+2025-10-29 14:06:34.826 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why3.png - null null
+2025-10-29 14:06:34.826 +07:00 [INF] Sending file. Request path: '/Data/why3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why3.png'
+2025-10-29 14:06:34.826 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why3.png - 200 9778 image/png 0.5649ms
+2025-10-29 14:06:34.828 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why4.png - null null
+2025-10-29 14:06:34.829 +07:00 [INF] Sending file. Request path: '/Data/why4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why4.png'
+2025-10-29 14:06:34.829 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why4.png - 200 10694 image/png 0.6216ms
+2025-10-29 14:06:34.835 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why5.png - null null
+2025-10-29 14:06:34.835 +07:00 [INF] Sending file. Request path: '/Data/why5.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why5.png'
+2025-10-29 14:06:34.835 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why5.png - 200 11621 image/png 0.5765ms
+2025-10-29 14:06:34.836 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why6.png - null null
+2025-10-29 14:06:34.836 +07:00 [INF] Sending file. Request path: '/Data/why6.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why6.png'
+2025-10-29 14:06:34.836 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why6.png - 200 12886 image/png 0.456ms
+2025-10-29 14:06:34.842 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/banner-hotro.jpg - null null
+2025-10-29 14:06:34.843 +07:00 [INF] Sending file. Request path: '/Data/banner-hotro.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\banner-hotro.jpg'
+2025-10-29 14:06:34.846 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-01.png - null null
+2025-10-29 14:06:34.846 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/iconht.svg - null null
+2025-10-29 14:06:34.846 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-02.png - null null
+2025-10-29 14:06:34.846 +07:00 [INF] Sending file. Request path: '/Data/iconht.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\iconht.svg'
+2025-10-29 14:06:34.846 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/iconht.svg - 200 null image/svg+xml 0.6262ms
+2025-10-29 14:06:34.847 +07:00 [INF] Sending file. Request path: '/Data/hotro-01.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-01.png'
+2025-10-29 14:06:34.847 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-03.png - null null
+2025-10-29 14:06:34.847 +07:00 [INF] Sending file. Request path: '/Data/hotro-02.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-02.png'
+2025-10-29 14:06:34.847 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/banner-hotro.jpg - 200 306351 image/jpeg 5.3664ms
+2025-10-29 14:06:34.848 +07:00 [INF] Sending file. Request path: '/Data/hotro-03.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-03.png'
+2025-10-29 14:06:34.849 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-04.png - null null
+2025-10-29 14:06:34.850 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner1.png - null null
+2025-10-29 14:06:34.850 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner2.png - null null
+2025-10-29 14:06:34.850 +07:00 [INF] Sending file. Request path: '/Data/partner2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner2.png'
+2025-10-29 14:06:34.850 +07:00 [INF] Sending file. Request path: '/Data/partner1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner1.png'
+2025-10-29 14:06:34.850 +07:00 [INF] Sending file. Request path: '/Data/hotro-04.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-04.png'
+2025-10-29 14:06:34.851 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner3.png - null null
+2025-10-29 14:06:34.851 +07:00 [INF] Sending file. Request path: '/Data/partner3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner3.png'
+2025-10-29 14:06:34.853 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner4.png - null null
+2025-10-29 14:06:34.853 +07:00 [INF] Sending file. Request path: '/Data/partner4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner4.png'
+2025-10-29 14:06:34.854 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner5.png - null null
+2025-10-29 14:06:34.854 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner6.png - null null
+2025-10-29 14:06:34.854 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/acb.png - null null
+2025-10-29 14:06:34.854 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/icon_our1.svg - null null
+2025-10-29 14:06:34.855 +07:00 [INF] Sending file. Request path: '/Data/partner5.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner5.png'
+2025-10-29 14:06:34.855 +07:00 [INF] Sending file. Request path: '/Data/partner6.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner6.png'
+2025-10-29 14:06:34.855 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our1.jpg - null null
+2025-10-29 14:06:34.855 +07:00 [INF] Sending file. Request path: '/Data/acb.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\acb.png'
+2025-10-29 14:06:34.855 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/acb.png - 200 3193 image/png 0.5154ms
+2025-10-29 14:06:34.855 +07:00 [INF] Sending file. Request path: '/Data/icon_our1.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our1.svg'
+2025-10-29 14:06:34.855 +07:00 [INF] Sending file. Request path: '/Data/our1.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our1.jpg'
+2025-10-29 14:06:34.855 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/icon_our2.svg - null null
+2025-10-29 14:06:34.855 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/icon_our1.svg - 200 null image/svg+xml 0.7343ms
+2025-10-29 14:06:34.856 +07:00 [INF] Sending file. Request path: '/Data/icon_our2.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our2.svg'
+2025-10-29 14:06:34.856 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/icon_our2.svg - 200 null image/svg+xml 0.6485ms
+2025-10-29 14:06:34.857 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/baoviet.png - null null
+2025-10-29 14:06:34.857 +07:00 [INF] Sending file. Request path: '/Data/baoviet.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\baoviet.png'
+2025-10-29 14:06:34.858 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/baoviet.png - 200 5265 image/png 0.7332ms
+2025-10-29 14:06:34.861 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our2.jpg - null null
+2025-10-29 14:06:34.861 +07:00 [INF] Sending file. Request path: '/Data/our2.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our2.jpg'
+2025-10-29 14:06:34.861 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-01.png - 200 307413 image/png 15.3575ms
+2025-10-29 14:06:34.861 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bg-dangky.jpg - null null
+2025-10-29 14:06:34.861 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our3.jpg - null null
+2025-10-29 14:06:34.862 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/logoft.svg - null null
+2025-10-29 14:06:34.862 +07:00 [INF] Sending file. Request path: '/Data/our3.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our3.jpg'
+2025-10-29 14:06:34.862 +07:00 [INF] Sending file. Request path: '/Data/bg-dangky.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bg-dangky.jpg'
+2025-10-29 14:06:34.862 +07:00 [INF] Sending file. Request path: '/Data/logoft.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logoft.svg'
+2025-10-29 14:06:34.864 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-29 14:06:34.865 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bgtop.jpg - null null
+2025-10-29 14:06:34.866 +07:00 [INF] Sending file. Request path: '/Data/bgtop.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bgtop.jpg'
+2025-10-29 14:06:34.866 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bgtop.jpg - 200 6785 image/jpeg 0.6636ms
+2025-10-29 14:06:34.870 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner1.png - 200 81892 image/png 20.0813ms
+2025-10-29 14:06:34.870 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner2.png - 200 21264 image/png 20.6793ms
+2025-10-29 14:06:34.872 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - null null
+2025-10-29 14:06:34.873 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - 404 null null 1.0917ms
+2025-10-29 14:06:34.873 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgvideo.jpg, Response status code: 404
+2025-10-29 14:06:34.874 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-03.png - 200 367140 image/png 26.882ms
+2025-10-29 14:06:34.875 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner3.png - 200 33087 image/png 24.1629ms
+2025-10-29 14:06:34.875 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner4.png - 200 32296 image/png 22.3921ms
+2025-10-29 14:06:34.875 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner5.png - 200 30141 image/png 21.2142ms
+2025-10-29 14:06:34.876 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner6.png - 200 30965 image/png 21.3257ms
+2025-10-29 14:06:34.877 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bg-what.jpg - null null
+2025-10-29 14:06:34.877 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our2.jpg - 200 29114 image/jpeg 16.5084ms
+2025-10-29 14:06:34.877 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our3.jpg - 200 35684 image/jpeg 15.848ms
+2025-10-29 14:06:34.877 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - null null
+2025-10-29 14:06:34.877 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bg-dangky.jpg - 200 46525 image/jpeg 16.1647ms
+2025-10-29 14:06:34.877 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/logoft.svg - 200 null image/svg+xml 15.8308ms
+2025-10-29 14:06:34.878 +07:00 [INF] Sending file. Request path: '/Data/bg-what.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bg-what.jpg'
+2025-10-29 14:06:34.878 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - 404 null null 0.5511ms
+2025-10-29 14:06:34.878 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgour.png, Response status code: 404
+2025-10-29 14:06:34.878 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0 - null null
+2025-10-29 14:06:34.879 +07:00 [INF] Sending file. Request path: '/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\fonts\fontawesome-webfont.woff2'
+2025-10-29 14:06:34.880 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our1.jpg - 200 39329 image/jpeg 25.1678ms
+2025-10-29 14:06:34.880 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bg-what.jpg - 200 45463 image/jpeg 2.9573ms
+2025-10-29 14:06:34.880 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0 - 200 77160 font/woff2 1.6765ms
+2025-10-29 14:06:34.886 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-02.png - 200 360391 image/png 39.9409ms
+2025-10-29 14:06:34.886 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-04.png - 200 414739 image/png 37.2091ms
+2025-10-29 14:06:34.886 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 22.0258ms
+2025-10-29 14:06:35.365 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/favicon.ico - null null
+2025-10-29 14:06:35.366 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/favicon.ico - 404 null null 0.8857ms
+2025-10-29 14:06:35.366 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/favicon.ico, Response status code: 404
+2025-10-29 14:06:35.377 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - null null
+2025-10-29 14:06:35.378 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - 404 null null 0.7006ms
+2025-10-29 14:06:35.378 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/img/logo/favicon.png, Response status code: 404
+2025-10-29 14:06:41.948 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-10-29 14:06:41.949 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - 404 null null 0.9677ms
+2025-10-29 14:06:41.949 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-10-29 14:07:06.598 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-29 14:07:06.601 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-29 14:07:06.601 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-29 14:07:06.603 +07:00 [INF] Executed ViewResult - view Index executed in 1.6895ms.
+2025-10-29 14:07:06.603 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 2.0317ms
+2025-10-29 14:07:06.603 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 5.3476ms
+2025-10-29 14:07:06.626 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-10-29 14:07:06.627 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - 404 null null 1.1503ms
+2025-10-29 14:07:06.627 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-10-29 14:07:06.637 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-29 14:07:06.637 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-29 14:07:06.638 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 0.7898ms
+2025-10-29 14:07:06.651 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 13.8766ms
+2025-10-29 14:07:08.449 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-29 14:07:08.452 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-29 14:07:08.453 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-29 14:07:08.454 +07:00 [INF] Executed ViewResult - view Index executed in 1.8016ms.
+2025-10-29 14:07:08.454 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 2.1616ms
+2025-10-29 14:07:08.455 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 6.7057ms
+2025-10-29 14:07:08.479 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-10-29 14:07:08.480 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - 404 null null 0.7121ms
+2025-10-29 14:07:08.480 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-10-29 14:07:08.493 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/style.css - null null
+2025-10-29 14:07:08.493 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css - null null
+2025-10-29 14:07:08.498 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css - null null
+2025-10-29 14:07:08.498 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css - null null
+2025-10-29 14:07:08.498 +07:00 [INF] Sending file. Request path: '/assets/css/style.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\style.css'
+2025-10-29 14:07:08.503 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/custom.css - null null
+2025-10-29 14:07:08.506 +07:00 [INF] Sending file. Request path: '/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\OwlCarousel2-2.3.4\dist\assets\owl.carousel.min.css'
+2025-10-29 14:07:08.506 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.css - null null
+2025-10-29 14:07:08.507 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css - 200 null text/css 8.443ms
+2025-10-29 14:07:08.507 +07:00 [INF] Sending file. Request path: '/assets/css/custom.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\custom.css'
+2025-10-29 14:07:08.507 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css - null null
+2025-10-29 14:07:08.510 +07:00 [INF] Sending file. Request path: '/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\css\font-awesome.min.css'
+2025-10-29 14:07:08.510 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/vi.png - null null
+2025-10-29 14:07:08.511 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/en.svg - null null
+2025-10-29 14:07:08.511 +07:00 [INF] Sending file. Request path: '/assets/lib/fancybox/dist/jquery.fancybox.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\fancybox\dist\jquery.fancybox.min.css'
+2025-10-29 14:07:08.511 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/jquery.min.js - null null
+2025-10-29 14:07:08.511 +07:00 [INF] Sending file. Request path: '/Data/vi.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\vi.png'
+2025-10-29 14:07:08.511 +07:00 [INF] Sending file. Request path: '/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\OwlCarousel2-2.3.4\dist\assets\owl.theme.default.min.css'
+2025-10-29 14:07:08.512 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/vi.png - 200 381 image/png 1.0003ms
+2025-10-29 14:07:08.514 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css - 200 null text/css 7.0288ms
+2025-10-29 14:07:08.514 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/style.css - 200 null text/css 20.7085ms
+2025-10-29 14:07:08.514 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css - 200 null text/css 16.0219ms
+2025-10-29 14:07:08.514 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/custom.css - 200 null text/css 11.4411ms
+2025-10-29 14:07:08.514 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.css - 200 null text/css 7.9658ms
+2025-10-29 14:07:08.514 +07:00 [INF] Sending file. Request path: '/Data/en.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\en.svg'
+2025-10-29 14:07:08.514 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/en.svg - 200 null image/svg+xml 3.6956ms
+2025-10-29 14:07:08.515 +07:00 [INF] Sending file. Request path: '/assets/js/jquery.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.min.js'
+2025-10-29 14:07:08.515 +07:00 [INF] Sending file. Request path: '/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap.min.css'
+2025-10-29 14:07:08.516 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css - 200 null text/css 23.0379ms
+2025-10-29 14:07:08.517 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/jquery.min.js - 200 93100 text/javascript 6.3009ms
+2025-10-29 14:07:08.580 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/banner.png - null null
+2025-10-29 14:07:08.580 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why1.png - null null
+2025-10-29 14:07:08.580 +07:00 [INF] Sending file. Request path: '/Data/why1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why1.png'
+2025-10-29 14:07:08.580 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why1.png - 200 14212 image/png 0.6077ms
+2025-10-29 14:07:08.582 +07:00 [INF] Sending file. Request path: '/Data/banner.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\banner.png'
+2025-10-29 14:07:08.594 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/banner.png - 200 717328 image/png 14.1637ms
+2025-10-29 14:07:08.597 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why2.png - null null
+2025-10-29 14:07:08.598 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js - null null
+2025-10-29 14:07:08.598 +07:00 [INF] Sending file. Request path: '/Data/why2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why2.png'
+2025-10-29 14:07:08.598 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why2.png - 200 11775 image/png 0.5639ms
+2025-10-29 14:07:08.598 +07:00 [INF] Sending file. Request path: '/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\js\bootstrap.bundle.min.js'
+2025-10-29 14:07:08.600 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js - 200 80502 text/javascript 2.6813ms
+2025-10-29 14:07:08.604 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/bootstrap.js?v=5.5.9 - null null
+2025-10-29 14:07:08.605 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/owl.carousel.min.js?v=5.5.9 - null null
+2025-10-29 14:07:08.605 +07:00 [INF] Sending file. Request path: '/assets/js/bootstrap.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\bootstrap.js'
+2025-10-29 14:07:08.605 +07:00 [INF] Sending file. Request path: '/assets/js/owl.carousel.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\owl.carousel.min.js'
+2025-10-29 14:07:08.606 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/bootstrap.js?v=5.5.9 - 200 27674 text/javascript 1.5362ms
+2025-10-29 14:07:08.606 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/owl.carousel.min.js?v=5.5.9 - 200 42772 text/javascript 1.4755ms
+2025-10-29 14:07:08.610 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/waypoints.min.js - null null
+2025-10-29 14:07:08.610 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/site.js?v=1.0 - null null
+2025-10-29 14:07:08.610 +07:00 [INF] Sending file. Request path: '/assets/js/site.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\site.js'
+2025-10-29 14:07:08.610 +07:00 [INF] Sending file. Request path: '/assets/js/waypoints.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\waypoints.min.js'
+2025-10-29 14:07:08.610 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/site.js?v=1.0 - 200 1676 text/javascript 0.6455ms
+2025-10-29 14:07:08.610 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/waypoints.min.js - 200 8044 text/javascript 0.7101ms
+2025-10-29 14:07:08.612 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-29 14:07:08.612 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/logo.svg - null null
+2025-10-29 14:07:08.612 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/js/jquery.counterup.min.js - null null
+2025-10-29 14:07:08.612 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.js - null null
+2025-10-29 14:07:08.612 +07:00 [INF] Sending file. Request path: '/assets/js/jquery.counterup.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.counterup.min.js'
+2025-10-29 14:07:08.613 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 0.8689ms
+2025-10-29 14:07:08.613 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/js/jquery.counterup.min.js - 200 1067 text/javascript 0.9631ms
+2025-10-29 14:07:08.613 +07:00 [INF] Sending file. Request path: '/Data/logo.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logo.svg'
+2025-10-29 14:07:08.613 +07:00 [INF] Sending file. Request path: '/assets/lib/fancybox/dist/jquery.fancybox.min.js'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\fancybox\dist\jquery.fancybox.min.js'
+2025-10-29 14:07:08.614 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why3.png - null null
+2025-10-29 14:07:08.616 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/lib/fancybox/dist/jquery.fancybox.min.js - 200 68265 text/javascript 4.0944ms
+2025-10-29 14:07:08.616 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why5.png - null null
+2025-10-29 14:07:08.616 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why4.png - null null
+2025-10-29 14:07:08.616 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/banner-hotro.jpg - null null
+2025-10-29 14:07:08.616 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/logo.svg - 200 null image/svg+xml 4.1023ms
+2025-10-29 14:07:08.616 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/why6.png - null null
+2025-10-29 14:07:08.616 +07:00 [INF] Sending file. Request path: '/Data/why3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why3.png'
+2025-10-29 14:07:08.617 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why3.png - 200 9778 image/png 3.2001ms
+2025-10-29 14:07:08.617 +07:00 [INF] Sending file. Request path: '/Data/why4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why4.png'
+2025-10-29 14:07:08.617 +07:00 [INF] Sending file. Request path: '/Data/why5.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why5.png'
+2025-10-29 14:07:08.617 +07:00 [INF] Sending file. Request path: '/Data/why6.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\why6.png'
+2025-10-29 14:07:08.617 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why5.png - 200 11621 image/png 0.8733ms
+2025-10-29 14:07:08.617 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why4.png - 200 10694 image/png 0.8685ms
+2025-10-29 14:07:08.617 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/why6.png - 200 12886 image/png 0.9052ms
+2025-10-29 14:07:08.620 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/iconht.svg - null null
+2025-10-29 14:07:08.620 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-01.png - null null
+2025-10-29 14:07:08.620 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-02.png - null null
+2025-10-29 14:07:08.620 +07:00 [INF] Sending file. Request path: '/Data/banner-hotro.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\banner-hotro.jpg'
+2025-10-29 14:07:08.621 +07:00 [INF] Sending file. Request path: '/Data/iconht.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\iconht.svg'
+2025-10-29 14:07:08.621 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/iconht.svg - 200 null image/svg+xml 0.7256ms
+2025-10-29 14:07:08.621 +07:00 [INF] Sending file. Request path: '/Data/hotro-01.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-01.png'
+2025-10-29 14:07:08.621 +07:00 [INF] Sending file. Request path: '/Data/hotro-02.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-02.png'
+2025-10-29 14:07:08.624 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-03.png - null null
+2025-10-29 14:07:08.624 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/hotro-04.png - null null
+2025-10-29 14:07:08.626 +07:00 [INF] Sending file. Request path: '/Data/hotro-03.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-03.png'
+2025-10-29 14:07:08.626 +07:00 [INF] Sending file. Request path: '/Data/hotro-04.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\hotro-04.png'
+2025-10-29 14:07:08.628 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner1.png - null null
+2025-10-29 14:07:08.629 +07:00 [INF] Sending file. Request path: '/Data/partner1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner1.png'
+2025-10-29 14:07:08.630 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner2.png - null null
+2025-10-29 14:07:08.631 +07:00 [INF] Sending file. Request path: '/Data/partner2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner2.png'
+2025-10-29 14:07:08.631 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner3.png - null null
+2025-10-29 14:07:08.632 +07:00 [INF] Sending file. Request path: '/Data/partner3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner3.png'
+2025-10-29 14:07:08.632 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner4.png - null null
+2025-10-29 14:07:08.632 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner5.png - null null
+2025-10-29 14:07:08.632 +07:00 [INF] Sending file. Request path: '/Data/partner4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner4.png'
+2025-10-29 14:07:08.632 +07:00 [INF] Sending file. Request path: '/Data/partner5.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner5.png'
+2025-10-29 14:07:08.635 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/acb.png - null null
+2025-10-29 14:07:08.635 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/partner6.png - null null
+2025-10-29 14:07:08.635 +07:00 [INF] Sending file. Request path: '/Data/acb.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\acb.png'
+2025-10-29 14:07:08.635 +07:00 [INF] Sending file. Request path: '/Data/partner6.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\partner6.png'
+2025-10-29 14:07:08.635 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/acb.png - 200 3193 image/png 0.6401ms
+2025-10-29 14:07:08.637 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/icon_our1.svg - null null
+2025-10-29 14:07:08.637 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/banner-hotro.jpg - 200 306351 image/jpeg 20.8627ms
+2025-10-29 14:07:08.637 +07:00 [INF] Sending file. Request path: '/Data/icon_our1.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our1.svg'
+2025-10-29 14:07:08.637 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/icon_our1.svg - 200 null image/svg+xml 0.6708ms
+2025-10-29 14:07:08.638 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our1.jpg - null null
+2025-10-29 14:07:08.638 +07:00 [INF] Sending file. Request path: '/Data/our1.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our1.jpg'
+2025-10-29 14:07:08.641 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/icon_our2.svg - null null
+2025-10-29 14:07:08.642 +07:00 [INF] Sending file. Request path: '/Data/icon_our2.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our2.svg'
+2025-10-29 14:07:08.642 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/baoviet.png - null null
+2025-10-29 14:07:08.642 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/icon_our2.svg - 200 null image/svg+xml 0.8432ms
+2025-10-29 14:07:08.642 +07:00 [INF] Sending file. Request path: '/Data/baoviet.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\baoviet.png'
+2025-10-29 14:07:08.642 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/baoviet.png - 200 5265 image/png 0.4621ms
+2025-10-29 14:07:08.643 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-01.png - 200 307413 image/png 22.7831ms
+2025-10-29 14:07:08.645 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our2.jpg - null null
+2025-10-29 14:07:08.645 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/our3.jpg - null null
+2025-10-29 14:07:08.646 +07:00 [INF] Sending file. Request path: '/Data/our2.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our2.jpg'
+2025-10-29 14:07:08.646 +07:00 [INF] Sending file. Request path: '/Data/our3.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\our3.jpg'
+2025-10-29 14:07:08.646 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bg-dangky.jpg - null null
+2025-10-29 14:07:08.646 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/logoft.svg - null null
+2025-10-29 14:07:08.646 +07:00 [INF] Sending file. Request path: '/Data/bg-dangky.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bg-dangky.jpg'
+2025-10-29 14:07:08.647 +07:00 [INF] Sending file. Request path: '/Data/logoft.svg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logoft.svg'
+2025-10-29 14:07:08.649 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-29 14:07:08.654 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bgtop.jpg - null null
+2025-10-29 14:07:08.655 +07:00 [INF] Sending file. Request path: '/Data/bgtop.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bgtop.jpg'
+2025-10-29 14:07:08.655 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bgtop.jpg - 200 6785 image/jpeg 0.9022ms
+2025-10-29 14:07:08.662 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner2.png - 200 21264 image/png 32.2843ms
+2025-10-29 14:07:08.663 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner3.png - 200 33087 image/png 32.6294ms
+2025-10-29 14:07:08.664 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner4.png - 200 32296 image/png 32.2944ms
+2025-10-29 14:07:08.665 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner6.png - 200 30965 image/png 30.1313ms
+2025-10-29 14:07:08.665 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - null null
+2025-10-29 14:07:08.665 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our1.jpg - 200 39329 image/jpeg 27.5482ms
+2025-10-29 14:07:08.666 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - 404 null null 0.5704ms
+2025-10-29 14:07:08.666 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgvideo.jpg, Response status code: 404
+2025-10-29 14:07:08.666 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our2.jpg - 200 29114 image/jpeg 20.88ms
+2025-10-29 14:07:08.666 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/our3.jpg - 200 35684 image/jpeg 20.6019ms
+2025-10-29 14:07:08.666 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bg-dangky.jpg - 200 46525 image/jpeg 20.1234ms
+2025-10-29 14:07:08.666 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/logoft.svg - 200 null image/svg+xml 20.0913ms
+2025-10-29 14:07:08.667 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-02.png - 200 360391 image/png 46.5242ms
+2025-10-29 14:07:08.667 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner1.png - 200 81892 image/png 38.4172ms
+2025-10-29 14:07:08.667 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/partner5.png - 200 30141 image/png 34.9962ms
+2025-10-29 14:07:08.671 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/bg-what.jpg - null null
+2025-10-29 14:07:08.672 +07:00 [INF] Sending file. Request path: '/Data/bg-what.jpg'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\bg-what.jpg'
+2025-10-29 14:07:08.672 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-03.png - 200 367140 image/png 47.6109ms
+2025-10-29 14:07:08.672 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 22.6288ms
+2025-10-29 14:07:08.673 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/bg-what.jpg - 200 45463 image/jpeg 1.8951ms
+2025-10-29 14:07:08.676 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/hotro-04.png - 200 414739 image/png 51.8052ms
+2025-10-29 14:07:08.678 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - null null
+2025-10-29 14:07:08.678 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - 404 null null 0.5808ms
+2025-10-29 14:07:08.678 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgour.png, Response status code: 404
+2025-10-29 14:07:08.680 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0 - null null
+2025-10-29 14:07:08.681 +07:00 [INF] Sending file. Request path: '/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\fonts\fontawesome-webfont.woff2'
+2025-10-29 14:07:08.682 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/css/fonts/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2?v=4.7.0 - 200 77160 font/woff2 1.9789ms
+2025-10-29 14:07:09.178 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/favicon.ico - null null
+2025-10-29 14:07:09.179 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/favicon.ico - 404 null null 0.6959ms
+2025-10-29 14:07:09.179 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/favicon.ico, Response status code: 404
+2025-10-29 14:07:09.188 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - null null
+2025-10-29 14:07:09.188 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - 404 null null 0.6015ms
+2025-10-29 14:07:09.188 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/img/logo/favicon.png, Response status code: 404
+2025-10-29 14:07:38.810 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-10-29 14:07:38.811 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - 404 null null 0.7964ms
+2025-10-29 14:07:38.811 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404

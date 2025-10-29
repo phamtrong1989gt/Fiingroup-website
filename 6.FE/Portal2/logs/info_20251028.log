@@ -1825,3 +1825,185 @@ WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language
 2025-10-28 17:01:24.133 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - null null
 2025-10-28 17:01:24.134 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - 404 null null 0.952ms
 2025-10-28 17:01:24.134 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/img/logo/favicon.png, Response status code: 404
+2025-10-28 21:28:03.991 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-28 21:28:04.101 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-28 21:28:04.101 +07:00 [INF] Hosting environment: Development
+2025-10-28 21:28:04.101 +07:00 [INF] Content root path: D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2
+2025-10-28 21:28:04.168 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:28:05.617 +07:00 [INF] Executed DbCommand (47ms) [Parameters=[@__slug_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__baseSettings_Value_PortalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [l].[Id], [l].[Acction], [l].[Area], [l].[Changefreq], [l].[Controller], [l].[Delete], [l].[Description], [l].[FacebookBanner], [l].[FacebookDescription], [l].[FocusKeywords], [l].[GooglePlusDescription], [l].[IncludeSitemap], [l].[IsStatic], [l].[Keywords], [l].[Language], [l].[Lastmod], [l].[MetaRobotsAdvance], [l].[MetaRobotsFollow], [l].[MetaRobotsIndex], [l].[Name], [l].[ObjectId], [l].[Parrams], [l].[PortalId], [l].[Priority], [l].[Redirect301], [l].[Slug], [l].[Status], [l].[Title], [l].[Type]
+FROM [Link] AS [l]
+WHERE [l].[Slug] = @__slug_0 AND [l].[Language] = @__language_1 AND [l].[PortalId] = @__baseSettings_Value_PortalId_2
+2025-10-28 21:28:05.719 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-28 21:28:05.765 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-28 21:28:05.818 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-28 21:28:05.850 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:28:05.871 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-28 21:28:05.888 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:28:05.904 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-28 21:28:05.924 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-28 21:28:05.975 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-28 21:28:06.014 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:28:06.032 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-28 21:28:06.045 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:28:06.058 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:28:06.071 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-28 21:28:06.105 +07:00 [INF] Executed ViewResult - view Index executed in 344.4073ms.
+2025-10-28 21:28:06.108 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 387.9966ms
+2025-10-28 21:28:06.127 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 2151.3252ms
+2025-10-28 21:28:06.192 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-28 21:28:06.196 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 3.4411ms
+2025-10-28 21:28:06.272 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-28 21:28:06.280 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - null null
+2025-10-28 21:28:06.284 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bghotro.png - null null
+2025-10-28 21:28:06.292 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - null null
+2025-10-28 21:28:06.292 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:28:06.292 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:28:06.295 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:28:06.296 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - 404 null null 16.0036ms
+2025-10-28 21:28:06.296 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - 404 null null 4.3541ms
+2025-10-28 21:28:06.296 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bghotro.png - 404 null null 12.7157ms
+2025-10-28 21:28:06.297 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bghotro.png, Response status code: 404
+2025-10-28 21:28:06.297 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgvideo.jpg, Response status code: 404
+2025-10-28 21:28:06.297 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgour.png, Response status code: 404
+2025-10-28 21:28:06.355 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 83.0986ms
+2025-10-28 21:28:06.862 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - null null
+2025-10-28 21:28:06.863 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:28:06.864 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - 404 null null 2.115ms
+2025-10-28 21:28:06.892 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/img/logo/favicon.png, Response status code: 404
+2025-10-28 21:39:58.531 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-28 21:39:58.635 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-28 21:39:58.636 +07:00 [INF] Hosting environment: Development
+2025-10-28 21:39:58.636 +07:00 [INF] Content root path: D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2
+2025-10-28 21:39:58.711 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:40:00.182 +07:00 [INF] Executed DbCommand (50ms) [Parameters=[@__slug_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__baseSettings_Value_PortalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [l].[Id], [l].[Acction], [l].[Area], [l].[Changefreq], [l].[Controller], [l].[Delete], [l].[Description], [l].[FacebookBanner], [l].[FacebookDescription], [l].[FocusKeywords], [l].[GooglePlusDescription], [l].[IncludeSitemap], [l].[IsStatic], [l].[Keywords], [l].[Language], [l].[Lastmod], [l].[MetaRobotsAdvance], [l].[MetaRobotsFollow], [l].[MetaRobotsIndex], [l].[Name], [l].[ObjectId], [l].[Parrams], [l].[PortalId], [l].[Priority], [l].[Redirect301], [l].[Slug], [l].[Status], [l].[Title], [l].[Type]
+FROM [Link] AS [l]
+WHERE [l].[Slug] = @__slug_0 AND [l].[Language] = @__language_1 AND [l].[PortalId] = @__baseSettings_Value_PortalId_2
+2025-10-28 21:40:00.286 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-28 21:40:00.328 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-28 21:40:00.386 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-28 21:40:00.451 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:40:00.473 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-28 21:40:00.488 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:40:00.502 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-28 21:40:00.532 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-28 21:40:00.580 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-28 21:40:00.627 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:40:00.650 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-28 21:40:00.665 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:40:00.679 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-28 21:40:00.692 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-28 21:40:00.734 +07:00 [INF] Executed ViewResult - view Index executed in 410.0166ms.
+2025-10-28 21:40:00.737 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 450.4126ms
+2025-10-28 21:40:00.758 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 2242.8237ms
+2025-10-28 21:40:00.806 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-28 21:40:00.808 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 2.3137ms
+2025-10-28 21:40:00.826 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-28 21:40:00.827 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - null null
+2025-10-28 21:40:00.829 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:40:00.833 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - 404 null null 6.5659ms
+2025-10-28 21:40:00.837 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgvideo.jpg, Response status code: 404
+2025-10-28 21:40:00.838 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bghotro.png - null null
+2025-10-28 21:40:00.839 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - null null
+2025-10-28 21:40:00.841 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:40:00.841 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:40:00.841 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - 404 null null 1.9178ms
+2025-10-28 21:40:00.841 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bghotro.png - 404 null null 3.2477ms
+2025-10-28 21:40:00.841 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgour.png, Response status code: 404
+2025-10-28 21:40:00.841 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bghotro.png, Response status code: 404
+2025-10-28 21:40:00.930 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 104.1288ms
+2025-10-28 21:40:42.262 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-28 21:40:42.270 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:40:42.273 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-28 21:40:42.276 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-28 21:40:42.279 +07:00 [INF] Executed ViewResult - view Index executed in 3.534ms.
+2025-10-28 21:40:42.280 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 6.836ms
+2025-10-28 21:40:42.280 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 18.1055ms
+2025-10-28 21:40:42.305 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-28 21:40:42.307 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-28 21:40:42.311 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 4.199ms
+2025-10-28 21:40:42.347 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 17.9942ms
+2025-10-28 21:41:28.360 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-28 21:41:28.363 +07:00 [INF] Identity.Application was not authenticated. Failure message: Unprotect ticket failed
+2025-10-28 21:41:28.370 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-28 21:41:28.373 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-28 21:41:28.376 +07:00 [INF] Executed ViewResult - view Index executed in 3.386ms.
+2025-10-28 21:41:28.376 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 5.6287ms
+2025-10-28 21:41:28.377 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 17.1208ms
+2025-10-28 21:41:28.433 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-28 21:41:28.433 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-28 21:41:28.434 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 0.9879ms
+2025-10-28 21:41:28.452 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 19.1212ms
