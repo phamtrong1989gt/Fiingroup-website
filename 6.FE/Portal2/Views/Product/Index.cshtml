@@ -48,4 +48,4 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeHeSinhThai", language = language, portalId = portalId }))
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderDauAn", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderOurClients", language = language, portalId = portalId }) *@
-@* <partial name="_Register" /> *@
+@Html.Partial("~/Views/Home/_Register.cshtml")
