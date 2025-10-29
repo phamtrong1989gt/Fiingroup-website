@@ -19,20 +19,42 @@
                         <input type="text" class="form-control input-sm form-control-t" asp-for="Name">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label" asp-for="Banner"></label>
-                    <div class="banner imgfull" style="margin-bottom:5px;">
-                        <div class="image">
-                            <img id="imgBanner" title="Xem chi tiết hình ảnh" onclick="onOpenImg(this)" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" src="@(Model.Banner??" ")" />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" asp-for="Banner"></label>
+                            <div class="banner imgfull" style="margin-bottom:5px;">
+                                <div class="image">
+                                    <img id="imgBanner" title="Xem chi tiết hình ảnh" onclick="onOpenImg(this)" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" src="@(Model.Banner ?? " ")" />
+                                </div>
+                            </div>
+                            <div class="input-group input-group-t">
+                                <input readonly type="text" class="form-control input-sm form-control-t" asp-for="Banner">
+                                <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
+                                    <a button-open-file-manager data-img="imgBanner" data-target="Banner" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="input-group input-group-t">
-                        <input readonly type="text" class="form-control input-sm form-control-t" asp-for="Banner">
-                        <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
-                            <a button-open-file-manager data-img="imgBanner" data-target="Banner" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" asp-for="Banner1"></label>
+                            <div class="banner imgfull" style="margin-bottom:5px;">
+                                <div class="image">
+                                    <img id="imgBanner1" title="Xem chi tiết hình ảnh" onclick="onOpenImg(this)" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" src="@(Model.Banner1 ?? " ")" />
+                                </div>
+                            </div>
+                            <div class="input-group input-group-t">
+                                <input readonly type="text" class="form-control input-sm form-control-t" asp-for="Banner1">
+                                <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
+                                    <a button-open-file-manager data-img="imgBanner1" data-target="Banner" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-9">
                         <div class="form-group">
@@ -57,9 +79,24 @@
                 <div class="form-group">
                     <label class="form-label" asp-for="Content"></label> <span asp-validation-for="Content"></span>
                     <div class="controls">
-                        <textarea class="form-control form-control-t" rows="3" asp-for="Content"></textarea>
+                        <textarea class="form-control form-control-t" rows="2" asp-for="Content"></textarea>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-label" asp-for="Content1"></label> <span asp-validation-for="Content1"></span>
+                    <div class="controls">
+                        <textarea class="form-control form-control-t" rows="2" asp-for="Content1"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" asp-for="Content2"></label> <span asp-validation-for="Content2"></span>
+                    <div class="controls">
+                        <textarea class="form-control form-control-t" rows="2" asp-for="Content2"></textarea>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <input type="checkbox" id="Status2" asp-for="Status" class="filled-in chk-col-green" />
                     <label for="Status2" asp-for="Status"></label>

@@ -590,7 +590,11 @@ namespace PT.BE.Areas.Manager.Controllers
                         Banner = use.Banner,
                         Template = use.Template,
                         Target = use.Target,
-                        Content = use.Content
+                        Content = use.Content,
+                        Banner1 = use.Banner1,
+                        Banner2 = use.Banner2,
+                        Content1 = use.Content1,
+                        Content2 = use.Content2
                     };
                     // Thêm item vào database
                     await _iBannerItemRepository.AddAsync(data);
@@ -680,7 +684,12 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Template = use.Template;
                     dl.Target = use.Target;
                     dl.Banner = use.Banner;
+                    dl.Banner1 = use.Banner1;
+                    dl.Banner2 = use.Banner2;
                     dl.Content = use.Content;
+                    dl.Content1 = use.Content1;
+                    dl.Content2 = use.Content2;
+
                     // Lưu thay đổi vào database
                     _iBannerItemRepository.Update(dl);
                     await _iBannerItemRepository.CommitAsync();

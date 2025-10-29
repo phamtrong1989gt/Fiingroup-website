@@ -15,8 +15,12 @@ namespace PT.Domain.Model
         public string Href { get; set; }
         public string Target { get; set; }
         public string Content { get; set; }
+        public string Content1 { get; set; }
+        public string Content2 { get; set; }
         public string Template { get; set; }
         public string Banner { get; set; }
+        public string Banner1 { get; set; }
+        public string Banner2 { get; set; }
         public int Order { get; set; }
         public bool Status { get; set; }
     }
@@ -30,16 +34,29 @@ namespace PT.Domain.Model
         [Display(Name = "Đường dẫn đến")]
         [Required(ErrorMessage = "{0} không được để rỗng!")]
         public string Href { get; set; }
-        [Display(Name = "Nội dung")]
+        [Display(Name = "Nội dung 1")]
         public string Content { get; set; }
         [Display(Name = "Cách mở trang")]
         public string Target { get; set; }
         [Display(Name = "Mẫu")]
         public string Template { get; set; }
-        [Display(Name = "Chọn hình ảnh")]
+        [Display(Name = "Chọn hình ảnh 1")]
         public string Banner { get; set; }
+
+        [Display(Name = "Chọn hình ảnh 2 ")]
+        public string Banner1 { get; set; }
+
+        [Display(Name = "Chọn hình ảnh 3")]
+        public string Banner2 { get; set; }
+
         public int Order { get; set; }
+
         [Display(Name = "Sử dụng dữ liệu này")]
         public bool Status { get; set; }
+
+        [Display(Name = "Nội dung 2")]
+        public string Content1 { get; set; }
+        [Display(Name = "Nội dung 3")]
+        public string Content2 { get; set; }
     }
 }
