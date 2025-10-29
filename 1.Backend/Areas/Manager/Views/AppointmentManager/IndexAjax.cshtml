@@ -1,0 +1,79 @@
+﻿@model PT.Domain.Model.BaseSearchModel<List<PT.Domain.Model.Contact>>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<div style="display:none !important;">
+    <input type="hidden" grid-data-page value="@Model.Page" />
+    <input type="hidden" grid-data-totalrows value="@Model.TotalRows" />
+    <input type="hidden" grid-data-limit value="@Model.Limit" />
+</div>
+@if (Model.TotalRows == 0)
+{
+    <div>
+        <div>Không tìm thấy bản ghi nào</div>
+    </div>
+}
+@foreach (var item in Model.Data)
+{
+    <div data-duration='@PT.Shared.Functions.GetHours(item.AppointmentDate.Value.ToString("HH:mm"),item.AppointmentDate.Value.AddHours(1).ToString("HH:mm"))'
+         data-event='{"description":"", "contactId":@item.Id,"start":"@item.AppointmentDate.Value.ToString("HH:mm")","scheduleId":0,"title":"@item.FullName/@item.Phone/@item.Email","stick":false,"allDay":false, "isChange":true, "color":"#3f50b5"}'
+         class="itemevent">
+        Khách hàng: <span class="text-primary text-w500">@item.FullName</span> / <span class="text-danger text-w500">@item.Phone</span> / <span class="text-warning text-w500">@item.Email</span><br>
+        Ngày hẹn: <span class="text-danger text-w500">@item.AppointmentDate?.ToString("dd/MM/yyyy HH:mm")</span> / @item.Service?.Name <br>
+        Ngày tạo đơn: @item.CreatedDate.ToString("dd/MM/yyyy HH:mm") <br>
+        Ghi chú: @item.Note
+    </div>
+}
+@*<tr style="display:none !important;">
+        <td colspan="999999">
+            <input type="hidden" grid-data-page value="@Model.Page" />
+            <input type="hidden" grid-data-totalrows value="@Model.TotalRows" />
+            <input type="hidden" grid-data-limit value="@Model.Limit" />
+        </td>
+    </tr>
+    @if (Model.TotalRows == 0)
+    {
+        <tr>
+            <td colspan="999">Không tìm thấy bản ghi nào</td>
+        </tr>
+    }
+    @foreach (var item in Model.Data)
+    {
+        <tr class="tr-status-@(item.Status) @(item.Status==false?"chuaDoc":"daDoc")">
+            <td><span class="text-primary text-name">@item.FullName</span></td>
+            <td>@item.Phone</td>
+            <td>@item.Email</td>
+            <td>@item.Age</td>
+            <td>@item.Service?.Name</td>
+            <td>@item.Employee?.FullName</td>
+            <td>@item.AppointmentDate?.ToStringDateTime()</td>
+            <td>@item.CreatedDate.ToStringDateTime()</td>
+            <td>
+                @if (item.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Undefined)
+                {
+                    <span class="label bg-indigo">@PT.Domain.Model.Contact.ContactConfirmAppointment.Undefined.GetDisplayName()</span>
+                }
+                else if (item.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Cancel)
+                {
+                    <span class="label label-danger">@PT.Domain.Model.Contact.ContactConfirmAppointment.Cancel.GetDisplayName()</span>
+                }
+                else if (item.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Confirm)
+                {
+                    <span class="label label-warning">@PT.Domain.Model.Contact.ContactConfirmAppointment.Confirm.GetDisplayName()</span>
+                }
+                else
+                {
+                    <span class="label label-success">@PT.Domain.Model.Contact.ContactConfirmAppointment.Done.GetDisplayName()</span>
+                }
+            </td>
+            <td>
+                <div class="btn-group">
+                    <div class="btn-group btn- group-sm" role="group">
+                        <a button-popup data-target="#myModalBig" asp-action="Details" asp-route-id="@item.Id" title="Cập nhật" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        i++;
+    }*@

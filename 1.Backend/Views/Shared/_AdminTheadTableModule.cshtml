@@ -1,0 +1,8 @@
+﻿@inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
+@if (_baseSettings.Value.MultipleLanguage)
+{
+    @foreach (var item in PT.Shared.ListData.ListLanguage)
+    {
+       <th style="width:53px;" class="text-center">@item.Name2</th>
+    }
+}

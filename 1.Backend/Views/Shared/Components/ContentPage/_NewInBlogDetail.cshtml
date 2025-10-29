@@ -1,0 +1,17 @@
+﻿@model ComponentModel<ContentPage>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    Layout = null;
+}
+@foreach (var item in Model.Items)
+{
+    string url = @PT.Shared.Functions.FormatUrl("", item.Link?.Slug);
+    <div class="recent-post-single">
+        <div class="recent-post-img">
+            <img src="@item.Banner" alt="@item.Name">
+        </div>
+        <div class="recent-post-bio">
+            <h6><a href="@url">@item.Name</a></h6>
+        </div>
+    </div>
+}

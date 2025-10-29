@@ -1,0 +1,37 @@
+﻿@model PT.Domain.Model.BaseSearchModel<List<PT.Domain.Model.ApplicationRole>>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+    int i = 1;
+}
+
+@if (Model.TotalRows == 0)
+{
+    <tr>
+        <td colspan="999">Không tìm thấy bản ghi nào</td>
+    </tr>
+}
+@foreach (var item in Model.Data)
+{
+<tr>
+    <td class="text-center">@PT.Shared.Functions.GenSTT(i, Model.Page, Model.Limit)</td>
+    <td><span class="text-primary text-name">@item.Name</span> </td>
+    <td>@Html.DisplayFor(x => item.Type)</td>
+    <td>@item.Description</td>
+    <td data-checked data-role-3>
+        <div class="btn-group">
+            <div class="btn-group btn- group-sm" role="group">
+                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-returnurl="@Model.ReturnUrl" title="Chỉnh sửa dữ liệu" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
+            </div>
+        </div>
+    </td>
+</tr>
+    i++;
+}
+<tr style="display:none;">
+    <td colspan="999999">
+        <input type="hidden" grid-data-page value="@Model.Page" />
+        <input type="hidden" grid-data-totalrows value="@Model.TotalRows" />
+        <input type="hidden" grid-data-limit value="@Model.Limit" />
+    </td>
+</tr>

@@ -1,0 +1,48 @@
+﻿@model PT.Domain.Model.BaseSearchModel<List<PT.Domain.Model.ApplicationUser>>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+    int i = 1;
+}
+<tr style="display:none !important;">
+    <td colspan="999999">
+        <input type="hidden" grid-data-page value="@Model.Page" />
+        <input type="hidden" grid-data-totalrows value="@Model.TotalRows" />
+        <input type="hidden" grid-data-limit value="@Model.Limit" />
+    </td>
+</tr>
+@if (Model.TotalRows == 0)
+{
+    <tr>
+        <td colspan="999">Không tìm thấy bản ghi nào</td>
+    </tr>
+}
+@foreach (var item in Model.Data)
+{
+<tr class="tr-status-@(!item.IsLock)">
+    <td class="text-center">@PT.Shared.Functions.GenSTT(i, Model.Page, Model.Limit)</td>
+    <td><span class="text-primary text-name">@item.UserName</span></td>
+    <td>@item.DisplayName</td>
+    <td>@item.PhoneNumber</td>
+    <td>@item.Email</td>
+    <td>@string.Join(", ", item.Roles.Select(x => x.Name).ToList())</td>
+    <td>
+        @if (item.IsLock)
+        {
+            <i class="material-icons text-danger icon-list">lock</i>
+        }
+        else
+        {
+            <i class="material-icons text-success icon-list">lock_open</i>
+        }
+    </td>
+    <td data-checked data-role-7>
+        <div class="btn-group">
+            <div class="btn-group btn- group-sm" role="group">
+                <a button-popup data-checked data-role-7 asp-route-returnurl="@Model.ReturnUrl" data-target="#myModal" asp-action="Edit" asp-route-id="@item.Id" title="Cập nhật tài khoản" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
+            </div>
+        </div>
+    </td>
+</tr>
+    i++;
+}

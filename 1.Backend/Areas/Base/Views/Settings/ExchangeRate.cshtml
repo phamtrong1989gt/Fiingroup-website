@@ -1,0 +1,37 @@
+﻿@model PT.Domain.Model.ExchangeRateSettings
+@addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PT.UI
+@{
+    Layout = null;
+}
+<form form-edit asp-action="ExchangeRate">
+    @Html.AntiForgeryToken()
+    <div role="tabpanel" class="tab-pane fade in active" id="tab1">
+        <div class="form-group">
+            <label class="form-label" asp-for="DollarToVND"></label> <strong class="text-danger">*</strong> <span asp-validation-for="DollarToVND"></span>
+            <div class="controls">
+                <input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="DollarToVND">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label" asp-for="PoundToVND"></label> <strong class="text-danger">*</strong> <span asp-validation-for="PoundToVND"></span>
+            <div class="controls">
+                <input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="PoundToVND">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label" asp-for="AUDToVND"></label> <strong class="text-danger">*</strong> <span asp-validation-for="AUDToVND"></span>
+            <div class="controls">
+                <input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="AUDToVND">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb-0 mt-5">
+                <div class="divbtnform">
+                    <button button-submit data-loading-text="<i class='material-icons icon-spin '>autorenew</i> <span>Lưu thay đổi</span>" type="button" class="btn  btn-p-t btn-icon bg-indigo waves-effect"><i class="material-icons">save</i> <span>Lưu thay đổi</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

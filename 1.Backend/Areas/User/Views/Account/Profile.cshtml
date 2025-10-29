@@ -1,0 +1,56 @@
+﻿@model PT.Domain.Model.UserProfileModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<form form-edit asp-action="Profile">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12 mb-0">
+            <div class="row">
+               <input type="hidden" asp-for="Email" />
+                <div class="col-md-6 mb-0">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="UserName"></label> <strong class="text-danger">*</strong> <span asp-validation-for="UserName"></span>
+                        <div class="controls">
+                            <input type="text" disabled="disabled" class="form-control input-sm form-control-t" placeholder="Tên tài khoản" asp-for="UserName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="DisplayName"></label> <strong class="text-danger">*</strong> <span asp-validation-for="DisplayName"></span>
+                        <div class="controls">
+                            <input type="text" class="form-control input-sm form-control-t" placeholder="Tên hiển thị" asp-for="DisplayName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" disabled="disabled" asp-for="Email"></label> 
+                        <div class="controls">
+                            <input type="text" disabled="disabled"  class="form-control input-sm form-control-t" placeholder="Email dùng để thay đổi mật khẩu" value="@Model.Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="PhoneNumber"></label>  <span asp-validation-for="PhoneNumber"></span>
+                        <div class="controls">
+                            <input type="text" class="form-control input-sm form-control-t" placeholder="Số điện thoại" asp-for="PhoneNumber">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-0">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Note"></label> <span asp-validation-for="Note"></span>
+                        <div class="controls">
+                            <textarea type="text" class="form-control input-sm form-control-t" rows="6" placeholder="Đôi nét" asp-for="Note"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-15">
+                <div class="col-md-12 mb-0">
+                    <div class="divbtnform">
+                        <button button-submit data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Lưu thay đổi</span>" type="button" class="btn  btn-p-t  btn-icon bg-indigo waves-effect"><i class="material-icons">save</i> <span>Lưu thay đổi</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

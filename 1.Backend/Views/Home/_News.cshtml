@@ -1,0 +1,49 @@
+﻿@model int
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer  Localizer
+@inject IContentPageRepository _iContentPageRepository;
+@inject ICategoryRepository _iCategoryRepository;
+@using PT.Shared;
+@{
+    Layout = null;
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var list = await _iContentPageRepository.SearchAdvanceAsync(CategoryType.Blog, 0, 4, null, null, m => m.Status && !m.Delete && m.DatePosted <= DateTime.Now && m.Language == language && (m.Type == CategoryType.Blog),
+                                                                                m => m.OrderByDescending(x => x.DatePosted),
+                                                                                   select: a => new ContentPage
+                                                                                   {
+                                                                                       Banner = a.Banner,
+                                                                                       DatePosted = a.DatePosted,
+                                                                                       Id = a.Id,
+                                                                                       Name = a.Name,
+                                                                                       Summary = a.Summary,
+                                                                                       Language = a.Language,
+                                                                                       Author = a.Author,
+                                                                                       CategoryId = a.CategoryId,
+                                                                                       Link = a.Link
+                                                                                   });
+    var category = await _iCategoryRepository.GetLink(Model, language, CategoryType.CategoryBlog);
+}
+
+<div class="row">
+    @foreach (var item in list)
+    {
+        <div class="col-lg-6">
+            <a class="box_news" href="@Functions.FormatUrl(item.Language,item.Link?.Slug)">
+                <figure>
+                    <img onerror="this.onerror=null;this.src = '/Content/Home/img/no-image.jpg';" src="@($"/data/image?path={item.Banner}&size=800")" alt="@item.Name">
+                    <figcaption><strong>@item.DatePosted.Day</strong>@item.DatePosted.ToString("MMMM")</figcaption>
+                </figure>
+                <ul>
+                    <li>@item.Author</li>
+                    <li>@item.DatePosted.ToString("MM-dd-yyyy")</li>
+                </ul>
+                <h4>@item.Name</h4>
+                <p>@item.Summary</p>
+            </a>
+        </div>
+    }
+</div>
+<p class="text-center nopadding">
+    <a href="@Functions.FormatUrl(category?.Language,category?.Link?.Slug)" class="btn btn-default view-more-tour h4 text-secondary py-0 text-capitalize btn-view-all">View More Blogs</a>
+</p>

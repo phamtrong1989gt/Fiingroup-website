@@ -1,0 +1,214 @@
+﻿@model PT.Domain.Model.ContactAppointmentModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<style>
+    .tt-menu {
+        z-index: 999999;
+    }
+</style>
+<form form-edit asp-action="Details">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="AppointmentStatus" />
+
+    <div class="sumaryValidateForm" asp-validation-summary="All"></div>
+    <div class="modal-header">
+        <h4 class="modal-title"><i class="material-icons">edit</i> CHI TIẾT ĐƠN HẸN KHÁM</h4>
+    </div>
+    <button title="Đóng cửa sổ" type="button" class="close btnclose-t" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-body">
+        <div class="divmodal">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="labelinfo-t bg-info mb-10">
+                        Thông tin khách hàng
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="FullName"></label>
+                                <div class="form-control-static-t">
+                                    @Model.FullName
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Age"></label>
+                                <div class="form-control-static-t">
+                                    @Model.Age
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Email"></label>
+                                <div class="form-control-static-t">
+                                    @Model.Email
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Phone"></label>
+                                <div class="form-control-static-t">
+                                    @Model.Phone
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Address"></label>
+                                <div class="form-control-static-t">
+                                    @Model.Address
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="ServiceId"></label>
+                                <div class="form-control-static-t">
+                                    @Model.Service?.Name
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="AppointmentDate"></label>
+                                <div class="form-control-static-t">
+                                    @Model.AppointmentDate?.ToStringDateTime()
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label" asp-for="CreatedDate"></label>
+                                <div class="form-control-static-t">
+                                    @Model.CreatedDate.ToStringDateTime()
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Content"></label> <span asp-validation-for="Content"></span>
+                        <div class="form-control-static-t">
+                            @Html.Raw(Model.Content ?? "".Replace("<script>", ""))
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="labelinfo-t bg-info mb-10">
+                        Chốt xử lý đặt lịch
+                    </div>
+
+                    @if (Model.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Undefined || Model.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Confirm)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    @*<div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" asp-for="AppointmentStatus"></label>  <strong class="text-danger">*</strong>
+                                                <span asp-validation-for="AppointmentStatus"></span>
+                                                <select asp-for="AppointmentStatus" class="input-sm form-control-t show-tick">
+                                                    <option data-content="Chọn trạng thái" value="0"></option>
+                                                    <option data-content="<span class='label label-danger'>@PT.Domain.Model.Contact.ContactConfirmAppointment.Cancel.GetDisplayName()</span>" value="3"></option>
+                                                    <option data-content="<span class='label label-warning'>@PT.Domain.Model.Contact.ContactConfirmAppointment.Confirm.GetDisplayName()</span>" value="1"></option>
+                                                    <option data-content="<span class='label label-success'>@PT.Domain.Model.Contact.ContactConfirmAppointment.Done.GetDisplayName()</span>" value="2"></option>
+                                                </select>
+                                            </div>
+                                        </div>*@
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label class="form-label" asp-for="ServiceId"></label>  <span asp-validation-for="ServiceId"></span>
+                                            <select data-live-search="true" asp-items="Model.ServiceSelectList" asp-for="ServiceId" class="input-sm form-control-t show-tick">
+                                                <option value="0">Dịch vụ khác</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="form-label" asp-for="EmployeeId"></label>
+                                            <select data-live-search="true" asp-items="@Model.EmployeeSelectList" asp-for="EmployeeId" class="input-sm form-control-t show-tick with-ajax">
+                                                <option value="0">Chọn bác sỹ</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label" asp-for="AppointmentDate"></label> <strong class="text-danger">*</strong> <span asp-validation-for="AppointmentDate"></span>
+                                            <div class="input-group input-group-t">
+                                                <div class="input-group-addon br-none">
+                                                    &nbsp;
+                                                    <i class="material-icons">event_available</i>
+                                                </div>
+                                                <input type="text" value="@Model.AppointmentDate?.ToString("dd/MM/yyyy HH:mm")" class="form-control input-sm form-control-t" asp-for="AppointmentDate">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" asp-for="Note"></label>
+                                    <div class="controls">
+                                        <textarea rows="3" class="form-control input-sm form-control-t" asp-for="Note"></textarea>
+                                    </div>
+                                </div>
+                                <div class="pt-10"></div>
+                                <div class="form-group">
+                                    <input type="checkbox" asp-for="SendEmail" class="filled-in chk-col-green" />
+                                    <label for="SendEmail" asp-for="SendEmail"></label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+
+                        <div class="form-group">
+                            <div class="form-control-static-t">
+                                @if (Model.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Cancel)
+                                {
+                                    <span class="label label-danger">@PT.Domain.Model.Contact.ContactConfirmAppointment.Cancel.GetDisplayName()</span>
+                                }
+                                else if (Model.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Confirm)
+                                {
+                                    <span class="label label-warning">@PT.Domain.Model.Contact.ContactConfirmAppointment.Confirm.GetDisplayName()</span>
+                                }
+                                else if (Model.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Done)
+                                {
+                                    <span class="label label-success">@PT.Domain.Model.Contact.ContactConfirmAppointment.Done.GetDisplayName()</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" asp-for="Note"></label>
+                            <div class="form-control-static-t">
+                                @Html.Raw(Model.Note ?? "".Replace("<script>", ""))
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Undefined || Model.AppointmentStatus == PT.Domain.Model.Contact.ContactConfirmAppointment.Confirm)
+    {
+    <div class="modal-footer" style="text-align:center;">
+        <button type="button" data-type="@PT.Domain.Model.Contact.ContactConfirmAppointment.Cancel" button-submit data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Hủy yêu cầu</span>" class="btn btn-icon  btn-danger waves-effect"><i class="material-icons">block</i> <span>Hủy yêu cầu</span></button>
+        @if (Model.AppointmentStatus != PT.Domain.Model.Contact.ContactConfirmAppointment.Confirm)
+        {
+            <button type="button" data-type="@PT.Domain.Model.Contact.ContactConfirmAppointment.Confirm" button-submit data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Đã xác nhận yêu cầu</span>" class="btn btn-icon btn-warning  waves-effect"><i class="material-icons">check</i> <span>Đã xác nhận yêu cầu</span></button>
+        }
+        <button type="button" data-type="@PT.Domain.Model.Contact.ContactConfirmAppointment.Done" button-submit data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Đã xác nhận yêu cầu & hoàn thành</span>" class="btn btn-icon btn-success  waves-effect"><i class="material-icons">check</i> <span>Đã xác nhận yêu cầu & hoàn thành</span></button>
+    </div>
+    }
+</form>
+<script>
+    $("[name='AppointmentDate']").toDateTimePicker();
+</script>

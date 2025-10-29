@@ -1,0 +1,86 @@
+@model PT.Domain.Model.ServicePriceModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+<td colspan="10">
+    <form form-edit-grid-Image asp-action="EditItem">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Language" />
+        <input type="hidden" asp-for="ParentId" />
+        <div class="divInTable">
+            <h3 class="titleStaticForm">CẬP NHẬT GIÁ DỊCH VỤ</h3>
+            <div class="row">
+                <div class="col-md-8 mb-0">
+                    <div class="form-group">
+                        <label asp-for="Name"></label> <strong class="text-danger">*</strong>
+                        <span asp-validation-for="Name"></span>
+                        <div class="input-group">
+                            <input asp-for="Name" type="text" class="form-control input-sm form-control-t" placeholder="">
+                            <div class="input-group-addon btn-group-addon btn-group-addon-form-group addoncheck" style="border-left:none !important;padding-right: 15px !important;">
+                                <input type="checkbox" asp-for="SubParent" class="filled-in chk-col-green" />
+                                <label for="SubParent" asp-for="SubParent"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-0">
+                    <div class="form-group">
+                        <label asp-for="Order"></label> <strong class="text-danger">*</strong>
+                        <span asp-validation-for="Order"></span>
+                        <input asp-for="Order" type="number" class="form-control input-sm form-control-t" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="row notParrent">
+                <div class="col-md-8 mb-0">
+                    <div class="form-group serviceprice">
+                        <label asp-for="Name"></label> <strong class="text-danger">*</strong>
+                        <div class="input-group input-group-t mb-0">
+                            <div class="input-group-addon br-none">
+                                Giá từ
+                            </div>
+                            <div style="position:relative;">
+                                <input type="number" asp-for="FromPrice" class="form-control input-sm form-control-t" placeholder="">
+                                <span asp-validation-for="FromPrice"></span>
+                            </div>
+                            <div class="input-group-addon br-none" style="border-left:none;">
+                                Giá đến
+                            </div>
+                            <div style="position:relative;">
+                                <input type="number" asp-for="ToPrice" class="form-control input-sm form-control-t" placeholder="">
+                                <span asp-validation-for="ToPrice"></span>
+                            </div>
+                            <div class="input-group-addon br-none" style="border-left:none;">
+                                Đơn vị
+                            </div>
+                            <div style="position:relative;">
+                                <input type="text" asp-for="Type" class="form-control input-sm form-control-t" placeholder="">
+                                <span asp-validation-for="Type"></span>
+                            </div>
+                            <div class="input-group-addon btn-group-addon btn-group-addon-form-group addoncheck" style="border-left:none !important;padding-right: 15px !important;">
+                                <input type="checkbox" asp-for="ContactPrice" class="filled-in chk-col-green" />
+                                <label for="ContactPrice" asp-for="ContactPrice"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group pt-5">
+                <input type="checkbox" id="Status_2" asp-for="Status" class="filled-in chk-col-green" />
+                <label for="Status_2" asp-for="Status"></label>
+            </div>
+            <div class="divbtnform mt-10">
+                <a button-table-edit-cancel class="btn btn-icon btn-default waves-effect"><i class="material-icons">reply</i> <span>Quay lại</span></a>
+                <a button-submit data-type="EditImage" data-form="[form-edit-grid-Image]" data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Lưu thay đổi</span>" class="btn btn-icon btn-danger waves-effect">
+                    <i class="material-icons">save</i> <span>Lưu thay đổi</span>
+                </a>
+            </div>
+        </div>
+    </form>
+</td>
+<script>
+    initSubParent();
+    initContactPrice();
+</script>

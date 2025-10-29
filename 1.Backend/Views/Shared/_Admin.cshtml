@@ -1,0 +1,177 @@
+﻿@using static PT.Base.DataUserInfo;
+@{
+}
+@addTagHelper *, PT.UI
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Phần mềm quản lý website</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link href="~/Content/Admin/plugins/select2/select2.min.css" rel="stylesheet" />
+    <link asp-append-version="true" href="~/Content/Admin/site.min.css" rel="stylesheet" />
+    <meta name="robots" content="noindex,nofollow">
+    <style id="styleRole">
+    </style>
+    <style>
+        .dtp {
+            z-index: 99999 !important;
+        }
+    </style>
+    @if (!IsSuperAdmin)
+    {
+        <style>
+            [isSupperadmin] {
+                display: none !important;
+            }
+        </style>
+    }
+</head>
+<body class="theme-indigo" style="overflow-y: hidden;">
+    <input type="hidden" id="arrRole" value="@StringRoleActions" />
+    <div class="modal " id="myModal" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalNormal" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <div class="modal " id="myModalBig" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-big" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <div class="modal " id="myModalMax" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-big-2" role="document">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <div id="body">
+        <form id="formLogout" method="post" asp-action="LogOut" asp-controller="Account" asp-area="User">
+            @Html.AntiForgeryToken()
+        </form>
+        <!-- Page Loader -->
+        <div class="page-loader-wrapper">
+            <div class="loader">
+                <div class="preloader">
+                    <div class="spinner-layer pl-red">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+                <p>Đang tải xin đợi...</p>
+            </div>
+        </div>
+        <div class="overlay"></div>
+
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                    @*<a href="javascript:void(0);" title="Đóng/Mở thanh menu" class="bars"></a>*@
+                    <div class="navbar-brand">
+                        <span title="Thu gọn/Mở rộng thanh thực đơn" id="btnChangeTypeMenu" onclick="changeTypeMenu(this)">
+                            <i class="material-icons">menu</i>
+                        </span>
+                        <span class="textlogoadmin">PHẦN MỀM QUẢN LÝ WEBSITE</span>
+                    </div>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+
+                        <li class="dropdown">
+                            <a href="@Url.Action("Index", "ContactManager", new { area = "Manager" })" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                                <i style="position: relative;top: 5px;" class="material-icons">notifications</i>
+                                <span class="label-count">0</span>
+                            </a>
+                        </li>
+                        <!-- #END# Notifications -->
+                        <!-- Tasks -->
+                        <li class="dropdown">
+                            <a onclick="requestPermission()" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                                <i style="position: relative;top: 5px;" class="material-icons">flag</i>
+                            </a>
+                        <li class="dropdown"><a lass="dropdown-toggle" data-toggle="dropdown" role="button" onclick="logout()"><i style="position: relative;top: 5px;" class="material-icons">input</i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- #Top Bar -->
+        <section>
+            <!-- Left Sidebar -->
+            <aside id="leftsidebar" class="sidebar">
+                <!-- User Info -->
+                <div class="user-info">
+                    <a title="Cập nhật thông tin tài khoản" asp-action="Index" asp-controller="Account" asp-area="User">
+                        <div class="image">
+                            <img src="@(Avatar??"#")" width="40" height="40" alt="User" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" />
+                        </div>
+                    </a>
+                    <div class="info-container">
+                        <a asp-action="Index" asp-controller="Account" asp-area="User"><div class="name">@DisplayName</div></a>
+                        <a asp-action="Index" asp-controller="Account" asp-area="User">
+                            <div class="email">@UserName</div>
+                        </a>
+                    </div>
+                </div>
+                @{
+                    await Html.RenderPartialAsync("~/Views/Shared/_MenuAdmin.cshtml");
+                }
+            </aside>
+        </section>
+        <section class="content">
+            <div class="row" id="canbtn">
+            </div>
+            <div class="container-fluid container-fluid-t">
+                @RenderBody()
+            </div>
+        </section>
+    </div>
+</body>
+</html>
+<div class="modal fade" id="myModalChildrent1" role="dialog">
+    <div class="modal-dialog" role="document" data-backdrop="static" data-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-body modal-body-t">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModalChildrent2" role="dialog">
+    <div class="modal-dialog" role="document" data-backdrop="static" data-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-body modal-body-t">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/Admin/js/jquery.min.js"></script>
+<script src="~/Content/Admin/plugins/signalr/dist/browser/signalr.js"></script>
+<script src="~/Content/Admin/plugins/momentjs/moment.js"></script>
+<script src="~/Content/Admin/js/cookie.js"></script>
+<script src="~/Content/Admin/plugins/select2/select2.min.js"></script>
+<script src="~/Content/Admin/site.min.js"></script>
+<script asp-append-version="true" src="~/Content/Admin/js/script.js"></script>
+@*<script src="~/Content/Admin/js/signalR.js" asp-append-version="true"></script>*@
+<script>
+    // requestPermission();
+    //subscribeUserToPush();
+</script>
+@RenderSection("Scripts", required: false)
+

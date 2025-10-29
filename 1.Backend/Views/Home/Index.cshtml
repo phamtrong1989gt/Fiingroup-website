@@ -1,0 +1,80 @@
+﻿@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@using PT.Domain.Model;
+@using PT.Infrastructure.Interfaces;
+@using PT.Shared;
+@inject IViewLocalizer Localizer
+@using System.Linq.Expressions;
+@using PT.UI.Models
+
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+
+    var cplModel = new ContentPageComponentModel()
+    {
+        CategoryId = 1002,
+        ContentPageId = 0,
+        Href = "",
+        Language = language,
+        TagId = null,
+        Take = 6,
+        Title = "",
+        Type = CategoryType.Blog,
+        View = "_News"
+    };
+
+
+    var datbModel = new ContentPageComponentModel()
+    {
+        CategoryId = 2005,
+        ContentPageId = 0,
+        Href = "",
+        Language = language,
+        TagId = null,
+        Take = 6,
+        Title = "",
+        Type = CategoryType.Blog,
+        View = "_News"
+    };
+}
+<main class="main">
+
+ 
+    <vc:view-module code="Slide_Home" type="PhotoSlide"></vc:view-module>
+
+@*     <div data-editable data-name="main-content">
+        <h2>Tiêu đề</h2>
+        <p>Nội dung <b>chỉ sửa được text</b> không sửa được thẻ.</p>
+    </div> *@
+
+    <vc:view-module code="HomeGioiThieu" type="StaticInformation"></vc:view-module>
+
+    <vc:view-module code="HomeLinhVucKinhDoanh" type="AdvertisingBanner"></vc:view-module>
+
+    <vc:view-module code="KinhNghiem" type="StaticInformation"></vc:view-module>
+
+    <div class="blog-area py-120">
+        <div class="container">
+            <vc:view-module code="HomeDuAnTieuBieu" type="StaticInformation"></vc:view-module>
+            <vc:content-page model="datbModel"></vc:content-page>
+        </div>
+    </div>
+
+    <vc:view-module code="HomeChungToiDanhChoBan" type="StaticInformation"></vc:view-module>
+
+    <vc:view-module code="HomeBoxLienHe" type="StaticInformation"></vc:view-module>
+
+    <div class="blog-area py-120">
+        <div class="container">
+            <vc:view-module code="HomeTieuDeTinTuc" type="StaticInformation"></vc:view-module>
+            <vc:content-page model="cplModel"></vc:content-page>
+        </div>
+    </div>
+
+    <!-- blog area end -->
+    <vc:view-module code="HomeSlideDoiTai" type="PhotoSlide"></vc:view-module>
+</main>
+@section Scripts {
+}
+

@@ -1,0 +1,73 @@
+﻿@model PT.Domain.Model.BaseSettings
+@addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PT.UI
+@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.BaseSettings> _baseSettings;
+
+@{
+    Layout = "~/Views/Shared/_Admin.cshtml";
+    var listLan = PT.Shared.ListData.ListLanguage;
+
+    if (!_baseSettings.Value.MultipleLanguage)
+    {
+        listLan = listLan.Where(x => x.Id == PT.Base.CultureHelper.GetCurrentCulture.Id).ToList();
+    }
+}
+<div class="block-header">
+    <h2> <i class="material-icons">settings</i> Cấu hình SEO <span class="label label-danger label-t">Cập nhật</span></h2>
+    <ol class="breadcrumb breadcrumb-t">
+        <li>
+            <a href="/Admin">
+                Trang điều khiển
+            </a>
+        </li>
+        <li class="active">
+            Cấu hình SEO
+        </li>
+    </ol>
+</div>
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card card-t card-loading">
+            <div class="body" style="padding-top:10px;" tab-list>
+                <ul class="nav nav-tabs nav-tabs-t tab-lang" role="tablist">
+                    @foreach (var item in listLan)
+                    {
+                        <li role="presentation">
+                            <a tab-link data-tag="#@item.Id" data-not-active="true" data-url="@Url.Action("Seo",new { language = item.Id })" data-toggle="tab">
+                                <img class="icon-lang" src="@item.Icon" />  @item.Name
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <div class="tab-content tab-content-t" tab-data tab-loading>
+                    <div style="min-height:300px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        var _page = 1;
+        $("[button-popup]").toPopup();
+        $("[button-submit]").toSubmit();
+        $("[tab-list]").toTab();
+        function getDataGrid(page, first = false) {
+            _page = page;
+            $("[grid-index]").toGridView(first, page);
+        }
+        function reGetDataGrid(e) {
+            if (e != null) {
+                _page = 1;
+                $("[name='language']").val($(e).attr("data-val"));
+            }
+            getDataGrid(_page, false);
+        }
+
+    </script>
+}

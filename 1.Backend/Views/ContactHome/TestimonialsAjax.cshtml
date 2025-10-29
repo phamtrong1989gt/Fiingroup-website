@@ -1,0 +1,89 @@
+﻿@model PT.Domain.Model.BaseSearchModel<List<PT.Domain.Model.Contact>>
+@addTagHelper *, PT.UI
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer  Localizer
+@{
+    Layout = null;
+    bool style1 = false;
+    bool style2 = true;
+}
+<div class="row">
+    <div class="col-sm">
+        @foreach (var item in Model.Data.Skip(0).Take(Model.Data.Count() / 2))
+        {
+
+            <div class="testimonial-wrap">
+                <div class="testimonial text-center @(style1?"testimonial-bg2":"")">
+                    <div class="testimonial-photo">
+                        <img src="/Content/Home/images/non-user.jpg" alt="@Localizer["Testimonials"].Value">
+                    </div>
+                    <div class="testimonial-title">@item.FullName</div>
+                    <div class="star-rating">
+                        <span class="txt-gradient">
+                            @for (int i = 0; i <= item.Rating - 1; i++)
+                            {
+                                <i class="icon-star"></i>
+                            }
+                        </span>
+                    </div>
+                    <div class="testimonial-text">
+                        @if (item.Type == Contact.ContactType.TestimonialVideo)
+                        {
+                            <p>
+                                <iframe frameborder="0" border="0" cellspacing="0" height="300" scrolling="no" src="@item.Address" width="100%"></iframe>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                @Html.Raw(item.Content ?? "".Replace("<script", "<xscript").Replace("</script>", "</xscript>").Replace("onclick", "on_click"))
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+            style1 = !style1;
+        }
+    </div>
+    <div class="col-sm">
+        @foreach (var item in Model.Data.Skip(Model.Data.Count() / 2).Take(Model.Data.Count() - 1))
+        {
+            <div class="testimonial-wrap">
+                <div class="testimonial  text-center @(style2?"testimonial-bg2":"")">
+                    <div class="testimonial-photo">
+                        <img src="/Content/Home/images/non-user.jpg" alt="@Localizer["Testimonials"].Value">
+                    </div>
+                    <div class="testimonial-title">@item.FullName</div>
+                    <div class="star-rating">
+                        <span class="txt-gradient">
+                            @for (int i = 0; i <= item.Rating - 1; i++)
+                            {
+                                <i class="icon-star"></i>
+                            }
+                        </span>
+                    </div>
+                    <div class="testimonial-text">
+                        @if (item.Type == Contact.ContactType.TestimonialVideo)
+                        {
+                            <p>
+                                <iframe height="300" frameborder="0" border="0" cellspacing="0" scrolling="no" src="@item.Address" width="100%"></iframe>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                @Html.Raw(item.Content ?? "".Replace("<script", "<xscript").Replace("</script>", "</xscript>").Replace("onclick", "on_click"))
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+            style2 = !style2;
+        }
+    </div>
+</div>
+
+@if (Model.TotalRows > Model.Limit)
+{
+    <div style="height:20px;"></div>
+    @Html.Raw(PT.Shared.Functions.GenPageListAjax(Model.Page, Model.TotalRows, Model.Limit, "getData", "#myTabContentX"))
+}
