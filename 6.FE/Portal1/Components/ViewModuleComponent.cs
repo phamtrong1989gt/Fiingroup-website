@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
@@ -21,13 +22,15 @@ namespace PT.Component
         private readonly IMenuRepository _iMenuRepository;
         private readonly IBannerRepository _iBannerRepository;
         private readonly IStaticInformationRepository _iStaticInformationRepository;
-        public ViewModuleComponent(IWebHostEnvironment hostingEnvironment, IMemoryCache iMemoryCache, IMenuRepository iMenuRepository, IMenuItemRepository iMenuItemRepository, IBannerRepository iBannerRepository, IStaticInformationRepository iStaticInformationRepository)
+        private readonly IOptions<BaseSettings> _baseSettings;
+        public ViewModuleComponent(IWebHostEnvironment hostingEnvironment, IMemoryCache iMemoryCache, IMenuRepository iMenuRepository, IMenuItemRepository iMenuItemRepository, IBannerRepository iBannerRepository, IStaticInformationRepository iStaticInformationRepository, IOptions<BaseSettings> baseSettings)
         {
             _hostingEnvironment = hostingEnvironment;
             _iMemoryCache = iMemoryCache;
             _iMenuRepository = iMenuRepository;
             _iBannerRepository = iBannerRepository;
             _iStaticInformationRepository = iStaticInformationRepository;
+            _baseSettings = baseSettings;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(ModuleType type, string code, string language = "vi", int portalId = 1)
@@ -104,7 +107,8 @@ namespace PT.Component
                     // Lưu rendered HTML vào cache trong 24 giờ
                     var cacheOptions = new MemoryCacheEntryOptions
                     {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24),
+                        //AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24),
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_baseSettings.Value.TimeCache),
                         Priority = CacheItemPriority.Normal
                     };
 
