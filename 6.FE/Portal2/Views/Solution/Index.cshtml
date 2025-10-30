@@ -44,7 +44,9 @@
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "SolutionBanner", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionFiinGroup", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionHelp", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionHelp2", language = language, portalId = portalId }))
+@* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionHelp", language = language, portalId = portalId })) *@
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionCustomer", language = language, portalId = portalId }))
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "SolutionPartner", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionDeliver", language = language, portalId = portalId }))
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionSolutions", language = language, portalId = portalId }))
