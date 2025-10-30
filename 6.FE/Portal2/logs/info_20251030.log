@@ -1,0 +1,267 @@
+2025-10-30 09:21:13.577 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-30 09:21:13.674 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-30 09:21:13.674 +07:00 [INF] Hosting environment: Development
+2025-10-30 09:21:13.674 +07:00 [INF] Content root path: D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2
+2025-10-30 09:21:15.313 +07:00 [INF] Executed DbCommand (50ms) [Parameters=[@__slug_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__baseSettings_Value_PortalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [l].[Id], [l].[Acction], [l].[Area], [l].[Changefreq], [l].[Controller], [l].[Delete], [l].[Description], [l].[FacebookBanner], [l].[FacebookDescription], [l].[FocusKeywords], [l].[GooglePlusDescription], [l].[IncludeSitemap], [l].[IsStatic], [l].[Keywords], [l].[Language], [l].[Lastmod], [l].[MetaRobotsAdvance], [l].[MetaRobotsFollow], [l].[MetaRobotsIndex], [l].[Name], [l].[ObjectId], [l].[Parrams], [l].[PortalId], [l].[Priority], [l].[Redirect301], [l].[Slug], [l].[Status], [l].[Title], [l].[Type]
+FROM [Link] AS [l]
+WHERE [l].[Slug] = @__slug_0 AND [l].[Language] = @__language_1 AND [l].[PortalId] = @__baseSettings_Value_PortalId_2
+2025-10-30 09:21:15.430 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-30 09:21:15.481 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-30 09:21:15.538 +07:00 [INF] Executed DbCommand (10ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-30 09:21:15.572 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:15.593 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-30 09:21:15.607 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:15.619 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-30 09:21:15.633 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-30 09:21:15.664 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 1
+2025-10-30 09:21:15.703 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:15.722 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-30 09:21:15.735 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:15.748 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:15.759 +07:00 [INF] Executed DbCommand (7ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [m].[Id], [m].[Code], [m].[Content], [m].[Delete], [m].[HasChildrentClass1], [m].[HasChildrentClass2], [m].[HasChildrentClass3], [m].[Language], [m].[Name], [m].[PortalId], [m].[Status], [m].[Template], [m].[Template1], [m].[Template2], [m].[Template3]
+FROM [Menu] AS [m]
+WHERE [m].[Code] = @__code_0 AND [m].[Delete] = CAST(0 AS bit) AND [m].[Language] = @__language_1 AND [m].[PortalId] = @__portalId_2
+2025-10-30 09:21:15.799 +07:00 [INF] Executed ViewResult - view Index executed in 323.3487ms.
+2025-10-30 09:21:15.802 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 371.983ms
+2025-10-30 09:21:15.822 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 2258.4521ms
+2025-10-30 09:21:15.913 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-30 09:21:15.916 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 2.9781ms
+2025-10-30 09:21:15.989 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-30 09:21:15.990 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - null null
+2025-10-30 09:21:16.028 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - null null
+2025-10-30 09:21:16.029 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgvideo.jpg - 404 null null 38.7503ms
+2025-10-30 09:21:16.030 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgvideo.jpg, Response status code: 404
+2025-10-30 09:21:16.033 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/bgour.png - 404 null null 4.3328ms
+2025-10-30 09:21:16.033 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/bgour.png, Response status code: 404
+2025-10-30 09:21:16.082 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 89.7054ms
+2025-10-30 09:21:16.683 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/favicon.ico - null null
+2025-10-30 09:21:16.684 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/favicon.ico - 404 null null 1.153ms
+2025-10-30 09:21:16.685 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/favicon.ico, Response status code: 404
+2025-10-30 09:21:16.710 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - null null
+2025-10-30 09:21:16.711 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/img/logo/favicon.png - 404 null null 0.9853ms
+2025-10-30 09:21:16.711 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/img/logo/favicon.png, Response status code: 404
+2025-10-30 09:21:18.916 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/san-pham.html - null null
+2025-10-30 09:21:18.986 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__slug_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__baseSettings_Value_PortalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [l].[Id], [l].[Acction], [l].[Area], [l].[Changefreq], [l].[Controller], [l].[Delete], [l].[Description], [l].[FacebookBanner], [l].[FacebookDescription], [l].[FocusKeywords], [l].[GooglePlusDescription], [l].[IncludeSitemap], [l].[IsStatic], [l].[Keywords], [l].[Language], [l].[Lastmod], [l].[MetaRobotsAdvance], [l].[MetaRobotsFollow], [l].[MetaRobotsIndex], [l].[Name], [l].[ObjectId], [l].[Parrams], [l].[PortalId], [l].[Priority], [l].[Redirect301], [l].[Slug], [l].[Status], [l].[Title], [l].[Type]
+FROM [Link] AS [l]
+WHERE [l].[Slug] = @__slug_0 AND [l].[Language] = @__language_1 AND [l].[PortalId] = @__baseSettings_Value_PortalId_2
+2025-10-30 09:21:18.993 +07:00 [INF] Route matched with {action = "Index", controller = "Product"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.ProductController (PT.UI).
+2025-10-30 09:21:18.996 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-30 09:21:19.009 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-30 09:21:19.022 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:19.035 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:19.050 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:19.064 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:19.077 +07:00 [INF] Executed ViewResult - view Index executed in 82.6716ms.
+2025-10-30 09:21:19.077 +07:00 [INF] Executed action PT.UI.Controllers.ProductController.Index (PT.UI) in 83.5963ms
+2025-10-30 09:21:19.078 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/san-pham.html - 200 null text/html; charset=utf-8 161.8836ms
+2025-10-30 09:21:19.116 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-30 09:21:19.117 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 1.5297ms
+2025-10-30 09:21:19.132 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/Data/logoft.svg - null null
+2025-10-30 09:21:19.133 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/Data/logoft.svg - 404 null null 0.6982ms
+2025-10-30 09:21:19.133 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/vi/Data/logoft.svg, Response status code: 404
+2025-10-30 09:21:19.133 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-30 09:21:19.143 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/Data/product_bg1.png - null null
+2025-10-30 09:21:19.144 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/product_bg1.png - null null
+2025-10-30 09:21:19.144 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/Data/product_bg1.png - 404 null null 0.8283ms
+2025-10-30 09:21:19.144 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/product_bg1.png - 404 null null 0.4917ms
+2025-10-30 09:21:19.144 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/vi/Data/product_bg1.png, Response status code: 404
+2025-10-30 09:21:19.144 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/product_bg1.png, Response status code: 404
+2025-10-30 09:21:19.147 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/assets/Data/product_bg2.png - null null
+2025-10-30 09:21:19.148 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/assets/Data/product_bg2.png - 404 null null 0.8759ms
+2025-10-30 09:21:19.148 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/assets/Data/product_bg2.png, Response status code: 404
+2025-10-30 09:21:19.149 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 16.166ms
+2025-10-30 09:21:20.215 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/assets/img/logo/favicon.png - null null
+2025-10-30 09:21:20.221 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/assets/img/logo/favicon.png - 404 null null 5.8029ms
+2025-10-30 09:21:20.221 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/vi/assets/img/logo/favicon.png, Response status code: 404
+2025-10-30 09:21:28.995 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/giai-phap.html - null null
+2025-10-30 09:21:29.019 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__slug_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__baseSettings_Value_PortalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [l].[Id], [l].[Acction], [l].[Area], [l].[Changefreq], [l].[Controller], [l].[Delete], [l].[Description], [l].[FacebookBanner], [l].[FacebookDescription], [l].[FocusKeywords], [l].[GooglePlusDescription], [l].[IncludeSitemap], [l].[IsStatic], [l].[Keywords], [l].[Language], [l].[Lastmod], [l].[MetaRobotsAdvance], [l].[MetaRobotsFollow], [l].[MetaRobotsIndex], [l].[Name], [l].[ObjectId], [l].[Parrams], [l].[PortalId], [l].[Priority], [l].[Redirect301], [l].[Slug], [l].[Status], [l].[Title], [l].[Type]
+FROM [Link] AS [l]
+WHERE [l].[Slug] = @__slug_0 AND [l].[Language] = @__language_1 AND [l].[PortalId] = @__baseSettings_Value_PortalId_2
+2025-10-30 09:21:29.024 +07:00 [INF] Route matched with {action = "Index", controller = "Solution"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.SolutionController (PT.UI).
+2025-10-30 09:21:29.027 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-30 09:21:29.040 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-30 09:21:29.053 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:29.067 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:29.081 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-30 09:21:29.094 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:29.108 +07:00 [INF] Executed DbCommand (8ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 10), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [s].[Id], [s].[Code], [s].[Content], [s].[Data], [s].[Delete], [s].[Language], [s].[Name], [s].[ParentId], [s].[PortalId], [s].[Status]
+FROM [StaticInformation] AS [s]
+WHERE [s].[Code] = @__code_0 AND [s].[Delete] = CAST(0 AS bit) AND [s].[Language] = @__language_1 AND [s].[PortalId] = @__portalId_2
+2025-10-30 09:21:29.123 +07:00 [INF] Executed DbCommand (9ms) [Parameters=[@__code_0='?' (Size = 4000), @__language_1='?' (Size = 4000), @__portalId_2='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [b].[Id], [b].[ClassActive], [b].[Code], [b].[Content], [b].[Delete], [b].[Language], [b].[Name], [b].[PortalId], [b].[Status], [b].[Template], [b].[Type]
+FROM [Banner] AS [b]
+WHERE [b].[Code] = @__code_0 AND [b].[Delete] = CAST(0 AS bit) AND [b].[Language] = @__language_1 AND [b].[PortalId] = @__portalId_2 AND [b].[Type] = 0
+2025-10-30 09:21:29.130 +07:00 [INF] Executed ViewResult - view Index executed in 104.1704ms.
+2025-10-30 09:21:29.130 +07:00 [INF] Executed action PT.UI.Controllers.SolutionController.Index (PT.UI) in 105.6969ms
+2025-10-30 09:21:29.131 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/giai-phap.html - 200 null text/html; charset=utf-8 135.2731ms
+2025-10-30 09:21:29.153 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_banner.png - null null
+2025-10-30 09:21:29.161 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_why.png - null null
+2025-10-30 09:21:29.161 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_why2.png - null null
+2025-10-30 09:21:29.162 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-30 09:21:29.163 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 1.01ms
+2025-10-30 09:21:29.172 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_why4.png - null null
+2025-10-30 09:21:29.236 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_why5.png - null null
+2025-10-30 09:21:29.268 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_why3.png - null null
+2025-10-30 09:21:29.270 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_why6.png - null null
+2025-10-30 09:21:29.307 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_giaiphap1.png - null null
+2025-10-30 09:21:29.307 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_insight3.png - null null
+2025-10-30 09:21:29.307 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_giaiphap4.png - null null
+2025-10-30 09:21:29.307 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_giaiphap2.png - null null
+2025-10-30 09:21:29.307 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_insight2.png - null null
+2025-10-30 09:21:29.308 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_giaiphap3.png - null null
+2025-10-30 09:21:29.313 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_insight1.png - null null
+2025-10-30 09:21:29.313 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_bg4.png - null null
+2025-10-30 09:21:29.313 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/Data/logoft.svg - null null
+2025-10-30 09:21:29.313 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-30 09:21:29.313 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/Data/solution_bg3.png - null null
+2025-10-30 09:21:29.318 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/Data/logoft.svg - 404 null null 5.1019ms
+2025-10-30 09:21:29.318 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/vi/Data/logoft.svg, Response status code: 404
+2025-10-30 09:21:29.345 +07:00 [INF] Sending file. Request path: '/Data/solution_why3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_why3.png'
+2025-10-30 09:21:29.345 +07:00 [INF] Sending file. Request path: '/Data/solution_why6.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_why6.png'
+2025-10-30 09:21:29.346 +07:00 [INF] Sending file. Request path: '/Data/solution_why.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_why.png'
+2025-10-30 09:21:29.346 +07:00 [INF] Sending file. Request path: '/Data/solution_why4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_why4.png'
+2025-10-30 09:21:29.346 +07:00 [INF] Sending file. Request path: '/Data/solution_why5.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_why5.png'
+2025-10-30 09:21:29.346 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_why3.png - 200 8848 image/png 78.7502ms
+2025-10-30 09:21:29.346 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_why6.png - 200 7312 image/png 75.9642ms
+2025-10-30 09:21:29.346 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_why.png - 200 11440 image/png 185.0218ms
+2025-10-30 09:21:29.346 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_why5.png - 200 9562 image/png 110.5346ms
+2025-10-30 09:21:29.346 +07:00 [INF] Sending file. Request path: '/Data/solution_why2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_why2.png'
+2025-10-30 09:21:29.346 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_why4.png - 200 9181 image/png 174.2651ms
+2025-10-30 09:21:29.351 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_why2.png - 200 10568 image/png 189.0607ms
+2025-10-30 09:21:29.358 +07:00 [INF] Sending file. Request path: '/Data/solution_insight2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_insight2.png'
+2025-10-30 09:21:29.359 +07:00 [INF] Sending file. Request path: '/Data/solution_insight3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_insight3.png'
+2025-10-30 09:21:29.359 +07:00 [INF] Sending file. Request path: '/Data/solution_insight1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_insight1.png'
+2025-10-30 09:21:29.364 +07:00 [INF] Sending file. Request path: '/Data/solution_giaiphap2.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_giaiphap2.png'
+2025-10-30 09:21:29.370 +07:00 [INF] Sending file. Request path: '/Data/solution_giaiphap4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_giaiphap4.png'
+2025-10-30 09:21:29.373 +07:00 [INF] Sending file. Request path: '/Data/solution_giaiphap1.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_giaiphap1.png'
+2025-10-30 09:21:29.373 +07:00 [INF] Sending file. Request path: '/Data/solution_bg4.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_bg4.png'
+2025-10-30 09:21:29.377 +07:00 [INF] Sending file. Request path: '/Data/solution_banner.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_banner.png'
+2025-10-30 09:21:29.377 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_insight3.png - 200 165195 image/png 70.098ms
+2025-10-30 09:21:29.383 +07:00 [INF] Sending file. Request path: '/Data/solution_giaiphap3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_giaiphap3.png'
+2025-10-30 09:21:29.418 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 105.5944ms
+2025-10-30 09:21:29.419 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_insight1.png - 200 192666 image/png 105.9545ms
+2025-10-30 09:21:29.455 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_giaiphap1.png - 200 1090080 image/png 151.718ms
+2025-10-30 09:21:29.468 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_bg4.png - 200 774522 image/png 155.1269ms
+2025-10-30 09:21:29.473 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_insight2.png - 200 172481 image/png 165.4572ms
+2025-10-30 09:21:29.486 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_giaiphap2.png - 200 591342 image/png 178.8178ms
+2025-10-30 09:21:29.506 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_giaiphap4.png - 200 810135 image/png 198.5585ms
+2025-10-30 09:21:29.522 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_banner.png - 200 1676072 image/png 368.9609ms
+2025-10-30 09:21:29.544 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_giaiphap3.png - 200 2569262 image/png 236.6166ms
+2025-10-30 09:21:29.581 +07:00 [INF] Sending file. Request path: '/Data/solution_bg3.png'. Physical path: 'D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\solution_bg3.png'
+2025-10-30 09:21:29.959 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/Data/solution_bg3.png - 200 7326911 image/png 646.1979ms
+2025-10-30 09:22:22.524 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/san-pham.html - null null
+2025-10-30 09:22:22.532 +07:00 [INF] Route matched with {action = "Index", controller = "Product"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.ProductController (PT.UI).
+2025-10-30 09:22:22.532 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-30 09:22:22.534 +07:00 [INF] Executed ViewResult - view Index executed in 1.6563ms.
+2025-10-30 09:22:22.534 +07:00 [INF] Executed action PT.UI.Controllers.ProductController.Index (PT.UI) in 1.956ms
+2025-10-30 09:22:22.535 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/san-pham.html - 200 null text/html; charset=utf-8 10.8786ms
+2025-10-30 09:22:22.572 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-30 09:22:22.573 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 0.8499ms
+2025-10-30 09:22:22.583 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/Data/logoft.svg - null null
+2025-10-30 09:22:22.583 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-30 09:22:22.583 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/Data/logoft.svg - 404 null null 0.7967ms
+2025-10-30 09:22:22.584 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/vi/Data/logoft.svg, Response status code: 404
+2025-10-30 09:22:22.593 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/Data/product_bg1.png - null null
+2025-10-30 09:22:22.593 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/Data/product_bg1.png - 404 null null 0.5577ms
+2025-10-30 09:22:22.593 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/vi/Data/product_bg1.png, Response status code: 404
+2025-10-30 09:22:22.600 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 16.3898ms
+2025-10-30 09:22:32.141 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/ - null null
+2025-10-30 09:22:32.144 +07:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.HomeController (PT.UI).
+2025-10-30 09:22:32.144 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-30 09:22:32.146 +07:00 [INF] Executed ViewResult - view Index executed in 1.5655ms.
+2025-10-30 09:22:32.146 +07:00 [INF] Executed action PT.UI.Controllers.HomeController.Index (PT.UI) in 1.9631ms
+2025-10-30 09:22:32.147 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/ - 200 null text/html; charset=utf-8 6.5351ms
+2025-10-30 09:22:32.191 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-30 09:22:32.192 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 0.502ms
+2025-10-30 09:22:32.222 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-30 09:22:32.238 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 15.4974ms
+2025-10-30 09:22:41.513 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-10-30 09:22:41.514 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - 404 null null 1.0277ms
+2025-10-30 09:22:41.514 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2025-10-30 09:22:45.754 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/san-pham.html - null null
+2025-10-30 09:22:45.757 +07:00 [INF] Route matched with {action = "Index", controller = "Product"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index(System.String, Int32) on controller PT.UI.Controllers.ProductController (PT.UI).
+2025-10-30 09:22:45.757 +07:00 [INF] Executing ViewResult, running view Index.
+2025-10-30 09:22:45.758 +07:00 [INF] Executed ViewResult - view Index executed in 1.4335ms.
+2025-10-30 09:22:45.759 +07:00 [INF] Executed action PT.UI.Controllers.ProductController.Index (PT.UI) in 1.7234ms
+2025-10-30 09:22:45.759 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/san-pham.html - 200 null text/html; charset=utf-8 5.4235ms
+2025-10-30 09:22:45.790 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-30 09:22:45.791 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_framework/aspnetcore-browser-refresh.js - 200 16495 application/javascript; charset=utf-8 0.8054ms
+2025-10-30 09:22:45.799 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/Data/logoft.svg - null null
+2025-10-30 09:22:45.799 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/Data/logoft.svg - 404 null null 0.6886ms
+2025-10-30 09:22:45.800 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/vi/Data/logoft.svg, Response status code: 404
+2025-10-30 09:22:45.800 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/_vs/browserLink - null null
+2025-10-30 09:22:45.808 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/vi/Data/product_bg1.png - null null
+2025-10-30 09:22:45.809 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/vi/Data/product_bg1.png - 404 null null 0.642ms
+2025-10-30 09:22:45.809 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/vi/Data/product_bg1.png, Response status code: 404
+2025-10-30 09:22:45.818 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/_vs/browserLink - 200 null text/javascript; charset=UTF-8 18.1119ms
+2025-10-30 09:22:48.830 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - null null
+2025-10-30 09:22:48.831 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json - 404 null null 0.5396ms
+2025-10-30 09:22:48.831 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44372/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
