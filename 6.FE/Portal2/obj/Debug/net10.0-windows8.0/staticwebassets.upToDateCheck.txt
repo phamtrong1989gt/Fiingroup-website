@@ -341,11 +341,12 @@ wwwroot\Data\why3.png
 wwwroot\Data\why4.png
 wwwroot\Data\why5.png
 wwwroot\Data\why6.png
+wwwroot\Data\product_banner1.jpg
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\custom.css
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\css\font-awesome.min.css
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\fonts\font-awesome\4.7.0\fonts\fontawesome-webfont.svg
+D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logoft.svg
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\css\style.css
-D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\bootstrap.js
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\counter-up.js
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.counterup.min.js
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\jquery.min.js
@@ -370,6 +371,7 @@ D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstra
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap-reboot.rtl.min.css.map
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap-utilities.css
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap-utilities.css.map
+D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\js\bootstrap.js
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap-utilities.min.css
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap-utilities.min.css.map
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\assets\lib\bootstrap-5.2.2-dist\css\bootstrap-utilities.rtl.css
@@ -506,4 +508,3 @@ D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_home.svg
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our1.svg
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\icon_our2.svg
 D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logo.svg
-D:\DUYHK\Project\2025\Fiingroup-website\6.FE\Portal2\wwwroot\Data\logoft.svg
