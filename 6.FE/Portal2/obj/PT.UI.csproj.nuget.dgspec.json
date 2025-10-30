@@ -1,26 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\6.FE\\Portal2\\PT.UI.csproj": {}
+    "C:\\2025\\Fiin\\Fiingroup-website\\6.FE\\Portal2\\PT.UI.csproj": {}
   },
   "projects": {
-    "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\PT.Domain.csproj": {
+    "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\PT.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\PT.Domain.csproj",
+        "projectUniqueName": "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\PT.Domain.csproj",
         "projectName": "PT.Domain",
-        "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\PT.Domain.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\obj\\",
+        "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\PT.Domain.csproj",
+        "packagesPath": "C:\\Users\\Nguyen Quang Thanh\\.nuget\\packages\\",
+        "outputPath": "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
+          "C:\\Users\\Nguyen Quang Thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -29,9 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://git.dttt.vn/api/v4/projects/8/packages/nuget/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0-windows8.0": {
@@ -492,23 +487,20 @@
         }
       }
     },
-    "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj": {
+    "C:\\2025\\Fiin\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj",
+        "projectUniqueName": "C:\\2025\\Fiin\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj",
         "projectName": "PT.Infrastructure",
-        "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\3.Infrastructure\\obj\\",
+        "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\Nguyen Quang Thanh\\.nuget\\packages\\",
+        "outputPath": "C:\\2025\\Fiin\\Fiingroup-website\\3.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
+          "C:\\Users\\Nguyen Quang Thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -517,19 +509,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://git.dttt.vn/api/v4/projects/8/packages/nuget/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0-windows8.0": {
             "targetAlias": "net10.0-windows8.0",
             "projectReferences": {
-              "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\PT.Domain.csproj": {
-                "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\PT.Domain.csproj"
+              "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\PT.Domain.csproj": {
+                "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\PT.Domain.csproj"
               },
-              "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\PT.Share.csproj": {
-                "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\PT.Share.csproj"
+              "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\PT.Share.csproj": {
+                "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\PT.Share.csproj"
               }
             }
           }
@@ -875,23 +865,20 @@
         }
       }
     },
-    "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\PT.Share.csproj": {
+    "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\PT.Share.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\PT.Share.csproj",
+        "projectUniqueName": "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\PT.Share.csproj",
         "projectName": "PT.Shared",
-        "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\PT.Share.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\obj\\",
+        "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\PT.Share.csproj",
+        "packagesPath": "C:\\Users\\Nguyen Quang Thanh\\.nuget\\packages\\",
+        "outputPath": "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
+          "C:\\Users\\Nguyen Quang Thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -900,9 +887,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://git.dttt.vn/api/v4/projects/8/packages/nuget/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0-windows8.0": {
@@ -1219,23 +1204,20 @@
         }
       }
     },
-    "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj": {
+    "C:\\2025\\Fiin\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj",
+        "projectUniqueName": "C:\\2025\\Fiin\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj",
         "projectName": "PT.Base",
-        "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\5.Base\\PT.Base\\obj\\",
+        "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj",
+        "packagesPath": "C:\\Users\\Nguyen Quang Thanh\\.nuget\\packages\\",
+        "outputPath": "C:\\2025\\Fiin\\Fiingroup-website\\5.Base\\PT.Base\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
+          "C:\\Users\\Nguyen Quang Thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -1244,22 +1226,20 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://git.dttt.vn/api/v4/projects/8/packages/nuget/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0-windows8.0": {
             "targetAlias": "net10.0-windows8.0",
             "projectReferences": {
-              "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\PT.Domain.csproj": {
-                "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\PT.Domain.csproj"
+              "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\PT.Domain.csproj": {
+                "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\PT.Domain.csproj"
               },
-              "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj": {
-                "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj"
+              "C:\\2025\\Fiin\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj": {
+                "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj"
               },
-              "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\PT.Share.csproj": {
-                "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\PT.Share.csproj"
+              "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\PT.Share.csproj": {
+                "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\PT.Share.csproj"
               }
             }
           }
@@ -1573,23 +1553,20 @@
         }
       }
     },
-    "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\6.FE\\Portal2\\PT.UI.csproj": {
+    "C:\\2025\\Fiin\\Fiingroup-website\\6.FE\\Portal2\\PT.UI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\6.FE\\Portal2\\PT.UI.csproj",
+        "projectUniqueName": "C:\\2025\\Fiin\\Fiingroup-website\\6.FE\\Portal2\\PT.UI.csproj",
         "projectName": "PT.UI",
-        "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\6.FE\\Portal2\\PT.UI.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\6.FE\\Portal2\\obj\\",
+        "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\6.FE\\Portal2\\PT.UI.csproj",
+        "packagesPath": "C:\\Users\\Nguyen Quang Thanh\\.nuget\\packages\\",
+        "outputPath": "C:\\2025\\Fiin\\Fiingroup-website\\6.FE\\Portal2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
+          "C:\\Users\\Nguyen Quang Thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -1598,25 +1575,23 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://git.dttt.vn/api/v4/projects/8/packages/nuget/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0-windows8.0": {
             "targetAlias": "net10.0-windows8.0",
             "projectReferences": {
-              "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\PT.Domain.csproj": {
-                "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\2.Domain\\PT.Domain.csproj"
+              "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\PT.Domain.csproj": {
+                "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\2.Domain\\PT.Domain.csproj"
               },
-              "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj": {
-                "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj"
+              "C:\\2025\\Fiin\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj": {
+                "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\3.Infrastructure\\PT.Infrastructure.csproj"
               },
-              "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\PT.Share.csproj": {
-                "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\4.Shared\\PT.Share.csproj"
+              "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\PT.Share.csproj": {
+                "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\4.Shared\\PT.Share.csproj"
               },
-              "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj": {
-                "projectPath": "D:\\DUYHK\\Project\\2025\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj"
+              "C:\\2025\\Fiin\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj": {
+                "projectPath": "C:\\2025\\Fiin\\Fiingroup-website\\5.Base\\PT.Base\\PT.Base.csproj"
               }
             }
           }
