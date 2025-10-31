@@ -829,9 +829,9 @@ img:hover {
     border-color: #667eea;
 }
 
-.btn:hover {
+/*.btn:hover {
     transform: translateY(-4px);
-}
+}*/
 
 #manualsct .item {
     margin: 0 5%;
