@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "DuyHK",
+    "Projects": [
+      {
+        "Path": "6.FE\\Portal2\\PT.UI.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express"
+      },
+      {
+        "Path": "1.Backend\\PT.UI.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express"
+      }
+    ]
+  }
+]

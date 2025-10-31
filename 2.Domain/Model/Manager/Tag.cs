@@ -90,19 +90,26 @@ namespace PT.Domain.Model
     public class Tag : IAggregateRoot
     {
         public int Id { get; set; }
+        public int PortalId { get; set; }
         public string Name { get; set; }
         public string Banner { get; set; }
         public string Content { get; set; }
         public bool Status { get; set; }
+
+
         [MaxLength(10)]
         public string Language { get; set; }
-        public bool Delete { get; set; }
         [NotMapped]
         public virtual Link Link { get; set; }
         [NotMapped]
         public BaseSearchModel<List<ContentPage>> ContentPages { get; set; }
         [NotMapped]
         public List<LinkReference> LinkReferences { get; set; }
+        [NotMapped]
+        public Portal Portal { get; set; }
+
+        [NotMapped]
+        public string FullPath { get; set; }
     }
     public class TagModel:SeoModel
     {
@@ -115,6 +122,7 @@ namespace PT.Domain.Model
         public CategoryType SlugType { get; set; } = CategoryType.Page;
         [Display(Name = "Nội dung")]
         public string Content { get; set; }
+        public SelectList PortalSelectList { get; set; }
     }
     public class AddTagModel 
     {

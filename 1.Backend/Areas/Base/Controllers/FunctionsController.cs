@@ -11,7 +11,7 @@ using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
 
-namespace PT.UI.Areas.Base.Controllers
+namespace PT.BE.Areas.Base.Controllers
 {
     [Area("Base")]
     public class FunctionsController : Controller
@@ -52,16 +52,16 @@ namespace PT.UI.Areas.Base.Controllers
             return File(memory, Functions.GetContentType(path), Path.GetFileName(path));
         }
         [HttpGet, Authorize]
-        public async Task<JsonResult> IsSlug(string slug, int id, string language)
+        public async Task<JsonResult> IsSlug(string slug, int id, string language, int portalId)
         {
             if(id > 0)
             {
-                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == slug && x.ObjectId != id && x.Language == language);
+                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == slug && x.ObjectId != id && x.Language == language && x.PortalId == portalId);
                 return Json(!ktLug);
             }
             else
             {
-                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == slug && x.Language== language);
+                var ktLug = await _iLinkRepository.AnyAsync(x => x.Slug == slug && x.Language== language && x.PortalId == portalId);
                 return Json(!ktLug);
             }
         }
@@ -74,10 +74,10 @@ namespace PT.UI.Areas.Base.Controllers
             });
         }
         [HttpPost, Authorize]
-        public async Task<List<SelectListItem>> SearchLink(string q, string language, CategoryType type)
+        public async Task<List<SelectListItem>> SearchLink(string q, string language, CategoryType type, int portalId)
         {
-            return (await _iLinkRepository.SearchAsync(true, 0, 20, x => x.Name.ToLower().Contains(q.ToLower()) && !x.Delete && x.Status && x.Type == type && x.Language == language, x => x.OrderBy(y => y.Name),
-               x => new Link { Id = x.Id, Name = x.Name, Delete = x.Delete, Status = x.Status, Language = x.Language, Type = x.Type })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
+            return (await _iLinkRepository.SearchAsync(true, 0, 20, x => x.Name.ToLower().Contains(q.ToLower()) && !x.Delete && x.Status &&  x.Language == language && x.PortalId == portalId, x => x.OrderBy(y => y.Name),
+               x => new Link { Id = x.Id, Name = x.Name, Delete = x.Delete, Status = x.Status, Language = x.Language, Type = x.Type, PortalId = x.PortalId })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
         }
     }
 }

@@ -13,7 +13,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using PT.Infrastructure;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
     public class TourTypeManagerController : Base.Controllers.BaseController
@@ -199,7 +199,7 @@ namespace PT.UI.Areas.Manager.Controllers
                     await _iTourTypeRepository.CommitAsync();
 
                  
-                    await UpdateSeoLink(use.ChangeSlug, CategoryType.TourType, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "TourTypeHome", "Tours");
+                    await UpdateSeoLink(use.ChangeSlug, CategoryType.TourType, CategoryType.TourType, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "TourTypeHome", "Tours");
 
                     await _iTourTypeRepository.CommitTransaction();
 

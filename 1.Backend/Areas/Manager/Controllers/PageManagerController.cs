@@ -1,22 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using System.Linq;
+using PT.Infrastructure.Repositories;
 using PT.Shared;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
-using PT.Base;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
     public class PageManagerController : Base.Controllers.BaseController
@@ -29,6 +30,7 @@ namespace PT.UI.Areas.Manager.Controllers
         private readonly IContentPageTagRepository _iContentPageTagRepository;
         private readonly IWebHostEnvironment _iWebHostEnvironment;
         private readonly IFileRepository _iFileRepository;
+        private readonly IPortalRepository _iPortalRepository;
 
         public PageManagerController(
             ILogger<PageManagerController> logger,
@@ -38,7 +40,8 @@ namespace PT.UI.Areas.Manager.Controllers
             ITagRepository iTagRepository,
             IContentPageTagRepository iContentPageTagRepository,
             IWebHostEnvironment iWebHostEnvironment,
-            IFileRepository iFileRepository
+            IFileRepository iFileRepository,
+            IPortalRepository iPortalRepository
         )
         {
             controllerName = "PageManager";
@@ -51,17 +54,20 @@ namespace PT.UI.Areas.Manager.Controllers
             _iContentPageTagRepository = iContentPageTagRepository;
             _iWebHostEnvironment = iWebHostEnvironment;
             _iFileRepository = iFileRepository;
+            _iPortalRepository = iPortalRepository;
         }
 
         #region [Index]
         [AuthorizePermission]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
             return View();
         }
         [HttpPost, ActionName("Index")]
         [AuthorizePermission]
-        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, string language ="vi", string ordertype = "asc", string orderby = "name")
+        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language ="vi", string ordertype = "asc", string orderby = "name")
         {
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
@@ -73,8 +79,8 @@ namespace PT.UI.Areas.Manager.Controllers
                     m =>(m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key)) && 
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
-                        m.Type==CategoryType.Page &&
-                        !m.Delete,
+                        (m.PortalId== portalId || portalId == null) &&
+                        m.Type==CategoryType.Page,
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {
                     Category = x.Category,
@@ -82,7 +88,6 @@ namespace PT.UI.Areas.Manager.Controllers
                     Author = x.Author,
                     Banner = x.Banner,
                     DatePosted = x.DatePosted,
-                    Delete = x.Delete,
                     Name = x.Name,
                     Language = x.Language,
                     Price = x.Price,
@@ -93,19 +98,14 @@ namespace PT.UI.Areas.Manager.Controllers
                     Tags = x.Tags,
                     Type = x.Type,
                     Link = x.Link,
-                    IsHome = x.IsHome
+                    IsHome = x.IsHome,
+                    PortalId = x.PortalId
                 });
-                data.ReturnUrl =  Url.Action("Index", 
-                    new {
-                        page,
-                        limit,
-                        key,
-                        categoryId,
-                        tagId,
-                        status,
-                        ordertype,
-                        orderby
-            });
+            var portals = await _iPortalRepository.SearchAsync(true);
+            foreach (var item in data.Data)
+            {
+                item.Portal = portals.FirstOrDefault(x => x.Id == item.PortalId);
+            }
             return View("IndexAjax", data);
         }
         private Func<IQueryable<ContentPage>, IOrderedQueryable<ContentPage>> OrderByExtention(string ordertype, string orderby)
@@ -127,14 +127,22 @@ namespace PT.UI.Areas.Manager.Controllers
         #region [Create]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Create(string language = "vi")
+        public async Task<IActionResult> Create(int? portalId,string language = "vi")
         {
             var dl = new PageModel
             {
                 Language = language
             };
-            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
+            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
+            // Lấy danh sách portal để hiển thị trong dropdown trên trang quản lý
+            // Tham số: true = only active, 0,0 = không phân trang
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
+            dl.PortalSelectList = new SelectList(portals, "Id", "Name");
+            // Trả về view chính. Dữ liệu bảng sẽ được nạp bằng Ajax gọi IndexPost
+            dl.PortalId = portalId ?? 1;
+            dl.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId))?.Name;
             return View(dl);
         }
 
@@ -146,17 +154,18 @@ namespace PT.UI.Areas.Manager.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    await _iContentPageRepository.BeginTransaction();
                     var data = new ContentPage
                     {
                         Name = use.Name,
                         Banner = use.Banner,
                         Content = use.Content,
-                        Delete = false,
                         Status = use.Status,
                         Language = use.Language,
                         Type = CategoryType.Page,
                         Summary = use.Summary,
-                        DatePosted =  DateTime.Now
+                        DatePosted = DateTime.Now,
+                        PortalId = use.PortalId ?? 1
                     };
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
@@ -165,7 +174,7 @@ namespace PT.UI.Areas.Manager.Controllers
 
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateFileData(data.Id, CategoryType.Page, altId);
-
+                    await _iContentPageRepository.CommitTransaction();
                     await AddLog(new LogModel
                     {
                         ObjectId = data.Id,
@@ -192,7 +201,7 @@ namespace PT.UI.Areas.Manager.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var dl = await _iContentPageRepository.SingleOrDefaultAsync(true, m => m.Id == id);
-            if (dl == null || (dl != null && dl.Delete && dl.Type==CategoryType.Page))
+            if (dl == null)
             {
                 return View("404");
             }
@@ -220,10 +229,16 @@ namespace PT.UI.Areas.Manager.Controllers
                 model.Slug = ktLink.Slug;
             }
             var blogTagIds = (await _iContentPageTagRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x=>x.TagId).ToList();
-            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete }), "Id", "Name");
+            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             model.TagIds = blogTagIds;
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
+            model.PortalSelectList = new SelectList(portals, "Id", "Name");
+            model.PortalId = dl.PortalId;
+            model.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == dl.PortalId))?.Name;
             return View(model);
         }
+
         [HttpPost, ActionName("Edit")]
         [AuthorizePermission("Index")]
         public async Task<ResponseModel> EditPost(PageModel use, int id)
@@ -232,8 +247,9 @@ namespace PT.UI.Areas.Manager.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    await _iContentPageRepository.BeginTransaction();
                     var dl = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                    if (dl == null || (dl != null && dl.Delete))
+                    if (dl == null)
                     {
                         return new ResponseModel() { Output = 0, Message = "Dữ liệu không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                     }
@@ -247,7 +263,7 @@ namespace PT.UI.Areas.Manager.Controllers
                     _iContentPageRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
 
-                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Page, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPageHome", "Details");
+                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Page, CategoryType.Page, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPageHome", "Details");
 
                     await UpdateTag(id, use.TagIds);
                     await AddLog(new LogModel
@@ -257,7 +273,7 @@ namespace PT.UI.Areas.Manager.Controllers
                         Name = $"Cập nhật Trang nội dung \"{dl.Name}\".",
                         Type = LogType.Edit
                     });
-
+                    await _iContentPageRepository.CommitTransaction();
                     return new ResponseModel() { Output = 1, Message = "Cập nhật Trang nội dung thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
                 return new ResponseModel() { Output = -2, Message = "Bạn chưa nhập đầy đủ thông tin.", Type = ResponseTypeMessage.Warning };
@@ -295,16 +311,17 @@ namespace PT.UI.Areas.Manager.Controllers
         {
             try
             {
+                await _iContentPageRepository.BeginTransaction();
                 var kt = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                if (kt == null || (kt != null && kt.Delete && kt.Type==CategoryType.Page))
+                if (kt == null)
                 {
                     return new ResponseModel() { Output = 0, Message = "Trang nội dung không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                 }
-                kt.Delete = true;
+                _iContentPageRepository.Delete(kt);
                 await _iContentPageRepository.CommitAsync();
-
                 await DeleteSeoLink(CategoryType.Page, kt.Id);
                 await RemoveFileData(id, CategoryType.Page);
+
                 await AddLog(new LogModel
                 {
                     ObjectId = kt.Id,
@@ -312,7 +329,7 @@ namespace PT.UI.Areas.Manager.Controllers
                     Name = $"Xóa Trang nội dung \"{kt.Name}\".",
                     Type = LogType.Delete
                 });
-
+                await _iContentPageRepository.CommitTransaction();
                 return new ResponseModel() { Output = 1, Message = "Xóa Trang nội dung thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
             }
             catch (Exception ex)
@@ -343,7 +360,7 @@ namespace PT.UI.Areas.Manager.Controllers
         [HttpGet, Authorize]
         public async Task<object> SearchTag(string language = "vi")
         {
-            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && !x.Delete, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status, Delete = x.Delete })).Select(x=> new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
+            return (await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status })).Select(x=> new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
         }
         #endregion
 

@@ -7,6 +7,13 @@ using System.Text;
 
 namespace PT.Domain.Model
 {
+    // Sẽ chứa link tất cả các phiên bản của 1 nội dung ví dụ 1 row chính nó, 1 row của những phiên bản còn lại
+    public class LinkDataModel
+    {
+        public string Link { get; set; }
+        public string Language { get; set; }
+
+    }
     public class SeoModel: LinkReferenceBaseModel
     {
        
@@ -22,7 +29,7 @@ namespace PT.Domain.Model
         [Display(Name = "Liên kết thân thiện/Permalink")]
         [Required(ErrorMessage = "{0} không được để rỗng")]
         [RegularExpression(@"^.*[a-z0-9-/]$", ErrorMessage = "{0} chỉ bao gồm ký tự (a-z), (0-9), (-,/)")]
-        [Remote("IsSlug", "Functions", "Base", ErrorMessage = "{0} đã tồn tại, vui lòng thay đổi hoặc thêm một số ký tự khác bao gồm (a-z), (0-9), (-,/)", AdditionalFields = "Id,Language")]
+        [Remote("IsSlug", "Functions", "Base", ErrorMessage = "{0} đã tồn tại, vui lòng thay đổi hoặc thêm một số ký tự khác bao gồm (a-z), (0-9), (-,/)", AdditionalFields = "Id,Language,PortalId")]
         public string Slug { get; set; }
         public double? Price { get; set; }
         public bool ChangeSlug { get; set; }
@@ -55,7 +62,9 @@ namespace PT.Domain.Model
         public string GooglePlusDescription { get; set; }
 
         public bool IsStatic { get; set; }
-
+      
+        public string PortalName { get; set; }
+        public string PrefixSlug { get; set; }
 
     }
 }

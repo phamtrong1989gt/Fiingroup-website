@@ -21,12 +21,11 @@ namespace PT.Domain.Model
         public string Content { get; set; }
         public string Banner { get; set; }
         public string Banner2 { get; set; }
-
+        public string LinkData { get; set; }
         public int Order { get; set; }
         [MaxLength(10)]
         public string Language { get; set; }
         public bool Status { get; set; }
-        public bool Delete { get; set; }
         [NotMapped]
         public virtual Link Link { get; set; }
         [NotMapped]
@@ -45,6 +44,10 @@ namespace PT.Domain.Model
 
         [NotMapped]
         public BaseSearchModel<List<Product>> Products { get; set; }
+        public int PortalId { get; set; }
+
+        [NotMapped]
+        public string FullPath { get; set; }
     }
     public class CategoryModel:SeoModel
     {
@@ -66,7 +69,6 @@ namespace PT.Domain.Model
         public bool IsHome { get; set; }
         [Display(Name = "Ảnh đại diện dịch vụ tiêu biểu")]
         public string Banner2 { get; set; }
-
-
+        public SelectList PortalSelectList { get; set; }
     }
 }

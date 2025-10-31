@@ -38,9 +38,8 @@
             @item.Author
         </td>
         <td>@item.DatePosted.ToString("dd/MM/yyyy HH:mm")</td>
-
         <partial name="_AdminTbodyTableModule" model="@(new Tuple<List<PT.Domain.Model.LinkReference>,string,string,bool>(item.LinkReferences,item.Language,Url.Action("Edit", new { id ="#Id#" }),false))" />
-
+        <td>@item.Portal?.Name</td>
         <td>
             <div class="btn-group">
                 <div class="btn-group btn- group-sm" role="group">

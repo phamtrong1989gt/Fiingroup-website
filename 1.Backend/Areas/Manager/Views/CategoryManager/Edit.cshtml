@@ -25,7 +25,7 @@
     <input asp-for="Language" type="hidden" />
     <div class="sumaryValidateForm" asp-validation-summary="All"></div>
     <div class="modal-header">
-        <h4 class="modal-title"><i class="material-icons">edit</i> CẬP NHẬT DANH MỤC TIN TỨC - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name</span></h4>
+        <h4 class="modal-title"><i class="material-icons">edit</i> CẬP NHẬT DANH MỤC - <span class="text-warning">@Model.PortalName</span> - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name </span></h4>
     </div>
     <button title="Đóng cửa sổ" type="button" class="close btnclose-t" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -61,6 +61,26 @@
                             </div>
                             <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
                                 <div class="panel-body">
+                                    <div class="row">
+                                        <input type="hidden" asp-for="PortalId" />
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label class="form-label" asp-for="Type"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Type"></span>
+                                                <div class="controls">
+                                                    <select data-live-search="true" asp-for="Type" class="input-sm form-control-t show-tick">
+                                                        <option value="">Chọn</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryBlog">@PT.Domain.Model.CategoryType.CategoryBlog.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryService">@PT.Domain.Model.CategoryType.CategoryService.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryProduct">@PT.Domain.Model.CategoryType.CategoryProduct.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryFlowSupportService">@PT.Domain.Model.CategoryType.CategoryFlowSupportService.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryEvent">@PT.Domain.Model.CategoryType.CategoryEvent.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryPublications">@PT.Domain.Model.CategoryType.CategoryPublications.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.CategoryType.CategoryReport">@PT.Domain.Model.CategoryType.CategoryReport.GetDisplayName()</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
                                         <div class="controls">
@@ -83,7 +103,7 @@
                                 </div>
                             </div>
                         </div>
-                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type,LinkId = Model.LinkId })" />
+                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type,LinkId = Model.LinkId, PortalId = Model.PortalId ?? 1 })" />
                         <partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
                     </div>
                 </div>

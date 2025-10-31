@@ -1,0 +1,153 @@
+﻿@using PT.Domain.Model;
+@addTagHelper *, PT.UI
+@inject Microsoft.Extensions.Options.IOptions<List<WebsiteInfoSettings>> websiteInfoSettings
+@inject Microsoft.Extensions.Options.IOptions<List<SeoSettings>> seoSettings
+@inject Microsoft.Extensions.Options.IOptions<BindContentSettings> bindContentSettings
+@inject Microsoft.Extensions.Options.IOptions<AuthorizeSettings> _authorizeSettings;
+@inject IViewLocalizer Localizer
+
+@{
+	string domain = Context.Request.Host.ToString();
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var listLanguage = PT.Shared.ListData.ListLanguage;
+	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
+	var portalId = 2;
+	var homeModel = new HomeModel
+	{
+		Domain = domain,
+		SeoSettings = seoSettings.Value.FirstOrDefault(x => x.Id == language) ?? new SeoSettings(),
+		WebsiteInfoSettings = websiteInfoSettings.Value.FirstOrDefault(x => x.Id == language) ?? new WebsiteInfoSettings()
+	};
+	var currentType = PT.Base.CookieExtensions.Get("CurrentPrice");
+
+	var linkData = new Link();
+	if (ViewData["linkData"] != null)
+	{
+		linkData = (Link)ViewData["linkData"];
+	}
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- meta tags -->
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="assets/img/logo/favicon.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="../assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="../assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="../assets/css/style.css" />
+	<link rel="stylesheet" href="../assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" />
+	<link rel="stylesheet" href="../assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" />
+	<link rel="stylesheet" href="../assets/css/custom.css" />
+	<link href="../assets/lib/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
+	<script src="../assets/js/jquery.min.js"></script>
+	<partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
+</head>
+
+<body id="Body">
+	<div class="body">
+		<!-- header area -->
+		<section id="Header">
+			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeBannerTop", language = language, portalId = portalId })
+			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuPC", language = language, portalId = portalId })
+		</section>
+		<!-- header area end -->
+		@RenderBody()
+
+		<!-- footer area -->
+		<div class="footter hidden-login">
+			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeFooter", language = language, portalId = portalId })
+			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeFooterMenu", language = language, portalId = portalId })
+		</div>
+		<!-- footer area end -->
+		@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuMobile", language = language, portalId = portalId })
+		<!-- scroll-top -->
+		<button class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button>
+		<!-- scroll-top end -->
+		<!-- js -->
+		<script src="../assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js"></script>
+		<script src="../assets/js/bootstrap.js?v=5.5.9"></script>
+		<script src="../assets/js/owl.carousel.min.js?v=5.5.9"></script>
+		<script src="../assets/js/site.js?v=1.0"></script>
+		<script src="../assets/js/waypoints.min.js"></script>
+		<script src="../assets/js/jquery.counterup.min.js"></script>
+		<script>
+			$(document).ready(
+				function () {
+					let owl = $('#owlour');
+					owl.owlCarousel({
+						margin: 0,
+						autoplay: true,
+						autoplayTimeout: 5000,
+						nav: false,
+						loop: true,
+						dots: false,
+						dotsData: true,
+						pagination: false,
+						margin: 0,
+						responsive: {
+							0: { items: 1 },
+							600: { items: 2 },
+							1000: { items: 3 }
+						}
+					})
+					let owl2 = $('#manualsct');
+					owl2.owlCarousel({
+						margin: 0,
+						autoplay: true,
+						autoplayTimeout: 5000,
+						nav: false,
+						loop: true,
+						dots: false,
+						dotsData: true,
+						pagination: false,
+						responsive: {
+							0: { items: 1 },
+							600: { items: 3 },
+							1000: { items: 7 }
+						}
+					});
+					$('.counter').counterUp({
+						delay: 10,
+						time: 3000
+					});
+				}
+			);
+			 $(function () {
+				let star = '.star',
+					selected = '.selected';
+
+				$(star).on('click', function () {
+					$(selected).each(function () {
+						$(this).removeClass('selected');
+					});
+					$(this).addClass('selected');
+				});
+			});
+			 $(document).ready(function () {
+				$(window).scroll(function () {
+					if ($(this).scrollTop() > 200) {
+						$('#scroll-top').fadeIn();
+					} else {
+						$('#scroll-top').fadeOut();
+					}
+				});
+				$('#scroll-top').click(function () {
+					$('html, body').animate({ scrollTop: 0 }, 500);
+					return false;
+				});
+			});
+		</script>
+		<script src="../assets/lib/fancybox/dist/jquery.fancybox.min.js"></script>
+	</div>
+</body>
+</html>
+
+@Html.Raw(bindContentSettings.Value.Footer)
+@RenderSection("Scripts", required: false)

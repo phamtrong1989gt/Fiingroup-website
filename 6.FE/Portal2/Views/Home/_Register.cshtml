@@ -1,0 +1,57 @@
+﻿@{
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var listLanguage = PT.Shared.ListData.ListLanguage;
+    var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
+    var portalId = 2;
+}
+<section class="py-5 mb-5" id="DangKy">
+    <div class="container">
+        <h2 class="price-title mb-5">Đăng ký ngay để <span style="color: #0066CC;">nhận từ vấn</span></h2>
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+                <form>
+                    <div class="row">
+                        <div class="col-sm-6 mb-3">
+                            <label for="hoTen" class="form-label">Họ và tên <span class="error">*</span></label>
+                            <input type="text" class="form-control" id="hoTen" placeholder="Nhập họ và tên">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="soDienThoai" class="form-label">Số điện thoại <span class="error">*</span></label>
+                            <input type="text" class="form-control" id="soDienThoai" placeholder="Nhập số điện thoại">
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label for="email" class="form-label">Email <span class="error">*</span></label>
+                            <input type="email" class="form-control" id="email" placeholder="Nhập email">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="tenCongTy" class="form-label">Tên công ty <span class="error">*</span></label>
+                            <input type="text" class="form-control" id="tenCongTy" placeholder="Nhập công ty">
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="chucDanhCV" class="form-label">Chức danh công việc <span class="error">*</span></label>
+                            <input type="text" class="form-control" id="chucDanhCV" placeholder="Nhập chức danh công việc">
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label for="dichVuQT" class="form-label">Dịch vụ quan tâm <span class="error">*</span></label>
+                            <select class="form-select" id="dichVuQT" aria-label="Default select example">
+                                <option selected>Chọn dịch vụ quan tâm</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <label for="yeuCauCT" class="form-label">Yêu cầu chi tiết <span class="error">*</span></label>
+                            <textarea type="text" maxlength="200" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập yêu cầu chi tiết"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary col-sm-12 btn-yeucau">Gửi yêu cầu</button>
+                </form>
+            </div>
+            <div class="col-lg-6 col-sm-12 img">
+                @* <img src="Data/bg-dangky.jpg" alt="Đăng ký" /> *@
+                @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerRegister", language = language, portalId = portalId })
+            </div>
+        </div>
+    </div>
+</section>

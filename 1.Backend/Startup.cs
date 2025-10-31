@@ -1,74 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.ResponseCaching;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure;
 using PT.Infrastructure.Interfaces;
 using PT.Infrastructure.Repositories;
 using PT.Shared;
-using PT.UI.SignalR;
 using Serilog;
+using Serilog.Events;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace PT.UI
 {
+    // Lớp Startup cấu hình dịch vụ và middleware pipeline cho ứng dụng
     public class Startup
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            // Cấu hình Serilog để ghi log ra file theo mức độ
             Serilog.Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Error()
-               .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "logs/log-{Date}.txt"))
+               .MinimumLevel.Debug()
+               .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Information).WriteTo.File("logs/info_.log", rollingInterval: RollingInterval.Day))
+               .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Warning).WriteTo.File("logs/warning_.log", rollingInterval: RollingInterval.Day))
+               .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Error).WriteTo.File("logs/error_.log", rollingInterval: RollingInterval.Day))
+               .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Fatal).WriteTo.File("logs/fatal_.log", rollingInterval: RollingInterval.Day))
+               .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Debug).WriteTo.File("logs/debug_.log", rollingInterval: RollingInterval.Day))
                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // Cấu hình các dịch vụ sử dụng trong ứng dụng
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataProtection().SetApplicationName("rosedentalclinic");
-            // Thêm MemoryCache vào container DI
+            // DataProtection: dùng để mã hóa/giải mã dữ liệu (cookie, token, v.v.)
+            // SetApplicationName giúp chia sẻ key giữa các app cùng tên (nếu cần)
+            services.AddDataProtection().SetApplicationName("admin");
+
+            // Bộ nhớ cache trong bộ nhớ process (in-memory cache)
             services.AddMemoryCache();
+
+            // Đăng ký routing (cần thiết cho MVC/Controllers)
             services.AddRouting();
+
+            // Cấu hình chính sách cookie (ví dụ: SameSite, consent)
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                // Không yêu cầu consent để set cookie
                 options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            // Đăng ký DbContext với SQL Server (scoped theo request)
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
+
+            // Cấu hình Identity (user/role) sử dụng EF store
             services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
-            // Add Custom Claims processor
+
+            // Custom claims factory: thêm claim tuỳ chỉnh khi tạo ClaimsPrincipal
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsPrincipalFactory>();
+
+            // Bind các cấu hình từ appsettings.json vào POCOs để dễ sử dụng qua IOptions
             services.Configure<BaseSettings>(Configuration.GetSection("BaseSettings"));
             services.Configure<PaypalSettings>(Configuration.GetSection("PaypalSettings"));
             services.Configure<LogSettings>(Configuration.GetSection("LogSettings"));
@@ -81,67 +89,56 @@ namespace PT.UI
             services.Configure<List<AdvertisingHomepageSettings>>(Configuration.GetSection("AdvertisingHomepageSettings"));
             services.Configure<AuthorizeSettings>(Configuration.GetSection("AuthorizeSettings"));
             services.Configure<List<RedirectLinkSetting>>(Configuration.GetSection("RedirectLinkSettings"));
+
+            // Gọi lại AddMemoryCache nếu cần (không gây lỗi, nhưng có thể thừa)
             services.AddMemoryCache();
 
+            // Cấu hình chính sách mật khẩu, lockout, và yêu cầu email duy nhất
             services.Configure<IdentityOptions>(options =>
             {
-                // Password settings
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = false;
                 options.Password.RequiredUniqueChars = 6;
-
-                // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(120);
                 options.Lockout.MaxFailedAccessAttempts = 10;
                 options.Lockout.AllowedForNewUsers = true;
-
-                // User settings
                 options.User.RequireUniqueEmail = true;
             });
 
+            // Cấu hình cookie dùng cho Authentication
             services.ConfigureApplicationCookie(options =>
             {
-                // Cookie settings
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromHours(2);
-                options.LoginPath = "/Login"; // If the LoginPath is not set here, ASP.NET Core will default to /Account/Login
-                options.LogoutPath = "/Logout"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout
-                options.AccessDeniedPath = "/Admin/AccessDenied"; // If the AccessDeniedPath is not set here, ASP.NET Core will default to /Account/AccessDenied
-                options.SlidingExpiration = true;
-
+                options.LoginPath = "/Login"; // đường dẫn trang login
+                options.LogoutPath = "/Logout";
+                options.AccessDeniedPath = "/Admin/AccessDenied";
+                options.SlidingExpiration = true; // gia hạn cookie khi có hoạt động
             });
 
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //      .AddCookie(options =>
-            //      {
-            //          options.Cookie.HttpOnly = true;
-            //          options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //          options.Cookie.SameSite = SameSiteMode.Lax;
-            //      });
-
-            var supportedCultures = ListData.ListLanguage.Select(x => new CultureInfo(x.Id)).ToArray();
-            // Lấy cấu hình từ base setting xem mặc định ngôn ngữ là gì
+            // Lấy cấu hình BaseSettings để sử dụng cho localization provider
             var baseSettings = Configuration.GetSection("BaseSettings").Get<BaseSettings>();
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            // Cấu hình localization (culture, supported cultures, provider)
             services.Configure<RequestLocalizationOptions>(options =>
             {
+                // Tạo danh sách culture được hỗ trợ (ví dụ: "vi")
+                var supported = new List<CultureInfo> { new CultureInfo(baseSettings.DefaultLanguage) };
                 options.DefaultRequestCulture = new RequestCulture(baseSettings.DefaultLanguage);
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-            
+                options.SupportedCultures = supported;
+                options.SupportedUICultures = supported;
+
+                // UrlRequestCultureProvider: provider custom dùng segment URL để xác định culture
                 options.RequestCultureProviders.Insert(0, new UrlRequestCultureProvider(baseSettings.DefaultLanguage)
                 {
                     Options = options
                 });
             });
 
-            // Adding our UrlRequestCultureProvider as first object in the list
-            
-            // Ngôn ngữ End
-            // Add application services.
+            // Đăng ký các repository cho DI (scoped phù hợp với DbContext)
             services.AddScoped<IEmailSenderRepository, EmailSenderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleAreaRepository, RoleAreaRepository>();
@@ -156,19 +153,16 @@ namespace PT.UI
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ILinkRepository, LinkRepository>();
-
             services.AddScoped<IContentPageCategoryRepository, ContentPageCategoryRepository>();
             services.AddScoped<IContentPageRelatedRepository, ContentPageRelatedRepository>();
             services.AddScoped<IContentPageRepository, ContentPageRepository>();
             services.AddScoped<IContentPageTagRepository, ContentPageTagRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IPaymentTransactionRepository, PaymentTransactionRepository>();
-            
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IStaticInformationRepository, StaticInformationRepository>();
-
             services.AddScoped<IMenuItemRepository, MenuItemRepository>();
             services.AddScoped<IMenuRepository, MenuRepository>();
             services.AddScoped<IBannerRepository, BannerRepository>();
@@ -188,15 +182,16 @@ namespace PT.UI
             services.AddScoped<IFileDataRepository, FileDataRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
-            // Đăng ký DI cho repository tổng quát
+            services.AddScoped<IPortalRepository, PortalRepository>();
+            // Đăng ký repository tổng quát cho các entity kiểu chung
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
-            //Gzip
-            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
 
+            // Cấu hình nén response (Gzip)
+            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
             services.AddResponseCompression(options =>
             {
-                //options.EnableForHttps = true;
                 options.Providers.Add<GzipCompressionProvider>();
+                // Những mime type nên nén
                 options.MimeTypes = new string[]{
                         "text/plain",
                         "text/css",
@@ -210,70 +205,62 @@ namespace PT.UI
                         "application/atom+xml"
                     };
             });
-       
-            //Content/Admin/plugins/signalr
+
+            // Cấu hình giới hạn upload (multipart)
             services.Configure<FormOptions>(options =>
             {
-                options.MultipartBodyLengthLimit = 209_715_200;
+                options.MultipartBodyLengthLimit = 209_715_200; // ~200MB
             });
 
+            // Cache phân tán (dùng cho session nếu cần scale-out)
             services.AddDistributedMemoryCache();
 
+            // Cấu hình session
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.Name = ".PhamTrong.Session";
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // chỉ gửi cookie qua HTTPS
             });
 
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-            //services.AddHttpsRedirection(options =>
-            //{
-            //    options.HttpsPort = 443;
-            //    options.RedirectStatusCode = 301;
-            //});
-
+            // Cấu hình MVC và localization cho view + data annotations
+            // Note: EnableEndpointRouting = false dùng legacy routing (UseMvc)
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
-                //options.Filters.Add(new RequireHttpsAttribute
-                //{
-                //    Permanent = true
-                //});
-                //options.Filters.Add(new RequireWwwAttribute
-                //{
-                //    IgnoreLocalhost = true,
-                //    Permanent = true
-                //});
-             })
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = "Resources"; })
+            })
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // Cấu hình pipeline xử lý HTTP request
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-
+            // Kết nối Serilog với hệ thống logging của ASP.NET Core
             loggerFactory.AddSerilog();
+
+            // Xử lý lỗi: developer vs production
             if (env.IsDevelopment())
             {
+                // Trang lỗi chi tiết khi phát triển
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                // Handler chung cho production; chuyển hướng mã lỗi vào trang lỗi
                 app.UseExceptionHandler("/Home/Error");
                 app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
-                app.UseHsts();
+                app.UseHsts(); // HTTP Strict Transport Security
             }
 
+            // Lưu lại IServiceProvider toàn cục (sử dụng cẩn trọng: service locator anti-pattern)
             AppHttpContext.Services = app.ApplicationServices;
 
-            //Gzip
+            // Kích hoạt response compression đã cấu hình
             app.UseResponseCompression();
-            //app.UseHttpsRedirection();
 
+            // Phục vụ file tĩnh và thêm header cache-control để cache lâu trên client/CDN
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
@@ -282,21 +269,37 @@ namespace PT.UI
                 }
             });
 
-            var localizationOption = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
-            app.UseRequestLocalization(localizationOption.Value);
-
+            // Cookie policy middleware
             app.UseCookiePolicy();
+
+            // Session middleware: bắt buộc gọi trước khi dùng session trong controller
             app.UseSession();
+
+            // Thiết lập culture mặc định sớm để model binding/validation parse ngày/number theo culture này
+            var vi = new CultureInfo("vi");
+            vi.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy"; // định dạng ngày ngắn
+            vi.DateTimeFormat.DateSeparator = "/";
+            CultureInfo.DefaultThreadCurrentCulture = vi;
+            CultureInfo.DefaultThreadCurrentUICulture = vi;
+
+            // Lấy RequestLocalizationOptions đã cấu hình trong ConfigureServices và kích hoạt
+            var locOptions = app.ApplicationServices.GetRequiredService<Microsoft.Extensions.Options.IOptions<RequestLocalizationOptions>>().Value;
+            app.UseRequestLocalization(locOptions);
+
+            // Authentication/Authorization middleware: phải nằm trước routing/controller execution
             app.UseAuthentication();
+            app.UseAuthorization();
+
+            // Routing bằng legacy MVC (có support area)
             app.UseMvc(routes =>
             {
-                routes.Routes.Add(new CustomRouter(routes.DefaultHandler));
+                // Route cho area (Admin/...)
                 routes.MapRoute(
                 name: "areas",
-                template: "Admin/{area:exists}/{controller=Home}/{action=Index}/{id?}"
-            );
+                template: "Admin/{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-             routes.MapRoute(
+                // Route mặc định
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });

@@ -30,7 +30,7 @@
     <input asp-for="Language" type="hidden" />
     <div class="sumaryValidateForm" asp-validation-summary="All"></div>
     <div class="modal-header">
-        <h4 class="modal-title"><i class="material-icons">edit</i> CẬP NHẬT TRANG NỘI DUNG - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name</span></h4>
+        <h4 class="modal-title"><i class="material-icons">edit</i> CẬP NHẬT TRANG NỘI DUNG - <span class="text-warning">@Model.PortalName</span> - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name </span></h4>
     </div>
     <button title="Đóng cửa sổ" type="button" class="close btnclose-t" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -66,11 +66,16 @@
                             </div>
                             <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
                                 <div class="panel-body">
-                                    <div class="form-group">
-                                        <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
-                                        <div class="controls">
-                                            <input type="text" seo-page-name class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
+                                                <div class="controls">
+                                                    <input type="text" seo-page-name onkeydown="GenSlug()" onkeyup="GenSlug()" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
+                                                </div>
+                                            </div>
                                         </div>
+                                        <input type="hidden" asp-for="PortalId" />
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" asp-for="Summary"></label> <span asp-validation-for="Summary"></span>
@@ -92,7 +97,7 @@
                                 </div>
                             </div>
                         </div>
-                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type,LinkId = Model.LinkId })" />
+                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language = Model.Language, Type = Model.Type, LinkId = Model.LinkId, PortalId = Model.PortalId })" />
                         <partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
                     </div>
                 </div>

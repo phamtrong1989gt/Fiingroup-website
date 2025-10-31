@@ -24,13 +24,12 @@
 <form form-edit asp-action="Edit">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Language" />
-
     <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="CategoryIds" />
+    <input type="hidden" asp-for="CategoryIds" />  
     <input asp-for="Language" type="hidden" />
     <div class="sumaryValidateForm" asp-validation-summary="All"></div>
     <div class="modal-header">
-        <h4 class="modal-title"><i class="material-icons">edit</i> CẬP NHẬT TIN TỨC - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name</span></h4>
+        <h4 class="modal-title"><i class="material-icons">edit</i> CẬP NHẬT BÀI VIẾT - <span class="text-warning">@Model.PortalName</span> - <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name </span></h4>
     </div>
     <button title="Đóng cửa sổ" type="button" class="close btnclose-t" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -50,10 +49,14 @@
                             </div>
                             <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
                                 <div class="panel-body">
-                                    <div class="form-group">
-                                        <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
-                                        <div class="controls">
-                                            <input type="text" seo-page-name class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
+                                                <div class="controls">
+                                                    <input type="text" seo-page-name onkeydown="GenSlug()" onkeyup="GenSlug()" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -150,7 +153,7 @@
                                 </div>
                             </div>
                         </div>
-                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type,LinkId = Model.LinkId })" />
+                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = Model.Type, LinkId = Model.LinkId, PortalId = Model.PortalId })" />
                         <partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
                     </div>
                 </div>
@@ -162,11 +165,36 @@
                         <partial name="_FileUploadSingle" model="@fileUploadSingleBanner" />
                     </div>
                     <div class="labelinfo-t bg-info mb-10">
+                        CẤU HÌNH CỔNG
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Cổng chính</label> <strong class="text-danger">*</strong> <span asp-validation-for="PortalId"></span>
+                            <div class="controls">
+                                <input type="text"  class="form-control input-sm form-control-t" disabled value="@Model.PortalName">
+                                <input type="hidden" asp-for="PortalId" />
+                            </div>
+                        </div>
+                        @foreach (var item in Model.PortalShareds)
+                        {
+                            <div class="form-group">
+                                <input type="checkbox" id="PortalId_@item.Id" name="SharedPortalIds" value="@item.Id" class="filled-in chk-col-red" @(item.Selected ? "checked=\"checked\" disabled=\"disabled\"" : "") />
+                                <label for="PortalId_@item.Id">Chia sẻ cho <strong class="text-name">@item.Name</strong></label>
+                            </div>
+                        }
+                    </div>
+                    <div class="labelinfo-t bg-info mb-10">
                         DANH MỤC TIN
                     </div>
                     <div class="form-group">
-                        <div class="controls tree-category" id="using_json_2">
-                        </div>
+                        <label asp-for="CategoryId"></label>
+                        <select asp-for="CategoryId" asp-items="Model.CategorySelectList" class="input-sm form-control-t show-tick">
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Danh mục phụ</label>
+                        <div class="controls tree-category" id="using_json_2"></div>
                     </div>
                     <div class="labelinfo-t bg-info mb-10">
                         CẤU HÌNH HIỂN THỊ
@@ -211,9 +239,33 @@
     paseRelated(@Html.Raw(Model.RelatedString));
     paseReference(@Html.Raw(Model.ReferenceString));
     initRickText("@Url.Action("UploadImage", new { type = 1, id = Model.Id})");
-    getTreeCategory($("[form-edit] [name='Language']").val(),@Model.Id);
-      $("[name='DatePosted']").toDateTimePicker();
+    getTreeCategory($("[form-edit] [name='Language']").val(),@(Model.Id),@(Model.PortalId ?? 1));
+    $("[name='DatePosted']").toDateTimePicker();
     $("[name='Lastmod']").toDateTimePicker();
     initAutoComplate();
     initAutoComplate2();
+    setTimeout(function () {
+           var val = $(this).val();
+            updateTreeBySelect(val);
+    },500);
+         // when user changes the dropdown, update the tree
+        $(document).on('change', "[name='CategoryId']", function () {
+            var val = $(this).val();
+            updateTreeBySelect(val);
+        });
+
+        // initial sync: after tree created, apply current select value
+        // attempt multiple times until tree exists
+        (function waitForTreeAndSync(retry) {
+            retry = retry || 0;
+            var tree = $('#using_json_2').jstree(true);
+            if (tree) {
+                // small delay to ensure ready handlers executed
+                setTimeout(function () { updateTreeBySelect($("[name='CategoryId']").val()); }, 150);
+                return;
+            }
+            if (retry < 10) {
+                setTimeout(function () { waitForTreeAndSync(retry + 1); }, 200);
+            }
+        })();
 </script>

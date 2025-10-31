@@ -9,11 +9,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using PT.UI.Areas.Base.Controllers;
+using PT.BE.Areas.Base.Controllers;
 using PT.Shared;
 using PT.Base;
 
-namespace PT.UI.Areas.Setting.Controllers
+namespace PT.BE.Areas.Setting.Controllers
 {
     [Area("Base")]
     [AuthorizePermission("Index")]
@@ -232,7 +232,7 @@ namespace PT.UI.Areas.Setting.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    await UpdateSeoLink(use.ChangeSlug, dl.Type, dl.ObjectId, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, dl.Area, dl.Controller, dl.Acction);
+                    await UpdateSeoLink(use.ChangeSlug, dl.Type, dl.Type, dl.ObjectId, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, dl.Area, dl.Controller, dl.Acction);
                     await AddLog(new LogModel
                     {
                         ObjectId = dl.Id,

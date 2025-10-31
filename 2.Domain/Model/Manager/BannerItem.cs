@@ -10,6 +10,7 @@ namespace PT.Domain.Model
     {
         public int Id { get; set; }
         public int BannerId { get; set; }
+        // Content đã tồn tại trong domain model (đã có). Giữ nguyên.
         public string Name { get; set; }
         public string Href { get; set; }
         public string Target { get; set; }

@@ -105,7 +105,7 @@ namespace PT.Infrastructure.Repositories
                 }
                 return true;
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 return false;
             }

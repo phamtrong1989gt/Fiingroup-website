@@ -20,6 +20,7 @@ namespace PT.Infrastructure.Repositories
         
         public override async Task<BaseSearchModel<List<Category>>> SearchPagedListAsync(int page, int limit, Expression<Func<Category, bool>> predicate = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, Expression<Func<Category, Category>> select = null, params Expression<Func<Category, object>>[] includeProperties)
         {
+            var types = GetCategoryPrefixedTypes();
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
             {
@@ -42,14 +43,13 @@ namespace PT.Infrastructure.Repositories
                 }
             }
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.CategoryBlog || x.Type == CategoryType.CategoryService).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
                     Id = x.data.Id,
                     Banner = x.data.Banner,
                     Content = x.data.Content,
-                    Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
                     Status = x.data.Status,
@@ -76,6 +76,8 @@ namespace PT.Infrastructure.Repositories
            Expression<Func<Category, Category>> select = null,
            bool anyContent = false)
         {
+            var types = GetCategoryPrefixedTypes();
+
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
             {
@@ -97,14 +99,13 @@ namespace PT.Infrastructure.Repositories
             }
 
             query = query
-                .GroupJoin(_context.Links.Where(x=> (x.Type == CategoryType.CategoryProduct || x.Type == CategoryType.CategoryBlog || x.Type == CategoryType.CategoryService || x.Type == CategoryType.CategoryTour)).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x=> types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
                     Id = x.data.Id,
                     Banner = x.data.Banner,
                     Content = x.data.Content,
-                    Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
                     Status = x.data.Status,
@@ -113,7 +114,8 @@ namespace PT.Infrastructure.Repositories
                     Type = x.data.Type,
                     Summary = x.data.Summary,
                     Banner2 = x.data.Banner2,
-                    IsHome = x.data.IsHome
+                    IsHome = x.data.IsHome,
+                    PortalId = x.data.PortalId
                 }).AsQueryable();
             if (Take > 0)
             {
@@ -139,6 +141,8 @@ namespace PT.Infrastructure.Repositories
             Expression<Func<Category, Category>> select = null, 
             params Expression<Func<Category, object>>[] includeProperties)
         {
+            var types = GetCategoryPrefixedTypes();
+
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
             {
@@ -161,14 +165,13 @@ namespace PT.Infrastructure.Repositories
                 }
             }
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.CategoryBlog || x.Type == CategoryType.CategoryService).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
                     Id = x.data.Id,
                     Banner = x.data.Banner,
                     Content = x.data.Content,
-                    Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
                     Status = x.data.Status,
@@ -196,6 +199,8 @@ namespace PT.Infrastructure.Repositories
 
         public  async Task<List<Category>> FindByLinkReference(int skip = 0, int Take = 0, Expression<Func<Category, bool>> predicate = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, Expression<Func<Category, Category>> select = null)
         {
+            var types = GetCategoryPrefixedTypes();
+
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
             {
@@ -208,14 +213,13 @@ namespace PT.Infrastructure.Repositories
             }
           
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.CategoryBlog || x.Type == CategoryType.CategoryService || x.Type == CategoryType.CategoryTour).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
                     Id = x.data.Id,
                     Banner = x.data.Banner,
                     Content = x.data.Content,
-                    Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
                     Status = x.data.Status,
@@ -224,7 +228,8 @@ namespace PT.Infrastructure.Repositories
                     Type = x.data.Type,
                     Summary = x.data.Summary,
                     Banner2 = x.data.Banner2,
-                    IsHome = x.data.IsHome
+                    IsHome = x.data.IsHome,
+                    PortalId = x.data.PortalId
                 }).AsQueryable();
 
             if (Take > 0)
@@ -281,21 +286,21 @@ namespace PT.Infrastructure.Repositories
 
         public async override Task<Category> SingleOrDefaultAsync(bool asNoTracking = false, Expression<Func<Category, bool>> predicate = null, params Expression<Func<Category, object>>[] includeProperties)
         {
+            var types = GetCategoryPrefixedTypes();
+
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
             {
                 query = query.Where(predicate).AsQueryable();
             }
-
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.CategoryBlog || x.Type == CategoryType.CategoryService).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
                     Id = x.data.Id,
                     Banner = x.data.Banner,
                     Content = x.data.Content,
-                    Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
                     Status = x.data.Status,
@@ -304,7 +309,8 @@ namespace PT.Infrastructure.Repositories
                     Type = x.data.Type,
                     Summary = x.data.Summary,
                     Banner2 = x.data.Banner2,
-                    IsHome = x.data.IsHome
+                    IsHome = x.data.IsHome,
+                    PortalId = x.data.PortalId
                 }).AsQueryable();
            
             if (asNoTracking)
@@ -367,7 +373,7 @@ namespace PT.Infrastructure.Repositories
 
         public async Task<List<ContentPageCategoryTreeModel>> CurrentTreeContent(int contentPageId, IEnumerable<CategoryType> linkTypes)
         {
-            var types = linkTypes?.ToList() ?? new List<CategoryType> { CategoryType.CategoryBlog, CategoryType.CategoryService };
+            var types = GetCategoryPrefixedTypes();
 
             var query = await (
                 from cpc in _context.ContentPageCategorys
@@ -415,7 +421,6 @@ namespace PT.Infrastructure.Repositories
                     Link = y,
                     Id = x.data.Id,
                     Banner = x.data.Banner,
-                    Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
                     Status = x.data.Status,
@@ -463,7 +468,6 @@ namespace PT.Infrastructure.Repositories
                          Link = y,
                          Id = x.data.Id,
                          Banner = x.data.Banner,
-                         Delete = x.data.Delete,
                          Name = x.data.Name,
                          Language = x.data.Language,
                          Status = x.data.Status,
@@ -487,7 +491,6 @@ namespace PT.Infrastructure.Repositories
                     Link = y,
                     Id = x.data.Id,
                     Banner = x.data.Banner,
-                    Delete = x.data.Delete,
                     Name = x.data.Name,
                     Language = x.data.Language,
                     Status = x.data.Status,
@@ -535,6 +538,46 @@ namespace PT.Infrastructure.Repositories
                 }
             }
             return newList;
+        }
+
+        /// <summary>
+        /// Trả về danh sách các giá trị enum CategoryType có tiền tố "Category".
+        /// Tham số đầu vào không được sử dụng nhưng giữ để tương thích API.
+        /// </summary>
+        public List<CategoryType> GetCategoryPrefixedTypes()
+        {
+            return Enum.GetValues(typeof(CategoryType))
+                .Cast<CategoryType>()
+                .Where(t => t.ToString().StartsWith("Category", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        public CategoryType CategoryTypeCategoryToContentPage(CategoryType categoryType)
+        {
+            if(categoryType == CategoryType.CategoryBlog)
+            {
+                return CategoryType.Blog;
+            }
+            else if(categoryType == CategoryType.CategoryService)
+            {
+                return CategoryType.Service;
+            }
+            else if(categoryType == CategoryType.CategoryFlowSupportService)
+            {
+                return CategoryType.FlowSupportService;
+            }
+            else if(categoryType == CategoryType.CategoryTour)
+            {
+                return CategoryType.Tour;
+            }
+            else if(categoryType == CategoryType.CategoryProduct)
+            {
+                return CategoryType.Product;
+            }
+            else
+            {
+                return CategoryType.Page;
+            }
         }
     }
 }

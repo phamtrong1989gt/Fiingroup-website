@@ -145,11 +145,10 @@ namespace PT.Base
                 }
                 // Dùng cache để lưu Link object Link theo key là slug và language, nếu null thì query từ database
                 var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
-                var cacheKey = $"Link_{slug}_{language}";
-
+                var cacheKey = $"Link_{baseSettings.Value.PortalId}_{slug}_{language}";
                 if (!cache.TryGetValue(cacheKey, out Link link))
                 {
-                    link = await _iLinkRepository.SingleOrDefaultAsync(true, x=>x.Slug == slug && x.Language == language);
+                    link = await _iLinkRepository.SingleOrDefaultAsync(true, x=>x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
                 }
 
                 if (link != null)
@@ -160,6 +159,7 @@ namespace PT.Base
                     context.RouteData.Values["action"] = link.Acction;
                     context.RouteData.Values["language"] = link.Language;
                     context.RouteData.Values["id"] = link.ObjectId;
+                    context.RouteData.Values["portalId"] = baseSettings.Value.PortalId;
                     context.RouteData.Values["parrams"] = link.Parrams;
                     context.RouteData.Values["linkData"] = Newtonsoft.Json.JsonConvert.SerializeObject(link);
                 }

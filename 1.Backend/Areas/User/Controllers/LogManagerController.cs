@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Identity;
 using PT.Shared;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using PT.UI.Areas.Base.Controllers;
+using PT.BE.Areas.Base.Controllers;
 using PT.Base;
 
-namespace PT.UI.Areas.Log.Controllers
+namespace PT.BE.Areas.Log.Controllers
 {
     [Area("User")]
     [AuthorizePermission]

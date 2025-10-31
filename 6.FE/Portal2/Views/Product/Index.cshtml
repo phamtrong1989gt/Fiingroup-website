@@ -1,0 +1,21 @@
+﻿@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@using PT.Domain.Model;
+@using PT.Infrastructure.Interfaces;
+@using PT.Shared;
+@inject IViewLocalizer Localizer;
+@using System.Linq.Expressions;
+@using PT.UI.Models
+
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var portalId = 2;
+}
+
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "ProductSlider", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductCoGi", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductTaiSao", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductBaoCao", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductNenTang", language = language, portalId = portalId }))
+@Html.Partial("~/Views/Home/_Register.cshtml")

@@ -4,11 +4,8 @@
 @inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.BaseSettings> _baseSettings;
 @{
     Layout = "~/Views/Shared/_Admin.cshtml";
+    var portals = (SelectList)ViewData["PortalSelectList"];
 }
-<style>
- 
-</style>
-
 <div grid-index data-url="@Url.Action("index")">
     <div class="row head-v2">
         <div class="col-md-6">
@@ -27,85 +24,100 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div search-advance class="input-group mb-0">
-                <div class="input-group-addon input-group-addon-t">
-                    <span class="text-addonsearch">Tìm kiếm</span>
-                </div>
-                <div class="divcansearch">
-                    <input grid-input type="text" name="key" class="form-control inputsearch keywidth" placeholder="Tìm theo tên, nội dung">
-                    <div search-form class="searchExtensionForm">
-                        <a search-close title="Đóng" class="btnCloseSearchEx"><span aria-hidden="true">×</span></a>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group clearfix">
-                                    <label class="form-label">Danh mục</label>
-                                    <div class="controls">
-                                        <select grid-input data-live-search="true" name="categoryId" class="input-sm form-control-t show-tick">
-                                            <option selected value="">Tất cả</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group clearfix">
-                                    <label class="form-label">Tag</label>
-                                    <div class="controls">
-                                        <select data-size="10" data-live-search="true" grid-input name="tagId" asp-items="@((SelectList)ViewData["TagSelectList"])" class="input-sm form-control-t show-tick">
-                                            <option selected value="">Tất cả</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="form-label">Trạng thái</label>
-                                    <div class="controls">
-                                        <input @(Context.Request.Query["status"].ToString() == "" ? "checked='checked'" : "") grid-input type="radio" id="radio_0" value="" name="status" class="with-gap radio-col-blue" />
-                                        <label for="radio_0" class="labelradio">Tất cả</label>
-                                        &nbsp;
-                                        <input @(Context.Request.Query["status"].ToString() == "true" ? "checked='checked'" : "") grid-input type="radio" id="radio_2" value="true" name="status" class="with-gap radio-col-green" />
-                                        <label for="radio_2" class="labelradio">Sử dụng</label>
-                                        &nbsp;
-                                        <input @(Context.Request.Query["status"].ToString() == "false" ? "checked='checked'" : "") grid-input type="radio" id="radio_3" value="false" name="status" class="with-gap radio-col-red" />
-                                        <label for="radio_3" class="labelradio">Không sử dụng</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a search-menu class="searchExtension" title="Tìm kiếm nâng cao"><i class="material-icons">keyboard_arrow_down</i></a>
-                </div>
-                <span class="input-group-addon btn-group-addon">
-                    <button onclick="getDataGrid(1)" type="button" class="btn bg-indigo waves-effect btn-search"><i class="material-icons">search</i></button>
-                </span>
-                <div class="input-group-addon btn-group-addon pl-10">
-                    @if (_baseSettings.Value.MultipleLanguage)
-                    {
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">add</i><span>Thêm mới</span> <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu drcontrol">
-                                @foreach (var item in PT.Shared.ListData.ListLanguage)
-                                {
-                                    <li><a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
-                                }
-                            </ul>
-                        </div>
-                    }
-                    else
-                    {
-                        <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
-                            <i class="material-icons">add</i><span>Thêm mới</span>
-                        </a>
-                    }
-                </div>
-            </div>
         </div>
     </div>
     <div class="row clearfix">
+        <div class="col-md-12">
+            <div class="new-form-search">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Từ khóa</label>
+                            <div class="controls">
+                                <input class="form-control input-sm form-control-t" grid-input type="text" name="key">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Cổng</label>
+                            <div class="controls">
+                                <select grid-input name="portalId" asp-items="@portals" class="input-sm form-control-t show-tick">
+                                    <option value="">Tất cả</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group clearfix">
+                            <label class="form-label">Tag</label>
+                            <div class="controls">
+                                <select data-live-search="true" data-size="10" grid-input name="tagId" asp-items="@((SelectList)ViewData["TagSelectList"])" class="input-sm form-control-t show-tick">
+                                    <option selected value="">Tất cả</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group clearfix">
+                            <label class="form-label">Danh mục</label>
+                            <div class="controls">
+                                <select grid-input data-live-search="true" name="categoryId" class="input-sm form-control-t show-tick">
+                                    <option selected value="">Tất cả</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Trạng thái</label>
+                            <div class="controls">
+                                <select grid-input name="status" class="input-sm form-control-t show-tick">
+                                    <option value="">Tất cả</option>
+                                    <option value="true">Sử dụng</option>
+                                    <option value="false">Không sử dụng</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="can-button-search">
+                            <a onclick="getDataGrid(1)" class="btn bg-indigo dropdown-toggle">
+                                <i class="material-icons">search</i><span>Tìm kiếm</span>
+                            </a>
+                            @if (_baseSettings.Value.MultipleLanguage)
+                            {
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">add</i><span>Thêm mới</span> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu drcontrol">
+                                        @foreach (var portal in portals)
+                                        {
+                                            <li><strong class="label-portal">@portal.Text</strong></li>
+                                            @foreach (var item in PT.Shared.ListData.ListLanguage)
+                                            {
+                                                <li> <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-portalId="@portal.Value" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var portal in portals)
+                                {
+                                    <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
+                                        <i class="material-icons">add</i><span> Thêm @portal.Text</span>
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-md-12">
             <div grid-loading class="card card-t card-loading">
                 <div class="header bg-indigo">
@@ -150,6 +162,7 @@
                                     <th style="width:150px;">Tác giả</th>
                                     <th style="width:120px;">Ngày đăng</th>
                                     <partial name="_AdminTheadTableModule" />
+                                    <th style="width:200px;">Cổng</th>
                                     <th style="width:120px;">Hành động</th>
                                 </tr>
                             </thead>
@@ -321,8 +334,8 @@
             getDataGrid(_page, false);
         }
 
-        function getTreeCategory(language, id = 0) {
-            $.post("@Url.Action("TreeCategory")?language=" + language + "&id=" + id, function (data) {
+         function getTreeCategory(language, id = 0, portalId = 1) {
+              $.post("@Url.Action("TreeCategory")?language=" + language + "&id=" + id+ "&portalId=" + portalId, function (data) {
                 var $treeview = $('#using_json_2').jstree({
                     'check_callback': true,
                     'core': {
@@ -361,7 +374,8 @@
             })
         }
         function bindTag(language, setvalue = "") {
-            $.get("@Url.Action("SearchTag")?language=" + language, function (data) {
+         
+             $.get("@Url.Action("SearchTag")?language=" + language + "&portalId=" + ( $("#portalId").val() ?? ''), function (data) {
                     $("[name='tagId']").empty();
                     $("[name='tagId']").append("<option value=''>Tất cả</option>")
                     for (i = 0; i < data.length; i++) {
@@ -436,6 +450,54 @@
                 }
             });
         }
+
+              // Đồng bộ dropdown với jstree: chọn/check node, sau đó vô hiệu hóa node và các nút cha để tránh thay đổi
+        function updateTreeBySelect(selectedId) {
+            var tree = $('#using_json_2').jstree(true);
+            if (!tree) return;
+
+            // Bật (enable) tất cả các nút trước
+            try {
+                var all = tree.get_json('#', { flat: true }).map(function (n) { return n.id; });
+                // if (all && all.length) {
+                //     tree.enable_node(all);
+                //     tree.uncheck_node(all);
+                //     tree.deselect_all(true);
+                // }
+            } catch (e) { }
+
+            if (!selectedId || selectedId == '') {
+                // Không chọn gì -> giữ tree ở trạng thái enable và xóa CategoryIds
+                $("[name='CategoryIds']").val("");
+                return;
+            }
+
+            var nodeId = selectedId.toString();
+            var node = tree.get_node(nodeId);
+            if (!node) return;
+
+            // Lấy node được chọn và tất cả các nút cha (không bao gồm root '#')
+            var parents = (node.parents || []).filter(function (p) { return p !== '#'; });
+            var toSelect = [nodeId].concat(parents);
+
+            // Đánh dấu check node được chọn (để jstree tự động cascade lên các nút cha)
+            try {
+                tree.select_node(nodeId);
+            } catch (e) { }
+            // Vô hiệu hóa (disable) node và các nút cha để tránh thay đổi
+            toSelect.forEach(function (id) {
+                try { tree.disable_node(id); } catch (e) { }
+            });
+
+            // Cập nhật trườngẩ CategoryIds bằng các id đã được check
+            try {
+                var checked = tree.get_checked();
+                $("[name='CategoryIds']").val(checked.join(','));
+            } catch (e) {
+                $("[name='CategoryIds']").val(toSelect.join(','));
+            }
+        }
+
 
     </script>
 }

@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using PT.UI.Areas.Base.Controllers;
+using PT.BE.Areas.Base.Controllers;
 using PT.Base;
 
-namespace PT.UI.Areas.Setting.Controllers
+namespace PT.BE.Areas.Setting.Controllers
 {
     [Area("Manager")]
     [AuthorizePermission("Index", "AdvertisingBannerManager")]

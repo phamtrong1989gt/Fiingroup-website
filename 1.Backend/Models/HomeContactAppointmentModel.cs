@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static PT.Domain.Model.Contact;
 
-namespace PT.UI.Models
+namespace PT.BE.Models
 {
     public class HomeContactAppointmentModel
     {

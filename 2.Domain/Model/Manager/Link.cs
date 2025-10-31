@@ -52,6 +52,8 @@ namespace PT.Domain.Model
 
         public string Parrams { get; set; }
 
+        public int PortalId { get; set; }
+
         [NotMapped]
         public List<LinkReference> LinkReferences { get; set; }
     }

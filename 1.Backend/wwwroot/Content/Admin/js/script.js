@@ -1,5 +1,4 @@
-﻿
-function sleep(time) {
+﻿function sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
 
@@ -225,9 +224,9 @@ $.fn.initPopup = function (setting = {}) {
             $form.unbind();
             $form.data("validator", null);
             // Check document for changes
-            $.validator.unobtrusive.parse(document);
+            $.validator?.unobtrusive?.parse(document);
             // Re add validation with changes
-            $form.validate($form.data("unobtrusiveValidation").options);
+    $form?.validate($form.data("unobtrusiveValidation")?.options);
             $(myModal).modal('show');
         } catch (e) {
             console.log(e);
@@ -248,7 +247,15 @@ $.fn.toPopup = function () {
         }
         $(myModal).modal({ backdrop: 'static', keyboard: false });
         $(myModal + ">div>div.modal-content").html("<div class='modalLoadding'><i class='material-icons icon-spin'>data_usage</i><span>Đang xử lý...</span></div><div class='bind-data' style='display:none;'></div>");
-        $.get($(this).attr("href"), function (data) {
+        $.ajax({
+            url: $(this).attr("href"),
+            method: 'GET'
+        }).done(function (data, textStatus, jqXHR) {
+            // If status is not200 treat as error
+            if (jqXHR && jqXHR.status && jqXHR.status !==200) {
+                alertify.notify("Đã xảy ra lỗi khi tải nội dung. Mã lỗi: " + jqXHR.status, "danger",5);
+                return;
+            }
             try {
                 $(myModal + ">div>div.modal-content .bind-data").html(data);
                 var $form = $(myModal + " " + form);
@@ -257,10 +264,9 @@ $.fn.toPopup = function () {
                     $form.unbind();
                     $form.data("validator", null);
                     // Check document for changes
-                    $.validator.unobtrusive.parse(document);
+                    $.validator?.unobtrusive?.parse(document);
                     // Re add validation with changes
-                    $form.validate($form.data("unobtrusiveValidation").options);
-
+                    $form?.validate($form.data("unobtrusiveValidation")?.options);
                 } catch (e) {
                     console.log(e);
                 }
@@ -268,8 +274,12 @@ $.fn.toPopup = function () {
                 $(myModal + ">div>div.modal-content .modalLoadding").hide();
                 $(myModal + ">div>div.modal-content .bind-data").show();
             } catch (e) {
-
+                console.log(e);
+                alertify.notify("Đã xảy ra lỗi khi xử lý nội dung, vui lòng thử lại.", "danger",5);
             }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+            alertify.notify("Đã xảy ra lỗi khi tải nội dung. Vui lòng F5 và thử lại.", "danger",5);
         });
     });
 }
@@ -672,9 +682,9 @@ $.fn.toStaticForm = function (callback) {
                 $form.unbind();
                 $form.data("validator", null);
                 // Check document for changes
-                $.validator.unobtrusive.parse(document);
+                $.validator?.unobtrusive?.parse(document);
                 // Re add validation with changes
-                $form.validate($form.data("unobtrusiveValidation").options);
+                $form?.validate($form.data("unobtrusiveValidation")?.options);
                 $.AdminBSB.select.activate();
                 $loading.waitMe('hide');
                 if (callback != null) {
@@ -812,9 +822,9 @@ $.fn.toTab = function () {
                 $form.unbind();
                 $form.data("validator", null);
                 // Check document for changes
-                $.validator.unobtrusive.parse(document);
+                $.validator?.unobtrusive?.parse(document);
                 // Re add validation with changes
-                $form.validate($form.data("unobtrusiveValidation").options);
+        $form?.validate($form.data("unobtrusiveValidation")?.options);
 
             } catch (e) {
                 console.log(e);
@@ -951,8 +961,8 @@ $.fn.toEditGrid = function (callback) {
             try {
                 $form.unbind();
                 $form.data("validator", null);
-                $.validator.unobtrusive.parse(document);
-                $form.validate($form.data("unobtrusiveValidation").options);
+                $.validator?.unobtrusive?.parse(document);
+        $form?.validate($form.data("unobtrusiveValidation")?.options);
                 $.AdminBSB.select.activate();
                 $loading.waitMe('hide');
                 if (callback != null) {
@@ -1000,9 +1010,9 @@ $.fn.openPopup = function (setting) {
                     $form.unbind();
                     $form.data("validator", null);
                     // Check document for changes
-                    $.validator.unobtrusive.parse(document);
+                    $.validator?.unobtrusive?.parse(document);
                     // Re add validation with changes
-                    $form.validate($form.data("unobtrusiveValidation").options);
+            $form?.validate($form.data("unobtrusiveValidation")?.options);
                 } catch (e) {
                     console.log(e);
                 }
@@ -1063,10 +1073,10 @@ function ToSlug(strVN) {
     str = strVN.toLowerCase();
     // xóa dấu
     str = str.replace(/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/g, 'a');
-    str = str.replace(/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/g, 'e');
+    str = str.replace(/(è|é|ẹ|ẻ|ẽ|ê|ề|Ế|ệ|ể|ễ)/g, 'e');
     str = str.replace(/(ì|í|ị|ỉ|ĩ)/g, 'i');
     str = str.replace(/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/g, 'o');
-    str = str.replace(/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/g, 'u');
+    str = str.replace(/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ỗ)/g, 'u');
     str = str.replace(/(ỳ|ý|ỵ|ỷ|ỹ)/g, 'y');
     str = str.replace(/(đ)/g, 'd');
 
@@ -1610,7 +1620,6 @@ $.fn.toUploadFile = function (callbackUrl) {
     
     });
 }
-
 
 //Biến toàn cục
 var http_arr = new Array();

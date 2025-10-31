@@ -1,11 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0-windows7.0</TargetFramework>
+    <TargetFramework>net10.0-windows8.0</TargetFramework>
     <!--<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>-->
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
+	  <MvcRazorCompileOnBuild>false</MvcRazorCompileOnBuild>
+	  <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
   </PropertyGroup>
+
+	<!--<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<MvcRazorCompileOnBuild>false</MvcRazorCompileOnBuild>
+		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<MvcRazorCompileOnBuild>true</MvcRazorCompileOnBuild>
+		<MvcRazorCompileOnPublish>true</MvcRazorCompileOnPublish>
+	</PropertyGroup>-->
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>True</Optimize>
@@ -14,6 +27,7 @@
   <ItemGroup>
     <Compile Remove="1223\**" />
     <Compile Remove="logs\**" />
+    <Compile Remove="Views\Shared\Plugins\**" />
     <Compile Remove="wwwroot\Content\Home\color\**" />
     <Compile Remove="wwwroot\Content\Home\form\**" />
     <Compile Remove="wwwroot\Content\Home\icons\**" />
@@ -24,6 +38,7 @@
     <Compile Remove="wwwroot\wp-json\**" />
     <Content Remove="1223\**" />
     <Content Remove="logs\**" />
+    <Content Remove="Views\Shared\Plugins\**" />
     <Content Remove="wwwroot\Content\Home\color\**" />
     <Content Remove="wwwroot\Content\Home\form\**" />
     <Content Remove="wwwroot\Content\Home\icons\**" />
@@ -34,6 +49,7 @@
     <Content Remove="wwwroot\wp-json\**" />
     <EmbeddedResource Remove="1223\**" />
     <EmbeddedResource Remove="logs\**" />
+    <EmbeddedResource Remove="Views\Shared\Plugins\**" />
     <EmbeddedResource Remove="wwwroot\Content\Home\color\**" />
     <EmbeddedResource Remove="wwwroot\Content\Home\form\**" />
     <EmbeddedResource Remove="wwwroot\Content\Home\icons\**" />
@@ -44,6 +60,7 @@
     <EmbeddedResource Remove="wwwroot\wp-json\**" />
     <None Remove="1223\**" />
     <None Remove="logs\**" />
+    <None Remove="Views\Shared\Plugins\**" />
     <None Remove="wwwroot\Content\Home\color\**" />
     <None Remove="wwwroot\Content\Home\form\**" />
     <None Remove="wwwroot\Content\Home\icons\**" />
@@ -52,6 +69,10 @@
     <None Remove="wwwroot\wp-content\**" />
     <None Remove="wwwroot\wp-includes\**" />
     <None Remove="wwwroot\wp-json\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Areas\Manager\Views\BlogManager\Edit.cshtml~RF1bc2bf45.TMP" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,10 +92,6 @@
     <None Include="Areas\Manager\Views\AppointmentManager\Details.cshtml" />
     <None Include="Areas\Manager\Views\AppointmentManager\Index.cshtml" />
     <None Include="Areas\Manager\Views\AppointmentManager\IndexAjax.cshtml" />
-    <None Include="Areas\Manager\Views\ProductManager\Create.cshtml" />
-    <None Include="Areas\Manager\Views\ProductManager\Edit.cshtml" />
-    <None Include="Areas\Manager\Views\ProductManager\Index.cshtml" />
-    <None Include="Areas\Manager\Views\ProductManager\IndexAjax.cshtml" />
     <None Include="Areas\Manager\Views\CategoryManager\Create.cshtml" />
     <None Include="Areas\Manager\Views\CategoryManager\Edit.cshtml" />
     <None Include="Areas\Manager\Views\CategoryManager\Index.cshtml" />
@@ -128,14 +145,6 @@
     <None Include="Areas\Manager\Views\PhotoSlideManager\EditItem.cshtml" />
     <None Include="Areas\Manager\Views\PhotoSlideManager\Index.cshtml" />
     <None Include="Areas\Manager\Views\PhotoSlideManager\IndexAjax.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceCategoryManager\Create.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceCategoryManager\Edit.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceCategoryManager\Index.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceCategoryManager\Setting.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceManager\Create.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceManager\Edit.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceManager\Index.cshtml" />
-    <None Include="Areas\Manager\Views\ServiceManager\IndexAjax.cshtml" />
     <None Include="Areas\Manager\Views\StaticInformationManager\Create.cshtml" />
     <None Include="Areas\Manager\Views\StaticInformationManager\Edit.cshtml" />
     <None Include="Areas\Manager\Views\StaticInformationManager\Index.cshtml" />
@@ -180,12 +189,8 @@
     <None Include="Areas\User\Views\UserManager\IndexAjax.cshtml" />
     <None Include="Areas\User\Views\UserManager\TypeRole.cshtml" />
     <None Include="Views\Shared\404.cshtml" />
-    <None Include="Views\Shared\Error.cshtml" />
-    <None Include="Views\Shared\Plugins\_Coment.cshtml" />
-    <None Include="Views\Shared\Plugins\_Like.cshtml" />
     <None Include="Views\Shared\_Admin.cshtml" />
     <None Include="Views\Shared\_CookieConsentPartial.cshtml" />
-    <None Include="Views\Shared\_HomeHead.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_Login.cshtml" />
     <None Include="Views\Shared\_MenuAdmin.cshtml" />
@@ -1547,14 +1552,13 @@
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
-	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.1" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.9" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	  <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
-	  <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-	  <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+	  <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
+	  <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
 

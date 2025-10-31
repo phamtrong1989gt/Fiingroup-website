@@ -1,4 +1,5 @@
-﻿using PT.Domain.Seedwork;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PT.Domain.Seedwork;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +18,13 @@ namespace PT.Domain.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        // PortalId dùng để phân biệt dữ liệu giữa các website/portal
+        public int PortalId { get; set; }
+        // NotMapped nav property để hiển thị thông tin Portal trên giao diện quản trị
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public Portal Portal { get; set; }
+        // Content lưu lại HTML đã được xử lý để tránh phải sinh lại mỗi lần
+        public string Content { get; set; }
         public string ClassActive { get; set; }
         public string Template { get; set; }
         public bool Status { get; set; }
@@ -50,5 +58,9 @@ namespace PT.Domain.Model
         [Display(Name = "Mã")]
         [Required(ErrorMessage = "{0} không được để rỗng!")]
         public string Code { get; set; }
+        [Display(Name = "Cổng (Portal)")]
+        public int PortalId { get; set; }
+        public SelectList PortalSelectList { get; set; }
+        public string PortalName { get; set; }
     }
 }

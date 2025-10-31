@@ -15,7 +15,7 @@ using PT.Base;
 using System.IO;
 using System.Net.Http.Headers;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
     public class TourManagerController : Base.Controllers.BaseController
@@ -300,7 +300,7 @@ namespace PT.UI.Areas.Manager.Controllers
                     dl.Order = use.Order;
                     _iTourRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
-                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Tour, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "TourHome", "Details");
+                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Tour, CategoryType.Tour, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "TourHome", "Details");
                     await UpdateCategory(id, use.CategoryIds);
                     await _iTourRepository.CommitTransaction();
 
@@ -351,7 +351,7 @@ namespace PT.UI.Areas.Manager.Controllers
         public async Task<List<TreeRoleModel>> TreeCategory(int id, string language="vi")
         {
             var listCurent = await _iTourCategoryRepository.SearchAsync(true, 0, 0, x => x.TourId == id);
-            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => !x.Delete && x.Status && x.Type == CategoryType.CategoryTour && x.Language==language);
+            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x =>  x.Status && x.Type == CategoryType.CategoryTour && x.Language==language);
             var abc  = listCategory.Select(x => 
             new TreeRoleModel {
                 Id = x.Id.ToString(),
@@ -369,7 +369,7 @@ namespace PT.UI.Areas.Manager.Controllers
         [HttpGet, Authorize]
         public async Task<object> SearchCategory(string language = "vi")
         {
-            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Language == language && x.Status && !x.Delete && x.Type == CategoryType.CategoryTour);
+            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Language == language && x.Status  && x.Type == CategoryType.CategoryTour);
             return GenSelectCategory(listCategory, 0, 0);
         }
         [NonAction]

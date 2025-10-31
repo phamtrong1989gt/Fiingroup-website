@@ -26,6 +26,10 @@
                             <div class="input-group backgrouphost">
                                 <span class="input-group-addon addonurl ">
                                     @($"{Context.Request.Host}{ViewData["language"]}/")
+                                    @if(string.IsNullOrEmpty(Model.PrefixSlug))
+                                    {
+                                        @($"{Model.PrefixSlug}/")
+                                    }
                                 </span>
                                 @if (Model.Slug != "" && Model.Slug != null)
                                 {
@@ -56,6 +60,10 @@
                             <div class="input-group backgrouphost">
                                 <span class="input-group-addon addonurl ">
                                     @($"{Context.Request.Host}{ViewData["language"]}/")
+                                    @if (string.IsNullOrEmpty(Model.PrefixSlug))
+                                    {
+                                        @($"{Model.PrefixSlug}/")
+                                    }
                                 </span>
                                 <input type="text" seo-page-url placeholder="Là ký tự không dấu và ký tự đặc biêt, cách nhau bằng gạch ngang" class="form-control addonurlinput  input-sm form-control-t" asp-for="Slug">
                                 <span class="input-group-addon">
@@ -268,6 +276,10 @@
                 noCheck = true;
             }
             var textKey = $("#FocusKeywords").val().toLowerCase();
+            if(textKey == null || textKey == "")
+            {
+				textKey = "trongDZAFDASD";
+            }
             if (inputCheck == "[seo-page-url]") {
                 thisText = ToSlug(thisText);
                 textKey = ToSlug(textKey);

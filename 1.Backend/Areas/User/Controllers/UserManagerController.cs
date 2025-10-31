@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using static PT.Base.DataUserInfo;
 using PT.Base;
 
-namespace PT.UI.Areas.User.Controllers
+namespace PT.BE.Areas.User.Controllers
 {
     [Area("User")]
     public class UserManagerController : Base.Controllers.BaseController

@@ -4,11 +4,23 @@ namespace PT.Domain.Model
 {
     public enum CategoryType
     {
-        [Display(Name ="Danh mục tin tức")]
+        [Display(Name ="Tin bài")]
         CategoryBlog = 1,
 
-        [Display(Name = "Danh mục dịch vụ")]
+        [Display(Name = "Dịch vụ")]
         CategoryService = 8,
+
+        [Display(Name = "Hỗ trợ dòng chảy")]
+        CategoryFlowSupportService = 100,
+
+        [Display(Name = "Sự kiện")]
+        CategoryEvent = 110,
+
+        [Display(Name = "Ấn phẩm")]
+        CategoryPublications = 120,
+
+        [Display(Name = "Báo cáo")]
+        CategoryReport = 130,
 
         [Display(Name = "Tag")]
         Tag = 2,
@@ -49,10 +61,22 @@ namespace PT.Domain.Model
         [Display(Name = "Tour style")]
         TourStyle = 15,
 
-        [Display(Name = "Danh mục sản phẩm")]
+        [Display(Name = "Sản phẩm")]
         CategoryProduct = 16,
 
         [Display(Name = "Sản phẩm")]
         Product = 17,
+
+        [Display(Name = "Hỗ trợ dòng chảy")]
+        FlowSupportService = 101,
+
+        [Display(Name = "Sự kiện")]
+        Event = 111,
+
+        [Display(Name = "Ấn phẩm")]
+        Publications = 121,
+
+        [Display(Name = "Báo cáo")]
+        Report = 131,
     }
 }

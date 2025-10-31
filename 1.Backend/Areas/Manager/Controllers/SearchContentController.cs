@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using PT.Base;
 
-namespace PT.UI.Areas.Manager.Controllers
+namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
     public class SearchContentController : Base.Controllers.BaseController
@@ -60,9 +60,7 @@ namespace PT.UI.Areas.Manager.Controllers
             var data = await _iContentPageRepository.SearchPagedListAsync(
                 page ?? 1,
                 limit ?? 10,
-                    m => m.Content.Contains(key) && 
-                      
-                        !m.Delete,
+                    m => m.Content.Contains(key),
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {
                     Category = x.Category,
@@ -70,7 +68,6 @@ namespace PT.UI.Areas.Manager.Controllers
                     Author = x.Author,
                     Banner = x.Banner,
                     DatePosted = x.DatePosted,
-                    Delete = x.Delete,
                     Name = x.Name,
                     Language = x.Language,
                     Price = x.Price,
