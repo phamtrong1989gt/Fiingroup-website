@@ -52,3 +52,5 @@
 6.FE/Portal2/bin/Debug/net10.0-windows8.0/PT.Infrastructure.staticwebassets.runtime.json
 6.FE/Portal2/bin/Debug/net10.0-windows8.0/en/PT.UI.resources.dll
 /6.FE/Portal2/obj
+/6.FE/Portal2/bin
+/6.FE/Portal2/logs
