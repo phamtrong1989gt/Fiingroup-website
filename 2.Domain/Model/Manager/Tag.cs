@@ -85,6 +85,9 @@ namespace PT.Domain.Model
 
         [MaxLength(100)]
         public string Phone { get; set; }
+
+        public ECategoryType? CategoryType { get; set; }
+        public ESlugType? SlugType { get; set; }
     }
 
     public class Tag : IAggregateRoot
@@ -110,6 +113,9 @@ namespace PT.Domain.Model
 
         [NotMapped]
         public string FullPath { get; set; }
+
+        public ECategoryType? CategoryType { get; set; }
+        public ESlugType? SlugType { get; set; }
     }
     public class TagModel:SeoModel
     {
@@ -119,7 +125,7 @@ namespace PT.Domain.Model
         [StringLength(1000, ErrorMessage = "{0} từ {2} đến {1} ký tự!", MinimumLength = 1)]
         public string Name { get; set; }
         public string Banner { get; set; }
-        public CategoryType SlugType { get; set; } = CategoryType.Page;
+        public CategoryType SlugType { get; set; } = CategoryType.ContentPagePage;
         [Display(Name = "Nội dung")]
         public string Content { get; set; }
         public SelectList PortalSelectList { get; set; }

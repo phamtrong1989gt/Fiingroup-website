@@ -65,17 +65,18 @@
                                         <input type="hidden" asp-for="PortalId" />
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label class="form-label" asp-for="Type"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Type"></span>
+                                                <label class="form-label" asp-for="CategoryType"></label> <strong class="text-danger">*</strong> <span asp-validation-for="CategoryType"></span>
                                                 <div class="controls">
-                                                    <select data-live-search="true" asp-for="Type" class="input-sm form-control-t show-tick">
+                                                    <select required data-live-search="true" asp-for="CategoryType" class="input-sm form-control-t show-tick">
                                                         <option value="">Chọn</option>
-                                                        <option value="@PT.Domain.Model.CategoryType.CategoryBlog">@PT.Domain.Model.CategoryType.CategoryBlog.GetDisplayName()</option>
-                                                        <option value="@PT.Domain.Model.CategoryType.CategoryService">@PT.Domain.Model.CategoryType.CategoryService.GetDisplayName()</option>
-                                                        <option value="@PT.Domain.Model.CategoryType.CategoryProduct">@PT.Domain.Model.CategoryType.CategoryProduct.GetDisplayName()</option>
-                                                        <option value="@PT.Domain.Model.CategoryType.CategoryFlowSupportService">@PT.Domain.Model.CategoryType.CategoryFlowSupportService.GetDisplayName()</option>
-                                                        <option value="@PT.Domain.Model.CategoryType.CategoryEvent">@PT.Domain.Model.CategoryType.CategoryEvent.GetDisplayName()</option>
-                                                        <option value="@PT.Domain.Model.CategoryType.CategoryPublications">@PT.Domain.Model.CategoryType.CategoryPublications.GetDisplayName()</option>
-                                                        <option value="@PT.Domain.Model.CategoryType.CategoryReport">@PT.Domain.Model.CategoryType.CategoryReport.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.ECategoryType.ContentPage_Blog">@PT.Domain.Model.ECategoryType.ContentPage_Blog.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.ECategoryType.ContentPage_Service">@PT.Domain.Model.ECategoryType.ContentPage_Service.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.ECategoryType.ContentPage_FlowSupportService">@PT.Domain.Model.ECategoryType.ContentPage_FlowSupportService.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.ECategoryType.ContentPage_Event">@PT.Domain.Model.ECategoryType.ContentPage_Event.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.ECategoryType.ContentPage_Publications">@PT.Domain.Model.ECategoryType.ContentPage_Publications.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.ECategoryType.ContentPage_Report">@PT.Domain.Model.ECategoryType.ContentPage_Report.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.ECategoryType.ContentPage_Product">@PT.Domain.Model.ECategoryType.ContentPage_Product.GetDisplayName()</option>
+                                                        <option value="@PT.Domain.Model.ECategoryType.ContentPage_FAQ">@PT.Domain.Model.ECategoryType.ContentPage_FAQ.GetDisplayName()</option>
                                                     </select>
                                                 </div>
                                             </div>

@@ -179,7 +179,6 @@ namespace PT.UI
             services.AddScoped<ITourDayGalleryRepository, TourDayGalleryRepository>();
             services.AddScoped<ITourTypeRepository, TourTypeRepository>();
             services.AddScoped<IFileDataRepository, FileDataRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
             // Đăng ký DI cho repository tổng quát
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));

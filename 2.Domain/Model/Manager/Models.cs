@@ -2,6 +2,42 @@
 
 namespace PT.Domain.Model
 {
+    // Quy định các bảng để biết type nào query qua bảng nào
+    public enum ESlugType: int
+    {
+        Category = 1,
+        Tag = 2,
+        ContentPage = 3,
+        Static = 10,
+        Employee = 11,
+        ImageGallery = 12,
+        Tour = 13,
+        TourType = 14,
+        FAQ = 15
+    }
+    // Qiy định type của category để khi vào các category biết được là loại gì để hiển thị các input tương ứng
+    public enum ECategoryType: int
+    {
+        [Display(Name = "Tin bài")]
+        ContentPage_Blog = 100,
+        [Display(Name = "Dịch vụ")]
+        ContentPage_Service = 101,
+        [Display(Name = "Hỗ trợ dòng chảy")]
+        ContentPage_FlowSupportService = 102,
+        [Display(Name = "Sự kiện")]
+        ContentPage_Event = 103,
+        [Display(Name = "Ấn phẩm")]
+        ContentPage_Publications = 104,
+        [Display(Name = "Báo cáo")]
+        ContentPage_Report = 104,
+        [Display(Name = "Sản phẩm")]
+        ContentPage_Product = 105,
+        [Display(Name = "Trang nội dung")]
+        ContentPage_Page = 106,
+        [Display(Name = "Câu hỏi thường gặp")]
+        ContentPage_FAQ = 107,
+    }
+
     public enum CategoryType
     {
         [Display(Name ="Tin bài")]
@@ -22,61 +58,19 @@ namespace PT.Domain.Model
         [Display(Name = "Báo cáo")]
         CategoryReport = 130,
 
-        [Display(Name = "Tag")]
-        Tag = 2,
-
-        [Display(Name = "Tin tức")]
-        Blog = 3,
-
-        [Display(Name = "Dịch vụ")]
-        Service = 4,
-
-        [Display(Name = "Trang nội dung")]
-        Page = 5,
-
-        [Display(Name = "Câu hỏi thường gặp")]
-        FAQ = 6,
-
-        [Display(Name = "Nhân viên")]
-        Employee = 7,
-
-        [Display(Name = "Thư viên ảnh")]
-        ImageGallery = 9,
-
-        [Display(Name = "Trang cố định")]
-        Static = 10,
-
-        [Display(Name = "Thông tin khuyến mãi")]
-        PromotionInformation = 12,
-
-        [Display(Name = "Danh mục Tour")]
-        CategoryTour = 11,
-
-        [Display(Name = "Tour")]
-        Tour = 13,
-
-        [Display(Name = "Tour type")]
-        TourType = 14,
-
-        [Display(Name = "Tour style")]
-        TourStyle = 15,
-
         [Display(Name = "Sản phẩm")]
         CategoryProduct = 16,
 
-        [Display(Name = "Sản phẩm")]
-        Product = 17,
+        [Display(Name = "Tag")]
+        Tag = 2,
 
-        [Display(Name = "Hỗ trợ dòng chảy")]
-        FlowSupportService = 101,
+        [Display(Name = "Trang tin")]
+        ContentPageBlog = 3,
+       
+        [Display(Name = "Trang nội dung")]
+        ContentPagePage = 5,
 
-        [Display(Name = "Sự kiện")]
-        Event = 111,
-
-        [Display(Name = "Ấn phẩm")]
-        Publications = 121,
-
-        [Display(Name = "Báo cáo")]
-        Report = 131,
+        [Display(Name = "Trang cố định")]
+        Static = 10
     }
 }

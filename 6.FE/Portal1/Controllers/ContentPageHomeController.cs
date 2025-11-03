@@ -39,64 +39,20 @@ namespace PT.UI.Controllers
                 return View("_Home404");
             }
             dl.Tags = await _iContentPageTagRepository.GetTag(0, 0, id, x => x.Status);
-            switch(dl.Type)
+            switch(dl.CategoryType)
             {
-                case CategoryType.Blog:
+                case ECategoryType.ContentPage_Blog:
                     viewName = "Blog";
                     break;
-                case CategoryType.Page:
-                    if(dl.Id== 3220 || dl.Id== 3221)
-                    {
-                        viewName = "TicketPrice";
-                    }
-                    else
-                    {
-                        viewName = "Page";
-                    }
-                   
-                    break;
-                case CategoryType.PromotionInformation:
-                    viewName = "PromotionInformation";
-                    break;
-                case CategoryType.FAQ:
-                    viewName = "FAQDetail";
-                    break;
-                case Domain.Model.CategoryType.Service:
-                    viewName = "Service";
-                    dl.ServiceCategorys = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status  && x.Type == CategoryType.CategoryService && x.Language==dl.Language);
-                    foreach (var item in dl.ServiceCategorys.Where(x=>x.ParentId != 0))
-                    {
-                        item.ContentPageCategory = await _iContentPageRepository.SearchAdvanceAsync(CategoryType.Service, 0, 0, item.Id, null, x => x.Status  && x.Type == CategoryType.Service, x => x.OrderByDescending(m => m.DatePosted), x => new ContentPage
-                        {
-                            Category = x.Category,
-                            Id = x.Id,
-                            Author = x.Author,
-                            Banner = x.Banner,
-                            DatePosted = x.DatePosted,
-                            Name = x.Name,
-                            Language = x.Language,
-                            Price = x.Price,
-                            Serice = x.Serice,
-                            ServiceId = x.ServiceId,
-                            Status = x.Status,
-                            Summary = x.Summary,
-                            Tags = x.Tags,
-                            Type = x.Type,
-                            Link = x.Link,
-                            IsHome = x.IsHome
-                        });
-                    }
+                case ECategoryType.ContentPage_Page:
+                    viewName = "Page";
                     break;
             }
 
             return View(viewName, dl);
         }
-
-     
         public async Task<IActionResult> FAQ(string language, int? c, int? page,string k, string linkData)
         {
-            
-
             var objectLink = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             objectLink.Title = string.IsNullOrEmpty(objectLink.Title) ? objectLink.Name : objectLink.Title;
             objectLink.Title = $"{ objectLink.Title }{ ((page == null) ? "" : (language == "vi" ? $" - trang {page}" : $" - page {page}"))}";
@@ -110,7 +66,7 @@ namespace PT.UI.Controllers
                 c,
                 null,
                 m => (m.Name.Contains(k) || k == null || m.Content.Contains(k) || m.Summary.Contains(k)) 
-                && m.Type == CategoryType.FAQ 
+                && m.CategoryType == ECategoryType.ContentPage_FAQ
                 && (m.Language == language) && m.Status, x=>x.OrderByDescending(m=>m.DatePosted), x => new ContentPage
                 {
                     Category = x.Category,
@@ -128,7 +84,9 @@ namespace PT.UI.Controllers
                     Tags = x.Tags,
                     Type = x.Type,
                     Link = x.Link,
-                    IsHome = x.IsHome
+                    IsHome = x.IsHome,
+                    CategoryType = x.CategoryType,
+                    SlugType = x.SlugType
                 });
 
             int totalPage = (data.TotalRows % data.Limit > 0) ? (data.TotalRows / data.Limit + 1) : (data.TotalRows / data.Limit);

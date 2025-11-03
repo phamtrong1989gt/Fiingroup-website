@@ -55,7 +55,7 @@ namespace PT.Infrastructure.Repositories
             }
 
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.Tour).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.Tour && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Tour
                 {
                     Link = y,
@@ -144,7 +144,7 @@ namespace PT.Infrastructure.Repositories
             }
 
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.Tour).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.Tour && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Tour
                 {
                     Link = y,
@@ -275,7 +275,7 @@ namespace PT.Infrastructure.Repositories
             }
 
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.Tour).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.Tour && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Tour
                 {
                     Link = y,

@@ -34,7 +34,7 @@ namespace PT.Infrastructure.Repositories
                 query = query.Skip(skip < 0 ? 0 : skip).Take(Take).AsQueryable();
             }
             query = query
-               .GroupJoin(_context.Links.Where(x => (x.Type == CategoryType.Blog || x.Type == CategoryType.FAQ || x.Type == CategoryType.Service || x.Type == CategoryType.Page)).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+               .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
                {
                    Link = y,

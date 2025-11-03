@@ -30,7 +30,7 @@ namespace PT.Infrastructure.Repositories
 
             query = _context.Tags
                 .Where(x => _context.ContentPageTags.Any(m => m.TagId == x.Id && m.ContentPageId== pageContentId))
-                .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.Tag).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { tag = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.Tag && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { tag = x, links = y })
                          .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Tag
                          {
                              Link = y,

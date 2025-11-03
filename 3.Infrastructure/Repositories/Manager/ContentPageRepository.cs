@@ -134,7 +134,7 @@ namespace PT.Infrastructure.Repositories
                 await _context.ContentPages.AddAsync(newContent);
                 await _context.SaveChangesAsync(); // get newContent.Id
                 // Try to get the parent's Link (on parent portal)
-                var parentLink = await _context.Links.AsNoTracking().FirstOrDefaultAsync(x => x.ObjectId == parentContentPageId && x.PortalId == parrentPortalId && x.Type == parentContentPage.Type);
+                var parentLink = await _context.Links.AsNoTracking().FirstOrDefaultAsync(x => x.ObjectId == parentContentPageId && x.PortalId == parrentPortalId && x.Type == parentContentPage.SlugType);
                 // Clone Link from parent (if exists) to the new content on target portal
                 if (parentLink != null)
                 {
@@ -223,7 +223,7 @@ namespace PT.Infrastructure.Repositories
             query = query
                .GroupJoin(_context.Categorys.AsQueryable(), x => x.CategoryId, y => y.Id, (x, y) => new { data = x, categorys = y })
                .SelectMany(x => x.categorys.DefaultIfEmpty(),(x,y)=> new  { x.data, category = y })
-               .GroupJoin(_context.Links.Where(x => x.Type == CategoryType.FAQ).AsQueryable(), x => x.data.Id, y => y.ObjectId, (x, y) => new { x.data, x.category, links = y })
+               .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.data.Id, y => y.ObjectId, (x, y) => new { x.data, x.category, links = y })
                .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
                {
                    Category = x.category,
@@ -317,7 +317,7 @@ namespace PT.Infrastructure.Repositories
                 }
             }
             query = query
-                .GroupJoin(_context.Links.Where(x=>(x.Type == CategoryType.Blog || x.Type == CategoryType.FAQ || x.Type == CategoryType.Service || x.Type == CategoryType.Page || x.Type == CategoryType.PromotionInformation)).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x=> x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage {
                     Link = y,
                     Id=x.data.Id,
@@ -399,14 +399,6 @@ namespace PT.Infrastructure.Repositories
             {
                 query = query.Where(x => _context.ContentPageTags.Any(m => m.ContentPageId == x.Id && m.TagId == tagId)).AsQueryable();
             }
-            if (categoryId != null && type !=CategoryType.FAQ)
-            {
-                query = query.Where(x => _context.ContentPageCategorys.Any(m => m.ContentPageId == x.Id && m.CategoryId == categoryId)).AsQueryable();
-            }
-            else if(type == CategoryType.FAQ)
-            {
-                query = query.Where(x=>x.CategoryId==categoryId || categoryId==null);
-            }
             if (orderBy != null)
             {
                 query = orderBy(query).AsQueryable();
@@ -417,7 +409,7 @@ namespace PT.Infrastructure.Repositories
             }
           
             query = query
-                .GroupJoin(_context.Links.Where(x => (x.Type == CategoryType.Blog || x.Type == CategoryType.FAQ || x.Type == CategoryType.Service || x.Type == CategoryType.Page || x.Type == CategoryType.PromotionInformation)).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
                 {
                     Link = y,
