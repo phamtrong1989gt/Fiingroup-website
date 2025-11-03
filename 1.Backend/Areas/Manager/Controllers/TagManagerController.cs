@@ -118,7 +118,7 @@ namespace PT.BE.Areas.Manager.Controllers
             var model = new TagModel
             {
                 Language = language,
-                Type = CategoryType.Tag
+                SlugType = CategoryType.Tag
             };
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
@@ -161,13 +161,14 @@ namespace PT.BE.Areas.Manager.Controllers
                         Content = model.Content,
                         Status = model.Status,
                         Language = model.Language,
-                        PortalId = model.PortalId ?? 0
+                        PortalId = model.PortalId ?? 0,
+                        SlugType = ESlugType.Tag
                     };
                     await _tagRepository.AddAsync(tag);
                     await _tagRepository.CommitAsync();
 
-                    await AddSeoLink(CategoryType.Tag, tag.Language, tag.Id, MapModel<SeoModel>.Go(model), tag.Name, "", "TagHome", "Details", tag.PortalId);
-                    await UpdateFileData(tag.Id, CategoryType.Tag, altId);
+                    await CreateLinkAsync(ESlugType.Tag, tag.Language, tag.Id, MapModel<SeoModel>.Go(model), tag.Name, "", "TagHome", "Details", tag.PortalId);
+                    await UpdateFileData(tag.Id, ESlugType.Tag, altId);
                     await AddLog(new LogModel
                     {
                         ObjectId = tag.Id,
@@ -217,7 +218,7 @@ namespace PT.BE.Areas.Manager.Controllers
             }
             var model = MapModel<TagModel>.Go(tag);
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{tag.Language}" : "";
-            var link = await _linkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == id && x.Type == CategoryType.Tag);
+            var link = await _linkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == id && x.Type == ESlugType.Tag);
             if (link != null)
             {
                 model.Changefreq = link.Changefreq;
@@ -294,7 +295,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     _tagRepository.Update(tag);
                     await _tagRepository.CommitAsync();
 
-                    await UpdateSeoLink(model.ChangeSlug, CategoryType.Tag, CategoryType.Tag, tag.Id, tag.Language, MapModel<SeoModel>.Go(model), tag.Name, "", "TagHome", "Details");
+                    await UpdateLinkAsync(model.ChangeSlug, ESlugType.Tag, tag.Id, tag.Language, MapModel<SeoModel>.Go(model), tag.Name, "", "TagHome", "Details");
 
                     await AddLog(new LogModel
                     {
@@ -356,8 +357,8 @@ namespace PT.BE.Areas.Manager.Controllers
                 // Xóa hết bảng liên quan
                 _iContentPageTagRepository.DeleteWhere(x=>x.TagId == id);
                 await _iContentPageTagRepository.CommitAsync();
-                await DeleteSeoLink(CategoryType.Tag, tag.Id);
-                await RemoveFileData(id, CategoryType.Tag);
+                await DeleteSeoLink(ESlugType.Tag, tag.Id);
+                await RemoveFileData(id, tag.SlugType ?? ESlugType.Tag);
                 await AddLog(new LogModel
                 {
                     ObjectId = tag.Id,
@@ -448,7 +449,7 @@ namespace PT.BE.Areas.Manager.Controllers
                             await file.CopyToAsync(stream);
                         }
 
-                        await AddFileData(id, pathServer, CategoryType.Tag, altId);
+                        await AddFileData(id, pathServer, ESlugType.Tag, altId);
 
                         if (type == 1)
                         {

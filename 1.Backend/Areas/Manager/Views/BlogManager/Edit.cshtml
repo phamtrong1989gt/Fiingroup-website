@@ -244,28 +244,28 @@
     $("[name='Lastmod']").toDateTimePicker();
     initAutoComplate();
     initAutoComplate2();
-    setTimeout(function () {
-           var val = $(this).val();
-            updateTreeBySelect(val);
-    },500);
+    // setTimeout(function () {
+    //        var val = $(this).val();
+    //         updateTreeBySelect(val);
+    // },500);
          // when user changes the dropdown, update the tree
-        $(document).on('change', "[name='CategoryId']", function () {
+       $(document).on('change', "[name='CategoryId']", function () {
             var val = $(this).val();
             updateTreeBySelect(val);
         });
 
         // initial sync: after tree created, apply current select value
         // attempt multiple times until tree exists
-        (function waitForTreeAndSync(retry) {
-            retry = retry || 0;
-            var tree = $('#using_json_2').jstree(true);
-            if (tree) {
-                // small delay to ensure ready handlers executed
-                setTimeout(function () { updateTreeBySelect($("[name='CategoryId']").val()); }, 150);
-                return;
-            }
-            if (retry < 10) {
-                setTimeout(function () { waitForTreeAndSync(retry + 1); }, 200);
-            }
-        })();
+        // (function waitForTreeAndSync(retry) {
+        //     retry = retry || 0;
+        //     var tree = $('#using_json_2').jstree(true);
+        //     if (tree) {
+        //         // small delay to ensure ready handlers executed
+        //         setTimeout(function () { updateTreeBySelect($("[name='CategoryId']").val()); }, 150);
+        //         return;
+        //     }
+        //     if (retry < 10) {
+        //         setTimeout(function () { waitForTreeAndSync(retry + 1); }, 200);
+        //     }
+        // })();
 </script>

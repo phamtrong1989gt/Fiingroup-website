@@ -557,7 +557,6 @@ namespace PT.BE.Areas.Manager.Controllers
                         Class = use.Class,
                         Icon = use.Icon,
                         Target = use.Target,
-                        CategoryType = use.CategoryType ?? CategoryType.Tour,
                         IsLinkLocal = use.IsLinkLocal,
                         Language = use.Language,
                         LinkId = use.LinkId
@@ -903,7 +902,7 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 return new List<SelectListItem>();
             }
-            return (await _iLinkRepository.SearchAsync(true, 0, 20, x => (x.Name.ToLower() == q.ToLower() || x.Name.ToLower().Contains(q.ToLower()) || q == null) && (x.Language == language || language == null) && (x.Type == categoryType || categoryType == null) && x.Status, x => x.OrderBy(y => y.Name),
+            return (await _iLinkRepository.SearchAsync(true, 0, 20, x => (x.Name.ToLower() == q.ToLower() || x.Name.ToLower().Contains(q.ToLower()) || q == null) && (x.Language == language || language == null) && x.Status, x => x.OrderBy(y => y.Name),
                 x => new Link { Id = x.Id, Name = x.Name, Status = x.Status, Type = x.Type, Language = x.Language  })).Select(x => new SelectListItem { Text = $"({x.Language}|{x.Type.GetDisplayName()}) / {x.Name}", Value = x.Id.ToString() }).ToList();
         }
     }

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using PT.Infrastructure.Repositories;
 using PT.Shared;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.BE.Areas.Manager.Controllers
 {
@@ -35,11 +33,7 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly IWebHostEnvironment _iWebHostEnvironment;
         private readonly IFileRepository _iFileRepository;
         private readonly IPortalRepository _iPortalRepository;
-        private readonly List<CategoryType> DisabledTypes = new List<CategoryType>
-        {
-            CategoryType.Page
-        };
-
+  
         public BlogManagerController(
             ILogger<BlogManagerController> logger,
             IOptions<BaseSettings> baseSettings,
@@ -88,6 +82,7 @@ namespace PT.BE.Areas.Manager.Controllers
         [AuthorizePermission]
         public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language = "vi", string ordertype = "asc", string orderby = "name")
         {
+            var allows = _iCategoryRepository.GetCategoryPrefixedTypes().Where(x=> x != ECategoryType.ContentPage_Page);
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
             var data = await _iContentPageRepository.SearchPagedListAsync(
@@ -95,7 +90,8 @@ namespace PT.BE.Areas.Manager.Controllers
                 limit ?? 10,
                 categoryId,
                 tagId,
-                m => (m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key)) && !DisabledTypes.Contains(m.Type) &&
+                m => (m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key)) 
+                     && (m.CategoryType != null && allows.Contains(m.CategoryType ?? ECategoryType.ContentPage_Blog)) &&
                     (m.Language == language) &&
                     (m.Status == status || status == null) &&
                     (m.PortalId == portalId || portalId  == null) 
@@ -166,7 +162,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     if(categoryMain == null)
                     {
                         return new ResponseModel() { Output = 0, Message = "Danh mục chính không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
-                    }    
+                    }
 
                     var data = new ContentPage
                     {
@@ -175,23 +171,23 @@ namespace PT.BE.Areas.Manager.Controllers
                         Content = use.Content,
                         Status = use.Status,
                         Language = use.Language,
-                        Type = CategoryType.Blog,
                         Summary = use.Summary,
                         DatePosted = use.DatePosted,
                         Author = use.Author,
                         PortalId = use.PortalId ?? 1,
-                        CategoryId = use.CategoryId
+                        CategoryId = use.CategoryId,
+                        SlugType = ESlugType.ContentPage,
+                        CategoryType = categoryMain.CategoryType
                     };
-                    data.Type = _iCategoryRepository.CategoryTypeCategoryToContentPage(categoryMain.Type);
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
 
-                    await AddSeoLink(CategoryType.Blog, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPageHome", "Details");
+                    await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPageHome", "Details");
                     await UpdateCategory(data.Id, categoryIds, data.CategoryId);
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateRelated(data.Id, use.ContentPageRelatedIds);
                     await UpdateReference(data.Id, use.ContentPageReferenceIds);
-                    await UpdateFileData(data.Id, CategoryType.Blog, altId);
+                    await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
                     await _iContentPageRepository.CommitTransaction();
 
                     await AddLog(new LogModel
@@ -226,7 +222,7 @@ namespace PT.BE.Areas.Manager.Controllers
             }
             var model = MapModel<BlogModel>.Go(dl);
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{dl.Language}" : "";
-            var ktLink = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == id && x.Type == CategoryType.Blog);
+            var ktLink = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == id && x.Type == ESlugType.ContentPage);
             if (ktLink != null)
             {
                 model.Changefreq = ktLink.Changefreq;
@@ -304,9 +300,9 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Author = use.Author;
                     dl.PortalId = use.PortalId ?? 1;
 
-                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Blog, CategoryType.Blog, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "ContentPageHome", "Details");
+                    await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage,  dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "ContentPageHome", "Details");
 
-                    dl.Type = _iCategoryRepository.CategoryTypeCategoryToContentPage(categoryMain.Type);
+                    dl.CategoryType = categoryMain.CategoryType;
 
                     _iContentPageRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
@@ -340,7 +336,6 @@ namespace PT.BE.Areas.Manager.Controllers
         }
         #endregion
 
-     
         private async Task UpdateRelated(int blogId, string strData)
         {
             var list = new List<int>();
@@ -465,8 +460,8 @@ namespace PT.BE.Areas.Manager.Controllers
                 }
                 _iContentPageRepository.Delete(kt);
                 await _iContentPageRepository.CommitAsync();
-                await DeleteSeoLink(CategoryType.Blog, kt.Id);
-                await RemoveFileData(id, CategoryType.Blog);
+                await DeleteSeoLink(kt.SlugType ?? ESlugType.ContentPage, kt.Id);
+                await RemoveFileData(id, ESlugType.ContentPage);
                 await AddLog(new LogModel
                 {
                     ObjectId = kt.Id,
@@ -499,7 +494,7 @@ namespace PT.BE.Areas.Manager.Controllers
         {
             var allowCategorys =  _iCategoryRepository.GetCategoryPrefixedTypes();
             var listCurent = await _iContentPageCategoryRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id);
-            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x =>  x.Status && allowCategorys.Contains(x.Type) && x.Language == language && x.PortalId ==portalId);
+            var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x =>  x.Status && allowCategorys.Contains(x.CategoryType ?? ECategoryType.ContentPage_Blog) && x.Language == language && x.PortalId ==portalId);
             var abc = listCategory.Select(x =>
            new TreeRoleModel
            {
@@ -563,7 +558,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<List<SelectListItem>> SearchContentPage(string q, int top = 10, string language = "vi")
         {
             top = top > 100 ? 100 : top;
-            return (await _iContentPageRepository.SearchAsync(true, 0, top, x => x.Name.ToLower().Contains(q.ToLower()) &&  x.Status && (x.Type == CategoryType.Blog || x.Type == CategoryType.Service) && x.Language == language, x => x.OrderBy(y => y.Name),
+            return (await _iContentPageRepository.SearchAsync(true, 0, top, x => x.Name.ToLower().Contains(q.ToLower()) &&  x.Status && x.CategoryType == ECategoryType.ContentPage_Blog && x.Language == language, x => x.OrderBy(y => y.Name),
                 x => new ContentPage { Id = x.Id, Name = x.Name,  Status = x.Status, Language = x.Language, Type = x.Type })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
         }
 
@@ -621,7 +616,7 @@ namespace PT.BE.Areas.Manager.Controllers
                             await file.CopyToAsync(stream);
                         }
 
-                        await AddFileData(id, pathServer, CategoryType.Blog, altId);
+                        await AddFileData(id, pathServer, ESlugType.ContentPage, altId);
 
                         if (type == 1)
                         {
@@ -661,12 +656,12 @@ namespace PT.BE.Areas.Manager.Controllers
         }
         #endregion
 
-        public async Task<SelectList> GetPortalSelectList(string language, int portalId, int? selectedValue = null)
+        public async Task<List<SelectListItem>> GetPortalSelectList(string language, int portalId, int? selectedValue = null)
         {
             // Lấy các loại category có tiền tố Category
             var allowCategorys = _iCategoryRepository.GetCategoryPrefixedTypes();
             // Lấy danh sách category áp dụng cho portal và ngôn ngữ
-            var listCategory = await _iCategoryRepository.SearchAsync(true,0,0, x => x.Status && allowCategorys.Contains(x.Type) && x.Language == language && x.PortalId == portalId);
+            var listCategory = await _iCategoryRepository.SearchAsync(true,0,0, x => x.Status && allowCategorys.Contains(x.CategoryType ?? ECategoryType.ContentPage_Blog) && x.Language == language && x.PortalId == portalId);
 
             // Sắp xếp và sinh SelectListItem theo cấu trúc cây
             var items = new List<SelectListItem>();
@@ -678,19 +673,26 @@ namespace PT.BE.Areas.Manager.Controllers
                 {
                     var prefix = string.Concat(Enumerable.Repeat("-----", level));
                     var text = string.IsNullOrWhiteSpace(prefix) ? c.Name : $"{prefix} {c.Name}";
+
+                    // Kiểm tra xem category hiện tại có con hay không
+                    var hasChildren = listCategory.Any(x => x.ParentId == c.Id);
+
                     items.Add(new SelectListItem
                     {
                         Text = text,
                         Value = c.Id.ToString(),
-                        Selected = selectedValue.HasValue && selectedValue.Value == c.Id
+                        Selected = selectedValue.HasValue && selectedValue.Value == c.Id,
+                        // Nếu có con thì disable (không enable), chỉ enable các node lá
+                        Disabled = hasChildren
                     });
+
                     AddChildren(c.Id, level +1);
                 }
             }
 
             AddChildren(0,0);
 
-            return new SelectList(items, "Value", "Text", selectedValue?.ToString());
+            return items;
         }
     }
 }

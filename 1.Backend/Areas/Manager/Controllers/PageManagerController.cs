@@ -80,7 +80,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
                         (m.PortalId== portalId || portalId == null) &&
-                        m.Type==CategoryType.Page,
+                        m.Type==CategoryType.ContentPagePage,
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {
                     Category = x.Category,
@@ -162,7 +162,8 @@ namespace PT.BE.Areas.Manager.Controllers
                         Content = use.Content,
                         Status = use.Status,
                         Language = use.Language,
-                        Type = CategoryType.Page,
+                        Type = CategoryType.ContentPagePage,
+                        SlugType = ESlugType.ContentPage,  
                         Summary = use.Summary,
                         DatePosted = DateTime.Now,
                         PortalId = use.PortalId ?? 1
@@ -170,10 +171,10 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
 
-                     await AddSeoLink(CategoryType.Page, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPageHome", "Details");
+                     await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPageHome", "Details");
 
                     await UpdateTag(data.Id, use.TagIds);
-                    await UpdateFileData(data.Id, CategoryType.Page, altId);
+                    await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
                     await _iContentPageRepository.CommitTransaction();
                     await AddLog(new LogModel
                     {
@@ -207,7 +208,7 @@ namespace PT.BE.Areas.Manager.Controllers
             }
             var model = MapModel<PageModel>.Go(dl);
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{dl.Language}" : "";
-            var ktLink = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == id && x.Type == CategoryType.Page);
+            var ktLink = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == id && x.Type == ESlugType.ContentPage);
             if (ktLink != null)
             {
              model.Changefreq = ktLink.Changefreq;
@@ -263,7 +264,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     _iContentPageRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
 
-                    await UpdateSeoLink(use.ChangeSlug, CategoryType.Page, CategoryType.Page, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPageHome", "Details");
+                    await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPageHome", "Details");
 
                     await UpdateTag(id, use.TagIds);
                     await AddLog(new LogModel
@@ -319,8 +320,8 @@ namespace PT.BE.Areas.Manager.Controllers
                 }
                 _iContentPageRepository.Delete(kt);
                 await _iContentPageRepository.CommitAsync();
-                await DeleteSeoLink(CategoryType.Page, kt.Id);
-                await RemoveFileData(id, CategoryType.Page);
+                await DeleteSeoLink(kt.SlugType ?? ESlugType.ContentPage, kt.Id);
+                await RemoveFileData(id, ESlugType.ContentPage);
 
                 await AddLog(new LogModel
                 {
@@ -418,7 +419,7 @@ namespace PT.BE.Areas.Manager.Controllers
                             await file.CopyToAsync(stream);
                         }
 
-                        await AddFileData(id, pathServer, CategoryType.Page, altId);
+                        await AddFileData(id, pathServer, ESlugType.ContentPage, altId);
 
                         if (type == 1)
                         {

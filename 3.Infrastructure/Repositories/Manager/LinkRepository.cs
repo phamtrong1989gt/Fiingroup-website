@@ -172,7 +172,7 @@ namespace PT.Infrastructure.Repositories
 
         public async Task<Link> FindObject404(string language)
         {
-            return await _context.Links.FirstOrDefaultAsync(x => (x.ObjectId == 21 || x.ObjectId == 22) && x.Language ==language && x.Type==CategoryType.Static);
+            return await _context.Links.FirstOrDefaultAsync(x => (x.ObjectId == 21 || x.ObjectId == 22) && x.Language ==language && x.Type== ESlugType.Static);
         }
     }
 }

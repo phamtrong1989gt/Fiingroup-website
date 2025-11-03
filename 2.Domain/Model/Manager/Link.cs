@@ -23,7 +23,7 @@ namespace PT.Domain.Model
         public string Changefreq { get; set; } = "monthly";
         public double Priority { get; set; } = 0.5;
         public bool IsStatic { get; set; } = false;
-        public CategoryType Type { get; set; }
+        public ESlugType Type { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Keywords { get; set; }

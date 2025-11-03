@@ -84,7 +84,7 @@ namespace PT.Domain.Model
         public string Office { get; set; }
         public string Banner { get; set; }
         public string Content { get; set; }
-        public CategoryType SlugType { get; set; } = CategoryType.Employee;
+        public CategoryType SlugType { get; set; }
         [Display(Name = "Ánh xạ với nhân viên")]
         public int EmployeeMappingId { get; set; }
         public SelectList EmployeeMappingSelectList { get; set; }

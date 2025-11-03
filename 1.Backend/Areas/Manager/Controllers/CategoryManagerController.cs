@@ -43,6 +43,7 @@ namespace PT.BE.Areas.User.Controllers
         private readonly IFileRepository _iFileRepository;
         private readonly IPortalRepository _iPortalRepository;
         private readonly IContentPageCategoryRepository _iContentPageCategoryRepository;
+        private readonly IContentPageRepository _iContentPageRepository;
         /// <summary>
         /// Hàm khởi tạo controller, inject các repository và service cần thiết.
         /// </summary>
@@ -61,7 +62,8 @@ namespace PT.BE.Areas.User.Controllers
             IWebHostEnvironment iWebHostEnvironment,
             IFileRepository iFileRepository,
             IPortalRepository iPortalRepository,
-            IContentPageCategoryRepository iContentPageCategoryRepository
+            IContentPageCategoryRepository iContentPageCategoryRepository,
+            IContentPageRepository iContentPageRepository
             )
         {
             _logger = logger;
@@ -72,6 +74,7 @@ namespace PT.BE.Areas.User.Controllers
             _iFileRepository = iFileRepository;
             _iPortalRepository = iPortalRepository;
             _iContentPageCategoryRepository = iContentPageCategoryRepository;
+            _iContentPageRepository = iContentPageRepository;
         }
 
         /// <summary>
@@ -98,7 +101,8 @@ namespace PT.BE.Areas.User.Controllers
             {
                 Language = language,
                 ParentId = parrentId,
-                Type = CategoryType.CategoryBlog
+                Type = ESlugType.Category,
+                SlugType = ESlugType.Category
             };
             // Đổ danh sách portal để view hiển thị chọn portal
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
@@ -121,7 +125,7 @@ namespace PT.BE.Areas.User.Controllers
      
         [HttpPost, ActionName("Create")]
         [AuthorizePermission("Index")]
-        public async Task<ResponseModel> CreatePost(CategoryModel use, string altId)
+        public async Task<ResponseModel> CreatePost(CategoryModel use, string altId, int portalId)
         {
             try
             {
@@ -129,19 +133,13 @@ namespace PT.BE.Areas.User.Controllers
                     // Nếu dữ liệu không hợp lệ theo DataAnnotation đã khai báo trên model -> trả về cảnh báo
                     return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
                 await _iCategoryRepository.BeginTransaction();
-                // --- Bước 1: Chuẩn hoá dữ liệu đầu vào để kiểm tra trùng lặp ---
-                // Trim khoảng trắng hai đầu và dùng tên này để so sánh với dữ liệu trong DB
-                var name = (use.Name ?? string.Empty).Trim();
-                // Nếu không truyền PortalId, mặc định lấy 1 (tương ứng portal mặc định)
-                var portalId = use.PortalId ?? 1;
-
-                // --- Bước 2: Kiểm tra trùng lặp ---
-                // Lấy danh sách các category có cùng language, portal và type (điều kiện đơn giản để tránh expression phức tạp)
-                var candidates = await _iCategoryRepository.SearchAsync(false, 0, 0, x => x.Language == use.Language && x.PortalId == portalId && x.Type == use.Type);
-                // So sánh tên trên bộ dữ liệu đã tải về bằng cách dùng so sánh không phân biệt hoa/thường
-                if (candidates.Any(x => string.Equals((x.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
-                    // Nếu tồn tại -> trả về cảnh báo cho client
+            
+                var nameCheck = (use.Name ?? string.Empty).Trim()?.ToUpper();
+                var candidates = await _iCategoryRepository.AnyAsync(x => x.Language == use.Language && x.PortalId == portalId && x.Name.ToUpper() == nameCheck);
+                if (candidates)
+                {
                     return new ResponseModel() { Output = 0, Message = "Danh mục đã tồn tại trên hệ thống, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
+                }
 
                 // Tạo đối tượng Category mới
                 // --- Bước 3: Tạo entity Category và lưu vào DB ---
@@ -150,7 +148,7 @@ namespace PT.BE.Areas.User.Controllers
                 var data = new Category
                 {
                     // Gán tên đã trim
-                    Name = name,
+                    Name = (use.Name ?? string.Empty).Trim(),
                     Banner = use.Banner,
                     Content = use.Content,
                     Status = use.Status,
@@ -158,8 +156,10 @@ namespace PT.BE.Areas.User.Controllers
                     Order = maxOrder + 1,
                     ParentId = 0,
                     Summary = use.Summary,
-                    Type = use.Type,
-                    PortalId = portalId
+                    Type = CategoryType.CategoryService,
+                    PortalId = portalId,
+                    SlugType = ESlugType.Category,
+                    CategoryType = use.CategoryType
                 };
 
                 await _iCategoryRepository.AddAsync(data);
@@ -168,9 +168,9 @@ namespace PT.BE.Areas.User.Controllers
                 // Thêm SEO link, cập nhật file và ghi log
                 // --- Bước 4: Cập nhật SEO/link, file liên quan và ghi log ---
                 // Thêm liên kết SEO cho đối tượng mới (tạo slug, link nếu cần)
-                await AddSeoLink(data.Type, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "CategoryHome", "Details", data.PortalId);
+                await CreateLinkAsync(data.SlugType ?? ESlugType.Category, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "CategoryHome", "Details", data.PortalId);
                 // Cập nhật file (nếu người dùng upload trước khi lưu)
-                await UpdateFileData(data.Id, data.Type, altId);
+                await UpdateFileData(data.Id, data.SlugType ?? ESlugType.Category, altId);
                 await _iCategoryRepository.CommitTransaction();
                 // Ghi log hành động tạo
                 await AddLog(new LogModel
@@ -191,7 +191,7 @@ namespace PT.BE.Areas.User.Controllers
         }
         #endregion
 
-       
+
 
         #region [Edit]
         /// <summary>
@@ -236,6 +236,7 @@ namespace PT.BE.Areas.User.Controllers
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
             model.PortalId = dl.PortalId;
             model.PortalName = portals.FirstOrDefault(x => x.Id == dl.PortalId)?.Name;
+            model.CategoryType = dl.CategoryType;
             return View(model);
         }
         /// <summary>
@@ -246,8 +247,9 @@ namespace PT.BE.Areas.User.Controllers
         /// </summary>
         [HttpPost, ActionName("Edit")]
         [AuthorizePermission("Index")]
-        public async Task<ResponseModel> EditPost(CategoryModel use, int id)
+        public async Task<ResponseModel> EditPost(CategoryModel use, int id, int portalId)
         {
+
             try
             {
                 if (!ModelState.IsValid)
@@ -257,15 +259,29 @@ namespace PT.BE.Areas.User.Controllers
                 if (dl == null)
                     return new ResponseModel() { Output = 0, Message = "Dữ liệu không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                await  _iCategoryRepository.BeginTransaction();
+                // Nếu thay đổi CategoryType thì cập nhật tất cả các contentPage có danh mục chính là danh mục này thì update lại CategoryType
+                if(use.CategoryType != dl.CategoryType)
+                {
+                    var listContentPageCategory = await _iContentPageRepository.SearchAsync(false, 0, 0, x => x.CategoryId == id);
+                    foreach(var item in listContentPageCategory)
+                    {
+                        item.CategoryType = use.CategoryType;
+                        _iContentPageRepository.Update(item);
+                    }
+                    await _iContentPageRepository.CommitAsync();
+                }
                 var name = (use.Name ?? string.Empty).Trim();
-                var portalId = use.PortalId ?? 1;
-                var candidates = await _iCategoryRepository.SearchAsync(false, 0, 0, x => x.Language == use.Language && x.PortalId == portalId && x.Type == use.Type);
-                if (candidates.Any(x => x.Id != id && string.Equals((x.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
+        
+                var nameCheck = (use.Name ?? string.Empty).Trim()?.ToUpper();
+                var candidates = await _iCategoryRepository.AnyAsync(x => x.Language == use.Language && x.PortalId == portalId && x.Name.ToUpper() == nameCheck && x.Id !!= id);
+                if (candidates)
+                {
                     return new ResponseModel() { Output = 0, Message = "Danh mục đã tồn tại trên hệ thống, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
+                }
 
-                await UpdateSeoLink(use.ChangeSlug, dl.Type, use.Type, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "CategoryHome", "Details");
+                await UpdateLinkAsync(use.ChangeSlug, dl.SlugType ?? ESlugType.Category, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "CategoryHome", "Details");
 
-                dl.Type = use.Type;
+                dl.CategoryType = use.CategoryType;
                 dl.Name = name;
                 dl.Banner = use.Banner;
                 dl.Content = use.Content;
@@ -323,8 +339,8 @@ namespace PT.BE.Areas.User.Controllers
 
                 _iContentPageCategoryRepository.DeleteWhere(x=>x.CategoryId == id);
                 await _iContentPageCategoryRepository.CommitAsync();
-                await DeleteSeoLink(kt.Type, kt.Id);
-                await RemoveFileData(id, kt.Type);
+                await DeleteSeoLink(kt.SlugType ?? ESlugType.Category, kt.Id);
+                await RemoveFileData(id, kt.SlugType ?? ESlugType.Category);
                 await AddLog(new LogModel
                 {
                     ObjectId = kt.Id,
@@ -449,7 +465,7 @@ namespace PT.BE.Areas.User.Controllers
                     str.Append($"<div class=\"dd-handle dd3-handle\"></div>");
                     str.Append($"<div class=\"dd3-content\">");
                     str.Append($"<strong title='{portals.FirstOrDefault(x=>x.Id == item.PortalId)?.Name}' style='margin-right: 10px;color: #FF5722;'>#{item.PortalId}</strong>");
-                    str.Append($"<span  class='label label-info' style='margin-right: 10px;'>{item.Type.GetDisplayName()}</span> ");
+                    str.Append($"<span  class='label label-info' style='margin-right: 10px;'>{item.CategoryType?.GetDisplayName()}</span> ");
                     //
                     str.Append($"{item.Name}");
                     str.Append($"<span class='can-span-category'>{BindReferenLanguage(new Tuple<List<LinkReference>, string, string, bool>(item.LinkReferences, item.Language, Url.Action("Edit", new { id = "#id#" }), false))}</span>");
@@ -562,7 +578,7 @@ namespace PT.BE.Areas.User.Controllers
                             await file.CopyToAsync(stream);
                         }
 
-                        await AddFileData(id, pathServer, CategoryType.CategoryBlog, altId);
+                        await AddFileData(id, pathServer, ESlugType.Category, altId);
 
                         if (type == 1)
                         {

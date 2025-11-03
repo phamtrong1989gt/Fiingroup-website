@@ -12,7 +12,7 @@ namespace PT.Domain.Model
         [MaxLength(100)]
         public string AltId { get; set; }
         public int ObjectId { get; set; }
-        public CategoryType Type { get; set; }
+        public ESlugType Type { get; set; }
         public DateTime CreatedDate { get; set; }
     }
 }
