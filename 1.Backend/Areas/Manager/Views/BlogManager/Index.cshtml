@@ -522,6 +522,7 @@
              var node = tree.get_node(nodeId);
              if (!node) return;
 
+
              // Lấy danh sách các ancestor (loại '#')
              var parents = (node.parents || []).filter(function (p) { return p !== '#'; });
              var toDisable = [nodeId].concat(parents);
