@@ -34,3 +34,6 @@
 /4.Shared/bin/Release/net10.0-windows8.0
 /6.FE/Portal1/logs
 /6.FE/Portal2/obj/Debug/net10.0-windows8.0/compressed
+/6.FE/Portal2/obj
+/6.FE/Portal2/bin
+/6.FE/Portal2/logs
