@@ -1,9 +1,6 @@
 ﻿@using PT.Base.Services
 @using PT.Domain.Model;
 @addTagHelper *, PT.UI
-@inject Microsoft.Extensions.Options.IOptions<List<WebsiteInfoSettings>> websiteInfoSettings
-@inject Microsoft.Extensions.Options.IOptions<List<SeoSettings>> seoSettings
-@inject Microsoft.Extensions.Options.IOptions<BindContentSettings> bindContentSettings
 @inject Microsoft.Extensions.Options.IOptions<AuthorizeSettings> _authorizeSettings;
 @inject IViewLocalizer Localizer
 @inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
@@ -16,11 +13,11 @@
 	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
 	var portalId = _baseSettings.Value.PortalId;
 	var seoSettings = await _settingService.SeoSettingGet(language, portalId);
+    var bindContentSetting = await _settingService.BindContentSettingGet(portalId);
 	var homeModel = new HomeModel
 	{
 		Domain = domain,
-		SeoSetting = seoSettings ?? new SeoSetting(),
-		WebsiteInfoSettings = websiteInfoSettings.Value.FirstOrDefault(x => x.Id == language) ?? new WebsiteInfoSettings()
+		SeoSetting = seoSettings ?? new SeoSetting()
 	};
 	var currentType = PT.Base.CookieExtensions.Get("CurrentPrice");
 
@@ -157,5 +154,5 @@
 </body>
 </html>
 
-@Html.Raw(bindContentSettings.Value.Footer)
+@Html.Raw(bindContentSetting.Footer)
 @RenderSection("Scripts", required: false)

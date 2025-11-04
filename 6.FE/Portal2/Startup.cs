@@ -80,10 +80,6 @@ namespace PT.UI
             services.Configure<LogSettings>(Configuration.GetSection("LogSettings"));
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.Configure<SocketSettings>(Configuration.GetSection("SocketSettings"));
-            services.Configure<List<SeoSettings>>(Configuration.GetSection("SeoSettings"));
-            services.Configure<List<WebsiteInfoSettings>>(Configuration.GetSection("WebsiteInfoSettings"));
-            services.Configure<ExchangeRateSettings>(Configuration.GetSection("ExchangeRateSettings"));
-            services.Configure<BindContentSettings>(Configuration.GetSection("BindContentSettings"));
             services.Configure<List<AdvertisingHomepageSettings>>(Configuration.GetSection("AdvertisingHomepageSettings"));
             services.Configure<AuthorizeSettings>(Configuration.GetSection("AuthorizeSettings"));
             services.Configure<List<RedirectLinkSetting>>(Configuration.GetSection("RedirectLinkSettings"));

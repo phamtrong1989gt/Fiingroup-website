@@ -10,18 +10,21 @@ namespace PT.Base.Services
     public interface ISettingService
     {
         Task<SeoSetting> SeoSettingGet(string languge, int portalId);
-        Task RefreshSeoSettingCache(string language, int portalId);
+        //Task RefreshSeoSettingCache(string language, int portalId);
         void RefreshByKey(string cacheKey);
+        Task<BindContentSetting> BindContentSettingGet(int portalId);
     }
 
     public class SettingService :  ISettingService
     {
         private readonly ISeoSettingRepository _iSeoSettingRepository;
+        private readonly IBindContentSettingRepository _iBindContentSettingRepository;
         private readonly IMemoryCache _memoryCache;
-        public SettingService(ISeoSettingRepository iSeoSettingRepository, IMemoryCache memoryCache) 
+        public SettingService(ISeoSettingRepository iSeoSettingRepository, IMemoryCache memoryCache, IBindContentSettingRepository iBindContentSettingRepository) 
         {
             _iSeoSettingRepository = iSeoSettingRepository;
             _memoryCache = memoryCache;
+            _iBindContentSettingRepository = iBindContentSettingRepository;
         }
 
         // Use memory cache for24 hours. Method is async to use GetOrCreateAsync.
@@ -48,6 +51,28 @@ namespace PT.Base.Services
                         Robots = string.Empty
                     };
                 }    
+                return data;
+            });
+            return result;
+        }
+
+        // Use memory cache for24 hours. Method is async to use GetOrCreateAsync.
+        public async Task<BindContentSetting> BindContentSettingGet(int portalId)
+        {
+            var cacheKey = $"BindContentSetting_{portalId}";
+
+            var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24);
+                // fetch from underlying repository
+                var data = await _iBindContentSettingRepository.SingleOrDefaultAsync(true, s => s.PortalId == portalId);
+                if (data == null)
+                {
+                    data = new BindContentSetting
+                    {
+                        PortalId = portalId
+                    };
+                }
                 return data;
             });
             return result;

@@ -24,23 +24,8 @@
             <div class="body body-tab" tab-list>
                 <ul class="nav nav-tabs nav-tabs-t" role="tablist">
                     <li role="presentation">
-                        <a tab-link data-tag="#info" data-url="@Url.Action("Info")">
-                            <i class="material-icons">info_outline</i> Thông tin website
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a tab-link data-tag="#exchangeRate" data-url="@Url.Action("ExchangeRate")">
-                            <i class="material-icons">attach_money</i> Tỉ giá tiền tệ
-                        </a>
-                    </li>
-                    <li role="presentation">
                         <a tab-link data-tag="#bindContent" data-url="@Url.Action("BindContent")">
                             <i class="material-icons">local_pharmacy</i> Chèn nội dung
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a tab-link data-tag="#website" data-url="@Url.Action("Website")">
-                            <i class="material-icons">build</i> Cấu hình chung
                         </a>
                     </li>
                     <li role="presentation">
@@ -78,6 +63,7 @@
                 onRefeshValueContent();
             }
         });
+
         $("[tab-list]").toTab();
         $("[button-open-file-manager]").toButtonOpenFile();
         $("[button-post]").toPost(null, function ($data) {

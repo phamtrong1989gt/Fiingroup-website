@@ -27,15 +27,13 @@ namespace PT.UI.Controllers
 {
     public class AboutUsController : Controller
     {
-        private readonly IOptions<List<SeoSettings>> _seoSettings;
         private readonly ILinkRepository _iLinkRepository;
         private readonly IOptions<BaseSettings> _baseSettings;
         private readonly IWebHostEnvironment _iHostingEnvironment;
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ILinkReferenceRepository _iLinkReferenceRepository;
-        public AboutUsController(IOptions<List<SeoSettings>> seoSettings, ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository)
+        public AboutUsController(ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository)
         {
-            _seoSettings = seoSettings;
             _iLinkRepository = iLinkRepository;
             _baseSettings = baseSettings;
             _iHostingEnvironment = iHostingEnvironment;

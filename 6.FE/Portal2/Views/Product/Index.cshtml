@@ -13,9 +13,9 @@
     var portalId = 2;
 }
 
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "ProductSlider", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductCoGi", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductTaiSao", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductBaoCao", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ProductNenTang", language = language, portalId = portalId }))
-@Html.Partial("~/Views/Home/_Register.cshtml")
+<vc:view-module type="@ModuleType.PhotoSlide" code="ProductSlider" language="@language" portal-id="@portalId" />
+<vc:view-module type="@ModuleType.StaticInformation" code="ProductCoGi" language="@language" portal-id="@portalId" />
+<vc:view-module type="@ModuleType.StaticInformation" code="ProductTaiSao" language="@language" portal-id="@portalId" />
+<vc:view-module type="@ModuleType.StaticInformation" code="ProductBaoCao" language="@language" portal-id="@portalId" />
+<vc:view-module type="@ModuleType.StaticInformation" code="ProductNenTang" language="@language" portal-id="@portalId" />
+<partial name="~/Views/Home/_Register.cshtml" />

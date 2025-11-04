@@ -31,7 +31,7 @@ namespace PT.Domain.Model
         public DateTime DatePosted { get; set; }
         public bool Status { get; set; }
         public int PortalId { get; set; } = 1;
-        public double? Price { get; set; }
+        public decimal? Price { get; set; }
         [NotMapped]
         public  Link Link { get; set; }
         [NotMapped]
@@ -48,6 +48,21 @@ namespace PT.Domain.Model
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+
+        public string TimeFromTo { get; set; }
+
+        // Địa chỉ event
+        public string Address { get; set; }
+        // Đường dẫn sample sản phẩm
+        public string FilePath { get; set; }
+        // Số trang
+        public int Pages { get; set; }
+        // Định dạng
+        public string Extentions { get; set; }
+        // Chủ đề
+        public string Topic { get; set; }
+        // Thời gian giao hàng
+        public string DeliveryTime { get; set; }
 
         [NotMapped]
         public List<LinkReference> LinkReferences { get; set; }
@@ -115,6 +130,20 @@ namespace PT.Domain.Model
 
         public List<int> SharedPortalIds { get; set; }
         public List<SelectListItem> CategorySelectList { get; set; }
+
+        public DateTime? StartDate { get; set; }
+        public string TimeFromTo { get; set; }
+        public string Address { get; set; }
+        // Đường dẫn
+        public string FilePath { get; set; }
+        // Số trang
+        public int Pages { get; set; }
+        // Định dạng
+        public string Extentions { get; set; }
+        // Chủ đề
+        public string Topic { get; set; }
+        // Thời gian giao hàng
+        public string DeliveryTime { get; set; }
     }
     public class PortalSharedModel
     {

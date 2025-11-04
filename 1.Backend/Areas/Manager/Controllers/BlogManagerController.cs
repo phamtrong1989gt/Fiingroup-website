@@ -145,7 +145,9 @@ namespace PT.BE.Areas.Manager.Controllers
             dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             dl.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId))?.Name;
             dl.PortalId = portalId;
-            dl.CategorySelectList = await GetPortalSelectList(language, portalId);
+            var categorys = await CategorysAsync(language, portalId);
+            ViewData["CategoryJson"] = Newtonsoft.Json.JsonConvert.SerializeObject(categorys.Select(x=> new { x.Id, x.CategoryType, x.SlugType }));
+            dl.CategorySelectList = await GetPortalSelectList(categorys, language, portalId);
             return View(dl);
         }
         [HttpPost, ActionName("Create")]
@@ -267,7 +269,9 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 item.Selected = currentShared.Any(x => (x.ParentPortalId == item.Id) || ( x.SharedPortalId == item.Id));
             }
-            model.CategorySelectList = await GetPortalSelectList(model.Language, model.PortalId ?? 1, model.CategoryId);
+            var categorys = await CategorysAsync(model.Language, model.PortalId ?? 1);
+            ViewData["CategoryJson"] = Newtonsoft.Json.JsonConvert.SerializeObject(categorys.Select(x => new { x.Id, x.CategoryType, x.SlugType }));
+            model.CategorySelectList = await GetPortalSelectList(categorys, model.Language, model.PortalId ?? 1, model.CategoryId);
             return View(model);
         }
         [HttpPost, ActionName("Edit")]
@@ -656,13 +660,16 @@ namespace PT.BE.Areas.Manager.Controllers
         }
         #endregion
 
-        public async Task<List<SelectListItem>> GetPortalSelectList(string language, int portalId, int? selectedValue = null)
+        public async Task<List<Category>> CategorysAsync(string language, int portalId)
         {
             // Lấy các loại category có tiền tố Category
             var allowCategorys = _iCategoryRepository.GetCategoryPrefixedTypes();
             // Lấy danh sách category áp dụng cho portal và ngôn ngữ
-            var listCategory = await _iCategoryRepository.SearchAsync(true,0,0, x => x.Status && allowCategorys.Contains(x.CategoryType ?? ECategoryType.ContentPage_Blog) && x.Language == language && x.PortalId == portalId);
+            return await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status && allowCategorys.Contains(x.CategoryType ?? ECategoryType.ContentPage_Blog) && x.Language == language && x.PortalId == portalId);
+        }
 
+        public async Task<List<SelectListItem>> GetPortalSelectList(List<Category> listCategory, string language, int portalId, int? selectedValue = null)
+        {
             // Sắp xếp và sinh SelectListItem theo cấu trúc cây
             var items = new List<SelectListItem>();
 

@@ -29,13 +29,13 @@ namespace PT.Domain.Model
         [Display(Name = "Ấn phẩm")]
         ContentPage_Publications = 104,
         [Display(Name = "Báo cáo")]
-        ContentPage_Report = 104,
+        ContentPage_Report = 105,
         [Display(Name = "Sản phẩm")]
-        ContentPage_Product = 105,
+        ContentPage_Product = 106,
         [Display(Name = "Trang nội dung")]
-        ContentPage_Page = 106,
+        ContentPage_Page = 107,
         [Display(Name = "Câu hỏi thường gặp")]
-        ContentPage_FAQ = 107,
+        ContentPage_FAQ = 108,
     }
 
     public enum CategoryType
