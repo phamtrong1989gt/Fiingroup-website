@@ -16,6 +16,9 @@ namespace PT.Domain.Model
         public int Id { get; set; }
         public int ParentId { get; set; }
         public CategoryType Type { get; set; }
+        public ECategoryType? CategoryType { get; set; }
+        public ESlugType? SlugType { get; set; }
+
         public string Name { get; set; }
         public string Summary { get; set; }
         public string Content { get; set; }
@@ -64,11 +67,15 @@ namespace PT.Domain.Model
         public string Banner { get; set; }
         public int Order { get; set; }
         public int ParentId { get; set; }
-        public CategoryType SlugType { get; set; } = CategoryType.CategoryBlog;
+        public ESlugType? SlugType { get; set; }
         [Display(Name = "Đặt làm dịch vụ tiêu biểu")]
         public bool IsHome { get; set; }
         [Display(Name = "Ảnh đại diện dịch vụ tiêu biểu")]
         public string Banner2 { get; set; }
         public SelectList PortalSelectList { get; set; }
+
+        [Display(Name = "Loại danh mục")]
+        [Required(ErrorMessage = "{0} không được để rỗng!")]
+        public ECategoryType? CategoryType { get; set; }
     }
 }

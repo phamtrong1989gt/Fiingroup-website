@@ -180,7 +180,6 @@ namespace PT.UI
             services.AddScoped<ITourDayGalleryRepository, TourDayGalleryRepository>();
             services.AddScoped<ITourTypeRepository, TourTypeRepository>();
             services.AddScoped<IFileDataRepository, FileDataRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
             services.AddScoped<ISeoSettingRepository, SeoSettingRepository>();
             services.AddScoped<ISettingService, SettingService>();

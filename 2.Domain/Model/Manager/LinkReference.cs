@@ -25,7 +25,7 @@ namespace PT.Domain.Model
 
         [Display(Name = "Loại danh mục")]
         [Required]
-        public CategoryType Type { get; set; }
+        public ESlugType Type { get; set; }
 
         public string Language { get; set; }
 

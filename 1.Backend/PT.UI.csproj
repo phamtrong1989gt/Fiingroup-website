@@ -1576,13 +1576,6 @@
 
 
   <ItemGroup>
-    <Content Update="Views\ContactHome\Testimonials.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-
-  <ItemGroup>
     <Folder Include="wwwroot\Data\" />
   </ItemGroup>
 

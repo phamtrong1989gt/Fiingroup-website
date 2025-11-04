@@ -20,7 +20,7 @@ namespace PT.Infrastructure.Repositories
         
         public override async Task<BaseSearchModel<List<Category>>> SearchPagedListAsync(int page, int limit, Expression<Func<Category, bool>> predicate = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, Expression<Func<Category, Category>> select = null, params Expression<Func<Category, object>>[] includeProperties)
         {
-            var types = GetCategoryPrefixedTypes();
+            
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
             {
@@ -43,7 +43,7 @@ namespace PT.Infrastructure.Repositories
                 }
             }
             query = query
-                .GroupJoin(_context.Links.Where(x => types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.Category && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
@@ -76,7 +76,7 @@ namespace PT.Infrastructure.Repositories
            Expression<Func<Category, Category>> select = null,
            bool anyContent = false)
         {
-            var types = GetCategoryPrefixedTypes();
+            
 
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
@@ -95,11 +95,11 @@ namespace PT.Infrastructure.Repositories
 
             if (anyContent)
             {
-                query = query.Where(x => _context.ContentPages.Any(m => m.ServiceId == x.Id && m.Type==CategoryType.FAQ));
+                query = query.Where(x => _context.ContentPages.Any(m => m.ServiceId == x.Id));
             }
 
             query = query
-                .GroupJoin(_context.Links.Where(x=> types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x=> x.Type == ESlugType.Category && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
@@ -141,7 +141,7 @@ namespace PT.Infrastructure.Repositories
             Expression<Func<Category, Category>> select = null, 
             params Expression<Func<Category, object>>[] includeProperties)
         {
-            var types = GetCategoryPrefixedTypes();
+            
 
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
@@ -165,7 +165,7 @@ namespace PT.Infrastructure.Repositories
                 }
             }
             query = query
-                .GroupJoin(_context.Links.Where(x => types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.Category && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
@@ -199,7 +199,7 @@ namespace PT.Infrastructure.Repositories
 
         public  async Task<List<Category>> FindByLinkReference(int skip = 0, int Take = 0, Expression<Func<Category, bool>> predicate = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, Expression<Func<Category, Category>> select = null)
         {
-            var types = GetCategoryPrefixedTypes();
+            
 
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
@@ -213,7 +213,7 @@ namespace PT.Infrastructure.Repositories
             }
           
             query = query
-                .GroupJoin(_context.Links.Where(x => types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.Category && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
@@ -229,7 +229,9 @@ namespace PT.Infrastructure.Repositories
                     Summary = x.data.Summary,
                     Banner2 = x.data.Banner2,
                     IsHome = x.data.IsHome,
-                    PortalId = x.data.PortalId
+                    PortalId = x.data.PortalId,
+                    CategoryType = x.data.CategoryType,
+                    SlugType = x.data.SlugType
                 }).AsQueryable();
 
             if (Take > 0)
@@ -286,7 +288,7 @@ namespace PT.Infrastructure.Repositories
 
         public async override Task<Category> SingleOrDefaultAsync(bool asNoTracking = false, Expression<Func<Category, bool>> predicate = null, params Expression<Func<Category, object>>[] includeProperties)
         {
-            var types = GetCategoryPrefixedTypes();
+            
 
             IQueryable<Category> query = _context.Categorys.AsQueryable();
             if (predicate != null)
@@ -294,7 +296,7 @@ namespace PT.Infrastructure.Repositories
                 query = query.Where(predicate).AsQueryable();
             }
             query = query
-                .GroupJoin(_context.Links.Where(x => types.Contains(x.Type) && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.Category && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
                 {
                     Link = y,
@@ -310,7 +312,9 @@ namespace PT.Infrastructure.Repositories
                     Summary = x.data.Summary,
                     Banner2 = x.data.Banner2,
                     IsHome = x.data.IsHome,
-                    PortalId = x.data.PortalId
+                    PortalId = x.data.PortalId,
+                    CategoryType    = x.data.CategoryType,
+                    SlugType        = x.data.SlugType,
                 }).AsQueryable();
            
             if (asNoTracking)
@@ -335,13 +339,12 @@ namespace PT.Infrastructure.Repositories
             return ancestors;
         }
 
-        public async Task<List<CategoryTreeModel>> GetAll(string language, IEnumerable<CategoryType> linkTypes)
+        public async Task<List<CategoryTreeModel>> GetAll(string language, int portalId)
         {
-            var types = linkTypes?.ToList() ?? new List<CategoryType> {  };
             var query = await (
                 from  cat in _context.Categorys
                 join link in _context.Links on cat.Id equals link.ObjectId
-                where types.Contains(link.Type) && cat.Language == language
+                where link.Type == ESlugType.Category && !link.Delete && cat.Language == language && cat.PortalId == portalId 
                 select new CategoryTreeModel
                 {
                     CategoryId = cat.Id,
@@ -371,15 +374,15 @@ namespace PT.Infrastructure.Repositories
             return query;
         }
 
-        public async Task<List<ContentPageCategoryTreeModel>> CurrentTreeContent(int contentPageId, IEnumerable<CategoryType> linkTypes)
+        public async Task<List<ContentPageCategoryTreeModel>> CurrentTreeContent(int contentPageId, int portalId)
         {
-            var types = GetCategoryPrefixedTypes();
+            
 
             var query = await (
                 from cpc in _context.ContentPageCategorys
                 join cat in _context.Categorys on cpc.CategoryId equals cat.Id
                 join link in _context.Links on cat.Id equals link.ObjectId
-                where cpc.ContentPageId == contentPageId && types.Contains(link.Type)
+                where cpc.ContentPageId == contentPageId && link.Type == ESlugType.Category && !link.Delete && cat.PortalId == portalId
                 select new ContentPageCategoryTreeModel
                 {
                     CategoryId = cat.Id,
@@ -410,174 +413,44 @@ namespace PT.Infrastructure.Repositories
             return query;
         }
 
-        public async Task<List<Category>> CurrentTreeChildrent(int currentCategoryId, string language, CategoryType type)
-        {
-            var newList = new List<Category>();
-
-            var query = await _context.Categorys.Where(x=>x.Language== language && x.Type==type)
-                .GroupJoin(_context.Links.Where(x => x.Type == type).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
-                .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
-                {
-                    Link = y,
-                    Id = x.data.Id,
-                    Banner = x.data.Banner,
-                    Name = x.data.Name,
-                    Language = x.data.Language,
-                    Status = x.data.Status,
-                    ParentId = x.data.ParentId,
-                    Type = x.data.Type,
-                    Summary = x.data.Summary,
-                    Banner2 = x.data.Banner2,
-                    IsHome = x.data.IsHome
-                }).AsNoTracking().ToListAsync();
-
-            query = query.Where(x =>  x.Link != null).ToList();
-            newList = CurrentTreeChildrentGetParrent(query, currentCategoryId, 99);
-            return newList.OrderBy(x=>x.Order).ToList();
-        }
-
-        private List<Category> CurrentTreeChildrentGetParrent(List<Category> list, int currentCategoryId,int currentOrder)
-        {
-            var listData = new List<Category>();
-            var getParent = list.FirstOrDefault(x => x.Id == currentCategoryId);
-            if(getParent!=null)
-            {
-                if(getParent.Id == getParent.ParentId)
-                {
-                    return null;
-                }    
-                getParent.Order = currentOrder;
-                currentOrder--;
-                listData.Add(getParent);
-                var nextData = CurrentTreeChildrentGetParrent(list, getParent.ParentId, currentOrder);
-                if(nextData!=null)
-                {
-                    listData.AddRange(nextData);
-                }
-                return listData;
-            }
-            return listData;
-        }
-
-        public async Task<Category> GetLink(int objectId, string language, CategoryType type)
-        {
-            return await _context.Categorys.Where(x => x.Language == language && x.Type == type && x.Id == objectId)
-                     .GroupJoin(_context.Links.Where(x => x.Type == type).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
-                     .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
-                     {
-                         Link = y,
-                         Id = x.data.Id,
-                         Banner = x.data.Banner,
-                         Name = x.data.Name,
-                         Language = x.data.Language,
-                         Status = x.data.Status,
-                         ParentId = x.data.ParentId,
-                         Type = x.data.Type,
-                         Summary = x.data.Summary,
-                         Banner2 = x.data.Banner2,
-                         IsHome = x.data.IsHome
-                     }).AsNoTracking().FirstOrDefaultAsync();
-        }
-
-
-        public async Task<List<Category>> GetChildrent(int parentId, string language, CategoryType type)
-        {
-            var newList = new List<Category>();
-
-            var query = await _context.Categorys.Where(x => x.Language == language && x.Type == type)
-                .GroupJoin(_context.Links.Where(x => x.Type == type).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
-                .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new Category
-                {
-                    Link = y,
-                    Id = x.data.Id,
-                    Banner = x.data.Banner,
-                    Name = x.data.Name,
-                    Language = x.data.Language,
-                    Status = x.data.Status,
-                    ParentId = x.data.ParentId,
-                    Type = x.data.Type,
-                    Summary = x.data.Summary,
-                    Banner2 = x.data.Banner2,
-                    IsHome = x.data.IsHome
-                }).AsNoTracking().ToListAsync();
-
-            query = query.Where(x => x.Link != null).ToList();
-
-            if(parentId==0)
-            {
-                return query;
-            }    
-
-            var listItem = GetAllChildrent(query, parentId);
-            if(listItem.Count > 0)
-            {
-                newList.AddRange(listItem);
-            }
-            return newList.OrderBy(x => x.Order).ToList();
-        }
-
-        private List<Category> GetAllChildrent(List<Category> list, int parentId)
-        {
-            var newList = new List<Category>();
-            var parent = list.FirstOrDefault(x => x.Id == parentId);
-            if(parent==null)
-            {
-                return newList;
-            }
-            if(parent.Id == parent.ParentId)
-            {
-                return newList;
-            }
-            foreach (var item in list.Where(x => x.ParentId == parent.Id))
-            {
-                newList.Add(item);
-                var listRage = GetAllChildrent(list, item.Id);
-                if(listRage.Count() > 0)
-                {
-                    newList.AddRange(listRage);
-                }
-            }
-            return newList;
-        }
+        //private List<Category> CurrentTreeChildrentGetParrent(List<Category> list, int currentCategoryId,int currentOrder)
+        //{
+        //    var listData = new List<Category>();
+        //    var getParent = list.FirstOrDefault(x => x.Id == currentCategoryId);
+        //    if(getParent!=null)
+        //    {
+        //        if(getParent.Id == getParent.ParentId)
+        //        {
+        //            return null;
+        //        }    
+        //        getParent.Order = currentOrder;
+        //        currentOrder--;
+        //        listData.Add(getParent);
+        //        var nextData = CurrentTreeChildrentGetParrent(list, getParent.ParentId, currentOrder);
+        //        if(nextData!=null)
+        //        {
+        //            listData.AddRange(nextData);
+        //        }
+        //        return listData;
+        //    }
+        //    return listData;
+        //}
 
         /// <summary>
         /// Trả về danh sách các giá trị enum CategoryType có tiền tố "Category".
         /// Tham số đầu vào không được sử dụng nhưng giữ để tương thích API.
         /// </summary>
-        public List<CategoryType> GetCategoryPrefixedTypes()
+        public List<ECategoryType> GetCategoryPrefixedTypes()
         {
-            return Enum.GetValues(typeof(CategoryType))
-                .Cast<CategoryType>()
-                .Where(t => t.ToString().StartsWith("Category", StringComparison.OrdinalIgnoreCase))
+            return Enum.GetValues(typeof(ECategoryType))
+                .Cast<ECategoryType>()
+                .Where(t => t.ToString().StartsWith("ContentPage", StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 
         public CategoryType CategoryTypeCategoryToContentPage(CategoryType categoryType)
         {
-            if(categoryType == CategoryType.CategoryBlog)
-            {
-                return CategoryType.Blog;
-            }
-            else if(categoryType == CategoryType.CategoryService)
-            {
-                return CategoryType.Service;
-            }
-            else if(categoryType == CategoryType.CategoryFlowSupportService)
-            {
-                return CategoryType.FlowSupportService;
-            }
-            else if(categoryType == CategoryType.CategoryTour)
-            {
-                return CategoryType.Tour;
-            }
-            else if(categoryType == CategoryType.CategoryProduct)
-            {
-                return CategoryType.Product;
-            }
-            else
-            {
-                return CategoryType.Page;
-            }
+            return CategoryType.CategoryBlog;
         }
     }
 }

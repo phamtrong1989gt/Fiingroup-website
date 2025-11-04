@@ -1,0 +1,43 @@
+﻿@model ComponentModel<ContentPage>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer  Localizer
+
+@{
+    Layout = null;
+    int i = 1;
+}
+<div class="section bg-grey py-0">
+    <div class="container-fluid px-0">
+        <div class="row no-gutters">
+            <div class="col-xl-6 banner-left bg-fullheight" style="background-image: url(/Content/Home/images/content/banner-left.jpg)"></div>
+            <div class="col-xl-6">
+                <div class="faq-wrap">
+                    <div class="title-wrap">
+                        <h2 class="h1">@Html.Raw(Localizer["Title"].Value)</h2>
+                    </div>
+                    <div id="tab-content" class="tab-content mt-sm-1">
+                        <div id="tab-" class="tab-pane fade show active" role="tabpanel">
+                            <div id="faqAccordion_1" class="faq-accordion" data-children=".faq-item">
+                                @foreach (var dataItem in Model.Items)
+                                {
+                                    <div class="faq-item">
+                                        <a data-toggle="collapse" data-parent="#faqAccordion_1" href="#faqItem_@dataItem.Id" aria-expanded="true"><span>@i.</span><span>@dataItem.Name</span></a>
+                                        <div id="faqItem_@dataItem.Id" class="collapse  faq-item-content" role="tabpanel">
+                                            <div>
+                                                <p style="margin-bottom:10px;font-size:14px;">
+                                                    @dataItem.Summary
+                                                </p>
+                                                <a href="@PT.Shared.Functions.FormatUrl(dataItem.Language,dataItem.Link?.Slug)" class="btn-link"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@SR["Details"]</font></font><i class="icon-right-arrow"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Localizer["Link"].Value" class="btn mt-15 mt-md-3"><i class="icon-right-arrow"></i><span>@Localizer["See more"].Value</span><i class="icon-right-arrow"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

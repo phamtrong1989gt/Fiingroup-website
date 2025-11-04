@@ -9,9 +9,8 @@ namespace PT.Infrastructure.Interfaces
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {
-       Task<List<CategoryTreeModel>> GetAll(string language, IEnumerable<CategoryType> linkTypes);
+        Task<List<CategoryTreeModel>> GetAll(string language, int portalId);
        int  MaxOrder(Expression<Func<Category, bool>> predicate = null);
-        Task<List<Category>> CurrentTreeChildrent(int parentId, string language, CategoryType type);
         Task<List<Category>> FindByLinkReference(int skip = 0, int Take = 0, Expression<Func<Category, bool>> predicate = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, Expression<Func<Category, Category>> select = null);
         Task<List<Category>> SearchAsync(
            bool asNoTracking = false,
@@ -21,11 +20,8 @@ namespace PT.Infrastructure.Interfaces
            Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null,
            Expression<Func<Category, Category>> select = null,
            bool anyContent = false);
-        Task<Category> GetLink(int objectId, string language, CategoryType type);
-        Task<List<Category>> GetChildrent(int parentId, string language, CategoryType type);
-        Task<List<ContentPageCategoryTreeModel>> CurrentTreeContent(int contentPageId, IEnumerable<CategoryType> linkTypes);
         List<PT.Domain.Model.CategoryTreeModel> GetCategoryAncestors(PT.Domain.Model.CategoryTreeModel category, List<PT.Domain.Model.CategoryTreeModel> allCategories);
-        List<CategoryType> GetCategoryPrefixedTypes();
+        List<ECategoryType> GetCategoryPrefixedTypes();
         CategoryType CategoryTypeCategoryToContentPage(CategoryType categoryType);
     }
 }

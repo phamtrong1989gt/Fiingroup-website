@@ -36,7 +36,7 @@ namespace PT.BE.Areas.Base.Controllers
         /// <param name="path">Đường dẫn file</param>
         /// <param name="type">Loại danh mục file</param>
         /// <param name="altId">Id thay thế (nếu có)</param>
-        public async Task AddFileData(int objectId, string path, CategoryType type, string altId)
+        public async Task AddFileData(int objectId, string path, ESlugType type, string altId)
         {
             var iFileDataRepository = (IFileDataRepository)AppHttpContext.Current.RequestServices.GetService(typeof(IFileDataRepository));
             await iFileDataRepository.AddAsync(new FileData {
@@ -55,7 +55,7 @@ namespace PT.BE.Areas.Base.Controllers
         /// <param name="objectId">Id đối tượng</param>
         /// <param name="type">Loại danh mục file</param>
         /// <param name="altId">Id thay thế</param>
-        public async Task UpdateFileData(int objectId, CategoryType type, string altId)
+        public async Task UpdateFileData(int objectId, ESlugType type, string altId)
         {
             var iFileDataRepository = (IFileDataRepository)AppHttpContext.Current.RequestServices.GetService(typeof(IFileDataRepository));
             var listFiles = await iFileDataRepository.SearchAsync(false, 0, 0, x => x.AltId == altId && x.Type == type);
@@ -72,7 +72,7 @@ namespace PT.BE.Areas.Base.Controllers
         /// </summary>
         /// <param name="objectId">Id đối tượng</param>
         /// <param name="type">Loại danh mục file</param>
-        public async Task RemoveFileData(int objectId, CategoryType type)
+        public async Task RemoveFileData(int objectId, ESlugType type)
         {
             var iFileDataRepository = (IFileDataRepository)AppHttpContext.Current.RequestServices.GetService(typeof(IFileDataRepository));
             var iWebHostEnvironment = (IWebHostEnvironment)AppHttpContext.Current.RequestServices.GetService(typeof(IWebHostEnvironment));
@@ -138,7 +138,7 @@ namespace PT.BE.Areas.Base.Controllers
             }
             var use = new TagModel
             {
-                Type = CategoryType.Tag,
+                Type = ESlugType.Tag,
                 Slug = Functions.ToUrlSlug(name),
                 Language = language,
                 Name = name,
@@ -178,15 +178,14 @@ namespace PT.BE.Areas.Base.Controllers
             await _iTagRepository.AddAsync(data);
             await _iTagRepository.CommitAsync();
             var seoModel = MapModel<SeoModel>.Go(use);
-            await AddSeoLink(CategoryType.Tag, data.Language, data.Id, seoModel, name, "", "TagHome", "Details", portalId);
-
+            await CreateLinkAsync(ESlugType.Tag, data.Language, data.Id, seoModel, name, "", "TagHome", "Details", portalId);
             return new { id = data.Id, name = data.Name };
         }
 
         /// <summary>
         /// Thêm liên kết SEO cho đối tượng
         /// </summary>
-        /// <param name="type">Loại danh mục</param>
+        /// <param name="slugType">Loại danh mục</param>
         /// <param name="language">Ngôn ngữ</param>
         /// <param name="id">Id đối tượng</param>
         /// <param name="model">Model SEO</param>
@@ -195,7 +194,7 @@ namespace PT.BE.Areas.Base.Controllers
         /// <param name="controller">Controller</param>
         /// <param name="action">Action</param>
         /// <returns>Id liên kết SEO vừa thêm</returns>
-        public async Task<int> AddSeoLink(CategoryType type, string language, int id, SeoModel model, string name, string area, string controller, string action, int portalId = 1)
+        public async Task<int> CreateLinkAsync(ESlugType slugType, string language, int id, SeoModel model, string name, string area, string controller, string action, int portalId = 1)
         {
             // Check cả slug đã delete, path delete sẽ tự động redrirect về trang chủ
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
@@ -222,7 +221,7 @@ namespace PT.BE.Areas.Base.Controllers
             {
                 Slug = model.Slug,
                 Name = name,
-                Type = type,
+                Type = slugType,
                 ObjectId = id,
                 Language = language,
                 IsStatic = false,
@@ -274,18 +273,18 @@ namespace PT.BE.Areas.Base.Controllers
         /// <param name="area">Khu vực</param>
         /// <param name="controller">Controller</param>
         /// <param name="action">Action</param>
-        public async Task UpdateSeoLink(bool changeSlug, CategoryType oldType, CategoryType newType, int id, string language, SeoModel model, string name, string area, string controller, string action)
+        public async Task UpdateLinkAsync(bool changeSlug, ESlugType slugType, int id, string language, SeoModel model, string name, string area, string controller, string action)
         {
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
             var _iLinkReferenceRepository = (ILinkReferenceRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkReferenceRepository));
             var baseSettings = (IOptions<BaseSettings>)AppHttpContext.Current.RequestServices.GetService(typeof(IOptions<BaseSettings>));
-            var ktLink = await _iLinkRepository.SingleOrDefaultAsync(false, x => x.ObjectId == id && x.Type == oldType);
+            var ktLink = await _iLinkRepository.SingleOrDefaultAsync(false, x => x.ObjectId == id && x.Type == slugType);
             if (ktLink == null)
             {
                 ktLink = new Link
                 {
                     Slug = model.Slug,
-                    Type = newType,
+                    Type = slugType,
                     Name = name,
                     ObjectId = id,
                     Language = language,
@@ -322,7 +321,7 @@ namespace PT.BE.Areas.Base.Controllers
                 {
                     Slug = ktLink.Slug,
                     Name = ktLink.Name,
-                    Type = newType,
+                    Type = ktLink.Type,
                     ObjectId = ktLink.ObjectId,
                     Language = ktLink.Language,
                     IsStatic = false,
@@ -352,7 +351,6 @@ namespace PT.BE.Areas.Base.Controllers
                 await _iLinkRepository.CommitAsync();
                 ktLink.Slug = model.Slug;
             }
-            ktLink.Type = newType;
             ktLink.Changefreq = model.Changefreq;
             ktLink.Lastmod = model.Lastmod ?? DateTime.Now;
             ktLink.Priority = model.Priority.ConvertToDouble();
@@ -385,7 +383,7 @@ namespace PT.BE.Areas.Base.Controllers
         /// </summary>
         /// <param name="type">Loại danh mục</param>
         /// <param name="id">Id đối tượng</param>
-        public async Task DeleteSeoLink(CategoryType type, int id)
+        public async Task DeleteSeoLink(ESlugType type, int id)
         {
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
             var ktLink = await _iLinkRepository.SingleOrDefaultAsync(false, x => x.ObjectId == id && x.Type == type);

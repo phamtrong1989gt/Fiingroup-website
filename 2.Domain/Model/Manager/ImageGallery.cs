@@ -19,6 +19,7 @@ namespace PT.Domain.Model
         public string Title { get; set; }
         public string Description { get; set; }
         public string Keywords { get; set; }
+        public ESlugType? SlugType { get; set; }
         [NotMapped]
         public  Link Link { get; set; }
         [NotMapped]
@@ -35,7 +36,7 @@ namespace PT.Domain.Model
         [Required(ErrorMessage = "{0} không được để rỗng!")]
         public string Name { get; set; }
         public virtual Link Link { get; set; }
-        public CategoryType SlugType { get; set; } = CategoryType.Employee;
+        public ESlugType SlugType { get; set; } 
         public List<SelectListItem> CategorySelectList { get; set; }
     }
 }

@@ -149,7 +149,7 @@ namespace PT.BE.Areas.Setting.Controllers
             int? limit, 
             string key,
             bool? includeSitemap,
-            CategoryType? type,
+            ESlugType? type,
             string language = "vi", 
             string ordertype = "asc", 
             string orderby = "name"
@@ -166,10 +166,8 @@ namespace PT.BE.Areas.Setting.Controllers
                         (m.Slug.Contains(key) || m.Title.Contains(key) || m.Description.Contains(key) || m.Keywords.Contains(key) || m.FocusKeywords.Contains(key) || key == null) &&
                         m.Status &&
                         (m.Type==type || type==null) &&
-                        (m.IncludeSitemap == includeSitemap || includeSitemap == null) &&
-                        (m.Type!=CategoryType.Employee) &&
-                        (m.Type != CategoryType.Tag) &&
-                        !m.Delete,
+                        (m.IncludeSitemap == includeSitemap || includeSitemap == null)
+                        ,
                 OrderByExtention(ordertype, orderby));
             return View("SitemapAjax", data);
         }
@@ -197,37 +195,37 @@ namespace PT.BE.Areas.Setting.Controllers
             string name = "";
             string content = "";
 
-            if (dl.Type==CategoryType.Blog || dl.Type == CategoryType.Service || dl.Type==CategoryType.Page || dl.Type == CategoryType.FAQ)
+            if (dl.Type==ESlugType.ContentPage)
             {
                 var data = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == dl.ObjectId);
                 name = data?.Name;
                 content = data?.Content;
             }
-            else if (dl.Type == CategoryType.CategoryBlog || dl.Type == CategoryType.CategoryService)
+            else if (dl.Type == ESlugType.Category)
             {
                 var data = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == dl.ObjectId);
                 name = data?.Name;
                 content = data?.Content;
             }
-            else if (dl.Type == CategoryType.Employee)
+            else if (dl.Type == ESlugType.Employee)
             {
                 var data = await _iEmployeeRepository.SingleOrDefaultAsync(true, x => x.Id == dl.ObjectId);
                 name = "";
                 content = data?.Content;
             }
-            else if (dl.Type == CategoryType.ImageGallery)
+            else if (dl.Type == ESlugType.ImageGallery)
             {
                 var data = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == dl.ObjectId);
                 name = data?.Name;
                 content = data?.Content;
             }
-            else if (dl.Type == CategoryType.Tag)
+            else if (dl.Type == ESlugType.Tag)
             {
                 var data = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == dl.ObjectId);
                 name = data?.Name;
                 content = data?.Content;
             }
-            else if (dl.Type == CategoryType.Static)
+            else if (dl.Type == ESlugType.Static)
             {
                 name = "";
                 content = "";
@@ -253,7 +251,7 @@ namespace PT.BE.Areas.Setting.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    await UpdateSeoLink(use.ChangeSlug, dl.Type, dl.Type, dl.ObjectId, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, dl.Area, dl.Controller, dl.Acction);
+                    await UpdateLinkAsync(use.ChangeSlug, dl.Type,  dl.ObjectId, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, dl.Area, dl.Controller, dl.Acction);
                     await AddLog(new LogModel
                     {
                         ObjectId = dl.Id,

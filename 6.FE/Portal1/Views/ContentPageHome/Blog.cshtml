@@ -9,19 +9,16 @@
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    var listCategory = await _iCategoryRepository.CurrentTreeContent(Model.Id, new List<CategoryType> { CategoryType.CategoryBlog });
-    var category = listCategory.LastOrDefault();
-
     var tinLienQuanModel = new ContentPageComponentModel()
     {
-        CategoryId = category?.CategoryId,
+        CategoryId = 0,
         ContentPageId = 0,
         Href = "",
         Language = language,
         TagId = null,
         Take = 6,
         Title = "",
-        Type = CategoryType.Blog,
+        Type = CategoryType.ContentPageBlog,
         View = "_NewInBlogDetail"
     };
 }
@@ -31,10 +28,10 @@
     <!-- breadcrumb -->
     <div class="site-breadcrumb" style="background: url(assets/img/cta/01.jpg)">
         <div class="container">
-            <h2 class="breadcrumb-title">@category?.CategoryName</h2>
+            <h2 class="breadcrumb-title"></h2>
             <ul class="breadcrumb-menu">
                 <li><a href="/">Trang chủ</a></li>
-                <li class="active">@category?.CategoryName</li>
+                <li class="active"></li>
             </ul>
         </div>
     </div>

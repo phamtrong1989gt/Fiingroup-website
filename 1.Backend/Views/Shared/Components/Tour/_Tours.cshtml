@@ -1,0 +1,44 @@
+﻿@model ComponentModel<Tour>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer  Localizer
+@{
+    Layout = null;
+}
+
+<section id="moveTour" class="section_padding_top" style="padding-bottom: 50px;">
+    <div class="container">
+        <!-- Section Heading -->
+        <div class="row text-center">
+            <div class="col-lg-12">
+                <div class="section_heading_thirteen">
+                    <h2>THE NEW WAY TOURS</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="Trending_tour_slider owl-theme owl-carousel arrow_style">
+                    @foreach (var item in Model.Items)
+                    {
+                        string url = @PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
+                        <div class="theme_common_box_two img_hover">
+                            <div class="theme_two_box_img">
+                                <a href="@url"><img onerror="this.src='assets/img/home-eight/destination/destination-2.png'" title="@item.Name" src="@item.Banner" alt="img"></a>
+                                <p><i class="fas fa-map-marker-alt"></i>@item.Address</p>
+                            </div>
+                            <div class="theme_two_box_content">
+                                <h4><a href="@url">@item.Name</a></h4>
+                                <p>
+                                    <span class="review_rating">4.8/5 Excellent</span> <span class="review_count">
+                                        (1214 reviewes)
+                                    </span>
+                                </p>
+                                <h3>$@item.AdultPrice <del style="font-size:13px;" class="text-danger">$@(PT.Shared.Functions.GetFullPrice(item.AdultPrice ?? 0))</del></h3>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

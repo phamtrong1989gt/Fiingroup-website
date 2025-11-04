@@ -206,7 +206,7 @@ namespace PT.UI.Controllers
                 }
                 var stringBuilder = new StringBuilder();
 
-                var listItem = await _iLinkRepository.SearchAsync(true, 0, 0, x => (x.Language == language || language =="") && !x.Delete && x.Status && x.IncludeSitemap && x.Type != CategoryType.Employee);
+                var listItem = await _iLinkRepository.SearchAsync(true, 0, 0, x => (x.Language == language || language =="") && !x.Delete && x.Status && x.IncludeSitemap );
                 stringBuilder.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 stringBuilder.AppendLine("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd\">");
 
