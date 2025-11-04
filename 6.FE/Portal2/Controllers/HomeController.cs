@@ -1,4 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using PT.Base;
+using PT.Base.Services;
+using PT.Domain.Model;
+using PT.Infrastructure.Interfaces;
+using PT.Shared;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,36 +23,27 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using PT.Base;
-using PT.Domain.Model;
-using PT.Infrastructure.Interfaces;
-using PT.Shared;
 
 namespace PT.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IOptions<List<SeoSettings>> _seoSettings;
         private readonly ILinkRepository _iLinkRepository;
         private readonly IOptions<BaseSettings> _baseSettings;
         private readonly IWebHostEnvironment _iHostingEnvironment;
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ILinkReferenceRepository _iLinkReferenceRepository;
-        public HomeController(IOptions<List<SeoSettings>> seoSettings, ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository)
+        private readonly ISettingService _iSettingService;
+        public HomeController(ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository, ISettingService iSettingService)
         {
-            _seoSettings = seoSettings;
             _iLinkRepository = iLinkRepository;
             _baseSettings = baseSettings;
             _iHostingEnvironment = iHostingEnvironment;
             _iContentPageRepository = iContentPageRepository;
             _iLinkReferenceRepository = iLinkReferenceRepository;
+            _iSettingService = iSettingService;
         }
+
         public IActionResult Error(int? statusCode = null)
         {
             if (statusCode == null)
@@ -168,9 +170,9 @@ namespace PT.UI.Controllers
 
         [Route("robots.txt")]
         [Route("{language}/robots.txt")]
-        public FileResult Robots(string language = "vi")
+        public async Task<FileResult> Robots(string language = "vi")
         {
-            return GetFileRobots(language);
+            return await GetFileRobots(language);
         }
 
         [Route("sitemap.xml")]
@@ -179,10 +181,11 @@ namespace PT.UI.Controllers
             return GetFileSitemap("");
         }
 
-        private FileStreamResult GetFileRobots(string language)
+        private async Task<FileStreamResult> GetFileRobots(string language)
         {
             string str = "";
-            var dl = _seoSettings.Value.FirstOrDefault(m => m.Id == language);
+
+            var dl = await _iSettingService.SeoSettingGet(language, _baseSettings.Value.PortalId);
             if (dl != null)
             {
                 str = dl.Robots;

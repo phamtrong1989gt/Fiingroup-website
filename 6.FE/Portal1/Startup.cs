@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PT.Base;
+using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure;
 using PT.Infrastructure.Interfaces;
@@ -181,6 +182,8 @@ namespace PT.UI
             services.AddScoped<IFileDataRepository, FileDataRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+            services.AddScoped<ISeoSettingRepository, SeoSettingRepository>();
+            services.AddScoped<ISettingService, SettingService>();
             // Đăng ký DI cho repository tổng quát
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
             //Gzip

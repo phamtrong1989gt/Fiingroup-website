@@ -18,9 +18,9 @@
         robots += "," + linkData.MetaRobotsAdvance;
     }
 }
-<title>@(Html.Raw((linkData.Title ?? ModelHome.SeoSettings.Title) ?? PT.Shared.Functions.SubStringTitle(linkData.Name, 150)))</title>
+<title>@(Html.Raw((linkData.Title ?? ModelHome.SeoSetting.Title) ?? PT.Shared.Functions.SubStringTitle(linkData.Name, 150)))</title>
 
-<meta name="description" content="@(Html.Raw(linkData.Description ?? ModelHome.SeoSettings.Description))" />
+<meta name="description" content="@(Html.Raw(linkData.Description ?? ModelHome.SeoSetting.Description))" />
 <meta name="keywords" content="@(Html.Raw(linkData.Title ?? PT.Shared.Functions.SubStringTitle(linkData.Name,150)))" />
 
 <meta property="og:url" content="https://@Context.Request.Host@Context.Request.Path" />
@@ -39,7 +39,7 @@
 
 <meta name="twitter:image" content="http://@ModelHome.Domain@(string.IsNullOrEmpty(linkData.FacebookBanner)?ModelHome.WebsiteInfoSettings.Logo:linkData.FacebookBanner)" />
 
-<meta name="google-site-verification" content="@ModelHome.SeoSettings.MetaGoogle" />
+<meta name="google-site-verification" content="@ModelHome.SeoSetting.MetaGoogle" />
 <link rel="canonical" href="https://@Context.Request.Host@Context.Request.Path" />
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 @if (ViewData["linkNext"] != null)
@@ -50,13 +50,4 @@
 {
     <link rel="prev" href="https://@Context.Request.Host@Html.Raw(ViewData["linkPrev"])" />
 }
-@* 
-@if (!Context.Request.Host.ToString().Contains(_baseSettings.Value.RootDomin))
-{
-    <meta name="robots" content="noindex,follow">
-}
-else
-{
-    <meta name="robots" content="@robots">
-} *@
     <meta name="robots" content="@robots">

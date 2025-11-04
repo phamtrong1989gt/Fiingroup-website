@@ -6,7 +6,7 @@ namespace PT.Domain.Model
 {
     public  class HomeModel
     {
-        public SeoSettings SeoSettings { get; set; }
+        public SeoSetting SeoSetting { get; set; }
         public WebsiteInfoSettings WebsiteInfoSettings { get; set; }
         public string Domain { get; set; }
     }

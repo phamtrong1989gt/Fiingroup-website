@@ -183,6 +183,8 @@ namespace PT.UI
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
             services.AddScoped<IPortalRepository, PortalRepository>();
+            services.AddScoped<ISeoSettingRepository, SeoSettingRepository>();
+            
             // Đăng ký repository tổng quát cho các entity kiểu chung
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
 

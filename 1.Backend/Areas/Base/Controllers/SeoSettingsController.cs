@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using PT.Base;
+using PT.BE.Areas.Base.Controllers;
+using PT.Domain.Model;
+using PT.Infrastructure.Interfaces;
+using PT.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using PT.Domain.Model;
-using PT.Infrastructure.Interfaces;
-using PT.BE.Areas.Base.Controllers;
-using PT.Shared;
-using PT.Base;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace PT.BE.Areas.Setting.Controllers
 {
@@ -28,6 +29,8 @@ namespace PT.BE.Areas.Setting.Controllers
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ICategoryRepository _iCategoryRepository;
         private readonly IEmployeeRepository _iEmployeeRepository;
+        private readonly ISeoSettingRepository _iSeoSettingRepository;
+        private readonly IPortalRepository _iPortalRepository;
         public SeoSettingsController(
             ILogger<SeoSettingsController> logger, 
             IFileRepository iFileRepository,
@@ -37,7 +40,9 @@ namespace PT.BE.Areas.Setting.Controllers
             IOptions<BaseSettings> baseSettings,
             IContentPageRepository iContentPageRepository,
             ICategoryRepository iCategoryRepository,
-            IEmployeeRepository  iEmployeeRepository
+            IEmployeeRepository  iEmployeeRepository,
+            ISeoSettingRepository iSeoSettingRepository,
+            IPortalRepository iPortalRepository
             )
         {
             controllerName = "SeoSettings";
@@ -52,51 +57,67 @@ namespace PT.BE.Areas.Setting.Controllers
             _iContentPageRepository = iContentPageRepository;
             _iCategoryRepository = iCategoryRepository;
             _iEmployeeRepository = iEmployeeRepository;
+            _iSeoSettingRepository = iSeoSettingRepository;
+            _iPortalRepository = iPortalRepository;
         }
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            ViewData["portals"] = portals;
             return View();
         }
+
         #region [Seo]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult Seo(string language = "vi")
+        public async Task<IActionResult> Seo(string language = "vi", int portalId = 1)
         {
-            var dl = _seoSettings.Value.FirstOrDefault(x => x.Id == language);
-            return View(dl);
+            var portals = await _iPortalRepository.SearchAsync(true,0,0);
+            var data = await _iSeoSettingRepository.SingleOrDefaultAsync(true,x => x.Language == language && x.PortalId == portalId);
+            if(data == null)
+            {
+                return View(new SeoSetting { Language = language, PortalId= portalId, Portals= portals });
+            }
+            else
+            {
+                data.Portals = portals;
+                return View(data);
+            }    
         }
         [HttpPost, ValidateAntiForgeryToken, ActionName("Seo")]
         [AuthorizePermission("Index")]
-        public async Task<ResponseModel> SeoPost(SeoSettings model)
+        public async Task<ResponseModel> SeoPost(SeoSetting model, string language = "vi", int portalId = 1)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var data = _seoSettings.Value.FirstOrDefault(x => x.Id == model.Id);
+                    var data = await _iSeoSettingRepository.SingleOrDefaultAsync(true, x => x.Language == language && x.PortalId == portalId);
                     if (data == null)
                     {
-                        data = new SeoSettings
+                        _iSeoSettingRepository.Add(new SeoSetting
                         {
-                            Id = model.Id
-                        };
-                        _seoSettings.Value.Add(data);
+                            Language = language,
+                            PortalId = portalId,
+                            Title = model.Title,
+                            Description = model.Description,
+                            Keywords = model.Keywords,
+                            MetaGoogle = model.MetaGoogle,
+                            Robots = model.Robots
+                        });
                     }
-                    data.Keywords = model.Keywords;
-                    data.Lastmod = model.Lastmod;
-                    data.MetaGoogle = model.MetaGoogle;
-                    data.Robots = model.Robots;
-                    data.Title = model.Title;
-                    data.Analytics = model.Analytics;
-                    data.AppSubport = model.AppSubport;
-                    data.Changefreq = model.Changefreq;
-                  
-                    data.Description = model.Description;
-                    data.FacebookPixelID = model.FacebookPixelID;
-                    _iFileRepository.SettingsUpdate(_iHostingEnvironment.ContentRootPath + "/appsettings.Seo.json", new { SeoSettings = _seoSettings.Value });
-
+                    else
+                    {
+                        data.Title = model.Title;
+                        data.Description = model.Description;
+                        data.Keywords = model.Keywords;
+                        data.MetaGoogle = model.MetaGoogle;
+                        data.Robots = model.Robots;
+                        _iSeoSettingRepository.Update(data);
+                    }
+                    await _iSeoSettingRepository.CommitAsync();
                     await AddLog(new LogModel { Name = $"Cập nhật cấu thông tin seo {model.Id}.", Type = LogType.Edit });
 
                     return new ResponseModel() { Output = 1, Message = "Cập nhật cấu hình thành công.", Type = ResponseTypeMessage.Success };

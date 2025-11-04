@@ -19,32 +19,47 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using PT.Base;
+using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
 
 namespace PT.UI.Controllers
 {
-    public class ProductController : Controller
+    public class CacheController : Controller
     {
         private readonly ILinkRepository _iLinkRepository;
         private readonly IOptions<BaseSettings> _baseSettings;
         private readonly IWebHostEnvironment _iHostingEnvironment;
         private readonly IContentPageRepository _iContentPageRepository;
-        private readonly ILinkReferenceRepository _iLinkReferenceRepository;
-        public ProductController(ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository)
+        private readonly ISettingService _iSettingService;
+        public CacheController(ISettingService iSettingService, ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository)
         {
             _iLinkRepository = iLinkRepository;
             _baseSettings = baseSettings;
             _iHostingEnvironment = iHostingEnvironment;
             _iContentPageRepository = iContentPageRepository;
-            _iLinkReferenceRepository = iLinkReferenceRepository;
+            _iSettingService = iSettingService;
         }
 
-        public IActionResult Index(string linkData, int portalId)
+        [HttpPost("Refresh/{key}")]
+        public IActionResult Refresh(string key)
         {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View();
+            // Allow only when request comes from localhost (or 127.0.0.1).
+            // If behind a reverse proxy, X-Forwarded-Host is checked first.
+            var forwardedHost = Request.Headers["X-Forwarded-Host"].FirstOrDefault();
+            var host = !string.IsNullOrEmpty(forwardedHost)
+                ? forwardedHost.Split(',')[0].Trim().ToLowerInvariant()
+                : HttpContext.Request.Host.Host?.ToLowerInvariant();
+
+            if (host != "localhost" && host != "127.0.0.1")
+            {
+                // Deny non-localhost callers
+                return Forbid();
+            }
+
+            _iSettingService.RefreshByKey(key);
+            return Ok();
         }
     }
 }

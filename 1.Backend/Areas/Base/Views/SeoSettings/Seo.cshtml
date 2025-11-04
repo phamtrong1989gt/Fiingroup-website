@@ -1,5 +1,5 @@
 ﻿
-@model PT.Domain.Model.SeoSettings
+@model PT.Domain.Model.SeoSetting
 @addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PT.UI
@@ -14,6 +14,8 @@
 <form form-edit asp-action="Seo">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Language" />
+    <input type="hidden" asp-for="PortalId" />
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">

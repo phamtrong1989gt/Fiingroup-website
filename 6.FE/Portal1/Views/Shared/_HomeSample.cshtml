@@ -1,21 +1,24 @@
-﻿@using PT.Domain.Model;
+﻿@using PT.Base.Services
+@using PT.Domain.Model;
 @addTagHelper *, PT.UI
 @inject Microsoft.Extensions.Options.IOptions<List<WebsiteInfoSettings>> websiteInfoSettings
-@inject Microsoft.Extensions.Options.IOptions<List<SeoSettings>> seoSettings
 @inject Microsoft.Extensions.Options.IOptions<BindContentSettings> bindContentSettings
 @inject Microsoft.Extensions.Options.IOptions<AuthorizeSettings> _authorizeSettings;
 @inject IViewLocalizer Localizer
+@inject ISettingService _settingService;
+@inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
 
 @{
     string domain = Context.Request.Host.ToString();
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var listLanguage = PT.Shared.ListData.ListLanguage;
     var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
-
+    var portalId = _baseSettings.Value.PortalId;
+    var seoSettings = await _settingService.SeoSettingGet(language, portalId);
     var homeModel = new HomeModel
             {
                 Domain = domain,
-                SeoSettings = seoSettings.Value.FirstOrDefault(x => x.Id == language) ?? new SeoSettings(),
+                SeoSetting = seoSettings ?? new SeoSetting(),
                 WebsiteInfoSettings = websiteInfoSettings.Value.FirstOrDefault(x => x.Id == language) ?? new WebsiteInfoSettings()
             };
     var currentType = PT.Base.CookieExtensions.Get("CurrentPrice");
