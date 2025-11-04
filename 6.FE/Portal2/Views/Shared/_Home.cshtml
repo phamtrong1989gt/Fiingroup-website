@@ -1,22 +1,23 @@
-﻿@using PT.Domain.Model;
+﻿@using PT.Base.Services
+@using PT.Domain.Model;
 @addTagHelper *, PT.UI
-@inject Microsoft.Extensions.Options.IOptions<List<WebsiteInfoSettings>> websiteInfoSettings
-@inject Microsoft.Extensions.Options.IOptions<List<SeoSettings>> seoSettings
-@inject Microsoft.Extensions.Options.IOptions<BindContentSettings> bindContentSettings
 @inject Microsoft.Extensions.Options.IOptions<AuthorizeSettings> _authorizeSettings;
 @inject IViewLocalizer Localizer
+@inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
+@inject ISettingService _settingService;
 
 @{
 	string domain = Context.Request.Host.ToString();
 	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 	var listLanguage = PT.Shared.ListData.ListLanguage;
 	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
-	var portalId = 2;
+	var portalId = _baseSettings.Value.PortalId;
+	var seoSettings = await _settingService.SeoSettingGet(language, portalId);
+    var bindContentSetting = await _settingService.BindContentSettingGet(portalId);
 	var homeModel = new HomeModel
 	{
 		Domain = domain,
-		SeoSettings = seoSettings.Value.FirstOrDefault(x => x.Id == language) ?? new SeoSettings(),
-		WebsiteInfoSettings = websiteInfoSettings.Value.FirstOrDefault(x => x.Id == language) ?? new WebsiteInfoSettings()
+		SeoSetting = seoSettings ?? new SeoSetting()
 	};
 	var currentType = PT.Base.CookieExtensions.Get("CurrentPrice");
 
@@ -33,20 +34,24 @@
 <head>
 	<!-- meta tags -->
 	<meta charset="UTF-8">
+
+	<meta name="robots" content="noindex">
+	<meta name="googlebot" content="noindex">
+
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" type="image/x-icon" href="assets/img/logo/favicon.png">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="assets/css/style.css" />
-	<link rel="stylesheet" href="assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" />
-	<link rel="stylesheet" href="assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" />
-	<link rel="stylesheet" href="assets/css/custom.css" />
-	<link href="assets/lib/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
-	<script src="assets/js/jquery.min.js"></script>
+	<link rel="stylesheet" href="../assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="../assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="../assets/css/style.css" />
+	<link rel="stylesheet" href="../assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" />
+	<link rel="stylesheet" href="../assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" />
+	<link rel="stylesheet" href="../assets/css/custom.css" />
+	<link href="../assets/lib/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
+	<script src="../assets/js/jquery.min.js"></script>
 	<partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
 </head>
 
@@ -71,12 +76,12 @@
 		<button class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button>
 		<!-- scroll-top end -->
 		<!-- js -->
-		<script src="assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js"></script>
-		<script src="assets/js/bootstrap.js?v=5.5.9"></script>
-		<script src="assets/js/owl.carousel.min.js?v=5.5.9"></script>
-		<script src="assets/js/site.js?v=1.0"></script>
-		<script src="assets/js/waypoints.min.js"></script>
-		<script src="assets/js/jquery.counterup.min.js"></script>
+		<script src="../assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js"></script>
+		<script src="../assets/js/bootstrap.js?v=5.5.9"></script>
+		<script src="../assets/js/owl.carousel.min.js?v=5.5.9"></script>
+		<script src="../assets/js/site.js?v=1.0"></script>
+		<script src="../assets/js/waypoints.min.js"></script>
+		<script src="../assets/js/jquery.counterup.min.js"></script>
 		<script>
 			$(document).ready(
 				function () {
@@ -144,10 +149,10 @@
 				});
 			});
 		</script>
-		<script src="assets/lib/fancybox/dist/jquery.fancybox.min.js"></script>
+		<script src="../assets/lib/fancybox/dist/jquery.fancybox.min.js"></script>
 	</div>
 </body>
 </html>
 
-@Html.Raw(bindContentSettings.Value.Footer)
+@Html.Raw(bindContentSetting.Footer)
 @RenderSection("Scripts", required: false)

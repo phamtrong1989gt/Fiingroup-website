@@ -26,12 +26,12 @@ namespace PT.Domain.Model
         public string Banner { get; set; }
         [MaxLength(10)]
         public string Language { get; set; }
-        public CategoryType Type { get; set; } = CategoryType.Blog;
+        public CategoryType Type { get; set; } 
         public string Author { get; set; }
         public DateTime DatePosted { get; set; }
         public bool Status { get; set; }
         public int PortalId { get; set; } = 1;
-        public double? Price { get; set; }
+        public decimal? Price { get; set; }
         [NotMapped]
         public  Link Link { get; set; }
         [NotMapped]
@@ -49,6 +49,21 @@ namespace PT.Domain.Model
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+        public string TimeFromTo { get; set; }
+
+        // Địa chỉ event
+        public string Address { get; set; }
+        // Đường dẫn sample sản phẩm
+        public string FilePath { get; set; }
+        // Số trang
+        public int Pages { get; set; }
+        // Định dạng
+        public string Extentions { get; set; }
+        // Chủ đề
+        public string Topic { get; set; }
+        // Thời gian giao hàng
+        public string DeliveryTime { get; set; }
+
         [NotMapped]
         public List<LinkReference> LinkReferences { get; set; }
 
@@ -58,7 +73,10 @@ namespace PT.Domain.Model
         [NotMapped]
         public string FullPath { get; set; }
 
+        public ECategoryType? CategoryType { get; set; }
+        public ESlugType? SlugType { get; set; }
     }
+
     public class BlogModel :SeoModel
     {
         public int Id { get; set; }
@@ -111,7 +129,21 @@ namespace PT.Domain.Model
         public List<PortalSharedModel> PortalShareds { get; set; }
 
         public List<int> SharedPortalIds { get; set; }
-        public SelectList CategorySelectList { get; set; }
+        public List<SelectListItem> CategorySelectList { get; set; }
+
+        public DateTime? StartDate { get; set; }
+        public string TimeFromTo { get; set; }
+        public string Address { get; set; }
+        // Đường dẫn
+        public string FilePath { get; set; }
+        // Số trang
+        public int Pages { get; set; }
+        // Định dạng
+        public string Extentions { get; set; }
+        // Chủ đề
+        public string Topic { get; set; }
+        // Thời gian giao hàng
+        public string DeliveryTime { get; set; }
     }
     public class PortalSharedModel
     {
@@ -141,7 +173,7 @@ namespace PT.Domain.Model
         public virtual Category Category { get; set; }
         [Display(Name = "Tags")]
         public List<int> TagIds { get; set; }
-        public CategoryType SlugType { get; set; } = CategoryType.Service;
+        public CategoryType SlugType { get; set; }
         public MultiSelectList TagSelectList { get; set; }
         public string CategoryIds { get; set; }
         public string ReferenceString { get; set; }
@@ -168,7 +200,7 @@ namespace PT.Domain.Model
         public List<int> TagIds { get; set; }
         public MultiSelectList TagSelectList { get; set; }
         public SelectList PortalSelectList { get; set; }
-        public CategoryType SlugType { get; set; } = CategoryType.Page;
+        public CategoryType SlugType { get; set; } = CategoryType.ContentPagePage;
     }
   
     public class FAQModel:SeoModel
@@ -191,7 +223,7 @@ namespace PT.Domain.Model
         public string Banner { get; set; }
         [Display(Name = "Tags")]
         public List<int> TagIds { get; set; }
-        public CategoryType SlugType { get; set; } = CategoryType.FAQ;
+        public CategoryType SlugType { get; set; } 
         public MultiSelectList TagSelectList { get; set; }
         [Display(Name = "Thời gian đăng")]
         [Required(ErrorMessage = "{0} không được để trống")]
@@ -224,7 +256,7 @@ namespace PT.Domain.Model
         [Display(Name = "Tags")]
         public List<int> TagIds { get; set; }
         public MultiSelectList TagSelectList { get; set; }
-        public CategoryType SlugType { get; set; } = CategoryType.PromotionInformation;
+        public CategoryType SlugType { get; set; }
 
         [Display(Name = "Khuyến mãi hiệu lực từ")]
         [Required(ErrorMessage = "{0} không được để trống")]

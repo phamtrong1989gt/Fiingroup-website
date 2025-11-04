@@ -1,4 +1,5 @@
-﻿@model PT.Domain.Model.BaseSettings
+﻿@using PT.Domain.Model
+@model PT.Domain.Model.BaseSettings
 @addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PT.UI
@@ -12,6 +13,8 @@
     {
         listLan = listLan.Where(x => x.Id == PT.Base.CultureHelper.GetCurrentCulture.Id).ToList();
     }
+
+    var portals = (List<Portal>)ViewData["portals"];
 }
 <div class="block-header">
     <h2> <i class="material-icons">settings</i> Cấu hình SEO <span class="label label-danger label-t">Cập nhật</span></h2>
@@ -26,18 +29,24 @@
         </li>
     </ol>
 </div>
+<div style="height:10px;">
+
+</div>
 <div class="row clearfix">
     <div class="col-md-12">
         <div class="card card-t card-loading">
             <div class="body" style="padding-top:10px;" tab-list>
                 <ul class="nav nav-tabs nav-tabs-t tab-lang" role="tablist">
-                    @foreach (var item in listLan)
+                    @foreach (var portal in portals)
                     {
-                        <li role="presentation">
-                            <a tab-link data-tag="#@item.Id" data-not-active="true" data-url="@Url.Action("Seo",new { language = item.Id })" data-toggle="tab">
-                                <img class="icon-lang" src="@item.Icon" />  @item.Name
-                            </a>
-                        </li>
+                        @foreach (var item in listLan)
+                        {
+                            <li role="presentation">
+                                <a tab-link data-tag="#@item.Id" data-not-active="true" data-url="@Url.Action("Seo", new { language = item.Id, portalId = portal.Id })" data-toggle="tab">
+                                    <img class="icon-lang" src="@item.Icon" />  @item.Name (@portal.Name)
+                                </a>
+                            </li>
+                        }
                     }
                 </ul>
                 <div class="tab-content tab-content-t" tab-data tab-loading>

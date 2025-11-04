@@ -1,5 +1,5 @@
 ﻿@using PT.Domain.Model
-@model SeoSettings
+@model SeoSetting
 @addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PT.UI
@@ -70,10 +70,7 @@
                                                     <option selected value="">Tất cả</option>
                                                     @foreach (CategoryType name in Enum.GetValues(typeof(CategoryType)))
                                                     {
-                                                        if(name!=CategoryType.Employee)
-                                                        {
-                                                            <option value="@name">@name.GetDisplayName()</option>
-                                                        }
+                                                    <option value="@name">@name.GetDisplayName()</option>
                                                     }
                                                 </select>
                                             </div>

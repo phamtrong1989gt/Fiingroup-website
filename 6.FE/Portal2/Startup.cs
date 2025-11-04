@@ -22,6 +22,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using PT.Base;
+using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure;
 using PT.Infrastructure.Interfaces;
@@ -79,10 +80,6 @@ namespace PT.UI
             services.Configure<LogSettings>(Configuration.GetSection("LogSettings"));
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.Configure<SocketSettings>(Configuration.GetSection("SocketSettings"));
-            services.Configure<List<SeoSettings>>(Configuration.GetSection("SeoSettings"));
-            services.Configure<List<WebsiteInfoSettings>>(Configuration.GetSection("WebsiteInfoSettings"));
-            services.Configure<ExchangeRateSettings>(Configuration.GetSection("ExchangeRateSettings"));
-            services.Configure<BindContentSettings>(Configuration.GetSection("BindContentSettings"));
             services.Configure<List<AdvertisingHomepageSettings>>(Configuration.GetSection("AdvertisingHomepageSettings"));
             services.Configure<AuthorizeSettings>(Configuration.GetSection("AuthorizeSettings"));
             services.Configure<List<RedirectLinkSetting>>(Configuration.GetSection("RedirectLinkSettings"));
@@ -191,8 +188,10 @@ namespace PT.UI
             services.AddScoped<ITourDayGalleryRepository, TourDayGalleryRepository>();
             services.AddScoped<ITourTypeRepository, TourTypeRepository>();
             services.AddScoped<IFileDataRepository, FileDataRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+            services.AddScoped<ISeoSettingRepository, SeoSettingRepository>();
+            services.AddScoped<ISettingService, SettingService>();
+
             // Đăng ký DI cho repository tổng quát
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
             //Gzip

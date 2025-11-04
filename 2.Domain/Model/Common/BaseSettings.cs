@@ -80,5 +80,6 @@ namespace PT.Domain.Model
         public int ImageMaxWith { get; set; }
         public bool IsHttps { get; set; }
         public int PortalId { get; set; }
+        public int TimeCache { get; set; }
     }
 }

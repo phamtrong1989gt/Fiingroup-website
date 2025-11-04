@@ -7,5 +7,7 @@ namespace PT.Domain.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string Domain { get; set; }
+        public string DomainDev { get; set; }
+        public string RefeshCacheAPI { get; set; }
     }
 }

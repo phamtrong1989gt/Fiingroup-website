@@ -152,13 +152,13 @@
                 <div class="body body-t">
                     <partial name="_TabLanguage" model="@(new PT.Domain.Model.TabLanguageModel { Language = Context.Request.Query["language"] })" />
                     <div class="table-responsive">
-                        <table  class="table table-striped table-bordered table-hover table-t table-fix">
+                        <table class="table table-striped table-bordered table-hover table-t table-fix">
                             <thead>
                                 <tr>
                                     <th style="width:60px;" class="text-center">STT</th>
                                     <th>Tên</th>
-                                    <th >Danh mục</th>
-                                    <th >Tags</th>
+                                    <th>Danh mục</th>
+                                    <th>Tags</th>
                                     <th style="width:150px;">Tác giả</th>
                                     <th style="width:120px;">Ngày đăng</th>
                                     <partial name="_AdminTheadTableModule" />
@@ -166,7 +166,7 @@
                                     <th style="width:120px;">Hành động</th>
                                 </tr>
                             </thead>
-                            <tbody  grid-data></tbody>
+                            <tbody grid-data></tbody>
                         </table>
                     </div>
                     <div class="pl-20 pr-20 divpagination">
@@ -207,135 +207,171 @@
     <link href="~/Content/Admin/plugins/jstree/themes/default-dark/style.css" rel="stylesheet" />
 
     <script>
-        var contentPageRelated = [];
-        var contentPageReference =[];
+         var contentPageRelated = [];
+         var contentPageReference =[];
 
-        var _page = location.search.page > 0 ? location.search.page : 1;
-        $(function () {
-            bindCategory($("[name='language']").val(), '@Context.Request.Query["categoryId"].ToString()');
-            bindTag($("[name='language']").val(), '@Context.Request.Query["tagId"].ToString()')
-            $("[search-advance]").toSearch();
-            $("[button-popup]").toPopup();
-            $("[button-open-file-manager]").toButtonOpenFile();
-            $("[button-submit]").toSubmit();
-            $("[button-delete]").toDelete();
-            $("[button-upload]").toUploadFile();
-            $("[button-post]").toPost();
-            getDataGrid(1, true);
-        });
+         var _page = location.search.page > 0 ? location.search.page : 1;
+         $(function () {
+             bindCategory($("[name='language']").val(), '@Context.Request.Query["categoryId"].ToString()');
+             bindTag($("[name='language']").val(), '@Context.Request.Query["tagId"].ToString()')
+             $("[search-advance]").toSearch();
+             $("[button-popup]").toPopup();
+             $("[button-open-file-manager]").toButtonOpenFile();
+             $("[button-submit]").toSubmit();
+             $("[button-delete]").toDelete();
+             $("[button-upload]").toUploadFile();
+             $("[button-post]").toPost();
+             getDataGrid(1, true);
+         });
 
-        $(document).on("click", "[button-add-related]", function (e) {
-            var data = $("#BlogId");
-            if (data.val() == null) {
-                alertify.notify("Bạn chưa chọn một bài viết nào", "warning", 5);
-                return;
-            }
-            else {
-                var kt = contentPageRelated.find(x => x.id == data.val());
-                if (kt != null && kt != undefined) {
-                    alertify.notify("Bài viết liên quan đã tồn tại", "warning", 5);
-                    return;
-                }
-                contentPageRelated.push({ id: data.val(), text: data.find("option:selected").text() })
-                alertify.notify("Thêm một bài viết liên quan, click lưu thay đổi để lưu lại những bài viết liên quan vừa thêm", "success", 5);
-                bindRelated();
-            }
-        });
+         $(document).on("click", "[button-add-related]", function (e) {
+             var data = $("#BlogId");
+             if (data.val() == null) {
+                 alertify.notify("Bạn chưa chọn một bài viết nào", "warning", 5);
+                 return;
+             }
+             else {
+                 var kt = contentPageRelated.find(x => x.id == data.val());
+                 if (kt != null && kt != undefined) {
+                     alertify.notify("Bài viết liên quan đã tồn tại", "warning", 5);
+                     return;
+                 }
+                 contentPageRelated.push({ id: data.val(), text: data.find("option:selected").text() })
+                 alertify.notify("Thêm một bài viết liên quan, click lưu thay đổi để lưu lại những bài viết liên quan vừa thêm", "success", 5);
+                 bindRelated();
+             }
+         });
 
-        function paseRelated(str) {
-            if (str == null || str == undefined || str == "") {
-                contentPageRelated =[];
-            }
-            else {
-                console.log(str);
-                contentPageRelated = str;
-            }
-            bindRelated();
-        }
+         function paseRelated(str) {
+             if (str == null || str == undefined || str == "") {
+                 contentPageRelated =[];
+             }
+             else {
+                 console.log(str);
+                 contentPageRelated = str;
+             }
+             bindRelated();
+         }
 
-        function bindRelated() {
-            if (contentPageRelated.length > 0) {
-                var str = "";
-                $(contentPageRelated).each(function (i, item) {
-                    str += "<tr><td class=\"text-center\">" + (i + 1) + "</td><td>" + item.text + "</td><td><a  title=\"Xóa\" class=\"btn btn-danger waves-effect btncontrolgrid\" onclick=\"remoteRelated(" + item.id + ")\"><i class=\"material-icons iconcontrol\">delete_forever</i></a></td></tr>";
-                });
-                $("[bind-related]").html(str);
-            }
-            else {
-                $("[bind-related]").html("<tr><td colspan='369'>Chưa có bài viết liên quan nào</td></tr>");
-            }
-            $("[name='ContentPageRelatedIds']").val(contentPageRelated.map(x => x.id).join(','));
-        }
+         function bindRelated() {
+             if (contentPageRelated.length > 0) {
+                 var str = "";
+                 $(contentPageRelated).each(function (i, item) {
+                     str += "<tr><td class=\"text-center\">" + (i + 1) + "</td><td>" + item.text + "</td><td><a  title=\"Xóa\" class=\"btn btn-danger waves-effect btncontrolgrid\" onclick=\"remoteRelated(" + item.id + ")\"><i class=\"material-icons iconcontrol\">delete_forever</i></a></td></tr>";
+                 });
+                 $("[bind-related]").html(str);
+             }
+             else {
+                 $("[bind-related]").html("<tr><td colspan='369'>Chưa có bài viết liên quan nào</td></tr>");
+             }
+             $("[name='ContentPageRelatedIds']").val(contentPageRelated.map(x => x.id).join(','));
+         }
 
-        function remoteRelated(id) {
-            $.each(contentPageRelated, function (i) {
-                if (contentPageRelated[i].id == id) {
-                    contentPageRelated.splice(i, 1);
-                    bindRelated();
-                    alertify.notify("Xóa một bài viết liên quan, click lưu thay đổi để lưu lại những bài viết liên quan vừa thêm", "success", 5);
-                    return false;
-                }
-            });
-        }
+         function remoteRelated(id) {
+             $.each(contentPageRelated, function (i) {
+                 if (contentPageRelated[i].id == id) {
+                     contentPageRelated.splice(i, 1);
+                     bindRelated();
+                     alertify.notify("Xóa một bài viết liên quan, click lưu thay đổi để lưu lại những bài viết liên quan vừa thêm", "success", 5);
+                     return false;
+                 }
+             });
+         }
 
-        function initRickText(pathUpload) {
-            pathUpload = pathUpload.replace(/&amp;/g, "&");
-            $("ricktextContent").toRickText({ customConfig: 'configRickText.js', filebrowserUploadUrl: pathUpload });
-            $("[button-update-status]").toPost(function (rs, $this) {
-                swal({
-                    title: "Thông báo!",
-                    text: rs.message,
-                    type: rs.type,
-                    confirmButtonText: "Đóng!"
-                });
-                setTimeout(function () {
-                    $this.button('reset');
-                    setTimeout(function () {
-                        statusButtonEdit(false);
-                    }, 200);
-                }, 300);
+         function initRickText(pathUpload) {
+             pathUpload = pathUpload.replace(/&amp;/g, "&");
+             $("ricktextContent").toRickText({ customConfig: 'configRickText.js', filebrowserUploadUrl: pathUpload });
+             $("[button-update-status]").toPost(function (rs, $this) {
+                 swal({
+                     title: "Thông báo!",
+                     text: rs.message,
+                     type: rs.type,
+                     confirmButtonText: "Đóng!"
+                 });
+                 setTimeout(function () {
+                     $this.button('reset');
+                     setTimeout(function () {
+                         statusButtonEdit(false);
+                     }, 200);
+                 }, 300);
 
-            }, function () {
-                return serializedData;
-            });
-        }
+             }, function () {
+                 return serializedData;
+             });
+         }
 
-        function initAutoComplate() {
-            $("#TagIds").toTagsInput(function ($data) {
-                $data.language = $("[form-edit] [name='Language']").val();
-                return $data;
-            });
-        }
+         function initAutoComplate() {
+             $("#TagIds").toTagsInput(function ($data) {
+                 $data.language = $("[form-edit] [name='Language']").val();
+                 return $data;
+             });
+         }
 
-        function initAutoComplate2() {
-            $("#BlogId").toSelectAutocomplete({},function ($data) {
-                $data.type = function () {
-                    return $("[form-edit] [name='Language']").val();
-                };
-                return $data;
-            });
-        }
+         function initAutoComplate2() {
+             $("#BlogId").toSelectAutocomplete({},function ($data) {
+                 $data.type = function () {
+                     return $("[form-edit] [name='Language']").val();
+                 };
+                 return $data;
+             });
+         }
 
-        function getDataGrid(page, first = false) {
-            _page = page;
-            $("[grid-index]").toGridView(first, page);
-        }
+         function getDataGrid(page, first = false) {
+             _page = page;
+             $("[grid-index]").toGridView(first, page);
+         }
 
-        function reGetDataGrid(e) {
-            if (e != null) {
-                  _page = 1;
-                $("[name='language']").val($(e).attr("data-val"));
-                bindCategory($("[name='language']").val(), "");
-                bindTag($("[name='language']").val(), '')
-                $("[name='categoryId']").val("").selectpicker('refresh');
-                $("[name='tagId']").empty().append("<option value=''>Tất cả</option>");
-                $("[name='tagId']").val("").selectpicker('refresh');
-            }
-            getDataGrid(_page, false);
-        }
+         function reGetDataGrid(e) {
+             if (e != null) {
+                   _page = 1;
+                 $("[name='language']").val($(e).attr("data-val"));
+                 bindCategory($("[name='language']").val(), "");
+                 bindTag($("[name='language']").val(), '')
+                 $("[name='categoryId']").val("").selectpicker('refresh');
+                 $("[name='tagId']").empty().append("<option value=''>Tất cả</option>");
+                 $("[name='tagId']").val("").selectpicker('refresh');
+             }
+             getDataGrid(_page, false);
+         }
 
-         function getTreeCategory(language, id = 0, portalId = 1) {
-              $.post("@Url.Action("TreeCategory")?language=" + language + "&id=" + id+ "&portalId=" + portalId, function (data) {
+         //  function getTreeCategory(language, id = 0, portalId = 1) {
+         //       $.post("@Url.Action("TreeCategory")?language=" + language + "&id=" + id+ "&portalId=" + portalId, function (data) {
+         //         var $treeview = $('#using_json_2').jstree({
+         //             'check_callback': true,
+         //             'core': {
+         //                 'data': data,
+         //                 "themes": {
+         //                     "dots": true,
+         //                     "icons": false
+         //                 }
+         //             },
+         //             // Cấu hình checkbox để: không tự động tích/check parent khi click vào parent
+         //             'checkbox': {
+         //                 // tắt cơ chế three-state (cha tự chuyển trạng thái khi con thay đổi)
+         //                 'three_state': true,
+         //                 // tắt cascade để click parent không tác động lên children
+         //                 'cascade': ''
+         //             },
+         //             "plugins": ["checkbox", "changed"]
+         //         }).on("changed.jstree", function (e, data) {
+         //             if (data.node != undefined) {
+         //                 var parrents = "";
+         //                 if (data.node.parents != null) {
+         //                     parrents = data.node.parents.join(",");
+         //                 }
+         //                 var newStr = parrents + "," + data.selected.toString();
+         //                 newStr = newStr.replace("#", "-1");
+         //                 $("[name='CategoryIds']").val(newStr);
+         //             }
+         //         });
+         //         $treeview.on('ready.jstree', function () {
+         //             $treeview.jstree('open_all');
+         //         });
+         //     });
+         // }
+
+           function getTreeCategory(language, id = 0) {
+            $.post("@Url.Action("TreeCategory")?language=" + language + "&id=" + id, function (data) {
                 var $treeview = $('#using_json_2').jstree({
                     'check_callback': true,
                     'core': {
@@ -363,140 +399,163 @@
             });
         }
 
-        function bindCategory(language, setvalue = "") {
-            $.get("@Url.Action("SearchCategory")?language=" + language, function (data) {
-                $("[name='categoryId']").empty();
-                $("[name='categoryId']").append("<option value=''>Tất cả</option>")
-                for (i = 0; i < data.length; i++) {
-                    $("[name='categoryId']").append("<option value='" + data[i].value + "'>" + data[i].text + "</option>")
-                }
-                $("[name='categoryId']").val(setvalue).selectpicker('refresh');
-            })
-        }
-        function bindTag(language, setvalue = "") {
-         
-             $.get("@Url.Action("SearchTag")?language=" + language + "&portalId=" + ( $("#portalId").val() ?? ''), function (data) {
-                    $("[name='tagId']").empty();
-                    $("[name='tagId']").append("<option value=''>Tất cả</option>")
-                    for (i = 0; i < data.length; i++) {
-                        $("[name='tagId']").append("<option value='" + data[i].value + "'>" + data[i].text + "</option>")
-                    }
-                    $("[name='tagId']").val(setvalue).selectpicker('refresh');
-                })
-        }
+         function bindCategory(language, setvalue = "") {
+             $.get("@Url.Action("SearchCategory")?language=" + language, function (data) {
+                 $("[name='categoryId']").empty();
+                 $("[name='categoryId']").append("<option value=''>Tất cả</option>")
+                 for (i = 0; i < data.length; i++) {
+                     $("[name='categoryId']").append("<option value='" + data[i].value + "'>" + data[i].text + "</option>")
+                 }
+                 $("[name='categoryId']").val(setvalue).selectpicker('refresh');
+             })
+         }
+         function bindTag(language, setvalue = "") {
+
+              $.get("@Url.Action("SearchTag")?language=" + language + "&portalId=" + ( $("#portalId").val() ?? ''), function (data) {
+                     $("[name='tagId']").empty();
+                     $("[name='tagId']").append("<option value=''>Tất cả</option>")
+                     for (i = 0; i < data.length; i++) {
+                         $("[name='tagId']").append("<option value='" + data[i].value + "'>" + data[i].text + "</option>")
+                     }
+                     $("[name='tagId']").val(setvalue).selectpicker('refresh');
+                 })
+         }
 
 
-         $(document).on("click", "[button-add-reference]", function (e) {
-            var name = $("#NameReference");
-            var url = $("#UrlReference");
+          $(document).on("click", "[button-add-reference]", function (e) {
+             var name = $("#NameReference");
+             var url = $("#UrlReference");
 
-            if (name.val() == null || name.val() == "") {
-                alertify.notify("Bạn chưa nhập tên nguồn tham khảo", "warning", 5);
-                return;
-            }
-             else if (url.val() == null || url.val() == "") {
-                alertify.notify("Bạn chưa nhập đường dẫn nguồn tham khảo", "warning", 5);
-                return;
-            }
-            else {
-                contentPageReference.push({ Id : 0 ,Name: $("#NameReference").val(), Href: $("#UrlReference").val(), type: 1 })
-                alertify.notify("Thêm nguồn tham khảo thành công, click lưu thay đổi để lưu lại nguồn tham khảo vừa thêm", "success", 5);
-                $("#NameReference").val("");
-                $("#UrlReference").val("");
+             if (name.val() == null || name.val() == "") {
+                 alertify.notify("Bạn chưa nhập tên nguồn tham khảo", "warning", 5);
+                 return;
+             }
+              else if (url.val() == null || url.val() == "") {
+                 alertify.notify("Bạn chưa nhập đường dẫn nguồn tham khảo", "warning", 5);
+                 return;
+             }
+             else {
+                 contentPageReference.push({ Id : 0 ,Name: $("#NameReference").val(), Href: $("#UrlReference").val(), type: 1 })
+                 alertify.notify("Thêm nguồn tham khảo thành công, click lưu thay đổi để lưu lại nguồn tham khảo vừa thêm", "success", 5);
+                 $("#NameReference").val("");
+                 $("#UrlReference").val("");
 
-                bindReference();
-            }
-        });
+                 bindReference();
+             }
+         });
 
-        function paseReference(str) {
-            if (str == null || str == undefined || str == "") {
-                contentPageReference =[];
-            }
-            else {
-                contentPageReference = str;
-            }
-            bindReference();
-        }
+         function paseReference(str) {
+             if (str == null || str == undefined || str == "") {
+                 contentPageReference =[];
+             }
+             else {
+                 contentPageReference = str;
+             }
+             bindReference();
+         }
 
-       function bindReference() {
-           var referenceStt = 1;
-            if (contentPageReference.length > 0) {
-                var str = "";
-                $(contentPageReference).each(function (i, item) {
-                    item.stt = referenceStt;
-                    if (item.type == 3) {
+        function bindReference() {
+            var referenceStt = 1;
+             if (contentPageReference.length > 0) {
+                 var str = "";
+                 $(contentPageReference).each(function (i, item) {
+                     item.stt = referenceStt;
+                     if (item.type == 3) {
 
-                    }
-                    else {
-                        str += "<tr><td class=\"text-center\">" + (i + 1) + "</td><td><a class='text-primary text-name' target='_blank' href='" + item.Href + "'>" + item.Name + "</a></td><td><a  title=\"Xóa\" class=\"btn btn-danger waves-effect btncontrolgrid\" onclick=\"remoteReference(" + referenceStt + ")\"><i class=\"material-icons iconcontrol\">delete_forever</i></a></td></tr>";
-                    }
-                    referenceStt++;
-                });
-                $("[bind-reference]").html(str);
-            }
-            else {
-                $("[bind-reference]").html("<tr><td colspan='369'>Chưa có nguồn tham khảo nào</td></tr>");
-            }
-            $("[name='ContentPageReferenceIds']").val(JSON.stringify(contentPageReference));
-       }
-
-        function remoteReference(stt) {
-            $.each(contentPageReference, function (i) {
-                if (contentPageReference[i].stt == stt) {
-                    contentPageReference[i].type = 3;
-                    bindReference();
-                    alertify.notify("Xóa một nguồn tham khảo, click lưu thay đổi để lưu lại nguồn liên quan liên quan vừa thêm", "success", 5);
-                    return false;
-                }
-            });
+                     }
+                     else {
+                         str += "<tr><td class=\"text-center\">" + (i + 1) + "</td><td><a class='text-primary text-name' target='_blank' href='" + item.Href + "'>" + item.Name + "</a></td><td><a  title=\"Xóa\" class=\"btn btn-danger waves-effect btncontrolgrid\" onclick=\"remoteReference(" + referenceStt + ")\"><i class=\"material-icons iconcontrol\">delete_forever</i></a></td></tr>";
+                     }
+                     referenceStt++;
+                 });
+                 $("[bind-reference]").html(str);
+             }
+             else {
+                 $("[bind-reference]").html("<tr><td colspan='369'>Chưa có nguồn tham khảo nào</td></tr>");
+             }
+             $("[name='ContentPageReferenceIds']").val(JSON.stringify(contentPageReference));
         }
 
-              // Đồng bộ dropdown với jstree: chọn/check node, sau đó vô hiệu hóa node và các nút cha để tránh thay đổi
-        function updateTreeBySelect(selectedId) {
-            var tree = $('#using_json_2').jstree(true);
-            if (!tree) return;
+         function remoteReference(stt) {
+             $.each(contentPageReference, function (i) {
+                 if (contentPageReference[i].stt == stt) {
+                     contentPageReference[i].type = 3;
+                     bindReference();
+                     alertify.notify("Xóa một nguồn tham khảo, click lưu thay đổi để lưu lại nguồn liên quan liên quan vừa thêm", "success", 5);
+                     return false;
+                 }
+             });
+         }
+               // Đồng bộ dropdown với jstree: chọn/check node, sau đó vô hiệu hóa node và các nút cha để tránh thay đổi
+         function updateTreeBySelect(selectedId) {
+             // Lấy instance của jstree đã khởi tạo trên #using_json_2
+             var tree = $('#using_json_2').jstree(true);
+             // Nếu cây chưa khởi tạo hoặc không tồn tại -> dừng
+             if (!tree) return;
 
-            // Bật (enable) tất cả các nút trước
-            try {
-                var all = tree.get_json('#', { flat: true }).map(function (n) { return n.id; });
-                // if (all && all.length) {
-                //     tree.enable_node(all);
-                //     tree.uncheck_node(all);
-                //     tree.deselect_all(true);
-                // }
-            } catch (e) { }
+             // Lấy tất cả node hiện có trong cây (flat)
+             var allIds = [];
+             try {
+                 var flat = tree.get_json('#', { flat: true }) || [];
+                 allIds = flat.map(function (n) { return n.id; });
+             } catch (e) { allIds = []; }
 
-            if (!selectedId || selectedId == '') {
-                // Không chọn gì -> giữ tree ở trạng thái enable và xóa CategoryIds
-                $("[name='CategoryIds']").val("");
-                return;
-            }
+             // Bỏ disabled tất cả node (enable lại) nhưng KHÔNG bỏ check tất cả
+             try {
+                 if (allIds && allIds.length) {
+                     tree.enable_node(allIds);
+                     // Không uncheck tất cả nữa - chỉ uncheck những node sẽ bị disable sau
+                     // if (typeof tree.uncheck_node === 'function') {
+                     // tree.uncheck_node(allIds);
+                     // }
+                 }
+             } catch (e) { /* bỏ qua lỗi khi enable */ }
 
-            var nodeId = selectedId.toString();
-            var node = tree.get_node(nodeId);
-            if (!node) return;
+             // Nếu selectedId rỗng -> xóa CategoryIds và dừng
+             if (!selectedId || selectedId == '') {
+                 $("[name='CategoryIds']").val("");
+                 return;
+             }
 
-            // Lấy node được chọn và tất cả các nút cha (không bao gồm root '#')
-            var parents = (node.parents || []).filter(function (p) { return p !== '#'; });
-            var toSelect = [nodeId].concat(parents);
+             // Lấy node tương ứng với selectedId
+             var nodeId = selectedId.toString();
+             var node = tree.get_node(nodeId);
+             if (!node) return;
 
-            // Đánh dấu check node được chọn (để jstree tự động cascade lên các nút cha)
-            try {
-                tree.select_node(nodeId);
-            } catch (e) { }
-            // Vô hiệu hóa (disable) node và các nút cha để tránh thay đổi
-            toSelect.forEach(function (id) {
-                try { tree.disable_node(id); } catch (e) { }
-            });
 
-            // Cập nhật trườngẩ CategoryIds bằng các id đã được check
-            try {
-                var checked = tree.get_checked();
-                $("[name='CategoryIds']").val(checked.join(','));
-            } catch (e) {
-                $("[name='CategoryIds']").val(toSelect.join(','));
-            }
-        }
+             // Lấy danh sách các ancestor (loại '#')
+             var parents = (node.parents || []).filter(function (p) { return p !== '#'; });
+             var toDisable = [nodeId].concat(parents);
+
+             // Chỉ uncheck các node sẽ bị disable (node hiện tại và các ancestor)
+             try {
+                 if (typeof tree.uncheck_node === 'function') {
+                     tree.uncheck_node(toDisable);
+                 }
+             } catch (e) { }
+
+             // Check chỉ node được chọn — KHÔNG tự động tích các node cha
+             try {
+                 if (typeof tree.check_node === 'function') {
+                     tree.check_node(nodeId);
+                 } else {
+                     try { tree.select_node(nodeId); } catch (e) { }
+                 }
+             } catch (e) { /* bỏ qua lỗi khi check/select */ }
+
+             // Disable node được chọn và các ancestor
+             toDisable.forEach(function (id) {
+                 try { tree.disable_node(id); } catch (e) { }
+             });
+
+             // Cập nhật trường CategoryIds bằng danh sách node đang được check
+             try {
+                 var checked = tree.get_checked() || [];
+                 $("[name='CategoryIds']").val(checked.join(','));
+             } catch (e) {
+                 $("[name='CategoryIds']").val(nodeId);
+             }
+         }
 
 
     </script>

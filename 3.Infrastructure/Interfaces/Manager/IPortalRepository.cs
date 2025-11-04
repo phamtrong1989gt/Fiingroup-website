@@ -1,9 +1,11 @@
-﻿using PT.Domain.Model;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using PT.Domain.Model;
 using PT.Infrastructure.Repositories;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PT.Infrastructure.Interfaces
 {
@@ -15,9 +17,11 @@ namespace PT.Infrastructure.Interfaces
     public class PortalRepository : BaseRepository<Portal>, IPortalRepository
     {
         private readonly ApplicationContext _context;
-        public PortalRepository(ApplicationContext context) : base(context)
+        private readonly IWebHostEnvironment _env;
+        public PortalRepository(ApplicationContext context, IWebHostEnvironment env) : base(context)
         {
             _context = context;
+            _env = env;
         }
 
         public async Task<string> GetFullPathAsync(int portalId, string slug, string language = null, bool multipleLanguage = false)
@@ -36,6 +40,10 @@ namespace PT.Infrastructure.Interfaces
         {
             var portal = portals?.FirstOrDefault(p => p.Id == portalId);
             var domain = portal?.Domain?.TrimEnd('/') ?? string.Empty;
+            if(_env.IsDevelopment())
+            {
+                domain = portal.DomainDev;
+            }
             var cleanedSlug = (slug ?? string.Empty).TrimStart('/');
             if (multipleLanguage && !string.IsNullOrWhiteSpace(language))
             {

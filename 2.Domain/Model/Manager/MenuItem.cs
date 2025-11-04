@@ -22,7 +22,7 @@ namespace PT.Domain.Model
         public bool IsLinkLocal { get; set; }
         public bool Status { get; set; }
         public int LinkId { get; set; }
-        public CategoryType CategoryType { get; set; } = CategoryType.Blog;
+        public ESlugType CategoryType { get; set; }
         public string Language { get; set; }
     }
     public class MenuItemModel

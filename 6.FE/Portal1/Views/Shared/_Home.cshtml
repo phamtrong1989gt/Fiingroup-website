@@ -1,12 +1,9 @@
-﻿@using PT.Domain.Model;
+﻿@using PT.Base.Services
+@using PT.Domain.Model;
 @addTagHelper *, PT.UI
-@inject Microsoft.Extensions.Options.IOptions<List<WebsiteInfoSettings>> websiteInfoSettings
-@inject Microsoft.Extensions.Options.IOptions<List<SeoSettings>> seoSettings
-@inject Microsoft.Extensions.Options.IOptions<BindContentSettings> bindContentSettings
 @inject Microsoft.Extensions.Options.IOptions<AuthorizeSettings> _authorizeSettings;
 @inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
-
-@inject IViewLocalizer Localizer
+@inject ISettingService _settingService;    
 
 @{
     string domain = Context.Request.Host.ToString();
@@ -14,11 +11,11 @@
     var listLanguage = PT.Shared.ListData.ListLanguage;
     var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
     var portalId = _baseSettings.Value.PortalId;
+    var seoSettings = await _settingService.SeoSettingGet(language, portalId);
     var homeModel = new HomeModel
             {
                 Domain = domain,
-                SeoSettings = seoSettings.Value.FirstOrDefault(x => x.Id == language) ?? new SeoSettings(),
-                WebsiteInfoSettings = websiteInfoSettings.Value.FirstOrDefault(x => x.Id == language) ?? new WebsiteInfoSettings()
+                SeoSetting = seoSettings
             };
     var currentType = PT.Base.CookieExtensions.Get("CurrentPrice");
 
@@ -95,7 +92,6 @@
 
 
 
-@Html.Raw(bindContentSettings.Value.Footer)
 @RenderSection("Scripts", required: false)
 <partial name="_SettingHome" />
 <div class="modal modal-form fade" id="modalBookingForm" style="">
