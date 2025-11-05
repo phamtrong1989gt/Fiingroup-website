@@ -161,9 +161,9 @@ namespace PT.BE.Areas.Manager.Controllers
                     // Lấy ra danh mục chính
                     await _iContentPageRepository.BeginTransaction();
                     var categoryMain = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == use.CategoryId);
-                    if(categoryMain == null)
+                    if(categoryMain == null || categoryMain.CategoryType == null)
                     {
-                        return new ResponseModel() { Output = 0, Message = "Danh mục chính không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
+                        return new ResponseModel() { Output = 0, Message = "Danh mục chính không tồn tại hoặc dữ liệu chưa dc chuẩn hóa, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                     }
 
                     var data = new ContentPage

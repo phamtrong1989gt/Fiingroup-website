@@ -82,65 +82,7 @@
 										</div>
 									</div>
 
-									<div class="category_type category_type_103" style="display:none;">
-										<div class="form-group">
-											<label class="form-label" for="StartDate">Thời gian bắt đầu sự kiện</label>
-											<div class="controls">
-												<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="StartDate" />
-											</div>
-										</div>
-
-										<div class="form-group">
-											<label class="form-label" for="TimeFromTo">Thời gian sự kiện</label>
-											<div class="controls">
-												<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="TimeFromTo" />
-											</div>
-										</div>
-
-										<div class="form-group">
-											<label class="form-label" for="TimeFromTo">Địa chỉ sự kiện</label>
-											<div class="controls">
-												<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Address" />
-											</div>
-										</div>
-									</div>
-
-									<div class="category_type category_type_104 category_type_105" style="display:none;">
-										<div class="form-group">
-											<label class="form-label" for="FilePath">Đường dẫn sample sản phẩm</label>
-											<div class="controls">
-												<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="FilePath" />
-											</div>
-										</div>
-
-										<div class="form-group">
-											<label class="form-label" for="TimeFromTo">Tổng số trang</label>
-											<div class="controls">
-												<input type="number" class="form-control input-sm form-control-t" placeholder="" asp-for="Pages" />
-											</div>
-										</div>
-
-										<div class="form-group">
-											<label class="form-label" for="TimeFromTo">Định dạng</label>
-											<div class="controls">
-												<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Extentions" />
-											</div>
-										</div>
-
-										<div class="form-group">
-											<label class="form-label" for="FilePath">Chủ đề</label>
-											<div class="controls">
-												<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Topic" />
-											</div>
-										</div>
-
-										<div class="form-group">
-											<label class="form-label" for="TimeFromTo">Thời gian giao hàng</label>
-											<div class="controls">
-												<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="DeliveryTime" />
-											</div>
-										</div>
-									</div>
+									<partial name="_CategoryTypeInput" model="@Model">
 
 									<div class="form-group">
 										<label class="form-label" asp-for="Content"></label>
@@ -246,7 +188,7 @@
 					<div class="form-group">
 						<label asp-for="CategoryId"></label>
 						<select asp-for="CategoryId" asp-items="Model.CategorySelectList" class="input-sm form-control-t show-tick"></select>
-						<input type="hidden" name="CategoryTypes" id="CategoryTypesJson" value="@ViewData["CategoryJson"]" />
+						<input type="hidden" id="CategoryTypesJson" value="@ViewData["CategoryJson"]" />
 					</div>
 
 					<div class="form-group">
@@ -303,6 +245,7 @@
 
 	$("[name='DatePosted']").toDateTimePicker();
 	$("[name='Lastmod']").toDateTimePicker();
+	$("[name='StartDate']").toDateTimePicker();
 
 	initAutoComplate();
 	initAutoComplate2();
@@ -313,6 +256,7 @@
 	$(document).on('change', "[name='CategoryId']", function () {
 		var val = $(this).val();
 		updateTreeBySelect(val);
+		bindCategoryType(val);
 	});
 
 	// initial sync: after tree created, apply current select value
@@ -322,7 +266,7 @@
 		var tree = $('#using_json_2').jstree(true);
 		if (tree) {
 			// small delay to ensure ready handlers executed
-			setTimeout(function () { updateTreeBySelect($("[name='CategoryId']").val()); },150);
+			setTimeout(function () { updateTreeBySelect($("[name='CategoryId']").val()); bindCategoryType($("[name='CategoryId']").val()) },150);
 			return;
 		}
 		if (retry <10) {
@@ -330,45 +274,5 @@
 		}
 	})();
 
-	// --- category type binding ---
-	(function bindCategoryType() {
-		var json = $('#CategoryTypesJson').val() || '[]';
-		var items = [];
-		try { items = JSON.parse(json); } catch(e) { items = []; }
-		var map = {};
-		items.forEach(function(it) { map[String(it.Id)] = it.CategoryType; });
-
-		// attach data-category-type to options
-		$('#CategoryId option').each(function() {
-			var val = $(this).val();
-			if (map.hasOwnProperty(val)) $(this).attr('data-category-type', map[val]);
-		});
-
-		// handler to react to category type changes
-		function handleCategoryType(type) {
-			// TODO: implement show/hide logic based on category type
-			// Example:
-			// if (type ==1) { /* show specific inputs */ }
-			// else { /* hide or adjust other inputs */ }
-			hideAll();
-			$(".category_type_"+103).show();
-		}
-
-		function hideAll()
-		{
-			$(".category_type_103").hide();
-		}
-
-		function updateHiddenType() {
-			var sel = $('#CategoryId').val();
-			var t = '';
-			if (sel && map.hasOwnProperty(String(sel))) t = map[String(sel)];
-			// Do not set #CategoryType here; server-side code sets CategoryType based on CategoryId.
-			handleCategoryType(t);
-		}
-
-		// initial set and on change
-		updateHiddenType();
-		$('#CategoryId').on('change', updateHiddenType);
-	})();
+	
 </script>

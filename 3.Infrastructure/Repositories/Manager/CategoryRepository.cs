@@ -115,7 +115,9 @@ namespace PT.Infrastructure.Repositories
                     Summary = x.data.Summary,
                     Banner2 = x.data.Banner2,
                     IsHome = x.data.IsHome,
-                    PortalId = x.data.PortalId
+                    PortalId = x.data.PortalId,
+                    CategoryType = x.data.CategoryType,
+                    SlugType = x.data.SlugType
                 }).AsQueryable();
             if (Take > 0)
             {

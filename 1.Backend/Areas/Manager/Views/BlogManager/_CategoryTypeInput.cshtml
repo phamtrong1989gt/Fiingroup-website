@@ -1,0 +1,89 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model PT.Domain.Model.BlogModel
+<div class="category_type category_type_103" style="display:none;">
+	<div class="row" style=" background: #ff572214; padding-top: 7px; padding-bottom: 7px;">
+		<div class="col-md-4">
+			<div class="form-group">
+				<label class="form-label" for="StartDate">Thời gian bắt đầu sự kiện</label>
+				<div class="input-group input-group-t">
+					<div class="input-group-addon br-none">&nbsp;<i class="material-icons">event_available</i></div>
+					<input type="text" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm")" class="form-control input-sm form-control-t" asp-for="StartDate" />
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label class="form-label" for="TimeFromTo">Thời gian sự kiện</label>
+				<div class="controls">
+					<input type="text" class="form-control input-sm form-control-t" placeholder="Ví dụ: 10:00 - 11:30" asp-for="TimeFromTo" />
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label class="form-label" for="TimeFromTo">Địa chỉ sự kiện</label>
+				<div class="controls">
+					<input type="text" class="form-control input-sm form-control-t" placeholder="Ví dụ: Kiến Hưng, Hà Nội" asp-for="Address" />
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<div class="category_type category_type_104 category_type_105" style="display:none;">
+	<div class="row" style=" background: #ff572214; padding-top: 7px; padding-bottom: 7px;">
+		<div class="col-md-12">
+			<div class="form-group">
+				<label class="form-label" for="FilePath">Đường dẫn sample sản phẩm</label>
+				<div class="controls">
+					<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="FilePath" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+
+				</div>
+				<div class="col-md-3">
+
+				</div>
+				<div class="col-md-3">
+
+				</div>
+				<div class="col-md-3">
+
+				</div>
+			</div>
+		
+
+			<div class="form-group">
+				<label class="form-label" for="TimeFromTo">Tổng số trang</label>
+				<div class="controls">
+					<input type="number" class="form-control input-sm form-control-t" placeholder="" asp-for="Pages" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label" for="TimeFromTo">Định dạng</label>
+				<div class="controls">
+					<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Extentions" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label" for="FilePath">Chủ đề</label>
+				<div class="controls">
+					<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Topic" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label" for="TimeFromTo">Thời gian giao hàng</label>
+				<div class="controls">
+					<input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="DeliveryTime" />
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>

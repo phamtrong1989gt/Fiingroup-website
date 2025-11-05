@@ -486,33 +486,39 @@
                  }
              });
          }
-               // Đồng bộ dropdown với jstree: chọn/check node, sau đó vô hiệu hóa node và các nút cha để tránh thay đổi
+
+        // Thêm vào đầu <script> (bên cạnh các var khác)
+         var __lastSelectDisabled = [];
+         var __lastSelectedFromDropdown = null;
+
          function updateTreeBySelect(selectedId) {
              // Lấy instance của jstree đã khởi tạo trên #using_json_2
              var tree = $('#using_json_2').jstree(true);
-             // Nếu cây chưa khởi tạo hoặc không tồn tại -> dừng
              if (!tree) return;
 
-             // Lấy tất cả node hiện có trong cây (flat)
-             var allIds = [];
+             // Nếu trước đó có node bị disable do select -> bật lại và bỏ chọn chính node đó (không ảnh hưởng các check khác)
              try {
-                 var flat = tree.get_json('#', { flat: true }) || [];
-                 allIds = flat.map(function (n) { return n.id; });
-             } catch (e) { allIds = []; }
+                 if (__lastSelectDisabled && __lastSelectDisabled.length) {
+                     try { tree.enable_node(__lastSelectDisabled); } catch (e) { /* ignore */ }
 
-             // Bỏ disabled tất cả node (enable lại) nhưng KHÔNG bỏ check tất cả
-             try {
-                 if (allIds && allIds.length) {
-                     tree.enable_node(allIds);
-                     // Không uncheck tất cả nữa - chỉ uncheck những node sẽ bị disable sau
-                     // if (typeof tree.uncheck_node === 'function') {
-                     // tree.uncheck_node(allIds);
-                     // }
+                     if (__lastSelectedFromDropdown) {
+                         try {
+                             if (typeof tree.uncheck_node === 'function') {
+                                 // chỉ uncheck node đã từng được chọn từ dropdown
+                                 tree.uncheck_node(__lastSelectedFromDropdown);
+                             } else {
+                                 try { tree.deselect_node(__lastSelectedFromDropdown); } catch (e) { }
+                             }
+                         } catch (e) { /* ignore */ }
+                     }
+
+                     __lastSelectDisabled = [];
+                     __lastSelectedFromDropdown = null;
                  }
-             } catch (e) { /* bỏ qua lỗi khi enable */ }
+             } catch (e) { /* ignore */ }
 
              // Nếu selectedId rỗng -> xóa CategoryIds và dừng
-             if (!selectedId || selectedId == '') {
+             if (!selectedId || selectedId === '') {
                  $("[name='CategoryIds']").val("");
                  return;
              }
@@ -522,31 +528,32 @@
              var node = tree.get_node(nodeId);
              if (!node) return;
 
-
              // Lấy danh sách các ancestor (loại '#')
              var parents = (node.parents || []).filter(function (p) { return p !== '#'; });
              var toDisable = [nodeId].concat(parents);
 
-             // Chỉ uncheck các node sẽ bị disable (node hiện tại và các ancestor)
-             try {
-                 if (typeof tree.uncheck_node === 'function') {
-                     tree.uncheck_node(toDisable);
-                 }
-             } catch (e) { }
-
-             // Check chỉ node được chọn — KHÔNG tự động tích các node cha
+             // Check node được chọn (nếu jstree cấu hình không cascade thì chỉ check node này)
              try {
                  if (typeof tree.check_node === 'function') {
                      tree.check_node(nodeId);
                  } else {
                      try { tree.select_node(nodeId); } catch (e) { }
                  }
-             } catch (e) { /* bỏ qua lỗi khi check/select */ }
+             } catch (e) { /* ignore */ }
 
-             // Disable node được chọn và các ancestor
-             toDisable.forEach(function (id) {
-                 try { tree.disable_node(id); } catch (e) { }
-             });
+             // Disable node được chọn và các ancestor để tránh thay đổi sau đó
+             try {
+                 // try bulk disable; nếu lỗi thì disable từng node
+                 tree.disable_node(toDisable);
+             } catch (e) {
+                 toDisable.forEach(function (id) {
+                     try { tree.disable_node(id); } catch (ex) { }
+                 });
+             }
+
+             // Lưu lại để khi chọn giá trị khác có thể phục hồi đúng node trước đó
+             __lastSelectDisabled = toDisable;
+             __lastSelectedFromDropdown = nodeId;
 
              // Cập nhật trường CategoryIds bằng danh sách node đang được check
              try {
@@ -557,6 +564,13 @@
              }
          }
 
-
+         function bindCategoryType(categoryId) {
+			var json = $('#CategoryTypesJson').val() || '[]';
+			var items = [];
+			try { items = JSON.parse(json); } catch(e) { items = []; }
+			var type = items.find(x=>x.Id == categoryId)?.CategoryType || '';
+			$(".category_type").hide();
+            $(".category_type_"+type).show();
+		}
     </script>
 }
