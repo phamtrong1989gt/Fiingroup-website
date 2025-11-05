@@ -338,8 +338,17 @@ namespace PT.Infrastructure.Repositories
                     StartDate = x.data.StartDate,
                     EndDate=x.data.EndDate,
                     CategoryId=x.data.CategoryId,
-                    PortalId = x.data.PortalId
-                    
+                    PortalId = x.data.PortalId,
+                    TimeFromTo = x.data.TimeFromTo,
+                    Topic = x.data.Topic,
+                    Pages = x.data.Pages,
+                    Extentions = x.data.Extentions,
+                    FilePath = x.data.FilePath,
+                    Address = x.data.Address,
+                    CategoryType = x.data.CategoryType,
+                    DeliveryTime = x.data.DeliveryTime,
+                    SlugType = x.data.SlugType,
+
                 }).AsQueryable();
 
             var list = await query.Skip((page - 1) * limit).Take(limit).AsNoTracking().ToListAsync();

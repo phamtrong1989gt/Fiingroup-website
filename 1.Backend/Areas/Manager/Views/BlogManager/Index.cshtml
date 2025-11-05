@@ -10,7 +10,7 @@
     <div class="row head-v2">
         <div class="col-md-6">
             <div class="block-header">
-                <h2><i class="material-icons">assignment</i> QUẢN LÝ TIN TỨC <span class="label label-danger label-t">Danh sách</span></h2>
+                <h2><i class="material-icons">assignment</i> QUẢN LÝ Bài viết <span class="label label-danger label-t">Danh sách</span></h2>
                 <ol class="breadcrumb breadcrumb-t">
                     <li>
                         <a href="/Admin">
@@ -18,7 +18,7 @@
                         </a>
                     </li>
                     <li class="active">
-                        Danh sách tin tức
+                        Danh sách Bài viết
                     </li>
                 </ol>
             </div>
@@ -157,12 +157,14 @@
                                 <tr>
                                     <th style="width:60px;" class="text-center">STT</th>
                                     <th>Tên</th>
-                                    <th>Danh mục</th>
+                                    <th>Thông tin khác</th>
+                                    <th>Danh mục chính</th>
+                                    <th>Danh mục khác</th>
                                     <th>Tags</th>
                                     <th style="width:150px;">Tác giả</th>
                                     <th style="width:120px;">Ngày đăng</th>
                                     <partial name="_AdminTheadTableModule" />
-                                    <th style="width:200px;">Cổng</th>
+                                    <th style="width:120px;">Cổng</th>
                                     <th style="width:120px;">Hành động</th>
                                 </tr>
                             </thead>
@@ -302,7 +304,7 @@
 
          function initAutoComplate() {
              $("#TagIds").toTagsInput(function ($data) {
-                 $data.language = $("[form-edit] [name='Language']").val();
+                 // $data.language = $("[form-edit] [name='Language']").val();
                  return $data;
              });
          }
@@ -333,42 +335,6 @@
              }
              getDataGrid(_page, false);
          }
-
-         //  function getTreeCategory(language, id = 0, portalId = 1) {
-         //       $.post("@Url.Action("TreeCategory")?language=" + language + "&id=" + id+ "&portalId=" + portalId, function (data) {
-         //         var $treeview = $('#using_json_2').jstree({
-         //             'check_callback': true,
-         //             'core': {
-         //                 'data': data,
-         //                 "themes": {
-         //                     "dots": true,
-         //                     "icons": false
-         //                 }
-         //             },
-         //             // Cấu hình checkbox để: không tự động tích/check parent khi click vào parent
-         //             'checkbox': {
-         //                 // tắt cơ chế three-state (cha tự chuyển trạng thái khi con thay đổi)
-         //                 'three_state': true,
-         //                 // tắt cascade để click parent không tác động lên children
-         //                 'cascade': ''
-         //             },
-         //             "plugins": ["checkbox", "changed"]
-         //         }).on("changed.jstree", function (e, data) {
-         //             if (data.node != undefined) {
-         //                 var parrents = "";
-         //                 if (data.node.parents != null) {
-         //                     parrents = data.node.parents.join(",");
-         //                 }
-         //                 var newStr = parrents + "," + data.selected.toString();
-         //                 newStr = newStr.replace("#", "-1");
-         //                 $("[name='CategoryIds']").val(newStr);
-         //             }
-         //         });
-         //         $treeview.on('ready.jstree', function () {
-         //             $treeview.jstree('open_all');
-         //         });
-         //     });
-         // }
 
            function getTreeCategory(language, id = 0) {
             $.post("@Url.Action("TreeCategory")?language=" + language + "&id=" + id, function (data) {

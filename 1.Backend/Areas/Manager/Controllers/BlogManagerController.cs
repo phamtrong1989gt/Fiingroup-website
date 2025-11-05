@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -83,6 +84,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language = "vi", string ordertype = "asc", string orderby = "name")
         {
             var allows = _iCategoryRepository.GetCategoryPrefixedTypes().Where(x=> x != ECategoryType.ContentPage_Page);
+            var categorys = await _iCategoryRepository.SearchAsync(true, 0, 0);
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
             var data = await _iContentPageRepository.SearchPagedListAsync(
@@ -115,12 +117,23 @@ namespace PT.BE.Areas.Manager.Controllers
                     Link = x.Link,
                     IsHome = x.IsHome,
                     PortalId = x.PortalId,
-                    CategoryId = x.CategoryId
+                    CategoryId = x.CategoryId,
+                    CategoryType = x.CategoryType,
+                    Extentions = x.Extentions,
+                    StartDate = x.StartDate,
+                    TimeFromTo = x.TimeFromTo,
+                    Topic = x.Topic,
+                    DeliveryTime = x.DeliveryTime,
+                    Address = x.Address,
+                    FilePath = x.FilePath,
+                    Pages = x.Pages,
+                    SlugType = x.SlugType
                 });
             var portals = await _iPortalRepository.SearchAsync(true);
             foreach (var item in data.Data)
             {
                 item.Portal = portals.FirstOrDefault(x => x.Id == item.PortalId);
+                item.Category = categorys.FirstOrDefault(x => x.Id == item.CategoryId);
             }
             return View("IndexAjax", data);
         }
@@ -142,7 +155,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 Language = language
             };
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
-            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
+            dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 20, x => x.Status && x.Language == language && x.PortalId == portalId, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             dl.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId))?.Name;
             dl.PortalId = portalId;
             var categorys = await CategorysAsync(language, portalId);
@@ -179,7 +192,17 @@ namespace PT.BE.Areas.Manager.Controllers
                         PortalId = use.PortalId ?? 1,
                         CategoryId = use.CategoryId,
                         SlugType = ESlugType.ContentPage,
-                        CategoryType = categoryMain.CategoryType
+                        CategoryType = categoryMain.CategoryType,
+                        DeliveryTime = use.DeliveryTime,
+                        Address = use.Address,
+                        Price = use.Price,
+                        FilePath = use.FilePath,
+                        Extentions = use.Extentions,
+                         Pages = use.Pages,
+                        StartDate = use.StartDate,
+                        Topic = use.Topic,
+                        TimeFromTo = use.TimeFromTo,
+                        IsHome = use.IsHome
                     };
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
@@ -246,7 +269,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 model.Slug = ktLink.Slug;
             }
             var blogTagIds = (await _iContentPageTagRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x => x.TagId).ToList();
-            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == model.Language, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
+            model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 20, x => x.Status && x.Language == model.Language && x.PortalId == dl.PortalId, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             model.TagIds = blogTagIds;
 
             var listRelated = (await _iContentPageRelatedRepository.GetContentPageAsync(id, 0, 0, null, x => x.OrderBy(m => m.DatePosted), x => new ContentPage { Id = x.Id, DatePosted = x.DatePosted, Status = x.Status, Name = x.Name })).Select(x => new { id = x.Id, text = x.Name });
@@ -303,6 +326,16 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.DatePosted = use.DatePosted;
                     dl.Author = use.Author;
                     dl.PortalId = use.PortalId ?? 1;
+                    dl.DeliveryTime = use.DeliveryTime;
+                    dl.Address = use.Address;
+                    dl.Price = use.Price;
+                    dl.FilePath = use.FilePath;
+                    dl.Extentions = use.Extentions;
+                    dl.Pages = use.Pages;
+                    dl.StartDate = use.StartDate;
+                    dl.Topic = use.Topic;
+                    dl.TimeFromTo = use.TimeFromTo;
+                    dl.IsHome = use.IsHome;
 
                     await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage,  dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "ContentPageHome", "Details");
 
@@ -559,10 +592,10 @@ namespace PT.BE.Areas.Manager.Controllers
         #endregion
 
         [HttpPost, Authorize]
-        public async Task<List<SelectListItem>> SearchContentPage(string q, int top = 10, string language = "vi")
+        public async Task<List<SelectListItem>> SearchContentPage(string q, int top = 10, string language = "vi", int portalId = 0)
         {
             top = top > 100 ? 100 : top;
-            return (await _iContentPageRepository.SearchAsync(true, 0, top, x => x.Name.ToLower().Contains(q.ToLower()) &&  x.Status && x.CategoryType == ECategoryType.ContentPage_Blog && x.Language == language, x => x.OrderBy(y => y.Name),
+            return (await _iContentPageRepository.SearchAsync(true, 0, top, x => x.Name.ToLower().Contains(q.ToLower()) &&  x.Status && x.SlugType == ESlugType.ContentPage && x.Language == language && x.PortalId == portalId, x => x.OrderBy(y => y.Name),
                 x => new ContentPage { Id = x.Id, Name = x.Name,  Status = x.Status, Language = x.Language, Type = x.Type })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
         }
 

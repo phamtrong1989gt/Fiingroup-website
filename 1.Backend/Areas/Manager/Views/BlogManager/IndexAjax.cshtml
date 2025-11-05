@@ -23,6 +23,18 @@
         <td class="text-center">@PT.Shared.Functions.GenSTT(i, Model.Page, Model.Limit)</td>
         <td><span class="text-primary text-name">@item.Name</span></td>
         <td>
+            @if (item.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_Event)
+            {
+                <div>@item.StartDate?.ToString("dd/MM/yyyy HH:mm"), @item.TimeFromTo, @item.Address</div>
+            }
+            else if (item.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_Report || item.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_Publications)
+            {
+                <div>@item.Price?.ToString("N0"), @item.Extentions, @item.Pages pages, @item.Topic</div>
+            }
+        </td>
+		<td class="text-danger">@item.Category?.Name</td>
+    
+        <td>
             @foreach (var category in item.Categorys)
             {
                 <span class="label label-primary">@category?.Name</span>

@@ -56,7 +56,7 @@ namespace PT.Domain.Model
         // Đường dẫn sample sản phẩm
         public string FilePath { get; set; }
         // Số trang
-        public int Pages { get; set; }
+        public int? Pages { get; set; }
         // Định dạng
         public string Extentions { get; set; }
         // Chủ đề
@@ -144,6 +144,7 @@ namespace PT.Domain.Model
         public string Topic { get; set; }
         // Thời gian giao hàng
         public string DeliveryTime { get; set; }
+        public bool IsHome { get; set; }
     }
     public class PortalSharedModel
     {

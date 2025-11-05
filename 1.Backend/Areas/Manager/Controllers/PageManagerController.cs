@@ -80,7 +80,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
                         (m.PortalId== portalId || portalId == null) &&
-                        m.Type==CategoryType.ContentPagePage,
+                        m.CategoryType== ECategoryType.ContentPage_Page,
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {
                     Category = x.Category,

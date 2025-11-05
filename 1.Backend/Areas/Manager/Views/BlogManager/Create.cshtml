@@ -125,7 +125,7 @@
 
 									<div class="form-group">
 										<label asp-for="TagIds"></label>
-										<select asp-items="@Model.TagSelectList" multiple data-action-add="@Url.Action("AddTag")" style="width:100%;" data-action="@Url.Action("SearchTag")" asp-for="TagIds" class="form-control ms form-tag"></select>
+											<select asp-items="@Model.TagSelectList" multiple data-action-add="@Url.Action("AddTag", new { language = Model.Language, portalId = Model.PortalId })" style="width:100%;" data-action="@Url.Action("SearchTag")" asp-for="TagIds" class="form-control ms form-tag"></select>
 									</div>
 								</div>
 							</div>
@@ -148,7 +148,7 @@
 												<div class="input-group input-group-t">
 													<div class="input-group-addon br-none">Chọn bài viết liên quan</div>
 													<input type="hidden" asp-for="ContentPageRelatedIds" />
-													<select data-live-search="true" id="BlogId" data-action="@Url.Action("SearchContentPage")" name="BlogId" class="input-sm form-control-t show-tick with-ajax"></select>
+													<select data-live-search="true" id="BlogId" data-action="@Url.Action("SearchContentPage", new { language = Model.Language, portalId  = Model.PortalId})" name="BlogId" class="input-sm form-control-t show-tick with-ajax"></select>
 													<div class="input-group-addon btn-group-addon btn-group-addon-form-group">
 														<a button-add-related class="btn btn-icon bg-indigo waves-effect"><i class="material-icons">add</i> Thêm</a>
 													</div>

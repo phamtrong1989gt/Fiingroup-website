@@ -31,7 +31,7 @@ namespace PT.Domain.Model
         [RegularExpression(@"^.*[a-z0-9-/]$", ErrorMessage = "{0} chỉ bao gồm ký tự (a-z), (0-9), (-,/)")]
         [Remote("IsSlug", "Functions", "Base", ErrorMessage = "{0} đã tồn tại, vui lòng thay đổi hoặc thêm một số ký tự khác bao gồm (a-z), (0-9), (-,/)", AdditionalFields = "Id,Language,PortalId")]
         public string Slug { get; set; }
-        public double? Price { get; set; }
+        public decimal? Price { get; set; }
         public bool ChangeSlug { get; set; }
         [Display(Name = "Sitemap Lastmod")]
         public DateTime? Lastmod { get; set; } = DateTime.Now;
