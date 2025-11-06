@@ -1,57 +1,151 @@
 ﻿@{
-    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    var listLanguage = PT.Shared.ListData.ListLanguage;
-    var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
-    var portalId = 2;
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var listLanguage = PT.Shared.ListData.ListLanguage;
+	@model PT.UI.Models.ContactHomeModel;
+	@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
+	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
+	var portalId = 2;
 }
 <section class="py-5 mb-5" id="DangKy">
-    <div class="container">
-        <h2 class="price-title mb-5">Đăng ký ngay để <span style="color: #0066CC;">nhận từ vấn</span></h2>
-        <div class="row">
-            <div class="col-lg-6 col-sm-12">
-                <form>
-                    <div class="row">
-                        <div class="col-sm-6 mb-3">
-                            <label for="hoTen" class="form-label">Họ và tên <span class="error">*</span></label>
-                            <input type="text" class="form-control" id="hoTen" placeholder="Nhập họ và tên">
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <label for="soDienThoai" class="form-label">Số điện thoại <span class="error">*</span></label>
-                            <input type="text" class="form-control" id="soDienThoai" placeholder="Nhập số điện thoại">
-                        </div>
-                        <div class="col-sm-12 mb-3">
-                            <label for="email" class="form-label">Email <span class="error">*</span></label>
-                            <input type="email" class="form-control" id="email" placeholder="Nhập email">
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <label for="tenCongTy" class="form-label">Tên công ty <span class="error">*</span></label>
-                            <input type="text" class="form-control" id="tenCongTy" placeholder="Nhập công ty">
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <label for="chucDanhCV" class="form-label">Chức danh công việc <span class="error">*</span></label>
-                            <input type="text" class="form-control" id="chucDanhCV" placeholder="Nhập chức danh công việc">
-                        </div>
-                        <div class="col-sm-12 mb-3">
-                            <label for="dichVuQT" class="form-label">Dịch vụ quan tâm <span class="error">*</span></label>
-                            <select class="form-select" id="dichVuQT" aria-label="Default select example">
-                                <option selected>Chọn dịch vụ quan tâm</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-12 mb-3">
-                            <label for="yeuCauCT" class="form-label">Yêu cầu chi tiết <span class="error">*</span></label>
-                            <textarea type="text" maxlength="200" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập yêu cầu chi tiết"></textarea>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary col-sm-12 btn-yeucau">Gửi yêu cầu</button>
-                </form>
-            </div>
-            <div class="col-lg-6 col-sm-12 img">
-                @* <img src="Data/bg-dangky.jpg" alt="Đăng ký" /> *@
-                @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerRegister", language = language, portalId = portalId })
-            </div>
-        </div>
-    </div>
+	<div class="container">
+		<h2 class="price-title mb-5">Đăng ký ngay để <span style="color: #0066CC;">nhận từ vấn</span></h2>
+		<div class="row">
+			<div class="col-lg-6 col-sm-12">
+				@* <form form-edit method="post" asp-action="Contact" asp-controller="ContactHome"> *@
+				<form id="formLienHe" method="post">
+					@Html.AntiForgeryToken()
+					<div class="row">
+						<div class="col-sm-6 mb-3">
+							<label for="hoTen" class="form-label">Họ và tên <span class="error">*</span></label>
+							<input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder="Nhập họ và tên">
+							<span class="validate-style" asp-validation-for="FullName"></span>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<label for="soDienThoai" class="form-label">Số điện thoại <span class="error">*</span></label>
+							<input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder="Nhập số điện thoại">
+							<span class="validate-style" asp-validation-for="Phone"></span>
+						</div>
+						<div class="col-sm-12 mb-3">
+							<label for="email" class="form-label">Email <span class="error">*</span></label>
+							<input type="email" class="form-control" id="email" asp-for="Email" placeholder="Nhập email">
+							<span class="validate-style" asp-validation-for="Email"></span>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<label for="tenCongTy" class="form-label">Tên công ty <span class="error">*</span></label>
+							<input type="text" class="form-control" id="tenCongTy" asp-for="ConpanyName" placeholder="Nhập công ty">
+							<span class="validate-style" asp-validation-for="ConpanyName"></span>
+						</div>
+						<div class="col-sm-6 mb-3">
+							<label for="chucDanhCV" class="form-label">Chức danh công việc <span class="error">*</span></label>
+							<input type="text" class="form-control" id="chucDanhCV" asp-for="Position" placeholder="Nhập chức danh công việc">
+							<span class="validate-style" asp-validation-for="Position"></span>
+						</div>
+						<div class="col-sm-12 mb-3">
+							<label for="dichVuQT" class="form-label">Dịch vụ quan tâm <span class="error">*</span></label>
+							<select class="form-select" id="dichVuQT" asp-for="ServiceId" aria-label="Default select example">
+								<option selected>Chọn dịch vụ quan tâm</option>
+								<option value="1">One</option>
+								<option value="2">Two</option>
+								<option value="3">Three</option>
+							</select>
+						</div>
+						<div class="col-sm-12 mb-3">
+							<label for="yeuCauCT" class="form-label">Yêu cầu chi tiết <span class="error">*</span></label>
+							<textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập yêu cầu chi tiết"></textarea>
+							<span class="validate-style" asp-validation-for="Content"></span>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>Gửi yêu cầu</button>
+					@* <div class="row">
+						<div class="sumaryValidateForm" asp-validation-summary="All"></div>
+					</div> *@
+					@* <input type="hidden" id="g-recaptcha-response" name="capcha" /> *@
+				</form>
+			</div>
+			<div class="col-lg-6 col-sm-12 img">
+				@* <img src="Data/bg-dangky.jpg" alt="Đăng ký" /> *@
+				@await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerRegister", language = language, portalId = portalId })
+			</div>
+		</div>
+	</div>
 </section>
+@* <link href="/content/admin/plugins/alertifyjs/css/alertify.min.css" rel="stylesheet" /> *@
+@section Scripts {
+	<script src="/content/admin/plugins/alertifyjs/alertify.min.js"></script>
+	<script asp-append-version="true" src="/content/admin/js/script.home.js"></script>
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	@* <script src="https://www.google.com/recaptcha/api.js?render=@_authorizeSettings.Value.CapChaDataSitekey"></script>
+
+	<script>
+			  // Hàm lấy token reCAPTCHA, trả về Promise
+		function getCapchaToken() {
+			return new Promise(function (resolve) {
+				grecaptcha.ready(function () {
+					grecaptcha.execute('@_authorizeSettings.Value.CapChaDataSitekey', { action: 'submit' }).then(function (token) {
+						$("#g-recaptcha-response").val(token);
+						resolve(token);
+					});
+				});
+			});
+		}
+			$("[btnSendLH]").toSubmit(async function(data){
+				$("[btnSendLH]").prop("disabled", true);
+				await getCapchaToken();
+				// Sau khi có token, plugin sẽ tiếp tục submit như bình thường
+			}, function(rs){
+				if(rs.output == 1)
+				{
+				   resetInput();
+				}
+
+				setTimeout(function(){
+					$("[btnSendLH]").prop("disabled", false);
+				}, 6000);
+			});
+
+			function resetInput()
+			{
+				var $form = $("[form-edit]");
+				$form[0].reset(); // Reset tất cả các input, textarea về giá trị mặc định
+			}
+	</script> *@
+
+
+
+}
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+	$(function () {
+	  const $form = $('#formLienHe');
+	  $form.on('submit', function (e) {
+		e.preventDefault();
+
+		if (!$form.valid()) {
+		  console.log('Form không hợp lệ');
+		  return;
+		}
+		const token = $form.find('input[name="__RequestVerificationToken"]').val();
+		$.ajax({
+		  url: '@Url.Action("Contact", "ContactHome")',
+		  type: 'POST',
+		  data: $form.serialize(),
+		  headers: { 'RequestVerificationToken': token },
+		  success: function (res) {
+			alert(res.message);
+			$form[0].reset();
+		  },
+		  error: function (xhr) {
+			alert('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
+			console.error(xhr.responseText);
+		  }
+		});
+	  });
+	});
+</script>

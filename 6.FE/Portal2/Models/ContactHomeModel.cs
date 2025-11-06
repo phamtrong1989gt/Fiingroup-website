@@ -12,33 +12,40 @@ namespace PT.UI.Models
         public int Id { get; set; }
 
         [Display(Name = "FullName")]
-        [Required(ErrorMessage = "The {0} field is required")]
-        [StringLength(50, MinimumLength =1)]
+        [Required(ErrorMessage = "{0}  không được để trống")]
+        [StringLength(50, MinimumLength =10)]
         public string FullName { get; set; }
 
-        [Display(Name = "CountryId")]
-       // [Required(ErrorMessage = "The {0} field is required")]
-        public int? CountryId { get; set; }
-
-        [Display(Name = "PhoneCode")]
-        public string PhoneCode { get; set; }
-
-        [Display(Name = "Phone")]
-        [StringLength(20, MinimumLength = 0)]
+        [Display(Name = "Số điện thoại")]
+        [Required(ErrorMessage = "{0}  không được để trống")]
+        [StringLength(20, MinimumLength = 10)]
         public string Phone { get; set; }
 
         [Display(Name = "Email")]
-        [Required(ErrorMessage = "The {0} field is required")]
+        [Required(ErrorMessage = "{0}  không được để trống")]
         [StringLength(100, MinimumLength = 10)]
         public string Email { get; set; }
 
-        [Display(Name = "Content")]
-        [Required(ErrorMessage = "The {0} field is required")]
-        [StringLength(200, MinimumLength = 10)]
-        public string Content { get; set; }
+        [Display(Name = "Tên công ty")]
+        [Required(ErrorMessage = "{0}  không được để trống")]
+        [StringLength(100, MinimumLength = 10)]
+        public string ConpanyName { get; set; }
 
+        [Display(Name = "Chức danh công việc")]
+        [Required(ErrorMessage = "{0}  không được để trống")]
+        [StringLength(100, MinimumLength = 10)]
+        public string Position { get; set; }
+
+        [Display(Name = "Yêu cầu chi tiết")]
+        [Required(ErrorMessage = "{0}  không được để trống")]
+        [StringLength(100, MinimumLength = 10)]
+        public string Content { get; set; }
         public string Language { get; set; }
         public string Capcha { get; set; }
+
+        [Display(Name = "Dịch vụ quan tâm")]
+        [Required(ErrorMessage = "{0} không được để trống")]
+        public int? ServiceId { get; set; }
         public SelectList CountrySelectlist { get;  set; }
     }
 

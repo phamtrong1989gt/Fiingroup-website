@@ -310,12 +310,12 @@
         height: 600px;
     }
 
-.price-title, .why-title, #WhatWe .col-sm-4, .hotro-list .col-sm-5, .hotro-list .col-sm-7, .testimonial-card {
+/*.price-title, .why-title, #WhatWe .col-sm-4, .hotro-list .col-sm-5, .hotro-list .col-sm-7, .testimonial-card {
     transition: all 0.5s ease;
 }
     .price-title:hover, .why-title:hover, #WhatWe .col-sm-4:hover, .hotro-list .col-sm-5:hover, .hotro-list .col-sm-7:hover, .testimonial-card:hover {
         transform: translateY(-10px);
-    }
+    }*/
 .testimonial-card {
     background: #F2FAFF;
     overflow: hidden;

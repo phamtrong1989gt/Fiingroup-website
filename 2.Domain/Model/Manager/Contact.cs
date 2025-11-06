@@ -68,6 +68,8 @@ namespace PT.Domain.Model
         public Employee Employee { get; set; }
         public double Rating { get; set; }
         public bool IsHome { get; set; }
+        public string ConpanyName { get; set; }
+        public string Position { get; set; }
     }
 
     public class ContactModel
