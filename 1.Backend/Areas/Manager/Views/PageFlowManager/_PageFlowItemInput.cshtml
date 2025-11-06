@@ -1,0 +1,145 @@
+﻿@model PT.Domain.Model.PageModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne_1">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#collapseOne_1" aria-expanded="true" aria-controls="collapseOne_1">
+                <i class="material-icons">perm_contact_calendar</i> Thông tin chung (hiển thị ngoài trang chủ)
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
+                        <div class="controls">
+                            @if(Model.Id > 0)
+                            {
+                                <input type="text" seo-page-name onkeyup="GenSlug()" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
+                            }
+                            else
+                            {
+                                <input type="text" seo-page-name onkeydown="GenSlug()" onkeyup="GenSlug()" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
+                            }
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="PortalId" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" asp-for="Summary"></label> <span asp-validation-for="Summary"></span>
+                <div class="controls">
+                    <textarea id="ricktextSummary" class="form-control form-control-t" rows="3" placeholder="Tóm tắt" asp-for="Summary"></textarea>
+                </div>
+            </div>
+            <input asp-for="Content" type="hidden" seo-page-content />
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne_100">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#collapseOne_100" aria-expanded="true" aria-controls="headingOne_100">
+                <i class="material-icons">perm_contact_calendar</i> THÔNG TIN TRANG CHI TIẾT
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne_100" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_100">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-10"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Tiêu đề phụ</label>
+                        <div class="controls">
+                            <input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Input1">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Tiêu đề chính</label>
+                        <div class="controls">
+                            <input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Input2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Mô tả dòng chảy</label>
+                <div class="controls">
+                    <textarea class="form-control form-control-t" placeholder="" asp-for="Input3"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne_103">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#collapseOne_103" aria-expanded="true" aria-controls="headingOne_103">
+                <i class="material-icons">perm_contact_calendar</i> Scripts: SẢN PHẨM CÓ GÌ?
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne_103" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_103">
+        <div class="panel-body">
+            <textarea class="form-control form-control-t" placeholder="" asp-for="Input4"></textarea>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne_102">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#collapseOne_102" aria-expanded="true" aria-controls="headingOne_102">
+                <i class="material-icons">perm_contact_calendar</i> Scripts: TẠI SAO CHỌN SẢN PHẨM CHÚNG TÔI?
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne_102" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_102">
+        <div class="panel-body">
+            <textarea class="form-control form-control-t" placeholder="" asp-for="Input5"></textarea>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne_106">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#collapseOne_106" aria-expanded="true" aria-controls="headingOne_106">
+                <i class="material-icons">perm_contact_calendar</i> Scripts: BOX GIỚI THIỆU CỔNG THÔNG TIN LIÊN QUAN
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne_106" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_106">
+        <div class="panel-body">
+            <textarea class="form-control form-control-t" placeholder="" asp-for="Input6"></textarea>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne_107">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#collapseOne_107" aria-expanded="true" aria-controls="headingOne_107">
+                <i class="material-icons">perm_contact_calendar</i> Scripts: BOX GÓI DỊCH VỤ
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne_107" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_107">
+        <div class="panel-body">
+            <textarea class="form-control form-control-t" placeholder="" asp-for="Input7"></textarea>
+        </div>
+    </div>
+</div>

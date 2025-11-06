@@ -1,0 +1,99 @@
+﻿@model PT.Domain.Model.ContentPage
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer  Localizer
+@inject ICategoryRepository _iCategoryRepository
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x => x.Status && x.Language == language && x.Type == CategoryType.CategoryService, null, x => new Category { Id = x.Id, Status = x.Status, Type = x.Type, Name = x.Name, Language = x.Language, ParentId = x.ParentId });
+}
+<div class="page-content">
+    <div class="section mt-0">
+        <div class="breadcrumbs-wrap">
+            <div class="container">
+                <div class="breadcrumbs">
+                    <a href="/@Model.Language">@Localizer["Home"].Value</a>
+                    <a href="@Localizer["Link"].Value">@Localizer["FAQ"].Value</a>
+                    <span class="font-weight-500">@Model.Name</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section page-content-first">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 aside">
+                    <div class="blog-post blog-post-single">
+                        <div class="blog-post-info">
+                            <div>
+                                <h1 class="post-title-detail">@Model.Name</h1>
+                                <div class="post-meta">
+                                    <div class="post-meta-author">@Localizer["PostBy"].Value: <strong class="author-name">@Model.Author</strong></div>
+                                    <div class="post-meta-social">
+                                        <partial name="~/Views/Shared/Plugins/_Like.cshtml" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-text">
+                            @Html.Raw(Model.Content)
+                        </div>
+                        @*<div>
+                            <strong class="taglabel">Tags:</strong>
+                            <ul class="tags-list">
+                                @foreach (var item in Model.Tags)
+                                {
+                                    <li><a href="@PT.Shared.Functions.FormatUrl(item.Language,item.Link?.Slug)">@item.Name</a></li>
+                                }
+                            </ul>
+                        </div>*@
+                        <div class="baivietmoi">
+                            <h3>@Localizer["Related questions"].Value</h3>
+                            <div class="h-decor"></div>
+                            <vc:content-page content-pageid="0" type="FAQ" tag-id="null" language="@Model.Language" take="5" title="" view="_News" category-id="@Model.CategoryId" href="#"></vc:content-page>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 aside-left mt-5 mt-lg-0">
+                    <div class="side-block">
+                        <form method="get" action="@Localizer["Link"].Value" class="content-search d-flex">
+                            <div class="input-wrap">
+                                <input type="text" name="k" class="form-control" placeholder="Keywords">
+                            </div>
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </form>
+                    </div>
+
+                    <div class="side-block">
+                        <h3 class="side-block-title">@Localizer["Question category"].Value</h3>
+                        <ul class="categories-list">
+                            @foreach (var item in listCategory.Where(x => x.ParentId > 0))
+                            {
+                                string path = $"{Localizer["Link"].Value}?c={item.Id}";
+                                <li><a href="@path">@item.Name</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="row d-flex flex-column flex-sm-row flex-md-column">
+                        @if (language == "vi")
+                        {
+                            <vc:view-module id="8" type="StaticInformation"></vc:view-module>
+                        }
+                        else if (language == "en")
+                        {
+                            <vc:view-module id="6" type="StaticInformation"></vc:view-module>
+                        }
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+@section Scripts
+    {
+    <script>
+        loadSDKFacebook();
+    </script>
+}

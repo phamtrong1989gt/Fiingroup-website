@@ -64,6 +64,14 @@ namespace PT.Domain.Model
         // Thời gian giao hàng
         public string DeliveryTime { get; set; }
 
+        public string Input1 { get; set; }
+        public string Input2 { get; set; }
+        public string Input3 { get; set; }
+        public string Input4 { get; set; }
+        public string Input5 { get; set; }
+        public string Input6 { get; set; }
+        public string Input7 { get; set; }
+
         [NotMapped]
         public List<LinkReference> LinkReferences { get; set; }
 
@@ -75,6 +83,8 @@ namespace PT.Domain.Model
 
         public ECategoryType? CategoryType { get; set; }
         public ESlugType? SlugType { get; set; }
+        [NotMapped]
+        public List<ContentPage> Relateds { get; set; }
     }
 
     public class BlogModel :SeoModel
@@ -201,7 +211,7 @@ namespace PT.Domain.Model
         public List<int> TagIds { get; set; }
         public MultiSelectList TagSelectList { get; set; }
         public SelectList PortalSelectList { get; set; }
-        public CategoryType SlugType { get; set; } = CategoryType.ContentPagePage;
+        public ESlugType SlugType { get; set; }
 
         public string ContentPageRelatedIds { get; set; }
         public string RelatedString { get; set; }
@@ -213,7 +223,7 @@ namespace PT.Domain.Model
         public string Input5 { get; set; }
         public string Input6 { get; set; }
         public string Input7 { get; set; }
-
+        public ECategoryType? CategoryType { get; set; }
     }
   
     public class FAQModel:SeoModel
