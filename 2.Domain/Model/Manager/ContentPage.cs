@@ -202,6 +202,18 @@ namespace PT.Domain.Model
         public MultiSelectList TagSelectList { get; set; }
         public SelectList PortalSelectList { get; set; }
         public CategoryType SlugType { get; set; } = CategoryType.ContentPagePage;
+
+        public string ContentPageRelatedIds { get; set; }
+        public string RelatedString { get; set; }
+
+        public string Input1 { get; set; }
+        public string Input2 { get; set; }
+        public string Input3 { get; set; }
+        public string Input4 { get; set; }
+        public string Input5 { get; set; }
+        public string Input6 { get; set; }
+        public string Input7 { get; set; }
+
     }
   
     public class FAQModel:SeoModel

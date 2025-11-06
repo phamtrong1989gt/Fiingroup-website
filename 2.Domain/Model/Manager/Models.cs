@@ -36,6 +36,8 @@ namespace PT.Domain.Model
         ContentPage_Page = 107,
         [Display(Name = "Câu hỏi thường gặp")]
         ContentPage_FAQ = 108,
+        [Display(Name = "Trang hỗ trợ dòng chảy")]
+        ContentPage_Flow = 109,
     }
 
     public enum CategoryType

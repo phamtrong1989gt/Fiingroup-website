@@ -128,7 +128,9 @@ namespace PT.Infrastructure.Repositories
                     StartDate = parentContentPage.StartDate,
                     EndDate = parentContentPage.EndDate,
                     CategoryId = parentContentPage.CategoryId,
-                    PortalId = sharedPortalId
+                    PortalId = sharedPortalId,
+                    CategoryType = parentContentPage.CategoryType,
+                    SlugType = parentContentPage.SlugType
                 };
 
                 await _context.ContentPages.AddAsync(newContent);

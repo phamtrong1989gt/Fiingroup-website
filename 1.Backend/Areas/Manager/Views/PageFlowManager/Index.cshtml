@@ -1,0 +1,330 @@
+﻿@addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PT.UI
+@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.BaseSettings> _baseSettings;
+@{
+    Layout = "~/Views/Shared/_Admin.cshtml";
+    var portals = (SelectList)ViewData["PortalSelectList"];
+}
+
+<div grid-index data-url="@Url.Action("index")">
+    <div class="row head-v2">
+        <div class="col-md-4">
+            <div class="block-header">
+                <h2><i class="material-icons">content_paste</i> QUẢN LÝ TRANG HỖ TRỢ DÒNG CHẢY <span class="label label-danger label-t">Danh sách</span></h2>
+                <ol class="breadcrumb breadcrumb-t">
+                    <li>
+                        <a href="/Admin">
+                            Trang điều khiển
+                        </a>
+                    </li>
+                    <li class="active">
+                        Danh sách trang hỗ trợ dòng chảy    
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-md-8">
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12">
+            <div class="new-form-search">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Từ khóa</label>
+                            <div class="controls">
+                                <input class="form-control input-sm form-control-t" grid-input type="text" name="key">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Cổng</label>
+                            <div class="controls">
+                                <select grid-input name="portalId" asp-items="@((SelectList)ViewData["PortalSelectList"])" class="input-sm form-control-t show-tick">
+                                    <option value="">Tất cả</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group clearfix">
+                            <label class="form-label">Tag</label>
+                            <div class="controls">
+                                <select data-live-search="true" data-size="10" grid-input name="tagId" asp-items="@((SelectList)ViewData["TagSelectList"])" class="input-sm form-control-t show-tick">
+                                    <option selected value="">Tất cả</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Trạng thái</label>
+                            <div class="controls">
+                                <select grid-input name="status" class="input-sm form-control-t show-tick">
+                                    <option value="">Tất cả</option>
+                                    <option value="true">Sử dụng</option>
+                                    <option value="false">Không sử dụng</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="can-button-search">
+                            <a onclick="getDataGrid(1)" class="btn bg-indigo dropdown-toggle">
+                                <i class="material-icons">search</i><span>Tìm kiếm</span>
+                            </a>
+                            @if (_baseSettings.Value.MultipleLanguage)
+                            {
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">add</i><span>Thêm mới</span> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu drcontrol">
+                                        @foreach (var portal in portals)
+                                        {
+                                            <li><strong class="label-portal">@portal.Text</strong></li>
+                                            @foreach (var item in PT.Shared.ListData.ListLanguage)
+                                            {
+                                                <li> <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-portalId="@portal.Value" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var portal in portals)
+                                {
+                                    <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
+                                        <i class="material-icons">add</i><span> Thêm @portal.Text</span>
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div grid-loading class="card card-t card-loading">
+                <div class="header bg-indigo">
+                    <h4 grid-num-row class="num-t m-l-20">
+                        Đang tải...
+                    </h4>
+                    <ul class="header-dropdown m-r--5 header-dropdown-t">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">apps</i>
+                            </a>
+                            <ul class="dropdown-menu pull-left">
+                                @* <li><a href="javascript:void(0);">Khóa tài khoản đã chọn</a></li>*@
+                                <li><a href="javascript:void(0);">Đóng lại</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="controlOrderBy">
+                        <div style="width:110px;" class="itemorder selectOrder">
+                            <select grid-input onchange="getDataGrid(1)" data-header="Loại sắp xếp" name="ordertype" class="form-control input-sm form-control-t show-tick">
+                                <option data-icon="glyphicon-sort-by-attributes" value="asc">Tăng dần</option>
+                                <option data-icon="glyphicon-sort-by-attributes-alt" value="desc">Giảm dần</option>
+                            </select>
+                        </div>
+                        <div style="width:200px;" class="itemorder selectOrder">
+                            <select grid-input onchange="getDataGrid(1)" data-header="Xắp xếp theo" name="orderby" class="form-control input-sm form-control-t show-tick">
+                                <option data-icon="glyphicon glyphicon-sort" value="datePosted">Xếp theo thời gian đăng</option>
+                                <option data-icon="glyphicon glyphicon-sort" value="name">Xếp theo tên hiển thị</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="body body-t">
+                    <partial name="_TabLanguage" model="@(new PT.Domain.Model.TabLanguageModel { Language = Context.Request.Query["language"] })" />
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-t table-fix">
+                            <thead>
+                                <tr>
+                                    <th style="width:60px;" class="text-center">STT</th>
+                                    <th>Tên</th>
+                                    <th style="width:200px;">Tags</th>
+                                    <th style="width:120px;">Ngày đăng</th>
+                                    <partial name="_AdminTheadTableModule" />
+                                    <th style="width:200px;">Cổng</th>
+                                    <th style="width:120px;">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody grid-data></tbody>
+                        </table>
+                    </div>
+                    <div class="pl-20 pr-20 divpagination">
+                        <div class="row">
+                            <div class="col-md-2 m-b-0">
+                                <div class="input-group m-b-0">
+                                    <span class="input-group-addon">
+                                        Bản ghi/trang
+                                    </span>
+                                    <div class="form-line form-line-t form-line-pagesize">
+                                        <select name="limit" onchange="getDataGrid(1)" class="form-control show-tick" grid-input>
+                                            <option selected value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-10  m-b-0">
+                                <nav grid-pagination class="pg-t">
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script src="~/Content/Admin/plugins/ckeditor/ckeditor.js"></script>
+<script src="~/Content/Admin/plugins/jstree/jstree.min.js"></script>
+<link href="~/Content/Admin/plugins/jstree/themes/default/style.css" rel="stylesheet" />
+<link href="~/Content/Admin/plugins/jstree/themes/default-dark/style.css" rel="stylesheet" />
+
+<script>
+        var _page = 1;
+    $(function () {
+              bindTag($("[name='language']").val(), '@Context.Request.Query["tagId"].ToString()')
+            $("[search-advance]").toSearch();
+            $("[button-popup]").toPopup();
+            $("[button-open-file-manager]").toButtonOpenFile();
+            $("[button-submit]").toSubmit();
+            $("[button-delete]").toDelete();
+            $("[button-upload]").toUploadFile();
+            $("[button-post]").toPost();
+            getDataGrid(1, true);
+        });
+
+        function initRickText(pathUpload) {
+            pathUpload = pathUpload.replace(/&amp;/g, "&");
+            $("ricktextContent").toRickText({ customConfig: 'configRickText.js', filebrowserUploadUrl: pathUpload });
+            $("[button-update-status]").toPost(function (rs, $this) {
+                swal({
+                    title: "Thông báo!",
+                    text: rs.message,
+                    type: rs.type,
+                    confirmButtonText: "Đóng!"
+                });
+                setTimeout(function () {
+                    $this.button('reset');
+                    setTimeout(function () {
+                        statusButtonEdit(false);
+                    }, 200);
+                }, 300);
+
+            }, function () {
+                return serializedData;
+            });
+        }
+        function initAutoComplate() {
+           $("#TagIds").toTagsInput(function ($data) {
+                $data.language = $("[form-edit] [name='Language']").val();
+                return $data;
+            });
+        }
+
+        function getDataGrid(page, first = false) {
+            _page = page;
+            $("[grid-index]").toGridView(first, page);
+        }
+        function reGetDataGrid(e) {
+            if (e != null) {
+                _page = 1;
+
+                $("[name='language']").val($(e).attr("data-val"));
+                    bindTag($("[name='language']").val(), '')
+                $("[name='tagId']").empty().append("<option value=''>Tất cả</option>");
+                $("[name='tagId']").val("").selectpicker('refresh');
+            }
+            getDataGrid(_page, false);
+        }
+      function bindTag(language, setvalue = "") {
+        $.get("@Url.Action("SearchTag")?language=" + language, function (data) {
+                $("[name='tagId']").empty();
+                $("[name='tagId']").append("<option value=''>Tất cả</option>")
+                for (i = 0; i < data.length; i++) {
+                    $("[name='tagId']").append("<option value='" + data[i].value + "'>" + data[i].text + "</option>")
+                }
+                $("[name='tagId']").val(setvalue).selectpicker('refresh');
+            })
+    }
+           var contentPageRelated = [];
+           function paseRelated(str) {
+                 if (str == null || str == undefined || str == "") {
+                     contentPageRelated =[];
+                 }
+                 else {
+                     contentPageRelated = str;
+                 }
+                 bindRelated();
+             }
+
+                   $(document).on("click", "[button-add-related]", function (e) {
+                 var data = $("#BlogId");
+                 if (data.val() == null) {
+                     alertify.notify("Bạn chưa chọn một bài viết nào", "warning", 5);
+                     return;
+                 }
+                 else {
+                     var kt = contentPageRelated.find(x => x.id == data.val());
+                     if (kt != null && kt != undefined) {
+                         alertify.notify("sản phẩm hỗ trợ đã tồn tại", "warning", 5);
+                         return;
+                     }
+                     contentPageRelated.push({ id: data.val(), text: data.find("option:selected").text() })
+                     alertify.notify("Thêm một sản phẩm hỗ trợ, click lưu thay đổi để lưu lại những sản phẩm hỗ trợ vừa thêm", "success", 5);
+                     bindRelated();
+                 }
+             });
+
+             function paseRelated(str) {
+                 if (str == null || str == undefined || str == "") {
+                     contentPageRelated =[];
+                 }
+                 else {
+                     console.log(str);
+                     contentPageRelated = str;
+                 }
+                 bindRelated();
+             }
+
+             function bindRelated() {
+                 if (contentPageRelated.length > 0) {
+                     var str = "";
+                     $(contentPageRelated).each(function (i, item) {
+                         str += "<tr><td class=\"text-center\">" + (i + 1) + "</td><td>" + item.text + "</td><td><a  title=\"Xóa\" class=\"btn btn-danger waves-effect btncontrolgrid\" onclick=\"remoteRelated(" + item.id + ")\"><i class=\"material-icons iconcontrol\">delete_forever</i></a></td></tr>";
+                     });
+                     $("[bind-related]").html(str);
+                 }
+                 else {
+                     $("[bind-related]").html("<tr><td colspan='369'>Chưa có sản phẩm hỗ trợ nào</td></tr>");
+                 }
+                 $("[name='ContentPageRelatedIds']").val(contentPageRelated.map(x => x.id).join(','));
+             }
+
+             function remoteRelated(id) {
+                 $.each(contentPageRelated, function (i) {
+                     if (contentPageRelated[i].id == id) {
+                         contentPageRelated.splice(i, 1);
+                         bindRelated();
+                         alertify.notify("Xóa một sản phẩm hỗ trợ, click lưu thay đổi để lưu lại những sản phẩm hỗ trợ vừa thêm", "success", 5);
+                         return false;
+                     }
+                 });
+             }
+</script>
+}

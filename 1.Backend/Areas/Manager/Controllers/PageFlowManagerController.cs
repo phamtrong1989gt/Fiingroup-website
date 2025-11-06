@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
-    public class PageManagerController : Base.Controllers.BaseController
+    public class PageFlowManagerController : Base.Controllers.BaseController
     {
         private readonly ILogger _logger;
         private readonly IOptions<BaseSettings> _baseSettings;
@@ -32,8 +32,8 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly IFileRepository _iFileRepository;
         private readonly IPortalRepository _iPortalRepository;
 
-        public PageManagerController(
-            ILogger<PageManagerController> logger,
+        public PageFlowManagerController(
+            ILogger<PageFlowManagerController> logger,
             IOptions<BaseSettings> baseSettings,
             IContentPageRepository iContentPageRepository,
             ILinkRepository iLinkRepository,
@@ -44,8 +44,8 @@ namespace PT.BE.Areas.Manager.Controllers
             IPortalRepository iPortalRepository
         )
         {
-            controllerName = "PageManager";
-            tableName = "Blog";
+            controllerName = "PageFlowManager";
+            tableName = "ContentPage";
             _logger = logger;
             _baseSettings = baseSettings;
             _iContentPageRepository = iContentPageRepository;
@@ -80,7 +80,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
                         (m.PortalId== portalId || portalId == null) &&
-                        m.CategoryType== ECategoryType.ContentPage_Page,
+                        m.CategoryType== ECategoryType.ContentPage_Flow,
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {
                     Category = x.Category,
@@ -470,13 +470,5 @@ namespace PT.BE.Areas.Manager.Controllers
             return new ResponseModel<FileDataModel>() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại.", Type = ResponseTypeMessage.Danger, Status = false };
         }
         #endregion
-
-        [HttpPost, Authorize]
-        public async Task<List<SelectListItem>> SearchContentPage(string q, int top = 10, string language = "vi", int portalId = 0)
-        {
-            top = top > 100 ? 100 : top;
-            return (await _iContentPageRepository.SearchAsync(true, 0, top, x => x.Name.ToLower().Contains(q.ToLower()) && x.Status && x.SlugType == ESlugType.ContentPage && x.Language == language && x.PortalId == portalId, x => x.OrderBy(y => y.Name),
-                x => new ContentPage { Id = x.Id, Name = x.Name, Status = x.Status, Language = x.Language, Type = x.Type, PortalId = x.PortalId })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
-        }
     }
 }
