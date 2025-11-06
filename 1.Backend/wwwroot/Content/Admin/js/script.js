@@ -1069,30 +1069,33 @@ function datetimeToString(date, format) {
 }
 
 function ToSlug(strVN) {
-    var title, slug, str;
-    str = strVN.toLowerCase();
+    if (!strVN) return "";
+    var str = String(strVN).toLowerCase().trim();
+
     // xóa dấu
     str = str.replace(/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/g, 'a');
-    str = str.replace(/(è|é|ẹ|ẻ|ẽ|ê|ề|Ế|ệ|ể|ễ)/g, 'e');
+    str = str.replace(/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/g, 'e');
     str = str.replace(/(ì|í|ị|ỉ|ĩ)/g, 'i');
     str = str.replace(/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/g, 'o');
-    str = str.replace(/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ỗ)/g, 'u');
+    str = str.replace(/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ|ỗ)/g, 'u');
     str = str.replace(/(ỳ|ý|ỵ|ỷ|ỹ)/g, 'y');
     str = str.replace(/(đ)/g, 'd');
 
-    // Xóa ký tự đặc biệt
+    // Xóa ký tự đặc biệt (chỉ giữ chữ thường, số, dấu - và khoảng trắng)
     str = str.replace(/([^0-9a-z-\s])/g, '');
 
     // Xóa khoảng trắng thay bằng ký tự -
-    str = str.replace(/(\s+)/g, '-');
+    str = str.replace(/\s+/g, '-');
 
-    // xóa phần dự - ở đầu
-    str = str.replace(/^-+/g, '');
+    // Gộp nhiều dấu - liên tiếp thành 1 dấu -
+    str = str.replace(/-+/g, '-');
 
-    // xóa phần dư - ở cuối
-    str = str.replace(/-+$/g, '');
+    // xóa phần dư - ở đầu và cuối
+    str = str.replace(/^-+|-+$/g, '');
+
     return str;
 }
+
 function GenSlug(e) {
     if (e == null) {
         $("#Slug").val(ToSlug($("#Name").val()));

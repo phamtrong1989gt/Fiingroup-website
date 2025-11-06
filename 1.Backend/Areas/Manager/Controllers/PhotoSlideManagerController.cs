@@ -121,7 +121,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         (m.Language == language) &&
                         (m.PortalId == portalId || portalId == null) &&
                         (m.Status == status || status == null) &&
-                        (m.Code == code || code == null) &&
+                        (m.Code.Contains(code) || code == null) &&
                         m.Type == BannerType.Slide &&
                         !m.Delete
                         && (m.Id==id || id==null),

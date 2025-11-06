@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                 @*    <div class="col-md-3">
                         <div class="form-group clearfix">
                             <label class="form-label">Tag</label>
                             <div class="controls">
@@ -58,7 +58,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> *@
                     <div class="col-md-2">
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="form-label">Trạng thái</label>
@@ -71,7 +71,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                         <div class="can-button-search">
                             <a onclick="getDataGrid(1)" class="btn bg-indigo dropdown-toggle">
                                 <i class="material-icons">search</i><span>Tìm kiếm</span>
@@ -80,7 +80,7 @@
                             {
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">add</i><span>Thêm mới</span> <span class="caret"></span>
+                                        <i class="material-icons">add</i><span>Hỗ trợ dòng chảy</span> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu drcontrol">
                                         @foreach (var portal in portals)
@@ -99,7 +99,35 @@
                                 @foreach (var portal in portals)
                                 {
                                     <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
-                                        <i class="material-icons">add</i><span> Thêm @portal.Text</span>
+                                        <i class="material-icons">add</i><span> Hỗ trợ dòng chảy - @portal.Text</span>
+                                    </a>
+                                }
+                            }
+
+                            @if (_baseSettings.Value.MultipleLanguage)
+                            {
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">add</i><span>Sản phầm dòng chảy</span> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu drcontrol">
+                                        @foreach (var portal in portals)
+                                        {
+                                            <li><strong class="label-portal">@portal.Text</strong></li>
+                                            @foreach (var item in PT.Shared.ListData.ListLanguage)
+                                            {
+                                                <li> <a button-popup data-target="#myModalBig" asp-action="CreateItem" asp-route-portalId="@portal.Value" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var portal in portals)
+                                {
+                                    <a button-popup data-target="#myModalBig" asp-action="CreateItem" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-danger dropdown-toggle">
+                                        <i class="material-icons">add</i><span> Hỗ trợ dòng chảy - @portal.Text</span>
                                     </a>
                                 }
                             }
@@ -148,6 +176,7 @@
                                 <tr>
                                     <th style="width:60px;" class="text-center">STT</th>
                                     <th>Tên</th>
+                                    <th>Loại</th>
                                     <th style="width:200px;">Tags</th>
                                     <th style="width:120px;">Ngày đăng</th>
                                     <partial name="_AdminTheadTableModule" />
@@ -194,6 +223,13 @@
 <script src="~/Content/Admin/plugins/jstree/jstree.min.js"></script>
 <link href="~/Content/Admin/plugins/jstree/themes/default/style.css" rel="stylesheet" />
 <link href="~/Content/Admin/plugins/jstree/themes/default-dark/style.css" rel="stylesheet" />
+    <script src="~/Content/Admin/plugins/codemirror/js/codemirror.js"></script>
+    <link href="~/Content/Admin/plugins/codemirror/css/codemirror.css" rel="stylesheet" />
+    <script src="~/Content/Admin/plugins/codemirror/js/xml.js"></script>
+    <script src="~/Content/Admin/plugins/codemirror/js/javascript.js"></script>
+    <script src="~/Content/Admin/plugins/codemirror/js/css.js"></script>
+    <script src="~/Content/Admin/plugins/codemirror/js/htmlmixed.js"></script>
+    <script src="~/Content/Admin/plugins/codemirror/js/matchbrackets.js"></script>
 
 <script>
         var _page = 1;
@@ -202,10 +238,14 @@
             $("[search-advance]").toSearch();
             $("[button-popup]").toPopup();
             $("[button-open-file-manager]").toButtonOpenFile();
-            $("[button-submit]").toSubmit();
+                $("[button-submit]").toSubmit(null, null, function () {
+                      pageEditors.syncAllToTextareas();
+                });
             $("[button-delete]").toDelete();
             $("[button-upload]").toUploadFile();
-            $("[button-post]").toPost();
+              $("[button-post]").toPost(null, null, function () {
+                        pageEditors.syncAllToTextareas();
+                });
             getDataGrid(1, true);
         });
 
@@ -231,10 +271,12 @@
             });
         }
         function initAutoComplate() {
-           $("#TagIds").toTagsInput(function ($data) {
-                $data.language = $("[form-edit] [name='Language']").val();
-                return $data;
-            });
+              $("#BlogId").toSelectAutocomplete({},function ($data) {
+                     $data.type = function () {
+                         return $("[form-edit] [name='Language']").val();
+                     };
+                     return $data;
+                 });
         }
 
         function getDataGrid(page, first = false) {
@@ -326,5 +368,108 @@
                      }
                  });
              }
+
+            // var cmInput1;
+            // var cmInput2;
+            // var cmInput3;
+            // var cmInput4;
+
+            // var cmInput5;
+            // var cmInput6;
+            // var cmInput7;
+
+            // function initRickText() {
+            //         cmInput4 = CodeMirror.fromTextArea(document.getElementById("Input4"), {
+            //         lineNumbers: true,
+            //         mode: "text/html",
+            //         matchBrackets: true,
+            //         lineWrapping: true,
+            //         autoRefresh: true
+            //     });
+
+            //          cmInput6 = CodeMirror.fromTextArea(document.getElementById("Input6"), {
+            //             lineNumbers: true,
+            //             mode: "text/html",
+            //             matchBrackets: true,
+            //             lineWrapping: true,
+            //             autoRefresh: true
+            //         });
+            // }
+            // function onRefesh() {
+            //             cmInput4.refresh();
+            //             cmInput6.refresh();
+            // };
+            //        function onRefeshValue() {
+            //         document.getElementById("Input4").value = cmInput4.getValue()
+            //         document.getElementById("Input6").value = cmInput6.getValue()
+            // }
+
+              // Utility to initialize CodeMirror editors for a set of textarea IDs.
+        // Usage:
+        //   const editors = createEditors(['Input1','Input2'], { defaultOptions });
+        //   editors.refreshAll();
+        //   editors.syncAllToTextareas();
+        //   editors.disposeAll();
+        var pageEditors;
+        function createEditors(ids = [], globalOptions = {}) {
+          const instances = {};
+
+          const defaultOptions = {
+            lineNumbers: true,
+            mode: "text/html",
+            matchBrackets: true,
+            lineWrapping: true,
+            autoRefresh: true
+          };
+
+          ids.forEach(id => {
+            const ta = document.getElementById(id);
+            if (!ta || ta.nodeName.toLowerCase() !== "textarea") return;
+            try {
+              const opts = Object.assign({}, defaultOptions, globalOptions[id] || {});
+              instances[id] = CodeMirror.fromTextArea(ta, opts);
+            } catch (err) {
+              console.error(`createEditors: failed to init editor for ${id}`, err);
+            }
+          });
+
+          return {
+            instances,
+            get(id) {
+              return instances[id];
+            },
+            // Refresh all editors (useful after tab change / hidden -> visible)
+            refreshAll() {
+              Object.values(instances).forEach(ed => ed && ed.refresh && ed.refresh());
+            },
+            // Write editor contents back to corresponding textareas
+            syncAllToTextareas() {
+              Object.entries(instances).forEach(([id, ed]) => {
+                try {
+                  const ta = document.getElementById(id);
+                  if (ta) ta.value = ed.getValue();
+                } catch (err) { /* ignore per-editor error */ }
+              });
+            },
+            // Dispose editors and put content back into original textarea
+            disposeAll() {
+              Object.entries(instances).forEach(([id, ed]) => {
+                try {
+                  if (ed && ed.toTextArea) ed.toTextArea();
+                } catch (err) { /* ignore */ }
+              });
+              // clear collection
+              for (const k in instances) delete instances[k];
+            },
+            // Convenience: init specific editor later
+            initOne(id, options = {}) {
+              const ta = document.getElementById(id);
+              if (!ta) return null;
+              const opts = Object.assign({}, defaultOptions, globalOptions[id] || {}, options);
+              instances[id] = CodeMirror.fromTextArea(ta, opts);
+              return instances[id];
+            }
+          };
+        }
 </script>
 }

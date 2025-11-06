@@ -22,6 +22,7 @@
 <tr class="tr-status-@(item.Status)">
     <td class="text-center">@PT.Shared.Functions.GenSTT(i, Model.Page, Model.Limit)</td>
     <td><span class="text-primary text-name">@item.Name</span></td>
+    <td>@item.CategoryType?.GetDisplayName()</td>
     <td>
         @foreach (var tag in item.Tags)
         {

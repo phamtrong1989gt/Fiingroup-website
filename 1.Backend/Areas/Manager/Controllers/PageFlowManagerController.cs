@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.BE.Areas.Manager.Controllers
 {
@@ -31,7 +32,7 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly IWebHostEnvironment _iWebHostEnvironment;
         private readonly IFileRepository _iFileRepository;
         private readonly IPortalRepository _iPortalRepository;
-
+        private readonly IContentPageRelatedRepository _iContentPageRelatedRepository;
         public PageFlowManagerController(
             ILogger<PageFlowManagerController> logger,
             IOptions<BaseSettings> baseSettings,
@@ -41,7 +42,8 @@ namespace PT.BE.Areas.Manager.Controllers
             IContentPageTagRepository iContentPageTagRepository,
             IWebHostEnvironment iWebHostEnvironment,
             IFileRepository iFileRepository,
-            IPortalRepository iPortalRepository
+            IPortalRepository iPortalRepository,
+            IContentPageRelatedRepository iContentPageRelatedRepository
         )
         {
             controllerName = "PageFlowManager";
@@ -55,6 +57,7 @@ namespace PT.BE.Areas.Manager.Controllers
             _iWebHostEnvironment = iWebHostEnvironment;
             _iFileRepository = iFileRepository;
             _iPortalRepository = iPortalRepository;
+            _iContentPageRelatedRepository = iContentPageRelatedRepository;
         }
 
         #region [Index]
@@ -80,7 +83,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
                         (m.PortalId== portalId || portalId == null) &&
-                        m.CategoryType== ECategoryType.ContentPage_Flow,
+                        (m.CategoryType == ECategoryType.ContentPage_Flow || m.CategoryType == ECategoryType.ContentPage_FlowItems),
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {
                     Category = x.Category,
@@ -134,11 +137,19 @@ namespace PT.BE.Areas.Manager.Controllers
             return functionOrder;
         }
         #endregion
+        #region [Create Flow item]
+        [HttpGet]
+        [AuthorizePermission("Index")]
+        public async Task<IActionResult> CreateItem(int? portalId, string language = "vi")
+        {
+            return await Create(portalId, language, ECategoryType.ContentPage_FlowItems);
+        }
+        #endregion
 
         #region [Create]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Create(int? portalId,string language = "vi")
+        public async Task<IActionResult> Create(int? portalId,string language = "vi", ECategoryType categoryType = ECategoryType.ContentPage_Flow)
         {
             var dl = new PageModel
             {
@@ -154,7 +165,8 @@ namespace PT.BE.Areas.Manager.Controllers
             // Trả về view chính. Dữ liệu bảng sẽ được nạp bằng Ajax gọi IndexPost
             dl.PortalId = portalId ?? 1;
             dl.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId))?.Name;
-            return View(dl);
+            dl.CategoryType = categoryType;
+            return View("Create", dl);
         }
 
         [HttpPost, ActionName("Create")]
@@ -178,13 +190,20 @@ namespace PT.BE.Areas.Manager.Controllers
                         Summary = use.Summary,
                         DatePosted = DateTime.Now,
                         PortalId = use.PortalId ?? 1,
-                        CategoryType = ECategoryType.ContentPage_Page
+                        CategoryType = use.CategoryType,
+                        Input1 = use.Input1,
+                        Input2 = use.Input2,
+                        Input3 = use.Input3,
+                        Input4 = use.Input4,
+                        Input5 = use.Input5,
+                        Input6 = use.Input6,
+                        Input7 = use.Input7
                     };
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
 
-                     await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPageHome", "Details");
-
+                     await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details");
+                    await UpdateRelated(data.Id, use.ContentPageRelatedIds);
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
                     await _iContentPageRepository.CommitTransaction();
@@ -249,6 +268,9 @@ namespace PT.BE.Areas.Manager.Controllers
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
             model.PortalId = dl.PortalId;
             model.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == dl.PortalId))?.Name;
+            var listRelated = (await _iContentPageRelatedRepository.GetContentPageAsync(id, 0, 0, null, x => x.OrderBy(m => m.DatePosted), x => new ContentPage { Id = x.Id, DatePosted = x.DatePosted, Status = x.Status, Name = x.Name })).Select(x => new { id = x.Id, text = x.Name });
+            model.ContentPageRelatedIds = string.Join(',', listRelated.Select(x => x.id));
+            model.RelatedString = Newtonsoft.Json.JsonConvert.SerializeObject(listRelated);
             return View(model);
         }
 
@@ -272,12 +294,19 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Content = use.Content;
                     dl.Status = use.Status;
                     dl.Summary = use.Summary;
+                    dl.Input1 = use.Input1;
+                    dl.Input2 = use.Input2;
+                    dl.Input3 = use.Input3;
+                    dl.Input4 = use.Input4;
+                    dl.Input5 = use.Input5;
+                    dl.Input6 = use.Input6;
+                    dl.Input7 = use.Input7;
 
                     _iContentPageRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
 
-                    await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPageHome", "Details");
-
+                    await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPage", "Details");
+                    await UpdateRelated(dl.Id, use.ContentPageRelatedIds);
                     await UpdateTag(id, use.TagIds);
                     await AddLog(new LogModel
                     {
@@ -470,5 +499,31 @@ namespace PT.BE.Areas.Manager.Controllers
             return new ResponseModel<FileDataModel>() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại.", Type = ResponseTypeMessage.Danger, Status = false };
         }
         #endregion
+
+        [HttpPost, Authorize]
+        public async Task<List<SelectListItem>> SearchContentPage(string q, int top = 10, string language = "vi", int portalId = 0)
+        {
+            top = top > 100 ? 100 : top;
+            return (await _iContentPageRepository.SearchAsync(true, 0, top, x => x.Name.ToLower().Contains(q.ToLower()) && x.Status && x.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_FlowItems && x.Language == language && x.PortalId == portalId, x => x.OrderBy(y => y.Name),
+                x => new ContentPage { Id = x.Id, Name = x.Name, Status = x.Status, Language = x.Language, Type = x.Type })).Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }).ToList();
+        }
+
+
+        private async Task UpdateRelated(int blogId, string strData)
+        {
+            var list = new List<int>();
+            if (strData != null && strData != "")
+            {
+                list = strData.Split(',').Select(x => int.Parse(x)).ToList();
+            }
+            var _current = await _iContentPageRelatedRepository.SearchAsync(true, 0, 0, x => x.ParentId == blogId);
+            var idsAdd = list.Where(x => !_current.Any(y => y.ContentPageId == x));
+            _iContentPageRelatedRepository.DeleteWhere(x => x.ParentId == blogId && !list.Contains(x.ContentPageId));
+            foreach (var item in idsAdd)
+            {
+                await _iContentPageRelatedRepository.AddAsync(new ContentPageRelated { ParentId = blogId, ContentPageId = item });
+            }
+            await _iContentPageRelatedRepository.CommitAsync();
+        }
     }
 }

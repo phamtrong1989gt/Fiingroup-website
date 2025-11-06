@@ -1,51 +1,75 @@
 ﻿@addTagHelper *, PT.UI
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
 @using PT.Domain.Model;
 @using PT.Infrastructure.Interfaces;
 @using PT.Shared;
 @inject IViewLocalizer Localizer;
 @using System.Linq.Expressions;
 @using PT.UI.Models
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+@inject IOptions<BaseSettings> _baseSettings;   
 
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    var portalId = 2;
-
-    // var cplModel = new ContentPageComponentModel()
-    // {
-    //     CategoryId = 1002,
-    //     ContentPageId = 0,
-    //     Href = "",
-    //     Language = language,
-    //     TagId = null,
-    //     Take = 6,
-    //     Title = "",
-    //     Type = CategoryType.Blog,
-    //     View = "_News"
-    // };
-
-
-    // var datbModel = new ContentPageComponentModel()
-    // {
-    //     CategoryId = 2005,
-    //     ContentPageId = 0,
-    //     Href = "",
-    //     Language = language,
-    //     TagId = null,
-    //     Take = 6,
-    //     Title = "",
-    //     Type = CategoryType.Blog,
-    //     View = "_News"
-    // };
+    var portalId = _baseSettings.Value.PortalId;
+    var listFlow = await _iContentPageRepository.FlowGetsAsync(language, portalId);
 }
 
 @* <vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module> *@
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSlider", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerHeSinhThai", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeHeSinhThai", language = language, portalId = portalId }))
+
+@foreach (var item in listFlow)
+{
+    <section id="HoTro">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-7 d-none d-md-block">
+                    <a href="#" title="Hỗ trợ">
+                        <img src="Data/hotro-01.png" class="img-hotro" alt="Hỗ trợ" />
+                    </a>
+                </div>
+                <div class="col-lg-5 col-sm-12">
+                    <div class="why-title">@item.Name</div>
+                    <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                        <defs>
+                            <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                <stop offset="0.384615" stop-color="#034EA2" />
+                                <stop offset="1" stop-color="#53DFFF" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <p class="why-desc">@Html.Raw(item.Summary)</p>
+                    <div class="hotro-list">
+                        <div class="row">
+                            @for(int i = 0; i < item.Relateds.Count; i++)
+                            {
+                                <div class="col-sm-6 mb-3">
+                                    <img src="Data/iconht.svg" alt="@item.Relateds[i].Input2" />
+                                    <a><span class="pl-5">@item.Relateds[i].Input2</span></a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <a class="show-more" href="@PT.Shared.Functions.FormatUrl(language, item.Link?.Slug)">Khám phá thêm <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="text-center mb-5 mt-5">
+                <button class="btn btn-primary btn-join">Đăng kí để nhận tư vấn</button>
+            </div>
+        </div>
+    </section>
+}
+@* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeHeSinhThai", language = language, portalId = portalId })) *@
+
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderDauAn", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderOurClients", language = language, portalId = portalId })
 <partial name="_Register" />
