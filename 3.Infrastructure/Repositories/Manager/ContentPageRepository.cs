@@ -420,7 +420,7 @@ namespace PT.Infrastructure.Repositories
             }
           
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x => x.Status == true && x.Type == ESlugType.ContentPage).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
                 {
                     Link = y,
@@ -460,61 +460,113 @@ namespace PT.Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<List<ContentPage>> FlowGetsAsync(string language, int portalId)
+        public async Task<List<ContentPage>> FlowGetsAsync(string language, int portalId, int? parrentId = null)
         {
-            IQueryable<ContentPage> query = _context.ContentPages.Where(x=> (x.CategoryType == ECategoryType.ContentPage_Flow || x.CategoryType == ECategoryType.ContentPage_FlowItems) && x.Language == language && x.PortalId == portalId).AsQueryable();
-            query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
-                .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
-                {
-                    Link = y,
-                    Id = x.data.Id,
-                    Author = x.data.Author,
-                    Banner = x.data.Banner,
-                    Content = x.data.Content,
-                    DatePosted = x.data.DatePosted,
-                    Name = x.data.Name,
-                    Language = x.data.Language,
-                    Price = x.data.Price,
-                    Serice = x.data.Serice,
-                    ServiceId = x.data.ServiceId,
-                    Status = x.data.Status,
-                    Summary = x.data.Summary,
-                    Tags = x.data.Tags,
-                    Type = x.data.Type,
-                    IsHome = x.data.IsHome,
-                    StartDate = x.data.StartDate,
-                    EndDate = x.data.EndDate,
-                    CategoryId = x.data.CategoryId,
-                    PortalId = x.data.PortalId,
-                    TimeFromTo = x.data.TimeFromTo,
-                    Topic = x.data.Topic,
-                    Pages = x.data.Pages,
-                    Extentions = x.data.Extentions,
-                    FilePath = x.data.FilePath,
-                    Address = x.data.Address,
-                    CategoryType = x.data.CategoryType,
-                    DeliveryTime = x.data.DeliveryTime,
-                    SlugType = x.data.SlugType,
-                    Input1 = x.data.Input1,
-                    Input2 = x.data.Input2,
-                    Input3 = x.data.Input3,
-                    Input4 = x.data.Input4,
-                    Input5 = x.data.Input5,
-                    Input6 = x.data.Input6,
-                    Input7 = x.data.Input7
-                }).AsQueryable();
-
-            var listData = await query.AsNoTracking().ToListAsync();
-            var parrents = listData.Where(x=>x.CategoryType == ECategoryType.ContentPage_Flow);
-            var ids = parrents.Select(x => x.Id).ToList();
-            // lấy cái danh sách flow liên quan
-            var pageLienQuan = _context.ContentPageRelateds.Where(x=> ids.Contains(x.ParentId)).ToList();
-            foreach (var item in parrents)
+            if(parrentId == null || parrentId <= 0)
             {
-                item.Relateds = listData.Where(x => pageLienQuan.Any(m => m.ParentId == item.Id && m.ContentPageId == x.Id)).ToList();
+                IQueryable<ContentPage> query = _context.ContentPages.Where(x => x.Status == true && (x.CategoryType == ECategoryType.ContentPage_Flow || x.CategoryType == ECategoryType.ContentPage_FlowItems) && x.Language == language && x.PortalId == portalId).AsQueryable();
+                query = query
+                    .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                    .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
+                    {
+                        Link = y,
+                        Id = x.data.Id,
+                        Author = x.data.Author,
+                        Banner = x.data.Banner,
+                        Content = x.data.Content,
+                        DatePosted = x.data.DatePosted,
+                        Name = x.data.Name,
+                        Language = x.data.Language,
+                        Price = x.data.Price,
+                        Serice = x.data.Serice,
+                        ServiceId = x.data.ServiceId,
+                        Status = x.data.Status,
+                        Summary = x.data.Summary,
+                        Tags = x.data.Tags,
+                        Type = x.data.Type,
+                        IsHome = x.data.IsHome,
+                        StartDate = x.data.StartDate,
+                        EndDate = x.data.EndDate,
+                        CategoryId = x.data.CategoryId,
+                        PortalId = x.data.PortalId,
+                        TimeFromTo = x.data.TimeFromTo,
+                        Topic = x.data.Topic,
+                        Pages = x.data.Pages,
+                        Extentions = x.data.Extentions,
+                        FilePath = x.data.FilePath,
+                        Address = x.data.Address,
+                        CategoryType = x.data.CategoryType,
+                        DeliveryTime = x.data.DeliveryTime,
+                        SlugType = x.data.SlugType,
+                        Input1 = x.data.Input1,
+                        Input2 = x.data.Input2,
+                        Input3 = x.data.Input3,
+                        Input4 = x.data.Input4,
+                        Input5 = x.data.Input5,
+                        Input6 = x.data.Input6,
+                        Input7 = x.data.Input7
+                    }).AsQueryable();
+
+                var listData = await query.AsNoTracking().ToListAsync();
+                var parrents = listData.Where(x => x.CategoryType == ECategoryType.ContentPage_Flow);
+                var ids = parrents.Select(x => x.Id).ToList();
+                // lấy cái danh sách flow liên quan
+                var pageLienQuan = _context.ContentPageRelateds.Where(x => ids.Contains(x.ParentId)).ToList();
+                foreach (var item in parrents)
+                {
+                    item.Relateds = listData.Where(x => pageLienQuan.Any(m => m.ParentId == item.Id && m.ContentPageId == x.Id)).ToList();
+                }
+                return parrents.ToList();
             }
-            return parrents.ToList();
+            else
+            {
+                var pageLienQuan = _context.ContentPageRelateds.Where(x => x.ParentId == parrentId).ToList();
+                var idslq = pageLienQuan.Select(x => x.ContentPageId).ToList();
+                IQueryable<ContentPage> query = _context.ContentPages.Where(x => idslq.Contains(x.Id) &&(x.CategoryType == ECategoryType.ContentPage_Flow || x.CategoryType == ECategoryType.ContentPage_FlowItems) && x.Language == language && x.PortalId == portalId).AsQueryable();
+                query = query
+                    .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                    .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
+                    {
+                        Link = y,
+                        Id = x.data.Id,
+                        Author = x.data.Author,
+                        Banner = x.data.Banner,
+                        Content = x.data.Content,
+                        DatePosted = x.data.DatePosted,
+                        Name = x.data.Name,
+                        Language = x.data.Language,
+                        Price = x.data.Price,
+                        Serice = x.data.Serice,
+                        ServiceId = x.data.ServiceId,
+                        Status = x.data.Status,
+                        Summary = x.data.Summary,
+                        Tags = x.data.Tags,
+                        Type = x.data.Type,
+                        IsHome = x.data.IsHome,
+                        StartDate = x.data.StartDate,
+                        EndDate = x.data.EndDate,
+                        CategoryId = x.data.CategoryId,
+                        PortalId = x.data.PortalId,
+                        TimeFromTo = x.data.TimeFromTo,
+                        Topic = x.data.Topic,
+                        Pages = x.data.Pages,
+                        Extentions = x.data.Extentions,
+                        FilePath = x.data.FilePath,
+                        Address = x.data.Address,
+                        CategoryType = x.data.CategoryType,
+                        DeliveryTime = x.data.DeliveryTime,
+                        SlugType = x.data.SlugType,
+                        Input1 = x.data.Input1,
+                        Input2 = x.data.Input2,
+                        Input3 = x.data.Input3,
+                        Input4 = x.data.Input4,
+                        Input5 = x.data.Input5,
+                        Input6 = x.data.Input6,
+                        Input7 = x.data.Input7
+                    }).AsQueryable();
+
+                return await query.AsNoTracking().ToListAsync();
+            }
         }
     }
 }
