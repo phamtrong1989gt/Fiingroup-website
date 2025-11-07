@@ -10,49 +10,93 @@ using System.Text.RegularExpressions;
 
 namespace PT.Shared
 {
-    
+
     public class Functions
     {
+        /// <summary>
+        /// Thiết lập và trả về đường dẫn vật lý và đường dẫn public cho thư mục chia sẻ /Data.
+        /// - Nếu <paramref name="configuredDataPath"/> được cung cấp sẽ được ưu tiên. Hỗ trợ đường dẫn tuyệt đối và tương đối (so với webRootPath).
+        /// - Nếu không có cấu hình sẽ fallback về wwwroot/Data (sử dụng webRootPath nếu có).
+        /// - <paramref name="folderByDate"/> có thể truyền vào (ví dụ Functions.GenFolderByDate()) để tạo subfolder theo ngày.
+        /// Hàm đảm bảo thư mục vật lý tồn tại (kiểm tra trước khi tạo).
+        /// Trả về tuple (PhysicalPath, PublicUrl).
+        /// </summary>
+        public static (string PhysicalPath, string PublicUrl) SetupSharedDataFolder(string configuredDataPath = null, string folderByDate = null)
+        {
+            // Lấy folder theo ngày hoặc mặc định
+            var folder = string.IsNullOrWhiteSpace(folderByDate) ? GenFolderByDate() : folderByDate;
+
+            string physicalBasePath;
+            if (!string.IsNullOrWhiteSpace(configuredDataPath))
+            {
+                // Nếu là đường dẫn tuyệt đối dùng luôn.
+                // Nếu là đường dẫn tương đối thì kết hợp với current directory (không dùng any host paths)
+                physicalBasePath = Path.IsPathRooted(configuredDataPath)
+                ? configuredDataPath
+                : Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), configuredDataPath));
+            }
+            else
+            {
+                // Mặc định lưu trong Data trong current directory
+                physicalBasePath = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+            }
+
+            // Chuẩn hóa folder (loại bỏ dấu / đầu nếu có)
+            var relativeFolder = (folder ?? string.Empty).TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+            var physicalPath = Path.Combine(physicalBasePath, relativeFolder);
+
+            // Kiểm tra tồn tại thư mục rồi tạo nếu chưa có
+            if (!Directory.Exists(physicalPath))
+            {
+                Directory.CreateDirectory(physicalPath);
+            }
+
+            // PublicUrl luôn bắt đầu bằng /Data và theo định dạng URL (dấu /)
+            var publicUrl = "/Data" + (folder.StartsWith("/") ? folder : "/" + folder);
+            if (!publicUrl.EndsWith("/")) publicUrl += "/";
+
+            return (physicalPath, publicUrl);
+        }
 
         public static decimal GetFullPrice(decimal price)
         {
             return (price * 5 / 4);
         }
 
-        public static string SubStringTitle(string input,int num)
+        public static string SubStringTitle(string input, int num)
         {
-            if(string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input))
             {
                 return "";
             }
-            else if(input.Length <=num)
+            else if (input.Length <= num)
             {
                 return input;
             }
             else
             {
-                return input.Substring(0,num - 1);
+                return input.Substring(0, num - 1);
             }
         }
-        public static List<string> StringToListItem(string input,string sp=",")
+        public static List<string> StringToListItem(string input, string sp = ",")
         {
             try
             {
-                if(string.IsNullOrEmpty(input))
+                if (string.IsNullOrEmpty(input))
                 {
                     return new List<string>();
                 }
-                return input.Split(sp).Where(x=>!string.IsNullOrEmpty(x)).ToList();
+                return input.Split(sp).Where(x => !string.IsNullOrEmpty(x)).ToList();
             }
             catch
             {
                 return new List<string>();
             }
         }
-        
+
         public static string FormatMoney(double input)
         {
-            if(input>=1000)
+            if (input >= 1000)
             {
                 return string.Format("{0:00,0}", input);
             }
@@ -75,7 +119,7 @@ namespace PT.Shared
             }
             catch { return ""; }
         }
-        
+
         public static string ZipStringHTML(string value)
         {
             var REGEX_TAGS = new Regex(@">\s+<", RegexOptions.Compiled);
@@ -95,7 +139,7 @@ namespace PT.Shared
 
         public static string SContent(string content)
         {
-            if(!string.IsNullOrEmpty(content))
+            if (!string.IsNullOrEmpty(content))
             {
                 string newString = Regex.Replace(content, "<.*?>", String.Empty);
                 newString = newString.Replace("https://", String.Empty).Replace("http://", String.Empty).Replace("//", String.Empty);
@@ -188,25 +232,24 @@ namespace PT.Shared
                 return "";
             }
         }
-
         public static Dictionary<string, string> GetMimeTypes()
         {
             return new Dictionary<string, string>
-            {
-                {".txt", "text/plain"},
-                {".pdf", "application/pdf"},
-                {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
-                {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformats officedocument.spreadsheetml.sheet"},  
-                {".png", "image/png"},
-                {".jpg", "image/jpeg"},
-                {".jpeg", "image/jpeg"},
-                {".gif", "image/gif"},
-                {".csv", "text/csv"},
-                {".mp4","video/mp4"},
-                {".avi","video/avi"}
-            };
+ {
+ {".txt", "text/plain"},
+ {".pdf", "application/pdf"},
+ {".doc", "application/vnd.ms-word"},
+ {".docx", "application/vnd.ms-word"},
+ {".xls", "application/vnd.ms-excel"},
+ {".xlsx", "application/vnd.openxmlformats officedocument.spreadsheetml.sheet"},
+ {".png", "image/png"},
+ {".jpg", "image/jpeg"},
+ {".jpeg", "image/jpeg"},
+ {".gif", "image/gif"},
+ {".csv", "text/csv"},
+ {".mp4","video/mp4"},
+ {".avi","video/avi"}
+ };
         }
         public static string GetContentType(string path)
         {
@@ -256,9 +299,9 @@ namespace PT.Shared
 
         public static int GenSTT(int cstt, int page, int size = 10)
         {
-            return (page - 1)* size + cstt;
+            return (page - 1) * size + cstt;
         }
-       
+
         //private static  string _identString = "";
         //public static string FormatJson(string str)
         //{
@@ -330,7 +373,7 @@ namespace PT.Shared
         }
         public static string FormatUrl(string language, string slug)
         {
-            if(slug=="")
+            if (slug == "")
             {
                 return $"/{language}";
             }
@@ -361,7 +404,6 @@ namespace PT.Shared
                 return data;
             }
         }
-
 
         public static string GenFolderByDate()
         {
@@ -408,11 +450,11 @@ namespace PT.Shared
         {
             return (rad / Math.PI * 180.0);
         }
-        
-        public static string GetHours(string from,string to)
+
+        public static string GetHours(string from, string to)
         {
             if (from == null || to == null) return "04:00";
-            if(to=="00:00")
+            if (to == "00:00")
             {
                 to = "23:59:59";
             }
@@ -427,7 +469,7 @@ namespace PT.Shared
         {
             if (!File.Exists(mapPath))
             {
-                if(!Directory.Exists(Path.GetDirectoryName(mapPath)))
+                if (!Directory.Exists(Path.GetDirectoryName(mapPath)))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(mapPath));
                 }
@@ -440,7 +482,7 @@ namespace PT.Shared
                     fs.Write(author, 0, author.Length);
                 }
             }
-            if(!IsFileLocked(new FileInfo(mapPath)))
+            if (!IsFileLocked(new FileInfo(mapPath)))
             {
                 using (FileStream fs = new FileStream(mapPath, FileMode.Truncate, FileAccess.Write))
                 {
@@ -490,7 +532,7 @@ namespace PT.Shared
         {
             StringBuilder str = new StringBuilder();
             int totalPage = (totalRow % size > 0) ? (totalRow / size + 1) : (totalRow / size);
-            for (int i =1;i <= totalPage;i++)
+            for (int i = 1; i <= totalPage; i++)
             {
                 str.Append($"<li class=\"{liClass} {(i == curentPage ? classActive : "")}\"><a rel='nofollow' class=\"page-link\" href=\"{url}?page={i}{(query != null ? $"{query}" : "")}\">{i}</a></li>");
             }
@@ -504,20 +546,17 @@ namespace PT.Shared
             str.Append("<ul class=\"pagination justify-content-center\">");
             for (int i = 1; i <= totalPage; i++)
             {
-                str.Append($"<li class=\"page-item {(i == curentPage ? "active" : "")}\"><a { (forcus == null ? "": $"href=\"{forcus}\"") } onclick = \"{function}({i})\" class=\"page-link\">{i}</a></li>");
+                str.Append($"<li class=\"page-item {(i == curentPage ? "active" : "")}\"><a {(forcus == null ? "" : $"href=\"{forcus}\"")} onclick = \"{function}({i})\" class=\"page-link\">{i}</a></li>");
             }
             str.Append("</ul>");
             return str.ToString();
         }
 
-
-
-
         public static string GenContent(string data)
         {
             try
             {
-                if(string.IsNullOrEmpty(data))
+                if (string.IsNullOrEmpty(data))
                 {
                     return data;
                 }
@@ -526,10 +565,10 @@ namespace PT.Shared
                 newData += "<ul>";
                 foreach (var item in splData)
                 {
-                    if(!string.IsNullOrEmpty(item))
+                    if (!string.IsNullOrEmpty(item))
                     {
                         newData += $"<li>{item}</li>";
-                    }    
+                    }
                 }
                 newData += "</ul>";
                 return newData;
@@ -554,8 +593,8 @@ namespace PT.Shared
                 {
                     ChuoiMoi += mang[i] + "-";
                 }
-
             }
+
             for (int i = 1; i < vietNamChar.Length; i++)
             {
                 for (int j = 0; j < vietNamChar[i].Length; j++)
@@ -566,21 +605,21 @@ namespace PT.Shared
 
         private static readonly string[] vietNamChar = new string[]
         {
-            "aAeEoOuUiIdDyY",
-            "áàạảãâấầậẩẫăắằặẳẵ",
-            "ÁÀẠẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
-            "éèẹẻẽêếềệểễ",
-            "ÉÈẸẺẼÊẾỀỆỂỄ",
-            "óòọỏõôốồộổỗơớờợởỡ",
-            "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠ",
-            "úùụủũưứừựửữ",
-            "ÚÙỤỦŨƯỨỪỰỬỮ",
-            "íìịỉĩ",
-            "ÍÌỊỈĨ",
-            "đ",
-            "Đ",
-            "ýỳỵỷỹ",
-            "ÝỲỴỶỸ"
-         };
+ "aAeEoOuUiIdDyY",
+ "áàṭảãâấầuậẩẫăắằặẳẵ",
+ "ÁẠ̀ẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
+ "éèẹẻẽêếềệểễ",
+ "ÉÈẸẺẼÊẾỀỆỂỄ",
+ "óòọỏõôốồộổỗơớờợởỡ",
+ "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠ",
+ "úùụủũưứừựửữ",
+ "ÚÙỤỦŨƯỨỪỰỬỮ",
+ "íìịỉĩ",
+ "ÍÌỊỈĨ",
+ "đ",
+ "Đ",
+ "ýỳỵỷỹ",
+ "ÝỲỴỶỸ"
+        };
     }
 }

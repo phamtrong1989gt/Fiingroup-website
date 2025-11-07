@@ -32,9 +32,10 @@ namespace PT.BE.Areas.Base.Controllers
 
         public FileManagerController(IWebHostEnvironment env, IOptions<BaseSettings> baseSettings)
         {
-            // FileManager Content Folder Path
+            // FileManager Content Folder Path (sử dụng thư mụcảo /Data)
             _webPath = "Data";
-            _webRootPath = Path.Combine(env.WebRootPath, _webPath);
+            // Lấy đường dẫn vật lý từ cấu hình DataPath (nếu có), helper sẽ tạo thư mục nếu cần
+            _webRootPath = baseSettings?.Value?.DataPath;
             _baseSettings = baseSettings.Value;
             _allowedPhoteExtensions = new List<string> { ".jpg", ".jpe", ".jpeg", ".gif", ".png" };
             _allowedExtensions = new List<string> { "jpg", "jpe", "jpeg", "gif", "png", "svg", "txt", "pdf", "odp", "ods", "odt", "rtf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "csv", "ogv", "avi", "mkv", "mp4", "webm", "m4v", "ogg", "mp3", "wav", "zip", "rar", "md", "xml" };

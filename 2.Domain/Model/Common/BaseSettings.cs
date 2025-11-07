@@ -81,5 +81,6 @@ namespace PT.Domain.Model
         public bool IsHttps { get; set; }
         public int PortalId { get; set; }
         public int TimeCache { get; set; }
+        public string DataPath { get; set; }
     }
 }
