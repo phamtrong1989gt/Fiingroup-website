@@ -24,6 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.IO; // thêm để dùng Path và Directory
+using Microsoft.Extensions.FileProviders; // thêm để dùng PhysicalFileProvider
 
 namespace PT.UI
 {
@@ -265,6 +267,46 @@ namespace PT.UI
                     ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800* 58}");
                 }
             });
+
+            // Ánh xạ thư mục vật lý dùng chung cho Data (/Data)
+            try
+            {
+                // Đọc DataPath từ cấu hình BaseSettings
+                var configuredDataPath = Configuration["BaseSettings:DataPath"];
+
+                string dataPath;
+                if (string.IsNullOrWhiteSpace(configuredDataPath))
+                {
+                    // fallback to ContentRootPath/SharedData/Data
+                    dataPath = Path.Combine(env.ContentRootPath, "SharedData", "Data");
+                }
+                else
+                {
+                    // Nếu là đường dẫn tương đối, kết hợp với ContentRootPath
+                    dataPath = Path.IsPathRooted(configuredDataPath) ? configuredDataPath : Path.GetFullPath(Path.Combine(env.ContentRootPath, configuredDataPath));
+                }
+
+                // Kiểm tra và tạo thư mục nếu chưa tồn tại
+                if (!Directory.Exists(dataPath))
+                {
+                    Directory.CreateDirectory(dataPath);
+                }
+
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(dataPath),
+                    RequestPath = "/Data",
+                    OnPrepareResponse = ctx =>
+                    {
+                        ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800*58}");
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                // Ghi log nhưng tiếp tục; không làm ứng dụng lỗi khi ánh xạ thất bại
+                Serilog.Log.Error(ex, "Failed to configure shared Data static file mapping");
+            }
 
             // Cookie policy middleware
             app.UseCookiePolicy();
