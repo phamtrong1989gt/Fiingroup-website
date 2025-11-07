@@ -97,19 +97,6 @@
     <None Include="Areas\Manager\Views\PageFlowManager\IndexAjax.cshtml" />
     <None Include="Areas\Manager\Views\PageFlowManager\_PageFlowItemInput.cshtml" />
     <None Include="Areas\Manager\Views\PageFlowManager\_PageFlowInput.cshtml" />
-	  
-    <None Include="Areas\Manager\Views\TourCategoryManager\Create.cshtml" />
-    <None Include="Areas\Manager\Views\TourCategoryManager\Edit.cshtml" />
-    <None Include="Areas\Manager\Views\TourCategoryManager\Index.cshtml" />
-    <None Include="Areas\Manager\Views\TourCategoryManager\Setting.cshtml" />
-
-	  <None Include="Areas\Manager\Views\TourManager\Create.cshtml" />
-	  <None Include="Areas\Manager\Views\TourManager\Edit.cshtml" />
-	  <None Include="Areas\Manager\Views\TourManager\Index.cshtml" />
-	  <None Include="Areas\Manager\Views\TourManager\ListTourDayAjax.cshtml" />
-	  <None Include="Areas\Manager\Views\TourManager\CreateTourDay.cshtml" />
-	  <None Include="Areas\Manager\Views\TourManager\EditTourDay.cshtml" />
-	  <None Include="Areas\Manager\Views\TourManager\ListTourDayAjax.cshtml" />
 
 	  <None Include="Areas\Manager\Views\BlogManager\Create.cshtml" />
     <None Include="Areas\Manager\Views\BlogManager\Edit.cshtml" />
@@ -126,10 +113,6 @@
     <None Include="Areas\Manager\Views\EmployeeManager\Edit.cshtml" />
     <None Include="Areas\Manager\Views\EmployeeManager\Index.cshtml" />
     <None Include="Areas\Manager\Views\EmployeeManager\IndexAjax.cshtml" />
-    <None Include="Areas\Manager\Views\FAQManager\Create.cshtml" />
-    <None Include="Areas\Manager\Views\FAQManager\Edit.cshtml" />
-    <None Include="Areas\Manager\Views\FAQManager\Index.cshtml" />
-    <None Include="Areas\Manager\Views\FAQManager\IndexAjax.cshtml" />
     <None Include="Areas\Manager\Views\MenuManager\Create.cshtml" />
     <None Include="Areas\Manager\Views\MenuManager\CreateItem.cshtml" />
     <None Include="Areas\Manager\Views\MenuManager\Edit.cshtml" />

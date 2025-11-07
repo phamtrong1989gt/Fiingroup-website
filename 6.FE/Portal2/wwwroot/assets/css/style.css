@@ -713,7 +713,7 @@ a {
     font-weight: 600;
     font-size: 24px;
     color: var(--title-color);
-    height: 68px;
+    /*height: 68px;*/
     overflow:hidden;
 }
 
@@ -758,7 +758,7 @@ a {
 }
 
 .img-hotro {
-    max-height: 360px;
+    /*max-height: 360px;*/
 }
 
 /*img {

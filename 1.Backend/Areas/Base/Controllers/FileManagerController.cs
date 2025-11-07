@@ -37,8 +37,8 @@ namespace PT.BE.Areas.Base.Controllers
             // Lấy đường dẫn vật lý từ cấu hình DataPath (nếu có), helper sẽ tạo thư mục nếu cần
             _webRootPath = baseSettings?.Value?.DataPath;
             _baseSettings = baseSettings.Value;
-            _allowedPhoteExtensions = new List<string> { ".jpg", ".jpe", ".jpeg", ".gif", ".png" };
-            _allowedExtensions = new List<string> { "jpg", "jpe", "jpeg", "gif", "png", "svg", "txt", "pdf", "odp", "ods", "odt", "rtf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "csv", "ogv", "avi", "mkv", "mp4", "webm", "m4v", "ogg", "mp3", "wav", "zip", "rar", "md", "xml" };
+            _allowedPhoteExtensions = [".jpg", ".jpe", ".jpeg", ".gif", ".png"];
+            _allowedExtensions = ["jpg", "jpe", "jpeg", "gif", "png", "svg", "txt", "pdf", "odp", "ods", "odt", "rtf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "csv", "ogv", "avi", "mkv", "mp4", "webm", "m4v", "ogg", "mp3", "wav", "zip", "rar", "md", "xml"];
         }
         [HttpGet]
         [AuthorizePermission("Index")]

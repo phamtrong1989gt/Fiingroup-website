@@ -377,7 +377,7 @@ namespace PT.Shared
             {
                 return $"/{language}";
             }
-            return $"/{slug}.html";
+            return $"/{language}/{slug}.html";
             //if(string.IsNullOrEmpty(language))
             //{
             //    return $"/{slug}.html";
