@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Base.Services;
@@ -23,6 +24,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.UI.Controllers
 {
@@ -58,14 +60,21 @@ namespace PT.UI.Controllers
         public IActionResult Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            List<Country> lstdata = new List<Country>
+            {
+                new Country { Id = 1, Name = "Báo cáo Trái phiếu" },
+                new Country { Id = 2, Name = "FiinPro-X & Báo cáo Trái phiếu" },
+                new Country { Id = 3, Name = "Nền tảng FiinPro-X" }
+            };
+            ViewBag.dataServies = new SelectList(lstdata, "Id", "Name");
             return View();
         }
         public IActionResult Page404(string linkData)
         {
-            if(linkData!= null)
+            if (linkData != null)
             {
                 ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            }    
+            }
             return View("_Home404");
         }
         public IActionResult About(string linkData)
@@ -86,7 +95,7 @@ namespace PT.UI.Controllers
             return View();
         }
 
-        public IActionResult Clinic2( string linkData)
+        public IActionResult Clinic2(string linkData)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();
@@ -96,10 +105,10 @@ namespace PT.UI.Controllers
         {
             var objectLink = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             objectLink.Title = string.IsNullOrEmpty(objectLink.Title) ? objectLink.Name : objectLink.Title;
-            objectLink.Title = $"{ objectLink.Title }{ ((page == null || page == 1) ? "" : (language == "vi" ? " - trang" : " - page"))} {page}";
+            objectLink.Title = $"{objectLink.Title}{((page == null || page == 1) ? "" : (language == "vi" ? " - trang" : " - page"))} {page}";
             ViewData["linkData"] = objectLink;
 
-            
+
             var data = await _iContentPageRepository.SearchPagedListAsync(
                      page ?? 1,
                      10,
@@ -199,14 +208,14 @@ namespace PT.UI.Controllers
             try
             {
                 bool IsMuti = _baseSettings.Value.MultipleLanguage;
-                string Domain = $"{ AppHttpContext.Current.Request.Scheme }://{Request.Host}";
-                if(!string.IsNullOrEmpty(domain))
+                string Domain = $"{AppHttpContext.Current.Request.Scheme}://{Request.Host}";
+                if (!string.IsNullOrEmpty(domain))
                 {
-                    Domain = $"{ AppHttpContext.Current.Request.Scheme }://{domain}";
+                    Domain = $"{AppHttpContext.Current.Request.Scheme}://{domain}";
                 }
                 var stringBuilder = new StringBuilder();
 
-                var listItem = await _iLinkRepository.SearchAsync(true, 0, 0, x => (x.Language == language || language =="") && !x.Delete && x.Status && x.IncludeSitemap );
+                var listItem = await _iLinkRepository.SearchAsync(true, 0, 0, x => (x.Language == language || language == "") && !x.Delete && x.Status && x.IncludeSitemap);
                 stringBuilder.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 stringBuilder.AppendLine("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd\">");
 

@@ -28,12 +28,12 @@ namespace PT.UI.Models
 
         [Display(Name = "Tên công ty")]
         [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(100, MinimumLength = 10)]
+        [StringLength(100, MinimumLength = 1)]
         public string ConpanyName { get; set; }
 
         [Display(Name = "Chức danh công việc")]
         [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(100, MinimumLength = 10)]
+        [StringLength(100, MinimumLength = 1)]
         public string Position { get; set; }
 
         [Display(Name = "Yêu cầu chi tiết")]
