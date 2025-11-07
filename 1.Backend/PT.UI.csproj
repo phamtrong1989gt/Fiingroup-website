@@ -95,6 +95,7 @@
     <None Include="Areas\Manager\Views\PageFlowManager\Edit.cshtml" />
     <None Include="Areas\Manager\Views\PageFlowManager\Index.cshtml" />
     <None Include="Areas\Manager\Views\PageFlowManager\IndexAjax.cshtml" />
+    <None Include="Areas\Manager\Views\PageFlowManager\_PageSolutionInput.cshtml" />
     <None Include="Areas\Manager\Views\PageFlowManager\_PageFlowItemInput.cshtml" />
     <None Include="Areas\Manager\Views\PageFlowManager\_PageFlowInput.cshtml" />
 

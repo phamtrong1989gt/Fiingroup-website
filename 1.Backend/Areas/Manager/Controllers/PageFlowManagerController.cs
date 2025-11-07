@@ -137,6 +137,17 @@ namespace PT.BE.Areas.Manager.Controllers
             return functionOrder;
         }
         #endregion
+
+        
+        #region [Create Flow item]
+        [HttpGet]
+        [AuthorizePermission("Index")]
+        public async Task<IActionResult> CreateSolution(int? portalId, string language = "vi")
+        {
+            return await Create(portalId, language, ECategoryType.ContentPage_Solution);
+        }
+        #endregion
+
         #region [Create Flow item]
         [HttpGet]
         [AuthorizePermission("Index")]

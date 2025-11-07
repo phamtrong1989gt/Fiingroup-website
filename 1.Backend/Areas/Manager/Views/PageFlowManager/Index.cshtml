@@ -131,6 +131,34 @@
                                     </a>
                                 }
                             }
+
+                            @if (_baseSettings.Value.MultipleLanguage)
+                            {
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">add</i><span>Giải pháp</span> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu drcontrol">
+                                        @foreach (var portal in portals)
+                                        {
+                                            <li><strong class="label-portal">@portal.Text</strong></li>
+                                            @foreach (var item in PT.Shared.ListData.ListLanguage)
+                                            {
+                                                <li> <a button-popup data-target="#myModalBig" asp-action="CreateSolution" asp-route-portalId="@portal.Value" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var portal in portals)
+                                {
+                                    <a button-popup data-target="#myModalBig" asp-action="CreateSolution" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-danger dropdown-toggle">
+                                        <i class="material-icons">add</i><span> Giải pháp - @portal.Text</span>
+                                    </a>
+                                }
+                            }
                         </div>
                     </div>
                 </div>

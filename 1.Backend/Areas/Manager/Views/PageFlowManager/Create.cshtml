@@ -27,6 +27,10 @@
     {
         title = "THÊM MỚI TRANG SẢN PHẨM DÒNG CHẢY";
     }
+    else if (Model.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_Solution)
+    {
+        title = "THÊM MỚI TRANG GIẢI PHÁP";
+    }
 }
 <style>
     .tt-menu {
@@ -70,12 +74,16 @@
                     <div class="panel-group panel-website full-body" id="accordion_19" role="tablist" aria-multiselectable="true">
                         <input type="hidden" asp-for="CategoryType" />
                         @if(Model.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_Flow)
-                            {
+                        {
                             <partial name="_PageFlowInput" model="@Model" />
-                            }
+                        }
                         else if (Model.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_FlowItems)
                         {
                             <partial name="_PageFlowItemInput" model="@Model" />
+                        }
+                        else if (Model.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_Solution)
+                        {
+                            <partial name="_PageSolutionInput" model="@Model" />
                         }
                         <input type="hidden" asp-for="ContentPageRelatedIds" />
                         <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language = Model.Language, Type = Model.Type, LinkId = Model.LinkId, PortalId = Model.PortalId })" />
@@ -107,6 +115,14 @@
     </script>
 }
 else if (Model.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_FlowItems)
+{
+    <script>
+        setTimeout(function () {
+             pageEditors = createEditors(["Input3","Input4", "Input5", "Input6", "Input7"]);
+        }, 200);
+    </script>
+}
+else if (Model.CategoryType == PT.Domain.Model.ECategoryType.ContentPage_Solution)
 {
     <script>
         setTimeout(function () {
