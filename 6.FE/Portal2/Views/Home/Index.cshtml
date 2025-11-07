@@ -24,7 +24,7 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerHeSinhThai", language = language, portalId = portalId })
 
-<section id="HoTro">
+<section id="HoTro" class="pt-5">
     <div class="container">
         <div class="row">
 
@@ -58,9 +58,11 @@
                                 @for (int j = 0; j < item.Relateds.Count; j++)
                                 {
                                     string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
-                                    <div class="col-sm-6 mb-3">
+                                    string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7";
+
+                                    <div class="mb-4 @cssCol">
                                         <img src="Data/iconht.svg" alt="@item.Relateds[j].Input2" />
-                                        <a href="@pathItem"><span class="pl-5">@item.Relateds[j].Input2</span></a>
+                                        <a href="@pathItem"><span class="pl-2">@item.Relateds[j].Input2</span></a>
                                     </div>
                                 }
                             </div>
@@ -70,8 +72,7 @@
                         </div>
                     </div>
 
-                    <div class="clearfix mb-5"></div>
-                    <div class="clearfix mb-5"></div>
+                    <div class="clearfix mb-6"></div>
                 }
                 else
                 {
@@ -92,9 +93,10 @@
                                 @for (int j = 0; j < item.Relateds.Count; j++)
                                 {
                                     string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
-                                    <div class="col-sm-6 mb-3">
+                                    string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7";
+                                    <div class="mb-4 @cssCol">
                                         <img src="Data/iconht.svg" alt="@item.Relateds[j].Input2" />
-                                        <a href="@pathItem"><span class="pl-5">@item.Relateds[j].Input2</span></a>
+                                        <a href="@pathItem"><span class="pl-2">@item.Relateds[j].Input2</span></a>
                                     </div>
                                 }
                             </div>
@@ -108,15 +110,12 @@
                             <img src="@item.Banner" class="img-hotro" alt="Hỗ trợ" />
                         </a>
                     </div>
-                    <div class="clearfix mb-5"></div>
-                    <div class="clearfix mb-5"></div>
+                    <div class="clearfix mb-6"></div>
                 }
                 { flowi++; }
             }
-            
-
         </div>
-        <div class="text-center mb-5 mt-5">
+        <div class="text-center p-dangky">
             <button class="btn btn-primary btn-join">Đăng kí để nhận tư vấn</button>
         </div>
     </div>

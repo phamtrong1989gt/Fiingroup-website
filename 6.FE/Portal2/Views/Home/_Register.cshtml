@@ -1,10 +1,13 @@
-﻿@{
+﻿@inject PT.Infrastructure.Interfaces.IContactRepository _iContactRepository;
+
+@{
 	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 	var listLanguage = PT.Shared.ListData.ListLanguage;
 	@model PT.UI.Models.ContactHomeModel;
 	@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
 	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
 	var portalId = 2;
+	var listServies = await _iContactRepository.ServiesList(language, portalId);
 }
 <section class="py-5 mb-5" id="DangKy">
 	<div class="container">
@@ -42,7 +45,7 @@
 						</div>
 						<div class="col-sm-12 mb-3">
 							<label for="dichVuQT" class="form-label">Dịch vụ quan tâm <span class="error">*</span></label>
-							<select asp-for="ServiceId"	asp-items="ViewBag.dataServies" class="form-select" id="dichVuQT">
+							<select asp-for="ServiceId" asp-items="listServies" class="form-select" id="dichVuQT">
 								<option value="">Chọn dịch vụ quan tâm</option>
 							</select>
 							<span asp-validation-for="ServiceId" class="validate-style"></span>

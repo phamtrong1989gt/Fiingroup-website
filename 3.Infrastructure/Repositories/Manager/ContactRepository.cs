@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
@@ -84,6 +85,18 @@ namespace PT.Infrastructure.Repositories
                 Page = page,
                 TotalRows = await query.CountAsync()
             };
+        }
+
+        public async Task<SelectList> ServiesList(string language, int portalId, int? parrentId = null)
+        {
+            List<Country> lstdata = new List<Country>
+            {
+                new Country { Id = 1, Name = "Bond Report" },
+                new Country { Id = 2, Name = "FiinPro-X & Bond Report" },
+                new Country { Id = 3, Name = "FiinPro-X Platform" }
+            };
+            var lstData = new SelectList(lstdata, "Id", "Name");
+            return lstData;
         }
     }
 }

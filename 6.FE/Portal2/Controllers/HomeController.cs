@@ -60,13 +60,6 @@ namespace PT.UI.Controllers
         public IActionResult Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            List<Country> lstdata = new List<Country>
-            {
-                new Country { Id = 1, Name = "Báo cáo Trái phiếu" },
-                new Country { Id = 2, Name = "FiinPro-X & Báo cáo Trái phiếu" },
-                new Country { Id = 3, Name = "Nền tảng FiinPro-X" }
-            };
-            ViewBag.dataServies = new SelectList(lstdata, "Id", "Name");
             return View();
         }
         public IActionResult Page404(string linkData)
