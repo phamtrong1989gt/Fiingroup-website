@@ -42,12 +42,10 @@
 						</div>
 						<div class="col-sm-12 mb-3">
 							<label for="dichVuQT" class="form-label">Dịch vụ quan tâm <span class="error">*</span></label>
-							<select class="form-select" id="dichVuQT" asp-for="ServiceId" aria-label="Default select example">
-								<option selected>Chọn dịch vụ quan tâm</option>
-								<option value="1">One</option>
-								<option value="2">Two</option>
-								<option value="3">Three</option>
+							<select asp-for="ServiceId"	asp-items="ViewBag.dataServies" class="form-select" id="dichVuQT">
+								<option value="">Chọn dịch vụ quan tâm</option>
 							</select>
+							<span asp-validation-for="ServiceId" class="validate-style"></span>
 						</div>
 						<div class="col-sm-12 mb-3">
 							<label for="yeuCauCT" class="form-label">Yêu cầu chi tiết <span class="error">*</span></label>
@@ -63,16 +61,13 @@
 				</form>
 			</div>
 			<div class="col-lg-6 col-sm-12 img">
-				@* <img src="Data/bg-dangky.jpg" alt="Đăng ký" /> *@
 				@await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerRegister", language = language, portalId = portalId })
 			</div>
 		</div>
 	</div>
 </section>
-@* <link href="/content/admin/plugins/alertifyjs/css/alertify.min.css" rel="stylesheet" /> *@
+
 @section Scripts {
-	<script src="/content/admin/plugins/alertifyjs/alertify.min.js"></script>
-	<script asp-append-version="true" src="/content/admin/js/script.home.js"></script>
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
@@ -112,23 +107,20 @@
 				$form[0].reset(); // Reset tất cả các input, textarea về giá trị mặc định
 			}
 	</script> *@
-
-
-
 }
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+<link rel="stylesheet" href="/plugins/alertifyjs/css/alertify.min.css" />
+<link rel="stylesheet" href="/plugins/alertifyjs/css/themes/default.min.css" />
+<script src="/plugins/jquery-validate/jquery.validate.min.js"></script>
+<script src="/plugins/jquery-validate/jquery.validate.unobtrusive.min.js"></script>
+<script src="/plugins/alertifyjs/alertify.min.js"></script>
 
 <script>
 	$(function () {
 	  const $form = $('#formLienHe');
 	  $form.on('submit', function (e) {
 		e.preventDefault();
-
 		if (!$form.valid()) {
-		  console.log('Form không hợp lệ');
 		  return;
 		}
 		const token = $form.find('input[name="__RequestVerificationToken"]').val();
@@ -138,12 +130,11 @@
 		  data: $form.serialize(),
 		  headers: { 'RequestVerificationToken': token },
 		  success: function (res) {
-			alert(res.message);
+			alertify.success(res.message);
 			$form[0].reset();
 		  },
 		  error: function (xhr) {
-			alert('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
-			console.error(xhr.responseText);
+			alertify.warning('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
 		  }
 		});
 	  });

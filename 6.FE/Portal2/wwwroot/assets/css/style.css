@@ -833,9 +833,9 @@ img:hover {
     transform: translateY(-4px);
 }*/
 
-/*#manualsct .item {
+#manualsct .item {
     margin: 0 5%;
-    transition: all 0.3s ease;
+    /*transition: all 0.3s ease;*/
 }
 
 #manualsct img {
@@ -844,8 +844,10 @@ img:hover {
     border-radius: 10px;
     height: 50px;
 }
-
-#manualsct .item:hover {
+    #manualsct img:hover {
+        background: #f3f2f2;
+    }
+/*#manualsct .item:hover {
     transform: translateY(-6px);
 }*/
 
