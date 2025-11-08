@@ -1,0 +1,354 @@
+﻿@using Microsoft.Extensions.Options
+@using PT.Shared;
+@using PT.UI.Models
+
+@model PT.Domain.Model.ContentPage
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject ICategoryRepository _iCategoryRepository;
+@inject IContentPageReferenceRepository _iContentPageReferenceRepository;
+@inject IOptions<BaseSettings> _baseSettings;
+
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var portalId = _baseSettings.Value.PortalId;
+}
+<!-- Slide banner -->
+<section id="SliderBanner">
+    <style>
+        #SliderBanner {
+            background-image: url('/Data/product_bg1.png');
+            background-repeat: no-repeat;
+        }
+    </style>
+    <div id="carouselFiin" class="carousel slide carousel-fade" data-bs-touch="true">
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="3000">
+                <img src="/Data/product_banner1.png" class="d-block w-100" alt="Banner">
+            </div>
+        </div>
+        <div id="bg-1"></div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselFiin"
+                data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span>
+        </button><button class="carousel-control-next"
+                         type="button" data-bs-target="#carouselFiin" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
+
+<section id="FiinProX">
+    <style>
+        .finnpro {
+            padding-top: 50px;
+        }
+
+        .finx-title {
+            text-align: center;
+        }
+
+        .group-num {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            flex-wrap: wrap;
+            /* Allow wrapping on smaller screens */
+        }
+
+        .stat-box {
+            padding: 20px;
+            max-width: 180px;
+            /* Limit width for better wrapping */
+        }
+
+        .number {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .desc {
+            display: block;
+            font-size: 14px;
+            color: #2d5ba9;
+            white-space: nowrap;
+        }
+
+        /* SVG Line Styling */
+        .stat-box svg {
+            width: 100%;
+            height: 2px;
+            margin: 5px 0;
+        }
+
+        .stat-box rect {
+            fill: url(#paint0_linear_4337_26784);
+        }
+    </style>
+
+    <div class="container">
+        @Html.Raw(Model.Input4)
+    </div>
+</section>
+
+<!-- Find a rating-->
+<section id="FinnRatings">
+    <div class="whylastest mt-5">
+        <div class="container">
+            @Html.Raw(Model.Input5)
+        </div>
+    </div>
+</section>
+
+<!-- Report -->
+<section id="FiinProX">
+    <style>
+        .report-desc {
+            font-weight: 600;
+            text-align: justify;
+            overflow: hidden;
+            font-size: 26px;
+            padding-top: 10px;
+            color: #093461;
+        }
+
+
+        .stat-card {
+            position: relative;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 30px 20px;
+            margin-bottom: 15px;
+            width: 100%;
+            border: 1px solid #e2e7ee;
+        }
+
+        /* Ảnh góc trên phải */
+        .corner-decor {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: auto;
+            pointer-events: none;
+        }
+
+        .corner-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            font-size: 20px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            color: #0066CC;
+        }
+
+        .stat-value {
+            font-size: 60px;
+            font-weight: 700;
+            color: #0066CC;
+            margin-bottom: 10px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .stat-text {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1D2939;
+            z-index: 2;
+            position: relative;
+        }
+    </style>
+    <div class="container">
+        @Html.Raw(Model.Input6)
+    </div>
+</section>
+
+<!-- FiinCard -->
+<section id="FiinCard">
+    <style>
+        .box-card {
+            text-align: center;
+            align-items: center;
+        }
+
+        .box-left,
+        .box-right {
+            background-color: #fafbfe;
+            border-radius: 15px;
+            padding: 55px;
+            box-shadow: 0 4px 8px #0000001a;
+            text-align: center;
+            margin: 45px 0;
+            transition: transform 0.3s;
+        }
+
+        .box-center {
+            position: relative;
+            border-radius: 15px;
+            background-color: #fff;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 4px 8px #0000001a;
+            overflow: hidden;
+        }
+
+            .box-center::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: 15px;
+                padding: 2px;
+                /* độ dày border */
+                background: linear-gradient(to right, #034EA2, #53DFFF);
+                -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                pointer-events: none;
+            }
+
+            .box-left:hover,
+            .box-center:hover,
+            .box-right:hover {
+                transform: translateY(-5px);
+            }
+
+        .tilte-card {
+            font-size: 23px;
+            font-weight: bold;
+            color: #0066CC;
+            margin-bottom: 10px;
+        }
+
+        .tilte-card-center {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0066CC;
+            margin-bottom: 10px;
+        }
+
+        .money-card {
+            font-size: 30px;
+            color: #80b3e5;
+            margin-bottom: 5px;
+        }
+
+        .number-card {
+            color: #0066CC;
+            font-weight: 600;
+        }
+
+        .id-card {
+            font-size: 15px;
+            color: #1D2939;
+            margin-bottom: 20px;
+            text-align: right;
+            padding: 0 20px;
+        }
+
+        .id-card-center {
+            font-size: 15px;
+            color: #1D2939;
+            margin-bottom: 20px;
+            text-align: right;
+            padding: 0px 15px;
+        }
+
+        .noted-card {
+            border-radius: 8px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+            .feature-item i.fa.fa-check-circle {
+                color: #28a745;
+                margin-right: 15px;
+                font-size: 16px;
+                line-height: 1;
+            }
+
+            .feature-item span {
+                color: #000;
+                font-size: 12px;
+                line-height: 1.5;
+                text-align: left;
+            }
+
+                .feature-item span span {
+                    color: #1D2939;
+                    font-weight: bold;
+                }
+
+        .fa.fa-check-circle {
+            color: #28a745;
+            margin-right: 8px;
+            padding-top: 5px;
+            text-align: left;
+        }
+
+        .dang-ky-card {
+            background-color: #ffffff;
+            color: #0066cc;
+            padding: 7px 70px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: inline-block;
+            border: 1px solid #0066cc;
+        }
+
+        .dang-ky-card-center {
+            background-color: #0066cc;
+            color: #ffffff;
+            padding: 7px 70px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+
+        .box-center img {
+            max-width: 165px;
+            margin: 0 50px auto;
+        }
+
+        .box-center .corner-decor {
+            position: absolute;
+            top: 0;
+            right: -50px;
+            width: 70px;
+            height: auto;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 2;
+        }
+
+        .box-center:hover .corner-decor {
+            opacity: 1;
+        }
+    </style>
+
+    <div class="container">
+        @Html.Raw(Model.Input7)
+    </div>
+</section>
+
+<partial name="~/Views/Home/_Register.cshtml" model="@(new ContactHomeModel { })" />

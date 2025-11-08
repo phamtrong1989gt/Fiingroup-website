@@ -22,8 +22,8 @@ namespace PT.Domain.Model
         ContentPage_Blog = 100,
         [Display(Name = "Dịch vụ")]
         ContentPage_Service = 101,
-        [Display(Name = "Hỗ trợ dòng chảy")]
-        ContentPage_FlowSupportService = 102,
+        [Display(Name = "Giải pháp")]
+        ContentPage_Solution = 102,
         [Display(Name = "Sự kiện")]
         ContentPage_Event = 103,
         [Display(Name = "Ấn phẩm")]

@@ -15,24 +15,28 @@
   <ItemGroup>
     <Compile Remove="1223\**" />
     <Compile Remove="logs\**" />
+    <Compile Remove="wwwroot\Module\**" />
     <Compile Remove="wwwroot\wp-admin\**" />
     <Compile Remove="wwwroot\wp-content\**" />
     <Compile Remove="wwwroot\wp-includes\**" />
     <Compile Remove="wwwroot\wp-json\**" />
     <Content Remove="1223\**" />
     <Content Remove="logs\**" />
+    <Content Remove="wwwroot\Module\**" />
     <Content Remove="wwwroot\wp-admin\**" />
     <Content Remove="wwwroot\wp-content\**" />
     <Content Remove="wwwroot\wp-includes\**" />
     <Content Remove="wwwroot\wp-json\**" />
     <EmbeddedResource Remove="1223\**" />
     <EmbeddedResource Remove="logs\**" />
+    <EmbeddedResource Remove="wwwroot\Module\**" />
     <EmbeddedResource Remove="wwwroot\wp-admin\**" />
     <EmbeddedResource Remove="wwwroot\wp-content\**" />
     <EmbeddedResource Remove="wwwroot\wp-includes\**" />
     <EmbeddedResource Remove="wwwroot\wp-json\**" />
     <None Remove="1223\**" />
     <None Remove="logs\**" />
+    <None Remove="wwwroot\Module\**" />
     <None Remove="wwwroot\wp-admin\**" />
     <None Remove="wwwroot\wp-content\**" />
     <None Remove="wwwroot\wp-includes\**" />
@@ -64,11 +68,6 @@
 	  </PackageReference>
 	  <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
 	  <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Module\" />
   </ItemGroup>
 
 

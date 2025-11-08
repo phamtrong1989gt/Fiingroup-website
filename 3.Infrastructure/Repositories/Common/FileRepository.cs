@@ -131,8 +131,36 @@ namespace PT.Infrastructure.Repositories
 
         public string ResizeImage(IFormFile file, string pathSave, int maxSideSize, bool makeItSquare)
         {
+            // Mở ảnh từ stream
             using var image = System.Drawing.Image.FromStream(file.OpenReadStream());
-            var img = ResizeImage(Path.GetFileName(file.FileName), image, maxSideSize, makeItSquare);
+
+            // Nếu không cần resize (kích thước đã nhỏ hơn hoặc bằng yêu cầu) thì ghi file gốc
+            if (!makeItSquare)
+            {
+                // Nếu ảnh ngang: kiểm tra theo chiều rộng
+                if (image.Width > image.Height)
+                {
+                    if (image.Width <= maxSideSize)
+                    {
+                        // Lưu nguyên bản
+                        using var outStream = new FileStream(pathSave, FileMode.Create);
+                        file.OpenReadStream().CopyTo(outStream);
+                        return pathSave;
+                    }
+                }
+                else // ảnh dọc hoặc vuông: kiểm tra theo chiều cao
+                {
+                    if (image.Height <= maxSideSize)
+                    {
+                        using var outStream = new FileStream(pathSave, FileMode.Create);
+                        file.OpenReadStream().CopyTo(outStream);
+                        return pathSave;
+                    }
+                }
+            }
+
+            // Thực hiện resize (bao gồm cả trường hợp makeItSquare)
+            using var img = ResizeImage(Path.GetFileName(file.FileName), image, maxSideSize, makeItSquare);
             var type = GetImageFormat(img);
             img.Save(pathSave, type);
             return pathSave;
@@ -152,45 +180,75 @@ namespace PT.Infrastructure.Repositories
 
         private Bitmap ResizeImage(string fileName, System.Drawing.Image image, int maxSideSize, bool makeItSquare)
         {
-            int newWidth;
-            int newHeight;
-
             int oldWidth = image.Width;
             int oldHeight = image.Height;
-            Bitmap newImage;
+
             if (makeItSquare)
             {
-                int smallerSide = oldWidth >= oldHeight ? oldHeight : oldWidth;
-                double coeficient = maxSideSize / (double)smallerSide;
-                newWidth = Convert.ToInt32(coeficient * oldWidth);
-                newHeight = Convert.ToInt32(coeficient * oldHeight);
-                Bitmap tempImage = new Bitmap(image, newWidth, newHeight);
-                int cropX = (newWidth - maxSideSize) / 2;
-                int cropY = (newHeight - maxSideSize) / 2;
-                newImage = new Bitmap(maxSideSize, maxSideSize);
-                Graphics tempGraphic = Graphics.FromImage(newImage);
-                tempGraphic.SmoothingMode = SmoothingMode.AntiAlias;
-                tempGraphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                tempGraphic.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                tempGraphic.DrawImage(tempImage, new Rectangle(0, 0, maxSideSize, maxSideSize), cropX, cropY, maxSideSize, maxSideSize, GraphicsUnit.Pixel);
+                // Resize theo tỉ lệ rồi crop để thành square
+                int smallerSide = Math.Min(oldWidth, oldHeight);
+                double coef = maxSideSize / (double)smallerSide;
+                int tempWidth = (int)Math.Round(oldWidth * coef);
+                int tempHeight = (int)Math.Round(oldHeight * coef);
+
+                using var tempImage = new Bitmap(tempWidth, tempHeight);
+                using (var g = Graphics.FromImage(tempImage))
+                {
+                    g.CompositingQuality = CompositingQuality.HighQuality;
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.SmoothingMode = SmoothingMode.HighQuality;
+                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    g.DrawImage(image, 0, 0, tempWidth, tempHeight);
+                }
+
+                int cropX = (tempWidth - maxSideSize) / 2;
+                int cropY = (tempHeight - maxSideSize) / 2;
+                var square = new Bitmap(maxSideSize, maxSideSize);
+                using (var g = Graphics.FromImage(square))
+                {
+                    g.CompositingQuality = CompositingQuality.HighQuality;
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.SmoothingMode = SmoothingMode.HighQuality;
+                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    g.DrawImage(tempImage, new Rectangle(0, 0, maxSideSize, maxSideSize), cropX, cropY, maxSideSize, maxSideSize, GraphicsUnit.Pixel);
+                }
+
+                return square;
+            }
+
+            // Không make square: resize theo orientation
+            double scale = 1.0;
+            if (oldWidth >= oldHeight)
+            {
+                // landscape or square: constrain by width
+                if (oldWidth > maxSideSize) scale = maxSideSize / (double)oldWidth;
             }
             else
             {
-                int maxSide = oldWidth >= oldHeight ? oldWidth : oldHeight;
-                if (maxSide > maxSideSize)
-                {
-                    double coeficient = maxSideSize / (double)maxSide;
-                    newWidth = Convert.ToInt32(coeficient * oldWidth);
-                    newHeight = Convert.ToInt32(coeficient * oldHeight);
-                }
-                else
-                {
-                    newWidth = oldWidth;
-                    newHeight = oldHeight;
-                }
-                newImage = new Bitmap(image, newWidth, newHeight);
+                // portrait: constrain by height
+                if (oldHeight > maxSideSize) scale = maxSideSize / (double)oldHeight;
             }
-            return newImage;
+
+            int newWidth = (int)Math.Round(oldWidth * scale);
+            int newHeight = (int)Math.Round(oldHeight * scale);
+
+            // Nếu không cần thay đổi kích thước, trả về một bản sao Bitmap của ảnh gốc
+            if (scale >= 1.0)
+            {
+                return new Bitmap(image);
+            }
+
+            var dest = new Bitmap(newWidth, newHeight);
+            using (var g = Graphics.FromImage(dest))
+            {
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.DrawImage(image, 0, 0, newWidth, newHeight);
+            }
+
+            return dest;
         }
 
     }

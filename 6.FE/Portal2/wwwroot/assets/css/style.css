@@ -440,7 +440,12 @@ a {
 .btn-request {
     border-radius: 2em;
 }
-
+.pl-2 {
+    padding-left: 2% !important;
+}
+.pl-3 {
+    padding-left: 3% !important;
+}
 .pl-5 {
     padding-left: 5% !important;
 }
@@ -713,7 +718,7 @@ a {
     font-weight: 600;
     font-size: 24px;
     color: var(--title-color);
-    height: 68px;
+    /*height: 68px;*/
     overflow:hidden;
 }
 
@@ -741,16 +746,23 @@ a {
 }
 
 #HoTro {
-   /* background: url('../Data/bghotro.png') no-repeat top;
-    background-position: bottom 30% right;*/
+     background: url('/Data/bghotro.jpg') no-repeat top;
+    background-position: bottom 85% center;
 }
 
+.mb-6 {
+    margin-bottom: 4rem !important;
+}
+.p-dangky{
+    padding:6% 0;
+}
 .hotro-list {
     background: rgba(0, 0, 0, 0.001);
     border-radius: 12px;
     font-weight: 500;
-    padding: 25px 20px;
+    padding: 20px 10px 5px 10px;
     box-shadow: 2px 1px 2px 2px rgba(3, 78, 162, 0.12);
+    font-size: 14.5px;
 }
 
 .hotro-list .col-sm-7 {
@@ -758,16 +770,16 @@ a {
 }
 
 .img-hotro {
-    max-height: 360px;
+    /*max-height: 360px;*/
 }
 
-img {
+/*img {
     transition: all 0.5s ease;
 }
 
 img:hover {
     transform: translateY(-8px);
-}
+}*/
 
 .tag-item {
     color: var(--primary-color);
@@ -818,13 +830,13 @@ img:hover {
     white-space: nowrap;
 }
 
-.img-fluid,
+/*.img-fluid,
 .btn {
     transition: all 0.3s ease;
-}
+}*/
 
 .img-fluid:hover {
-    transform: translateY(-6px);
+    /*transform: translateY(-6px);*/
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
     border-color: #667eea;
 }
@@ -835,20 +847,21 @@ img:hover {
 
 #manualsct .item {
     margin: 0 5%;
-    transition: all 0.3s ease;
+    /*transition: all 0.3s ease;*/
 }
 
 #manualsct img {
-    /*transition: all 0.3s ease;*/
     background: #fff;
     padding: 10px 20px;
     border-radius: 10px;
     height: 50px;
 }
-
-#manualsct .item:hover {
+    #manualsct img:hover {
+        background: #f3f2f2;
+    }
+/*#manualsct .item:hover {
     transform: translateY(-6px);
-}
+}*/
 
 .footter {
     font-size: 12px;
@@ -924,7 +937,13 @@ a:hover {
     padding: 7px 20px;
     border-radius: 200px;
 }
-
+.validation-summary-valid{
+    color:red;
+    margin:20px 0;
+}
+.field-validation-error {
+    color: red;
+}
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
         max-width: 1230px;

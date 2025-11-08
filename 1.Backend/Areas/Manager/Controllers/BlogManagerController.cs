@@ -602,93 +602,97 @@ namespace PT.BE.Areas.Manager.Controllers
         #region [Upload file]
         [HttpPost, ActionName("UploadImage")]
         [AuthorizePermission("Index")]
-        public async Task<object> UploadImagePost(string altId, int id, int type = 0)
+        public async Task<object> UploadImagePost(string altId, int id, int type =0)
         {
             try
             {
-                string[] allowedExtensions = _baseSettings.Value.ImagesType.Split(',');
-                string path = $"{_iWebHostEnvironment.WebRootPath}/Data" + Functions.GenFolderByDate();
-                string pathServer = $"/Data" + Functions.GenFolderByDate();
+                var allowed = (_baseSettings.Value.ImagesType ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-                if (!Directory.Exists(path))
+                var folderByDate = Functions.GenFolderByDate();
+                string configuredDataPath = _baseSettings.Value.DataPath;
+
+                // Lấy đường dẫn vật lý và public base url, helper đã tạo và đảm bảo thư mục tồn tại
+                var (physicalPath, publicUrlBase) = Functions.SetupSharedDataFolder(configuredDataPath, folderByDate);
+
+                var file = Request.Form.Files.FirstOrDefault();
+                if (file == null)
+                    return new ResponseModel<FileDataModel> { Output =0, Message = "Không có tệp được gửi.", Type = ResponseTypeMessage.Warning };
+
+                var ext = Path.GetExtension(file.FileName);
+                if (!allowed.Contains(ext))
+                    return new ResponseModel<FileDataModel> { Output =2, Message = "Tệp tải lên không đúng định dạng.", Type = ResponseTypeMessage.Warning };
+
+                if (_baseSettings.Value.ImagesMaxSize < file.Length)
+                    return new ResponseModel<FileDataModel> { Output =3, Message = "Tệp tải lên vượt quá kích thước cho phép.", Type = ResponseTypeMessage.Warning };
+
+                var safeName = Path.GetFileNameWithoutExtension(file.FileName);
+                var fileName = safeName + ext;
+                var fullPath = Path.Combine(physicalPath, fileName);
+                if (System.IO.File.Exists(fullPath))
                 {
-                    Directory.CreateDirectory(path);
+                    fileName = $"{safeName}_{id}_{DateTime.Now:yyyyMMddHHmmss}{ext}";
+                    fullPath = Path.Combine(physicalPath, fileName);
                 }
 
-                var files = Request.Form.Files;
-                foreach (var file in files)
+                // Lưu file: resize nếu cần, else copy
+                try
                 {
-                    if (!allowedExtensions.Contains(Path.GetExtension(file.FileName)))
+                    using var img = System.Drawing.Image.FromStream(file.OpenReadStream());
+                    if (img.Width > _baseSettings.Value.ImageMaxWith)
                     {
-                        return new ResponseModel<FileDataModel>() { Output = 2, Message = "Tệp tải lên không đúng định dạng.", Type = ResponseTypeMessage.Warning };
-                    }
-                    else if (_baseSettings.Value.ImagesMaxSize < file.Length)
-                    {
-                        return new ResponseModel<FileDataModel>() { Output = 3, Message = "Tệp tải lên vượt quá kích thước cho phép.", Type = ResponseTypeMessage.Warning };
+                        _iFileRepository.ResizeImage(file, fullPath, _baseSettings.Value.ImageMaxWith, false);
                     }
                     else
                     {
-                        var newFilename = Path.GetFileName(file.FileName);
-                        if (System.IO.File.Exists(path + file.Name))
-                        {
-                            newFilename = $"{Path.GetFileName(file.FileName)}_{id}_{DateTime.Now:yyyyMMddHHmmss}";
-                        }
-
-                        string pathFile = ContentDispositionHeaderValue
-                        .Parse(file.ContentDisposition)
-                        .FileName
-                        .Trim('"');
-
-                        pathFile = $"{path}{newFilename}";
-                        pathServer = $"{pathServer}{newFilename}";
-
-                        using var image = System.Drawing.Image.FromStream(file.OpenReadStream());
-                        if (image.Width > _baseSettings.Value.ImageMaxWith)
-                        {
-                            _iFileRepository.ResizeImage(file, pathFile, _baseSettings.Value.ImageMaxWith, false);
-                        }
-                        else
-                        {
-                            using var stream = new FileStream(pathFile, FileMode.Create);
-                            await file.CopyToAsync(stream);
-                        }
-
-                        await AddFileData(id, pathServer, ESlugType.ContentPage, altId);
-
-                        if (type == 1)
-                        {
-                            return new FileDataCKEditerModel()
-                            {
-                                FileName = Path.GetFileName(pathServer),
-                                Number = 200,
-                                Uploaded = 1,
-                                Url = pathServer
-                            };
-                        }
-                        else
-                        {
-                            return new ResponseModel<FileDataModel>()
-                            {
-                                Output = 1,
-                                Message = "Tải tệp lên thành công.",
-                                Type = ResponseTypeMessage.Success,
-                                Data = new FileDataModel
-                                {
-                                    CreatedDate = DateTime.Now,
-                                    CreatedUser = DataUserInfo.UserId,
-                                    Path = pathServer,
-                                    FileName = Path.GetFileName(pathServer)
-                                },
-                                IsClosePopup = false
-                            };
-                        }
+                        using var fs = new FileStream(fullPath, FileMode.Create);
+                        // reset stream position
+                        file.OpenReadStream().CopyTo(fs);
                     }
                 }
+                catch
+                {
+                    // Nếu không thể load image thì ghi trực tiếp
+                    using var fs = new FileStream(fullPath, FileMode.Create);
+                    await file.CopyToAsync(fs);
+                }
+
+                var publicUrl = (publicUrlBase ?? "/Data/").Replace("\\", "/");
+                if (!publicUrl.EndsWith("/")) publicUrl += "/";
+                publicUrl = publicUrl + Uri.EscapeDataString(fileName);
+
+                await AddFileData(id, publicUrl, ESlugType.ContentPage, altId);
+
+                if (type ==1)
+                {
+                    return new FileDataCKEditerModel
+                    {
+                        FileName = fileName,
+                        Number =200,
+                        Uploaded =1,
+                        Url = publicUrl
+                    };
+                }
+
+                return new ResponseModel<FileDataModel>
+                {
+                    Output =1,
+                    Message = "Tải tệp lên thành công.",
+                    Type = ResponseTypeMessage.Success,
+                    Data = new FileDataModel
+                    {
+                        CreatedDate = DateTime.Now,
+                        CreatedUser = DataUserInfo.UserId,
+                        Path = publicUrl,
+                        FileName = fileName
+                    },
+                    IsClosePopup = false
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
             }
+
             return new ResponseModel<FileDataModel>() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại.", Type = ResponseTypeMessage.Danger, Status = false };
         }
         #endregion

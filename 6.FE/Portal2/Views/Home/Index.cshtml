@@ -8,13 +8,14 @@
 @using System.Linq.Expressions;
 @using PT.UI.Models
 @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
-@inject IOptions<BaseSettings> _baseSettings;   
+@inject IOptions<BaseSettings> _baseSettings;
 
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = _baseSettings.Value.PortalId;
     var listFlow = await _iContentPageRepository.FlowGetsAsync(language, portalId);
+    int flowi = 0;
 }
 
 @* <vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module> *@
@@ -23,51 +24,102 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerHeSinhThai", language = language, portalId = portalId })
 
-@foreach (var item in listFlow)
-{
-    <section id="HoTro">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-7 d-none d-md-block">
-                    <a href="#" title="Hỗ trợ">
-                        <img src="Data/hotro-01.png" class="img-hotro" alt="Hỗ trợ" />
-                    </a>
-                </div>
-                <div class="col-lg-5 col-sm-12">
-                    <div class="why-title">@item.Name</div>
-                    <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
-                        <defs>
-                            <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
-                                <stop offset="0.384615" stop-color="#034EA2" />
-                                <stop offset="1" stop-color="#53DFFF" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <p class="why-desc">@Html.Raw(item.Summary)</p>
-                    <div class="hotro-list">
-                        <div class="row">
-                            @for(int i = 0; i < item.Relateds.Count; i++)
-                            {
-                                <div class="col-sm-6 mb-3">
-                                    <img src="Data/iconht.svg" alt="@item.Relateds[i].Input2" />
-                                    <a><span class="pl-5">@item.Relateds[i].Input2</span></a>
-                                </div>
-                            }
+<section id="HoTro" class="pt-5">
+    <div class="container">
+        <div class="row">
+
+            @for (int i =0; i < listFlow.Count; i++)
+            {
+                var item = listFlow[i];
+                string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
+                var isEven = (i % 2 == 0);
+                if (isEven)
+                {
+                    <div class="col-sm-7 d-none d-md-block">
+                        <a href="@path" title="Hỗ trợ">
+                            <img src="@item.Banner" class="img-hotro" alt="Hỗ trợ" />
+                        </a>
+                    </div>
+
+                    <div class="col-lg-5 col-sm-12">
+                        <div class="why-title">@item.Name</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">@Html.Raw(item.Summary)</p>
+                        <div class="hotro-list">
+                            <div class="row">
+                                @for (int j = 0; j < item.Relateds.Count; j++)
+                                {
+                                    string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
+                                    string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7";
+
+                                    <div class="mb-4 @cssCol">
+                                        <img src="Data/iconht.svg" alt="@item.Relateds[j].Input2" />
+                                        <a href="@pathItem"><span class="pl-2">@item.Relateds[j].Input2</span></a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <a class="show-more" href="@path">Khám phá thêm <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <div class="pt-4">
-                        <a class="show-more" href="@PT.Shared.Functions.FormatUrl(language, item.Link?.Slug)">Khám phá thêm <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+
+                    <div class="clearfix mb-6"></div>
+                }
+                else
+                {
+                    <div class="col-lg-5 col-sm-12">
+                        <div class="why-title">@item.Name</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">@Html.Raw(item.Summary)</p>
+                        <div class="hotro-list">
+                            <div class="row">
+                                @for (int j = 0; j < item.Relateds.Count; j++)
+                                {
+                                    string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
+                                    string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7";
+                                    <div class="mb-4 @cssCol">
+                                        <img src="Data/iconht.svg" alt="@item.Relateds[j].Input2" />
+                                        <a href="@pathItem"><span class="pl-2">@item.Relateds[j].Input2</span></a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <a class="show-more" href="@path">Khám phá thêm <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                        </div>
                     </div>
-                </div>
-                
-            </div>
-            <div class="text-center mb-5 mt-5">
-                <button class="btn btn-primary btn-join">Đăng kí để nhận tư vấn</button>
-            </div>
+                    <div class="col-sm-7 d-none d-md-block text-right">
+                        <a href="@path" title="Hỗ trợ">
+                            <img src="@item.Banner" class="img-hotro" alt="Hỗ trợ" />
+                        </a>
+                    </div>
+                    <div class="clearfix mb-6"></div>
+                }
+                { flowi++; }
+            }
         </div>
-    </section>
-}
+        <div class="text-center p-dangky">
+            <button class="btn btn-primary btn-join">Đăng kí để nhận tư vấn</button>
+        </div>
+    </div>
+</section>
 @* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeHeSinhThai", language = language, portalId = portalId })) *@
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderDauAn", language = language, portalId = portalId })
