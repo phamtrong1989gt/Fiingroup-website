@@ -39,15 +39,723 @@
     //     View = "_News"
     // };
 }
+    
+        <!-- Slide banner -->
+ <section id="StockEconomy" class="hero-section">
+            <style>
+                #StockEconomy {
+            background: url('/Data/about_banner.png') no-repeat top;
+                    background-size: cover;
+                }
 
-@* <vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module> *@
+                .hero-content {
+                    color: #fff;
+                    max-width: 89%;
+                    z-index: 2;
+                    padding-bottom: 30px;
+                }
 
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "SolutionBanner", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionFiinGroup", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionHelp2", language = language, portalId = portalId }))
-@* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionHelp", language = language, portalId = portalId })) *@
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionCustomer", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "SolutionPartner", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionDeliver", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SolutionSolutions", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "SolutionFeatured", language = language, portalId = portalId })
+                .hero-subtitle {
+                    display: inline-block;
+                    font-size: 40px;
+                    font-weight: 500;
+                    color: #fff;
+                    padding-top: 60px;
+                }
+
+                .hero-title {
+                    font-size: 60px;
+                    font-weight: 700;
+                    line-height: 1.4;
+                    margin-bottom: 15px;
+                }
+
+                .hero-text {
+                    font-size: 19px;
+                    line-height: 1.7;
+                    color: #d7e9ff;
+                    text-align: justify;
+                    position: relative;
+                    padding-left: 25px;
+                }
+
+                .hero-text::before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 5px;
+                    height: 100%;
+                    background: linear-gradient(to bottom, #5086c0, #E2F2FB7A, #badcf1);
+                    border-radius: 2px;
+                }
+            </style>
+            <div class="hero-overlay">
+                <div class="container">
+                    <div class="hero-content">
+                        <span class="hero-subtitle">Solutions</span>
+                        <h1 class="hero-title">
+                            Giải pháp cho ngân hàng
+                        </h1>
+                        <div class="hero-text">
+                            FiinGroup mang đến hệ sinh thái dữ liệu và phân tích toàn diện, giúp ngân hàng:
+                            <ul>
+                                <li>- Ngân cao năng lực thẩm định tín dụng và quản trị rủi ro</li>
+                                <li>- Tối ưu hiệu quả đầu tư, đính giá và quản lý danh mục tài sản</li>
+                                <li>- Tăng tốc quy trình giám sát khách hàng, tuân thủ và báo cáo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="FiinGroup">
+            <style>
+                .navbarfin {
+                    padding: 50px 0;
+                }
+
+                .navbarfin a {
+                    color: #093461;
+                    text-decoration: none;
+                    font-size: 18px;
+                    padding: 5px 40px;
+                    transition: color 0.3s;
+                    cursor: pointer;
+                }
+
+                .navbarfin a.active {
+                    color: #0066CC;
+                    border-bottom: 3px solid #093461;
+                }
+
+                .box-fingroup {
+                    position: relative;
+                    border-radius: 15px;
+                    margin: 10px 0;
+                    box-shadow: 0 4px 8px #0000001a;
+                    transition: transform 0.3s;
+                    max-width: 31%;
+                    min-width: 350px;
+
+                    /* border gradient bo góc mượt */
+                    border: 1px solid transparent;
+                    background-image: linear-gradient(#f5f9ff, #f2f7ff), linear-gradient(to right, #E6E6E600, #034EA2);
+                    background-origin: border-box;
+                    background-clip: padding-box, border-box;
+                }
+
+                .box-fingroup:hover {
+                    transform: translateY(-5px);
+                }
+
+                .dangkytuvan {
+                    background: #0066CC;
+                    color: #ffffff;
+                    padding: 10px 110px;
+                    border-radius: 30px;
+                    cursor: pointer;
+                    display: inline-block;
+                    font-size: 16px;
+                    font-weight: 500;
+                    text-decoration: none;
+                    transition: 0.3s ease;
+                    max-width: fit-content;
+                }
+
+                .row.justify-content-center {
+                    text-align: center;
+                }
+
+                .dangkytuvan:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 20px rgba(3, 78, 162, 0.25);
+                    color: #fff;
+                }
+            </style>
+            <div class="container">
+                <div class="navbarfin">
+                    <a href="#overview" class="active">Tổng quan</a>
+                    <a href="#products">Sảm phẩm hỗ trợ</a>
+                    <a href="#featured-insights">Giải pháp khác</a>
+                    <a href="#webinars">Tin tức</a>
+                </div>
+                <div class="why pb-4">
+                    <h2 class="text-center price-title mb-5">FinnGroup <span style="color: #0066CC;"> thấu  hiểu</span> nhu cầu khách hàng</h2>
+                    <div class="row" style="justify-content: space-between;">
+                        <div class="mb-5 box-fingroup">
+                            <img src="/Data/solution_why.png" alt="why" />
+                            <div class="why-title">Ra quyết định nhanh và <br>chính xác</div>
+                            <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174"
+                                        y2="14.2709" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0.384615" stop-color="#034EA2" />
+                                        <stop offset="1" stop-color="#53DFFF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <p class="why-desc">Cần dữ liệu realtime, thống nhất để phản ứng kịp thị trường
+                            </p>
+                        </div>
+                        <div class="mb-5 box-fingroup pr-2">
+                            <img src="/Data/solution_why2.png" alt="why" />
+                            <div class="why-title">Giám sát, Quản trị rủi ro toàn diện</div>
+                            <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174"
+                                        y2="14.2709" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0.384615" stop-color="#034EA2" />
+                                        <stop offset="1" stop-color="#53DFFF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <p class="why-desc">Giám sát tín dụng, chấm điểm doanh nghiệp, giảm nợ xấu
+                        </div>
+                        <div class="mb-5 box-fingroup">
+                            <img src="/Data/solution_why.png" alt="why" />
+                            <div class="why-title">Định giá tài sản minh bạch
+                            </div>
+                            <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174"
+                                        y2="14.2709" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0.384615" stop-color="#034EA2" />
+                                        <stop offset="1" stop-color="#53DFFF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <p class="why-desc">Xác định giá trị trái phiếu, cổ phiếu theo giá thị trường
+                            </p>
+                        </div>
+
+                        <div class="mb-5 box-fingroup">
+                            <img src="/Data/solution_why.png" alt="why" />
+                            <div class="why-title">Hệ thống tích hợp dữ liệu linh hoạt</div>
+                            <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174"
+                                        y2="14.2709" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0.384615" stop-color="#034EA2" />
+                                        <stop offset="1" stop-color="#53DFFF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <p class="why-desc">Dễ dàng kết nối vào hệ thống nội bộ
+                            </p>
+                        </div>
+                        <div class="mb-5 box-fingroup">
+                            <img src="/Data/solution_why.png" alt="why" />
+                            <div class="why-title">Thấu hiểu khách hàng doanh nghiệp</div>
+                            <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174"
+                                        y2="14.2709" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0.384615" stop-color="#034EA2" />
+                                        <stop offset="1" stop-color="#53DFFF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <p class="why-desc">Phân tích tài chính & tín dụng hỗ trợ thẩm định hiệu quả</p>
+                        </div>
+                        <div class="mb-5 box-fingroup">
+                            <img src="/Data/solution_why.png" alt="why" />
+                            <div class="why-title">Nâng cao hiệu suất vận hành</div>
+                            <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174"
+                                        y2="14.2709" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0.384615" stop-color="#034EA2" />
+                                        <stop offset="1" stop-color="#53DFFF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <p class="why-desc">Tự động hóa phân tích, tiết kiệm thời gian và nguồn lực</p>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-4">
+                        <a href="#dangky" class="dangkytuvan">Đăng ký nhận tư vấn</a>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const links = document.querySelectorAll('.navbarfin a');
+                    links.forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            links.forEach(l => l.classList.remove('active'));
+                            link.classList.add('active');
+                        });
+                    });
+                });
+            </script>
+        </section>
+
+
+        <section id="GiaiPhap" class="py-5">
+            <style>
+                .overlay-card {
+                    position: relative;
+                    overflow: hidden;
+                    border-radius: 12px;
+                    cursor: pointer;
+                    transition: transform 0.3s ease;
+                }
+
+                .overlay-card:hover {
+                    transform: translateY(-5px);
+                }
+
+                .overlay-card .card-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                    filter: brightness(0.6);
+                    transition: filter 0.3s ease;
+                    border-radius: 12px;
+                    height: 240px;
+                    width: 330px !important;
+                }
+
+                .overlay-card:hover .card-img {
+                    filter: brightness(0.8);
+                }
+
+                .overlay-card .card-content {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    color: #fff;
+                    padding: 25px;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                }
+
+                .overlay-card h3 {
+                    font-size: 20px;
+                    font-weight: 700;
+                    margin: 0;
+                }
+
+                .overlay-card p {
+                    font-size: 15px;
+                    margin: 0 0 100px;
+                    opacity: 0.9;
+                    max-width: 75%;
+                }
+
+                .overlay-card .show-more {
+                    color: #fff;
+                    font-weight: 500;
+                    font-size: 14px;
+                    text-decoration: none;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    transition: all 0.3s ease;
+                }
+
+                .overlay-card .show-more i {
+                    transition: transform 0.3s ease;
+                }
+
+                .overlay-card .show-more:hover i {
+                    transform: translateX(4px);
+                }
+
+                #GiaiPhap .show-more i {
+                    color: #fff !important;
+                }
+            </style>
+            <div class="container">
+                <h2 class="price-title mb-5">Giải pháp hỗ trợ <span style="color: #0066CC;"> từ FiinGroup</span>
+                </h2>
+                <div class="owl-carousel owl-theme" id="owlour">
+                    <div class="item">
+                        <div class="overlay-card">
+                            <img src="/Data/solution_giaiphap1.png" alt="FiinPro-X" class="card-img">
+                            <div class="card-content">
+                                <h3>FiinPro-X</h3>
+                                <p>Nền tảng Dữ liệu Tài chính và Cổng thông tin Trái phiếu</p>
+                                <a href="#" class="show-more">Show more <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="item">
+                        <div class="overlay-card">
+                            <img src="/Data/solution_giaiphap2.png" alt="Bond Pricing" class="card-img">
+                            <div class="card-content">
+                                <h3>Bond Pricing</h3>
+                                <p>Dịch vụ tính giá trái phiếu</p>
+                                <a href="#" class="show-more">Show more <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="overlay-card">
+                            <img src="/Data/solution_giaiphap3.png" alt="Bond Pricing" class="card-img">
+                            <div class="card-content">
+                                <h3>API Datafeed</h3>
+                                <p>Giải pháp Dữ liệu Chứng khoán​</p>
+                                <a href="#" class="show-more">Show more <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="overlay-card">
+                            <img src="/Data/solution_giaiphap4.png" alt="Bond Pricing" class="card-img">
+                            <div class="card-content">
+                                <h3>FiinQuant</h3>
+                                <p>Thư viện dữ liệu Chứng khoán bằng ngôn ngữ Python</p>
+                                <a href="#" class="show-more">Show more <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         
+        </section>
+
+
+        <section id="GiaiPhapHoTro" class="py-5">
+            <style>
+                .solution-item {
+                    margin-bottom: 25px;
+                }
+
+                .solution-item h4 {
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #093461;
+                    margin-bottom: 6px;
+                }
+
+                .solution-item p {
+                    font-size: 13px;
+                    color: #093461;
+                    margin-bottom: 35px;
+                }
+
+                .solution-link {
+                    font-size: 14px;
+                    color: #034EA2;
+                    text-decoration: none;
+                    font-weight: 500;
+                    transition: 0.3s;
+                }
+
+                .solution-link:hover {
+                    text-decoration: underline;
+                    padding-left: 4px;
+                }
+
+                .solution-img {
+                    border-radius: 12px;
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+                }
+
+                .pdt20 {
+                    padding-top: 20px;
+                }
+            </style>
+
+            <div class="container">
+                <h2 class="price-title mb-4">Giải pháp hỗ trợ từ <span style="color:#0066CC;">FiinGroup</span></h2>
+
+                <div class="row pdt20">
+                    <div class="col-sm-5 mb-4">
+                        <div class="solution-item pdt20">
+                            <h4>FiinPro-X - Nền tảng Dữ liệu Tài chính và Cổng thông tin Trái phiếu</h4>
+                            <p>Cơ sở dữ liệu tài chính chuyên sâu và toàn diện dành cho các nhà nghiên cứu và chuyên
+                                viên phân tích</p>
+                            <a href="#" class="solution-link">Xem chi tiết <i class="fa fa-long-arrow-right"
+                                    aria-hidden="true"></i></a>
+                        </div>
+
+                        <div class="solution-item">
+                            <h4>FiinTrade - Nền tảng Phân tích Chứng khoán</h4>
+                            <p>Nền tảng phân tích dữ liệu chứng khoán chuyên sâu và cung cấp dữ liệu chứng khoán trực
+                                tuyến cho chuyên viên môi giới, giao dịch viên và nhà đầu tư chuyên nghiệp tại thì
+                                trường chứng khoán Việt Nam</p>
+                            <a href="#" class="solution-link">Xem chi tiết <i class="fa fa-long-arrow-right"
+                                    aria-hidden="true"></i></a>
+                        </div>
+
+                        <div class="solution-item">
+                            <h4>FiinQuant - Thư viện dữ liệu và công cụ phân tích danh cho Python</h4>
+                            <p>Nền tảng phân tích dữ liệu chứng khoán chuyên sâu và cung cấp dữ liệu chứng khoán trực
+                                tuyến cho chuyên viên môi giới, giao dịch viên và nhà đầu tư chuyên nghiệp tại thì
+                                trường chứng khoán Việt Nam</p>
+                            <a href="#" class="solution-link">Xem chi tiết <i class="fa fa-long-arrow-right"
+                                    aria-hidden="true"></i></a>
+                        </div>
+
+                        <div class="solution-item">
+                            <h4>Giải pháp Dữ liệu Chứng khoán (API Datafeed, Microsite)</h4>
+                            <p>Các giải pháp dữ liệu, thông tin và công nghệ data warehouse, trading board, và các ứng
+                                dụng khác</p>
+                            <a href="#" class="solution-link">Xem chi tiết <i class="fa fa-long-arrow-right"
+                                    aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-7 text-center">
+                        <img src="/Data/solution_giaiphap5.png" class="img-fluid solution-img" alt="Fiin Solutions">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="Customer" class="py-5">
+            <div class="container">
+                <h2 class="text-center price-title mb-5">Khách hàng <span style="color: #0066CC;"> nổi bật</span> </h2>
+            </div>
+        </section>
+
+        <section id="Partner" class="py-5 mb-5">
+            <style>
+                #Partner img {
+                    background: transparent;
+                }
+
+                #Partner {
+                    background: rgba(192, 230, 255, 0.2);
+                    height: 152px;
+                    display: flex;
+                    align-items: center;
+                }
+
+                #Partner h2 {
+                    background: transparent;
+                }
+            </style>
+
+            <div class="container">
+                <div class="owl-carousel owl-theme" id="manualsct">
+                    <div class="item"><img src="/Data/partner1.png" height="44"></div>
+                    <div class="item"><img src="/Data/partner2.png" height="44"></div>
+                    <div class="item"><img src="/Data/partner3.png" height="44"></div>
+                    <div class="item"><img src="/Data/partner4.png" height="44"></div>
+                    <div class="item"><img src="/Data/partner5.png" height="44"></div>
+                    <div class="item"><img src="/Data/partner6.png" height="44"></div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="Deliver" class="py-5 mb-5">
+            <style>
+                .contact-us {
+                    background: linear-gradient(to right, #0018A8, #166BF2, #3B7EEE);
+                    color: #ffffff;
+                    padding: 7px 80px;
+                    border-radius: 25px;
+                    cursor: pointer;
+                    display: inline-block;
+                    margin-top: 10px;
+                }
+
+                .deliver {
+                    padding: 60px;
+                    text-align: center;
+                }
+
+                .deliver .price-title {
+                    font-size: 30px !important;
+                }
+            </style>
+            <div class="container">
+                <div class="deliver">
+                    <h2 class="price-title">Đăng ký nhận bản tin của chúng tôi để không bỏ lỡ</h2>
+                    <h2 class="price-title">những <span style="color: #0066CC;">cập nhật mới nhất</span>.</h2>
+                    <div class="contact-us">Đăng ký ngay</div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="Solution" class="py-5 mb-5">
+            <style>
+                .giaiphap-title {
+                    color: white;
+                    font-size: 40px;
+                    font-weight: 600;
+                    padding: 10px;
+                }
+
+                .menusu-item {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    text-decoration: none;
+                    color: #fff;
+                    font-size: 25px;
+                    padding: 20px 0;
+                    font-weight: 600;
+                    transition: color 0.3s;
+                    border-bottom: 1px solid #e0e0e0;
+                }
+
+                .menusu-item:hover {
+                    color: #004d99;
+                }
+
+                .menusu-item .arrow {
+                    color: #fff;
+                    font-size: 16px;
+                }
+
+                .menusu-item:last-child {
+                    border-bottom: none;
+                }
+
+                /* #Solution .overlay {
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(255, 255, 255, 0.1);
+                } */
+            </style>
+            <div class="container">
+                <!-- <div class="overlay"></div> -->
+                <div class="solution">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h2 class="giaiphap-title">Giải pháp phù hợp cho từng <br>nhóm ngành</h2>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="menusu-container">
+                                <div class="menusu-item"><span>Ngân hàng</span><span class="arrow"><i
+                                            class="fas fa-long-arrow-right"></i></span></div>
+                                <div class="menusu-item"><span>Doanh nghiệp FDI</span><span class="arrow"><i
+                                            class="fas fa-long-arrow-right"></i></span></div>
+                                <div class="menusu-item"><span>Tập đoàn lớn</span><span class="arrow"><i
+                                            class="fas fa-long-arrow-right"></i></span></div>
+                                <div class="menusu-item"><span>Công ty Chứng khoán</span><span class="arrow"><i
+                                            class="fas fa-long-arrow-right"></i></span>
+                                </div>
+                                <div class="menusu-item"><span>Công ty Tư vấn</span><span class="arrow"><i
+                                            class="fas fa-long-arrow-right"></i></span></div>
+                                <div class="menusu-item"><span>Công ty Quản lý Quỹ</span><span class="arrow"><i
+                                            class="fas fa-long-arrow-right"></i></span>
+                                </div>
+                                <div class="menusu-item"><span>Công ty Bảo hiểm</span><span class="arrow"><i
+                                            class="fas fa-long-arrow-right"></i></span></div>
+                                <div class="menusu-item"><span>Tổ chức Giáo dục và Nghiên cứu</span><span
+                                        class="arrow"><i class="fas fa-long-arrow-right"></i></span></div>
+                                <div class="menusu-item"><span>Môi giới Bảo hiểm Tín dụng</span><span class="arrow"><i
+                                            class="fas fa-long-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="Insights" class="py-5 mb-5">
+            <style>
+                .show-all {
+                    background-color: #ffffff;
+                    color: #0066cc;
+                    padding: 8px 60px;
+                    border-radius: 25px;
+                    cursor: pointer;
+                    margin-top: 20px;
+                    display: inline-block;
+                    border: 1px solid #0066cc;
+                }
+            </style>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class="price-title mb-5">Our <span style="color: #0066CC;">Featured & Insights</span></h2>
+                    </div>
+                    <div class="col-sm-4" style="text-align: right;">
+                        <div class="show-all">
+                            Show all
+                        </div>
+                    </div>
+                </div>
+                <div class="row news-grid">
+                    <div class="col-sm-4">
+                        <img src="/Data/solution_insight1.png" class="img-fluid w-100" />
+                        <button class="mt-3 btn btn-news" id="btn-modal-login" data-action="login">Featured</button>
+                        <div class="pt-3 pb-3">
+                            <div class="news-title text-break"><a target="_blank" href="#">Vietnam Corporate Bond Market
+                                    Report – June 2025</a></div>
+                        </div>
+                        <div>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis faucibus dapibus volutpat.
+                            Vestibulum eget turpis vulputate, consequat ex vel, auctor turpis.
+                        </div>
+                        <div class="pt-4">
+                            <a class="show-more" href="#">Show more <i class="fa fa-long-arrow-right"
+                                    aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/Data/solution_insight2.png" class="img-fluid w-100" />
+                        <button class="mt-3 btn btn-news" id="btn-modal-login" data-action="login">Insights</button>
+                        <div class="pt-3 pb-3">
+                            <div class="news-title text-break"><a target="_blank" href="#">Vietnam Corporate Bond Market
+                                    Report – June 2025</a></div>
+                        </div>
+                        <div>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis faucibus dapibus volutpat.
+                            Vestibulum eget turpis vulputate, consequat ex vel, auctor turpis.
+                        </div>
+                        <div class="pt-4">
+                            <a class="show-more" href="#">Show more <i class="fa fa-long-arrow-right"
+                                    aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="/Data/solution_insight3.png" class="img-fluid w-100" />
+                        <button class="mt-3 btn btn-news" id="btn-modal-login" data-action="login">Insights</button>
+                        <div class="pt-3 pb-3">
+                            <div class="news-title text-break"><a target="_blank" href="#">Vietnam Corporate Bond Market
+                                    Report – June 2025</a></div>
+                        </div>
+                        <div>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis faucibus dapibus volutpat.
+                            Vestibulum eget turpis vulputate, consequat ex vel, auctor turpis.
+                        </div>
+                        <div class="pt-4">
+                            <a class="show-more" href="#">Show more <i class="fa fa-long-arrow-right"
+                                    aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+<script>
+    $("#owlour").owlCarousel({
+        items: 4,
+        loop: true,
+        margin: 20,
+        autoplay: true,
+        dots: true,
+        center: true
+    });
+</script>

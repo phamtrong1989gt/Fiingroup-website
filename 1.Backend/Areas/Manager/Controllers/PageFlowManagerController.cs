@@ -83,7 +83,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
                         (m.PortalId== portalId || portalId == null) &&
-                        (m.CategoryType == ECategoryType.ContentPage_Flow || m.CategoryType == ECategoryType.ContentPage_FlowItems),
+                        (m.CategoryType == ECategoryType.ContentPage_Flow || m.CategoryType == ECategoryType.ContentPage_FlowItems || m.CategoryType == ECategoryType.ContentPage_Solution),
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {
                     Category = x.Category,
@@ -208,12 +208,13 @@ namespace PT.BE.Areas.Manager.Controllers
                         Input4 = use.Input4,
                         Input5 = use.Input5,
                         Input6 = use.Input6,
-                        Input7 = use.Input7
+                        Input7 = use.Input7,
+                        Input8 = use.Input8,
                     };
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
 
-                     await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details");
+                    await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details", data.PortalId);
                     await UpdateRelated(data.Id, use.ContentPageRelatedIds);
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
@@ -312,6 +313,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Input5 = use.Input5;
                     dl.Input6 = use.Input6;
                     dl.Input7 = use.Input7;
+                    dl.Input8 = use.Input8;
 
                     _iContentPageRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();

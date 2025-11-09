@@ -71,6 +71,7 @@ namespace PT.Domain.Model
         public string Input5 { get; set; }
         public string Input6 { get; set; }
         public string Input7 { get; set; }
+        public string Input8 { get; set; }
 
         [NotMapped]
         public List<LinkReference> LinkReferences { get; set; }
@@ -223,6 +224,7 @@ namespace PT.Domain.Model
         public string Input5 { get; set; }
         public string Input6 { get; set; }
         public string Input7 { get; set; }
+        public string Input8 { get; set; }
         public ECategoryType? CategoryType { get; set; }
     }
   

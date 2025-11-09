@@ -1,0 +1,414 @@
+﻿@model PT.Domain.Model.Category
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using Microsoft.Extensions.Options
+@using PT.Shared;
+@inject IOptions<BaseSettings> _baseSettings;
+
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+}
+
+<style>
+	#Banner {
+		background: url(/Data/news-bg.jpg) no-repeat top;
+		background-size: cover;
+		height: 637px;
+	}
+
+		#Banner h1 {
+			font-style: normal;
+			font-weight: 700;
+			font-size: 36px;
+			line-height: 150%;
+		}
+
+		#Banner h2 {
+			font-weight: 700;
+			font-size: 24px;
+			line-height: 28px;
+		}
+
+		#Banner img {
+			border-radius: 16px;
+		}
+
+	.item-date {
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 150%;
+		display: flex;
+		align-items: center;
+		color: #fff;
+	}
+
+		.item-date i {
+			padding: 0 10px 0 0;
+			width: 30px;
+		}
+
+		.item-date .item-label {
+			padding: 0 10px 0 0;
+			width: 126px;
+		}
+
+	.item-date-sub {
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 150%;
+		display: flex;
+		align-items: center;
+		color: #1D2939;
+	}
+
+		.item-date-sub i {
+			padding: 0 10px 0 0;
+			width: 30px;
+			color: #0066CC;
+		}
+
+		.item-date-sub .item-label {
+			padding: 0 10px 0 0;
+			width: 126px;
+		}
+
+		.item-date-sub .item-label-sub {
+			padding: 0 10px 0 0;
+			font-weight: 600;
+			color: #1D2939;
+		}
+
+	#NewButton {
+		align-items: center;
+		justify-content: center;
+		margin: -2% 0 0 0;
+	}
+
+	.btn-active {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 12px 40px;
+		gap: 40px;
+		width: 302px;
+		height: 72px;
+		background: #FFFFFF;
+		box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+		border-radius: 12px;
+		font-size: 24px;
+		font-weight: 500;
+		color: #093461;
+		margin: 0 10px;
+	}
+
+		.btn-active:hover {
+			background: #f6f6f6;
+		}
+
+	.btn-noactive {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 12px 40px;
+		gap: 40px;
+		width: 302px;
+		height: 72px;
+		background: #0066CC;
+		box-shadow: 0px 8px 20px rgba(0, 102, 204, 0.12), 0px -8px 20px rgba(255, 255, 255, 0.2);
+		border-radius: 12px;
+		font-size: 24px;
+		font-weight: 500;
+		color: #fff;
+	}
+
+		.btn-noactive:hover {
+			background: #0f65ba;
+			color: #fff;
+		}
+
+	.btn-reset {
+		color: #0066CC;
+	}
+
+	#search #search-input {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 12px;
+		gap: 10px;
+		width: 485px;
+		height: 38px;
+		background: #FFFFFF;
+		border: 1px solid #034EA2;
+		border-radius: 4px;
+	}
+
+	#search {
+		position: relative;
+		font-size: 18px;
+	}
+
+		#search label {
+			position: absolute;
+			right: 8px;
+			top: 6px;
+			color: #034EA2;
+		}
+
+	.date-input {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 6px;
+		gap: 10px;
+		/*width: 198.5px;*/
+		height: 38px;
+		background: #FFFFFF;
+		border: 1px solid #034EA2;
+		border-radius: 4px;
+		color: #838282;
+	}
+
+	.mr-2 {
+		margin: 0 1rem 0;
+	}
+
+	.btn-search {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 10px 50px;
+		height: 40px;
+		background: #0066CC;
+		border-radius: 200px;
+	}
+
+	.news-title-sub {
+		font-weight: 700;
+		font-size: 20px;
+		line-height: 32px;
+		display: flex;
+		align-items: center;
+		color: #1D2939;
+		flex: none;
+		order: 0;
+		align-self: stretch;
+		flex-grow: 0;
+		overflow: hidden;
+	}
+
+	.tags {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 20px;
+		height: 40px;
+		/*background: #E1F4FD;*/
+		border-width: 1px 1px 1px 1px;
+		border-style: solid;
+		border-color: #034EA2;
+		border-radius: 8px;
+		color: #034EA2;
+		font-weight: 600;
+	}
+
+		.tags a {
+			padding: 7px 0;
+			text-align: center;
+			width: 119px;
+			color: #034EA2;
+		}
+
+			.tags a:hover {
+				color: #0066CC;
+			}
+
+		.tags .active {
+			background: #E1F4FD;
+			border-radius: 8px;
+		}
+</style>
+<section id="Banner">
+	<div class="container">
+		<div class="row">
+			<h1 class="text-white mb-5 mt-5">Khám phá những tin tức, sự kiện và thông tin mới nhất từ FiinGroup </h1>
+			<div class="col-lg-5 col-sm-6 mb-5">
+				<h2 class="text-white mb-4">Vietnam Petrochemical Market 2025 – Investment Needed to Close Domestic Gap</h2>
+				<div class="item-date mb-2">
+					<i class="fa fa-calendar-o" aria-hidden="true"></i>
+					<span class="item-label">Ngày tổ chức</span>
+					<span>12/08/2005</span>
+				</div>
+				<div class="item-date mb-2">
+					<i class="fa fa-clock-o" aria-hidden="true"></i>
+					<span class="item-label">Thời gian</span>
+					<span>12:24 - 14:50</span>
+				</div>
+				<div class="item-date mb-5">
+					<i class="fa fa-map-marker" aria-hidden="true"></i>
+					<span class="item-label">Địa điểm</span>
+					<span>Zoom Webinar</span>
+				</div>
+				<a class="btn btn-light btn-khampha" href="#" target="_blank">Khám phá ngay</a>
+			</div>
+			<div class="col-lg-7 col-sm-6 mb-5">
+				<img src="/Data/news.jpg" alt="news" />
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="NewButton">
+	<div class="container">
+		<div class="row d-flex justify-content-center">
+			<a class="btn btn-noactive">Tin tức</a>
+			<a class="btn btn-active">Sự kiện</a>
+		</div>
+	</div>
+</section>
+
+<section id="FiinGroup">
+	<div class="container">
+		<div class="d-flex justify-content-center mt-5 mb-5">
+			<div class="tags">
+				<a href="#" class="sapdienra active" title="News">Sắp diễn ra</a>
+				<a href="#" class="dangdienra" title="News">Đang diễn ra</a>
+				<a href="#" class="dadienra" title="News">Đã diễn ra</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-5 col-sm-6">
+				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-01.jpg" alt="News" /></a>
+			</div>
+			<div class="col-lg-7 col-sm-6">
+				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
+				<div class="mt-5">
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-calendar-o" aria-hidden="true"></i>
+						<span class="item-label">Ngày tổ chức</span>
+						<span class="item-label-sub">12/08/2005</span>
+					</div>
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-clock-o" aria-hidden="true"></i>
+						<span class="item-label">Thời gian</span>
+						<span class="item-label-sub">12:24 - 14:50</span>
+					</div>
+					<div class="item-date-sub mb-5">
+						<i class="fa fa-map-marker" aria-hidden="true"></i>
+						<span class="item-label">Địa điểm</span>
+						<span class="item-label-sub">Zoom Webinar</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-5 col-sm-6">
+				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-02.jpg" alt="News" /></a>
+			</div>
+			<div class="col-lg-7 col-sm-6">
+				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
+				<div class="mt-5">
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-calendar-o" aria-hidden="true"></i>
+						<span class="item-label">Ngày tổ chức</span>
+						<span class="item-label-sub">12/08/2005</span>
+					</div>
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-clock-o" aria-hidden="true"></i>
+						<span class="item-label">Thời gian</span>
+						<span class="item-label-sub">12:24 - 14:50</span>
+					</div>
+					<div class="item-date-sub mb-5">
+						<i class="fa fa-map-marker" aria-hidden="true"></i>
+						<span class="item-label">Địa điểm</span>
+						<span class="item-label-sub">Zoom Webinar</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-5 col-sm-6">
+				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-03.jpg" alt="News" /></a>
+			</div>
+			<div class="col-lg-7 col-sm-6">
+				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
+				<div class="mt-5">
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-calendar-o" aria-hidden="true"></i>
+						<span class="item-label">Ngày tổ chức</span>
+						<span class="item-label-sub">12/08/2005</span>
+					</div>
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-clock-o" aria-hidden="true"></i>
+						<span class="item-label">Thời gian</span>
+						<span class="item-label-sub">12:24 - 14:50</span>
+					</div>
+					<div class="item-date-sub mb-5">
+						<i class="fa fa-map-marker" aria-hidden="true"></i>
+						<span class="item-label">Địa điểm</span>
+						<span class="item-label-sub">Zoom Webinar</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-5 col-sm-6">
+				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-02.jpg" alt="News" /></a>
+			</div>
+			<div class="col-lg-7 col-sm-6">
+				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
+				<div class="mt-5">
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-calendar-o" aria-hidden="true"></i>
+						<span class="item-label">Ngày tổ chức</span>
+						<span class="item-label-sub">12/08/2005</span>
+					</div>
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-clock-o" aria-hidden="true"></i>
+						<span class="item-label">Thời gian</span>
+						<span class="item-label-sub">12:24 - 14:50</span>
+					</div>
+					<div class="item-date-sub mb-5">
+						<i class="fa fa-map-marker" aria-hidden="true"></i>
+						<span class="item-label">Địa điểm</span>
+						<span class="item-label-sub">Zoom Webinar</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-5 col-sm-6">
+				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-01.jpg" alt="News" /></a>
+			</div>
+			<div class="col-lg-7 col-sm-6">
+				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
+				<div class="mt-5">
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-calendar-o" aria-hidden="true"></i>
+						<span class="item-label">Ngày tổ chức</span>
+						<span class="item-label-sub">12/08/2005</span>
+					</div>
+					<div class="item-date-sub mb-2">
+						<i class="fa fa-clock-o" aria-hidden="true"></i>
+						<span class="item-label">Thời gian</span>
+						<span class="item-label-sub">12:24 - 14:50</span>
+					</div>
+					<div class="item-date-sub mb-5">
+						<i class="fa fa-map-marker" aria-hidden="true"></i>
+						<span class="item-label">Địa điểm</span>
+						<span class="item-label-sub">Zoom Webinar</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsDeliver", language = language, portalId = portalId }))

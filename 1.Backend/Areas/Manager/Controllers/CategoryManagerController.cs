@@ -168,7 +168,7 @@ namespace PT.BE.Areas.User.Controllers
                 // Thêm SEO link, cập nhật file và ghi log
                 // --- Bước 4: Cập nhật SEO/link, file liên quan và ghi log ---
                 // Thêm liên kết SEO cho đối tượng mới (tạo slug, link nếu cần)
-                await CreateLinkAsync(data.SlugType ?? ESlugType.Category, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "CategoryHome", "Details", data.PortalId);
+                await CreateLinkAsync(data.SlugType ?? ESlugType.Category, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "Category", "Details", data.PortalId);
                 // Cập nhật file (nếu người dùng upload trước khi lưu)
                 await UpdateFileData(data.Id, data.SlugType ?? ESlugType.Category, altId);
                 await _iCategoryRepository.CommitTransaction();
@@ -190,8 +190,6 @@ namespace PT.BE.Areas.User.Controllers
             }
         }
         #endregion
-
-
 
         #region [Edit]
         /// <summary>
@@ -279,7 +277,7 @@ namespace PT.BE.Areas.User.Controllers
                     return new ResponseModel() { Output = 0, Message = "Danh mục đã tồn tại trên hệ thống, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
                 }
 
-                await UpdateLinkAsync(use.ChangeSlug, dl.SlugType ?? ESlugType.Category, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "CategoryHome", "Details");
+                await UpdateLinkAsync(use.ChangeSlug, dl.SlugType ?? ESlugType.Category, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "Category", "Details");
 
                 dl.CategoryType = use.CategoryType;
                 dl.Name = name;

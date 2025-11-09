@@ -682,7 +682,7 @@ a {
 }
 
 #VideoFiin {
-    background: url('../Data/bgvideo.jpg') no-repeat top;
+    background: url('/Data/bgvideo.jpg') no-repeat top;
     background-size: cover;
     background-position: 30% center;
 }
@@ -897,7 +897,7 @@ img:hover {
 }
 
 #Our {
-    background: url('../Data/bgour.png') no-repeat top;
+    background: url('/Data/bgour.png') no-repeat top;
     background-size: cover;
     background-position: bottom center;
 }
@@ -908,25 +908,25 @@ a:hover {
 }
 
 #bg-1 {
-    background: url('../Data/product_bg1.png') no-repeat top;
+    background: url('/Data/product_bg1.png') no-repeat top;
     background-size: cover;
     background-position: bottom center;
 }
 
 #bg2 {
-    background: url('../Data/product_bg2.png') no-repeat top;
+    background: url('/Data/product_bg2.png') no-repeat top;
     background-size: cover;
     background-position: bottom center;
 }
 
 #Deliver .container {
-    background: url('../Data/solution_bg3.png') no-repeat center top;
+    background: url('/Data/solution_bg3.png') no-repeat center top;
     background-size: 100% auto;
 }
 
 
 #Solution {
-    background: url('../Data/solution_bg4.png') no-repeat top;
+    background: url('/Data/solution_bg4.png') no-repeat top;
     background-size: cover;
 }
 #carouselFiin h1 {

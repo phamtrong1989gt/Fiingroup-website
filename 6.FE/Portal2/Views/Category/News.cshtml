@@ -1,0 +1,298 @@
+﻿@model PT.Domain.Model.Category
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using Microsoft.Extensions.Options
+@using PT.Shared;
+@inject IOptions<BaseSettings> _baseSettings;
+
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+}
+
+<style>
+    #Banner {
+        background: url(/Data/news-bg.jpg) no-repeat top;
+        background-size: cover;
+        height: 637px;
+    }
+
+        #Banner h1 {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 36px;
+            line-height: 150%;
+        }
+
+        #Banner h2 {
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 28px;
+        }
+
+        #Banner img {
+            border-radius: 16px;
+        }
+
+    .item-date {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 150%;
+        display: flex;
+        align-items: center;
+        color: #fff;
+    }
+
+        .item-date i {
+            padding: 0 10px 0 0;
+            width: 30px;
+        }
+
+        .item-date .item-label {
+            padding: 0 10px 0 0;
+            width: 126px;
+        }
+
+    #NewButton {
+        align-items: center;
+        justify-content: center;
+        margin: -2% 0 0 0;
+    }
+
+    .btn-active {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 40px;
+        gap: 40px;
+        width: 302px;
+        height: 72px;
+        background: #FFFFFF;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+        font-size: 24px;
+        font-weight: 500;
+        color: #093461;
+        margin: 0 10px;
+    }
+
+        .btn-active:hover {
+            background: #f6f6f6;
+        }
+
+    .btn-noactive {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 40px;
+        gap: 40px;
+        width: 302px;
+        height: 72px;
+        background: #0066CC;
+        box-shadow: 0px 8px 20px rgba(0, 102, 204, 0.12), 0px -8px 20px rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        font-size: 24px;
+        font-weight: 500;
+        color: #fff;
+    }
+
+        .btn-noactive:hover {
+            background: #0f65ba;
+            color: #fff;
+        }
+
+    .btn-reset {
+        color: #0066CC;
+    }
+
+    #search #search-input {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px;
+        gap: 10px;
+        width: 485px;
+        height: 38px;
+        background: #FFFFFF;
+        border: 1px solid #034EA2;
+        border-radius: 4px;
+    }
+
+    #search {
+        position: relative;
+        font-size: 18px;
+    }
+
+        #search label {
+            position: absolute;
+            right: 8px;
+            top: 6px;
+            color: #034EA2;
+        }
+
+    .date-input {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 6px;
+        gap: 10px;
+        /*width: 198.5px;*/
+        height: 38px;
+        background: #FFFFFF;
+        border: 1px solid #034EA2;
+        border-radius: 4px;
+        color: #838282;
+    }
+
+    .mr-2 {
+        margin: 0 1rem 0;
+    }
+
+    .btn-search {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 50px;
+        height: 40px;
+        background: #0066CC;
+        border-radius: 200px;
+    }
+
+    .news-title {
+        font-weight: 700;
+        font-size: 28px;
+        height: 102px;
+        line-height: 120%;
+        display: flex;
+        align-items: center;
+        color: #1D2939;
+        flex: none;
+        order: 0;
+        align-self: stretch;
+        flex-grow: 0;
+        overflow: hidden;
+    }
+</style>
+<section id="Banner">
+    <div class="container">
+        <div class="row">
+            <h1 class="text-white mb-5 mt-5">Khám phá những tin tức, sự kiện và thông tin mới nhất từ FiinGroup </h1>
+            <div class="col-lg-5 col-sm-6 mb-5">
+                <h2 class="text-white mb-4">Vietnam Petrochemical Market 2025 – Investment Needed to Close Domestic Gap</h2>
+                <div class="item-date mb-2">
+                    <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                    <span class="item-label">Ngày tổ chức</span>
+                    <span>12/08/2005</span>
+                </div>
+                <div class="item-date mb-2">
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    <span class="item-label">Thời gian</span>
+                    <span>12:24 - 14:50</span>
+                </div>
+                <div class="item-date mb-5">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    <span class="item-label">Địa điểm</span>
+                    <span>Zoom Webinar</span>
+                </div>
+                <a class="btn btn-light btn-khampha" href="#" target="_blank">Khám phá ngay</a>
+            </div>
+            <div class="col-lg-7 col-sm-6 mb-5">
+                <img src="../Data/news.jpg" alt="news" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="NewButton">
+	<div class="container">
+		<div class="row d-flex justify-content-center">
+            @if(Model.ParentId == 0)
+            {
+                <a href="#" class="btn btn-active">Tin tức</a>
+                <a href="#" class="btn btn-noactive">Sự kiện</a>
+            }
+            else
+            {
+                <a href="#" class="btn btn-active">@Model.Name</a>
+            }
+		</div>
+	</div>
+</section>
+
+<section id="FiinGroup">
+	<div class="container">
+		<div class="d-flex justify-content-start mt-5">
+			<section id="search" class="mr-2">
+				<input id="search-input" class="form-control input-lg" placeholder="Search icons" autocomplete="off" spellcheck="false" autocorrect="off" tabindex="1">
+				<label for="search-input"><i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">Search icons</span></label>
+			</section>
+			<input id="startDate" class="date-input mr-2" type="date" placeholder="Từ ngày" />
+			<input id="endDate" class="date-input mr-2" type="date" placeholder="Đến ngày" />
+
+			<button type="submit" class="btn btn-reset">
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M8.0007 15.1666C4.53404 15.1666 1.7207 12.3466 1.7207 8.88659C1.7207 7.63993 2.08737 6.43326 2.7807 5.39326C2.93404 5.16659 3.24737 5.09993 3.47404 5.25326C3.7007 5.4066 3.76737 5.71993 3.61404 5.94659C3.03404 6.81326 2.72737 7.83326 2.72737 8.87993C2.72737 11.7933 5.09404 14.1599 8.00737 14.1599C10.9207 14.1599 13.2874 11.7933 13.2874 8.87993C13.2874 5.96659 10.914 3.59993 8.0007 3.59993C7.38737 3.59993 6.78737 3.68659 6.2207 3.85993C5.95404 3.93993 5.67404 3.79326 5.59404 3.52659C5.51404 3.25993 5.6607 2.97993 5.92737 2.89993C6.59404 2.69993 7.28737 2.59326 8.0007 2.59326C11.4674 2.59326 14.2807 5.41326 14.2807 8.87326C14.2807 12.3333 11.4674 15.1666 8.0007 15.1666Z" fill="#0066CC" />
+					<path d="M5.24625 4.04658C5.13292 4.04658 5.01292 4.00658 4.91959 3.92658C4.70626 3.73992 4.68626 3.42658 4.86626 3.21992L6.79292 1.00658C6.97292 0.799918 7.29292 0.773251 7.49959 0.959918C7.70625 1.13992 7.72625 1.45992 7.54625 1.66658L5.61959 3.87325C5.51959 3.98658 5.37959 4.04658 5.24625 4.04658Z" fill="#0066CC" />
+					<path d="M7.49241 5.68659C7.39241 5.68659 7.28574 5.65325 7.19907 5.59325L4.94574 3.94659C4.72574 3.78659 4.67907 3.47325 4.83907 3.25325C4.99907 3.02659 5.31241 2.97992 5.53907 3.13992L7.78574 4.77992C8.00574 4.93992 8.05907 5.25325 7.89241 5.47992C7.79907 5.61992 7.64574 5.68659 7.49241 5.68659Z" fill="#0066CC" />
+				</svg>
+				Xóa lọc
+			</button>
+			<button type="submit" class="btn btn-primary btn-search">Tìm kiếm</button>
+		</div>
+
+		<div class="row mt-5">
+			<div class="col-lg-4 col-sm-6">
+                <a href="/vi/news-detail.html" title="news"><img src="/Data/event_01.jpg" alt="News" /></a>
+                <h3 class="pt-4"><a href="/vi/news-detail.html" class="news-title">Báo cáo Ngành Hóa dầu Việt Nam 2025</a></h3>
+				<div class="pt-4 pb-4 mb-4">
+                    <a class="show-more" href="/vi/news-detail.html">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-4 col-sm-6">
+                <a href="/vi/news-detail.html" title="news"><img src="/Data/event_02.jpg" alt="News" /></a>
+                <h3 class="pt-4"><a href="/vi/news-detail.html" class="news-title">Dữ Liệu Minh Bạch – Nền Tảng Cho Hợp Tác Bền Vững</a></h3>
+				<div class="pt-4 pb-4 mb-4">
+                    <a class="show-more" href="/vi/news-detail.html">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-4 col-sm-6">
+				<a href="#" title="news"><img src="/Data/event_03.jpg" alt="News" /></a>
+				<h3 class="pt-4"><a href="#" class="news-title">Báo Cáo Hoạt Động Các Quỹ Đầu Tư Tại Việt Nam - Tháng 8/2025</a></h3>
+				<div class="pt-4 pb-4 mb-4">
+                    <a class="show-more" href="/vi/news-detail.html">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-4 col-sm-6">
+                <a href="/vi/news-detail.html" title="news"><img src="/Data/event_04.jpg" alt="News" /></a>
+                <h3 class="pt-4"><a href="/vi/news-detail.html" class="news-title">Dữ Liệu Mở Đường – Kinh Doanh Rộng Lối Với FiinPro-X</a></h3>
+				<div class="pt-4 pb-4 mb-4">
+                    <a class="show-more" href="/vi/news-detail.html">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-4 col-sm-6">
+                <a href="/vi/news-detail.html" title="news"><img src="/Data/event_05.jpg" alt="News" /></a>
+                <h3 class="pt-4"><a href="/vi/news-detail.html" class="news-title">Mở Khóa Cơ Hội Cho Nhà Đầu Tư Singapore Tại Việt Nam</a></h3>
+				<div class="pt-4 pb-4 mb-4">
+                    <a class="show-more" href="/vi/news-detail.html">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</div>
+			</div>
+			<div class="col-lg-4 col-sm-6">
+                <a href="/vi/news-detail.html" title="news"><img src="/Data/event_06.jpg" alt="News" /></a>
+                <h3 class="pt-4"><a href="/vi/news-detail.html" class="news-title">TB Nâng Cấp Tính Năng Chấm Điểm Rủi Ro Doanh Nghiệp Trên FiinGate</a></h3>
+				<div class="pt-4 pb-4 mb-4">
+                    <a class="show-more" href="/vi/news-detail.html">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="d-flex justify-content-start mt-5">
+		</div>
+	</div>
+</section>
+
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsDeliver", language = language, portalId = portalId }))

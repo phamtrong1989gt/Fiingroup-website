@@ -46,6 +46,9 @@ namespace PT.UI.Controllers
                 case ECategoryType.ContentPage_Flow:
                     viewName = "Flow";
                     break;
+                case ECategoryType.ContentPage_Solution:
+                    viewName = "Solution";
+                    break;
             }
             return View(viewName, dl);
         }

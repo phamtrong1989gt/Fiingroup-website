@@ -9,6 +9,7 @@ namespace PT.Infrastructure.Interfaces
 {
     public interface IContentPageRepository : IGenericRepository<ContentPage>
     {
+        Task<List<ContentPage>> SolutionGetsAsync(string language, int portalId);
         Task<List<ContentPage>> FlowGetsAsync(string language, int portalId, int? parrentId = null);
         Task ContentPageSharedDelete(int contentPageId);
         Task ContentPageSharedRefeshContent(int contentPageId);

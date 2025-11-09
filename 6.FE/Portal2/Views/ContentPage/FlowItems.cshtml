@@ -15,28 +15,67 @@
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = _baseSettings.Value.PortalId;
 }
-<!-- Slide banner -->
-<section id="SliderBanner">
+<section id="StockEconomy" class="hero-section">
     <style>
-        #SliderBanner {
-            background-image: url('/Data/product_bg1.png');
-            background-repeat: no-repeat;
+        #StockEconomy {
+            background: url('/Data/about_banner.png') no-repeat top;
+            background-size: cover;
         }
+
+        .hero-content {
+            color: #fff;
+            max-width: 89%;
+            z-index: 2;
+            padding-bottom: 30px;
+        }
+
+        .hero-subtitle {
+            display: inline-block;
+            font-size: 40px;
+            font-weight: 500;
+            color: #fff;
+            padding-top: 60px;
+        }
+
+        .hero-title {
+            font-size: 60px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .hero-text {
+            font-size: 19px;
+            line-height: 1.7;
+            color: #d7e9ff;
+            text-align: justify;
+            position: relative;
+            padding-left: 25px;
+        }
+
+            .hero-text::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 5px;
+                height: 100%;
+                background: linear-gradient(to bottom, #5086c0, #E2F2FB7A, #badcf1);
+                border-radius: 2px;
+            }
     </style>
-    <div id="carouselFiin" class="carousel slide carousel-fade" data-bs-touch="true">
-        <div class="carousel-inner">
-            <div class="carousel-item active" data-bs-interval="3000">
-                <img src="/Data/product_banner1.png" class="d-block w-100" alt="Banner">
+    <div class="hero-overlay">
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-subtitle">@Model.Input1</span>
+                <h1 class="hero-title">
+                    @Model.Input2
+                </h1>
+                <div class="hero-text">
+                    @Html.Raw(Model.Input3)
+                </div>
             </div>
         </div>
-        <div id="bg-1"></div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselFiin"
-                data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span>
-        </button><button class="carousel-control-next"
-                         type="button" data-bs-target="#carouselFiin" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span>
-        </button>
     </div>
 </section>
 
