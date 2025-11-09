@@ -500,6 +500,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     Output = 1,
                     Message = "Tải tệp lên thành công.",
                     Type = ResponseTypeMessage.Success,
+
                     Data = new FileDataModel
                     {
                         CreatedDate = DateTime.Now,
