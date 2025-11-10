@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --primary-color: #034EA2;
     --blue-color: #093461;
     --gary-color: #333;
@@ -746,9 +746,11 @@ a {
 }
 
 #HoTro {
-     background: url('/Data/bghotro.jpg') no-repeat top;
-    background-position: bottom 85% center;
+    background: url('/Data/bghotro.jpg?v=1.1.1') no-repeat top;
+     background-position: bottom 85% center;
+   
 }
+
 
 .mb-6 {
     margin-bottom: 4rem !important;
@@ -913,11 +915,11 @@ a:hover {
     background-position: bottom center;
 }
 
-#bg2 {
+/*#bg2 {
     background: url('/Data/product_bg2.png') no-repeat top;
     background-size: cover;
     background-position: bottom center;
-}
+}*/
 
 #Deliver .container {
     background: url('/Data/solution_bg3.png') no-repeat center top;
@@ -943,6 +945,19 @@ a:hover {
 }
 .field-validation-error {
     color: red;
+}
+.mt-6 {
+    margin-top: 4rem !important;
+}
+.mt-7 {
+    margin-top: 5rem !important;
+}
+.mb-6 {
+    margin-top: 4rem !important;
+}
+
+.mb-7 {
+    margin-top: 5rem !important;
 }
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
