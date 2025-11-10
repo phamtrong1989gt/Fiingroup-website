@@ -746,9 +746,11 @@ a {
 }
 
 #HoTro {
-     background: url('/Data/bghotro.png?v=1.1.1') no-repeat top;
-    background-position: bottom 85% center;
+    background: url('/Data/bghotro.jpg?v=1.1.1') no-repeat top;
+     background-position: bottom 85% center;
+   
 }
+
 
 .mb-6 {
     margin-bottom: 4rem !important;
