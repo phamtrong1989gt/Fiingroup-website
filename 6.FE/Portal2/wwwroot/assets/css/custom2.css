@@ -1,0 +1,18 @@
+:root {
+    --Base-Brand-Blue:  rgba(0, 102, 204, 1);
+}
+.w700 {
+    font-weight: 700;
+}
+.color-primary{
+    background: var(--Base-Brand-Blue);
+}
+
+.btn-slider {
+    box-shadow: 4px 4px 10px 0px rgba(0, 200, 255, 0.25);
+    border: 1px solid transparent;
+    border-color: #034EA2;
+}
+.btn-join {
+    background: var(--Base-Brand-Blue);
+}
