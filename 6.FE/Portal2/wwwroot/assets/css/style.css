@@ -746,7 +746,7 @@ a {
 }
 
 #HoTro {
-     background: url('/Data/bghotro.png') no-repeat top;
+     background: url('/Data/bghotro.png?v=1.1.1') no-repeat top;
     background-position: bottom 85% center;
 }
 
