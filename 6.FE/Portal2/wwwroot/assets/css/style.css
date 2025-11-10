@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --primary-color: #034EA2;
     --blue-color: #093461;
     --gary-color: #333;
@@ -746,7 +746,7 @@ a {
 }
 
 #HoTro {
-     background: url('/Data/bghotro.jpg') no-repeat top;
+     background: url('/Data/bghotro.png') no-repeat top;
     background-position: bottom 85% center;
 }
 
