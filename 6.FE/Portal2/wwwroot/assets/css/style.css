@@ -952,6 +952,13 @@ a:hover {
 .mt-7 {
     margin-top: 5rem !important;
 }
+.mb-6 {
+    margin-top: 4rem !important;
+}
+
+.mb-7 {
+    margin-top: 5rem !important;
+}
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
         max-width: 1230px;
