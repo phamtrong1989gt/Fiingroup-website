@@ -62,7 +62,7 @@
                                     <div class="form-group">
                                         <label class="form-label" asp-for="Summary"></label> <span asp-validation-for="Summary"></span>
                                         <div class="controls">
-                                            <textarea id="ricktextSummary" class="form-control form-control-t" rows="3" placeholder="Tóm tắt" asp-for="Summary"></textarea>
+                                            <textarea id="ricktextSummary" class="form-control form-control-t" rows="2" placeholder="Tóm tắt" asp-for="Summary"></textarea>
                                         </div>
                                     </div>
 
@@ -250,7 +250,10 @@
     initAutoComplate();
     initAutoComplate2();
         bindCategoryType(@Model.CategoryId);
-    bindCategoryType(@Model.CategoryId);
+       setTimeout(function(){
+            updateTreeBySelect(@Model.CategoryId);
+       },500);
+
          // when user changes the dropdown, update the tree
        $(document).on('change', "[name='CategoryId']", function () {
             var val = $(this).val();

@@ -70,7 +70,7 @@ namespace PT.BE.Areas.Manager.Controllers
         }
         [HttpPost, ActionName("Index")]
         [AuthorizePermission]
-        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language ="vi", string ordertype = "asc", string orderby = "name")
+        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language ="vi", string ordertype = "asc", string orderby = "name", ECategoryType? categoryType = null)
         {
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
@@ -83,6 +83,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         (m.Language== language) && 
                         (m.Status==status || status ==null) && 
                         (m.PortalId== portalId || portalId == null) &&
+                        (m.CategoryType == categoryType || categoryType == null) &&
                         (m.CategoryType == ECategoryType.ContentPage_Flow || m.CategoryType == ECategoryType.ContentPage_FlowItems || m.CategoryType == ECategoryType.ContentPage_Solution),
                 OrderByExtention(ordertype, orderby), 
                 x=> new ContentPage {

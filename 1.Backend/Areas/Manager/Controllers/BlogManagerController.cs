@@ -81,9 +81,9 @@ namespace PT.BE.Areas.Manager.Controllers
 
         [HttpPost, ActionName("Index")]
         [AuthorizePermission]
-        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language = "vi", string ordertype = "asc", string orderby = "name")
+        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language = "vi", string ordertype = "asc", string orderby = "name", ECategoryType? categoryType = null)
         {
-            var allows = _iCategoryRepository.GetCategoryPrefixedTypes().Where(x=> x != ECategoryType.ContentPage_Page);
+            var allows = _iCategoryRepository.GetCategoryPrefixedTypes().Where(x=> x != ECategoryType.ContentPage_Page && x != ECategoryType.ContentPage_Solution && x != ECategoryType.ContentPage_Flow && x != ECategoryType.ContentPage_FlowItems);
             var categorys = await _iCategoryRepository.SearchAsync(true, 0, 0);
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
@@ -96,6 +96,7 @@ namespace PT.BE.Areas.Manager.Controllers
                      && (m.CategoryType != null && allows.Contains(m.CategoryType ?? ECategoryType.ContentPage_Blog)) &&
                     (m.Language == language) &&
                     (m.Status == status || status == null) &&
+                    (m.CategoryType == categoryType || categoryType == null) &&
                     (m.PortalId == portalId || portalId  == null) 
                     ,
                 OrderByExtention(ordertype, orderby), x => new ContentPage
@@ -529,7 +530,7 @@ namespace PT.BE.Areas.Manager.Controllers
 
         public async Task<List<TreeRoleModel>> TreeCategory(int id, string language = "vi", int portalId = 1)
         {
-            var allowCategorys =  _iCategoryRepository.GetCategoryPrefixedTypes();
+            var allowCategorys =  new List<ECategoryType>() { ECategoryType.ContentPage_Blog, ECategoryType.ContentPage_Event, ECategoryType.ContentPage_Service, ECategoryType.ContentPage_Product, ECategoryType.ContentPage_Publications, ECategoryType.ContentPage_Report };
             var listCurent = await _iContentPageCategoryRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id);
             var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x =>  x.Status && allowCategorys.Contains(x.CategoryType ?? ECategoryType.ContentPage_Blog) && x.Language == language && x.PortalId ==portalId);
             var abc = listCategory.Select(x =>

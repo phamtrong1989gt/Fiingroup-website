@@ -1,4 +1,5 @@
-﻿@addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
+﻿@using PT.Domain.Model
+@addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PT.UI
 @inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.BaseSettings> _baseSettings;
@@ -11,7 +12,7 @@
     <div class="row head-v2">
         <div class="col-md-4">
             <div class="block-header">
-                <h2><i class="material-icons">content_paste</i> QUẢN LÝ TRANG HỖ TRỢ DÒNG CHẢY <span class="label label-danger label-t">Danh sách</span></h2>
+                <h2><i class="material-icons">content_paste</i> QUẢN LÝ TRANG DÒNG CHẢY & GIẢI PHÁP <span class="label label-danger label-t">Danh sách</span></h2>
                 <ol class="breadcrumb breadcrumb-t">
                     <li>
                         <a href="/Admin">
@@ -19,7 +20,7 @@
                         </a>
                     </li>
                     <li class="active">
-                        Danh sách trang hỗ trợ dòng chảy    
+                        Danh sách trang dòng chảy & giải pháp 
                     </li>
                 </ol>
             </div>
@@ -39,7 +40,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="form-label">Cổng</label>
                             <div class="controls">
@@ -49,17 +50,22 @@
                             </div>
                         </div>
                     </div>
-                 @*    <div class="col-md-3">
-                        <div class="form-group clearfix">
-                            <label class="form-label">Tag</label>
+
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Loại trang</label>
                             <div class="controls">
-                                <select data-live-search="true" data-size="10" grid-input name="tagId" asp-items="@((SelectList)ViewData["TagSelectList"])" class="input-sm form-control-t show-tick">
-                                    <option selected value="">Tất cả</option>
+                                <select grid-input name="categoryType"  class="input-sm form-control-t show-tick">
+                                    <option value="">Tất cả</option>
+                                    <option value="@((int)ECategoryType.ContentPage_Flow)">@ECategoryType.ContentPage_Flow.GetDisplayName()</option>
+                                    <option value="@((int)ECategoryType.ContentPage_FlowItems)">@ECategoryType.ContentPage_FlowItems.GetDisplayName()</option>
+                                    <option value="@((int)ECategoryType.ContentPage_Solution)">@ECategoryType.ContentPage_Solution.GetDisplayName()</option>
                                 </select>
                             </div>
                         </div>
-                    </div> *@
-                    <div class="col-md-2">
+                    </div>
+               
+                    <div class="col-md-1">
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="form-label">Trạng thái</label>
                             <div class="controls">

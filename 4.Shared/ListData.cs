@@ -17,16 +17,6 @@ namespace PT.Shared
             {
                 return new List<LanguageModel>()
                 {
-
-                    new LanguageModel()
-                    {
-                        Id = "en",
-                        Id2="en-US",
-                        Name = "Tiếng Anh",
-                        Name2 = "English",
-                        Icon = "/Content/Admin/images/en.png",
-                        Icon2 = "/Content/Admin/images/en.png"
-                    },
                     new LanguageModel()
                     {
                         Id = "vi",
@@ -35,6 +25,15 @@ namespace PT.Shared
                         Name2 = "Tiếng Việt",
                         Icon = "/Content/Admin/images/vi.png",
                         Icon2 = "/Content/Admin/images/vi.png"
+                    },
+                    new LanguageModel()
+                    {
+                        Id = "en",
+                        Id2="en-US",
+                        Name = "Tiếng Anh",
+                        Name2 = "English",
+                        Icon = "/Content/Admin/images/en.png",
+                        Icon2 = "/Content/Admin/images/en.png"
                     }
                 };
             }

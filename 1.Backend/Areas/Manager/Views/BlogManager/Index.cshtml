@@ -38,7 +38,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="form-label">Cổng</label>
                             <div class="controls">
@@ -69,7 +69,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="form-label">Trạng thái</label>
                             <div class="controls">
@@ -336,8 +336,8 @@
              getDataGrid(_page, false);
          }
 
-           function getTreeCategory(language, id = 0) {
-            $.post("@Url.Action("TreeCategory")?language=" + language + "&id=" + id, function (data) {
+           function getTreeCategory(language, id = 0, portalId) {
+            $.post("@Url.Action("TreeCategory")?language=" + language + "&id=" + id + "&portalId=" + portalId, function (data) {
                 var $treeview = $('#using_json_2').jstree({
                     'check_callback': true,
                     'core': {
