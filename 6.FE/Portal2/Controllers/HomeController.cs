@@ -62,6 +62,7 @@ namespace PT.UI.Controllers
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();
         }
+
         public IActionResult Page404(string linkData)
         {
             if (linkData != null)
@@ -70,25 +71,8 @@ namespace PT.UI.Controllers
             }
             return View("_Home404");
         }
+
         public IActionResult About(string linkData)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View();
-        }
-
-        public IActionResult FAQ(string linkData)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View();
-        }
-
-        public IActionResult Clinic1(string linkData)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View();
-        }
-
-        public IActionResult Clinic2(string linkData)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();

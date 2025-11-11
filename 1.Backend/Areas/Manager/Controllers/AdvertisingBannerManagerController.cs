@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -11,6 +6,12 @@ using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PT.BE.Areas.Manager.Controllers
 {
@@ -21,7 +22,7 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly ILogger<AdvertisingBannerManagerController> _logger;
         private readonly IBannerRepository _bannerRepository;
         private readonly IBannerItemRepository _bannerItemRepository;
-        private readonly IPortalRepository _portalRepository;
+        private readonly IPortalRepository _iPortalRepository;
 
         private const string TokenUrl = "[Url]";
         private const string TokenTarget = "[Target]";
@@ -42,7 +43,7 @@ namespace PT.BE.Areas.Manager.Controllers
             _hostingEnvironment = hostingEnvironment;
             _bannerRepository = bannerRepository;
             _bannerItemRepository = bannerItemRepository;
-            _portalRepository = portalRepository;
+            _iPortalRepository = portalRepository;
         }
 
         #region Index
@@ -50,7 +51,7 @@ namespace PT.BE.Areas.Manager.Controllers
         [AuthorizePermission]
         public async Task<IActionResult> Index()
         {
-            var portals = await _portalRepository.SearchAsync(true, 0, 0);
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
             return View();
         }
@@ -78,7 +79,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 GetOrderBy(orderby, ordertype)
             );
 
-            var portals = await _portalRepository.SearchAsync(true, 0, 0);
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             foreach (var item in data.Data)
             {
                 item.Portal = portals.FirstOrDefault(p => p.Id == item.PortalId);
@@ -108,7 +109,7 @@ namespace PT.BE.Areas.Manager.Controllers
         public async Task<IActionResult> Create(int portalId,string language = "vi")
         {
             var model = new BannerModel { Language = language };
-            var portals = await _portalRepository.SearchAsync(true, 0, 0);
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
             model.PortalId = portalId;
             model.PortalName = portals.FirstOrDefault(x => x.Id == portalId)?.Name;
@@ -150,12 +151,6 @@ namespace PT.BE.Areas.Manager.Controllers
                 _bannerRepository.Update(banner);
                 await _bannerRepository.CommitAsync();
 
-                CommonFunctions.TriggerCacheModuleClear(
-                    banner.Content,
-                    ModuleType.AdvertisingBanner,
-                    banner.Code,
-                    banner.Language, banner.PortalId);
-
                 await AddLog(new LogModel
                 {
                     ObjectId = banner.Id,
@@ -186,7 +181,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 return View("404");
 
             var model = MapModel<BannerModel>.Go(banner);
-            var portals = await _portalRepository.SearchAsync(true, 0, 0);
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
             model.PortalName = portals.FirstOrDefault(x => x.Id == banner.PortalId)?.Name;
             return View(model);
@@ -222,12 +217,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 _bannerRepository.Update(banner);
                 await _bannerRepository.CommitAsync();
 
-
-                CommonFunctions.TriggerCacheModuleClear(
-                    banner.Content,
-                    ModuleType.AdvertisingBanner,
-                    banner.Code,
-                    banner.Language, banner.PortalId);
+                await _iPortalRepository.TriggerRemoteCacheRefreshAsync(banner.PortalId, ModuleType.AdvertisingBanner, banner.Code, banner.Language);
 
                 await AddLog(new LogModel
                 {
@@ -263,11 +253,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 banner.Delete = true;
                 await _bannerRepository.CommitAsync();
 
-                CommonFunctions.TriggerCacheModuleClear(
-                    null,
-                    ModuleType.AdvertisingBanner,
-                    banner.Code,
-                    banner.Language, banner.PortalId);
+                await _iPortalRepository.TriggerRemoteCacheRefreshAsync(banner.PortalId, ModuleType.AdvertisingBanner, banner.Code, banner.Language);
 
                 await AddLog(new LogModel
                 {
@@ -307,7 +293,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     parentBanner.Content = await UpdateGroupBanner(parentBanner);
                     _bannerRepository.Update(parentBanner);
                     await _bannerRepository.CommitAsync();
-                    CommonFunctions.TriggerCacheModuleClear(parentBanner.Content, ModuleType.AdvertisingBanner, parentBanner.Code, parentBanner?.Language, parentBanner.PortalId);
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(parentBanner.PortalId, ModuleType.AdvertisingBanner, parentBanner.Code, parentBanner.Language);
                 }
                 await _bannerItemRepository.CommitAsync();
 
@@ -423,7 +409,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     parentBanner.Content = content;
                     _bannerRepository.Update(parentBanner);
                     await _bannerRepository.CommitAsync();
-                    CommonFunctions.TriggerCacheModuleClear(content, ModuleType.AdvertisingBanner, parentBanner.Code, parentBanner?.Language, parentBanner.PortalId);
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(parentBanner.PortalId, ModuleType.AdvertisingBanner, parentBanner.Code, parentBanner.Language);
                 }
 
                 await AddLog(new LogModel
@@ -483,14 +469,10 @@ namespace PT.BE.Areas.Manager.Controllers
                 await _bannerItemRepository.CommitAsync();
 
                 var parentBanner = await _bannerRepository.SingleOrDefaultAsync(true, x => x.Id == item.BannerId);
-
-                CommonFunctions.GenModule(
-                    _hostingEnvironment.WebRootPath,
-                    await UpdateGroupBanner(parentBanner),
-                    ModuleType.AdvertisingBanner,
-                    parentBanner.Code,
-                    parentBanner?.Language);
-
+                if(parentBanner != null)
+                {
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(parentBanner.PortalId, ModuleType.AdvertisingBanner, parentBanner.Code, parentBanner.Language);
+                }    
                 await AddLog(new LogModel
                 {
                     ObjectId = item.Id,
@@ -535,12 +517,10 @@ namespace PT.BE.Areas.Manager.Controllers
                 });
 
                 var parentBanner = await _bannerRepository.SingleOrDefaultAsync(true, x => x.Id == id);
-                CommonFunctions.GenModule(
-                    _hostingEnvironment.WebRootPath,
-                    await UpdateGroupBanner(parentBanner),
-                    ModuleType.AdvertisingBanner,
-                    parentBanner.Code,
-                    parentBanner?.Language);
+                if(parentBanner != null)
+                {
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(parentBanner.PortalId, ModuleType.AdvertisingBanner, parentBanner.Code, parentBanner.Language);
+                }
 
                 return ResponseHepper.Success("Cập nhật thành công.", false);
             }

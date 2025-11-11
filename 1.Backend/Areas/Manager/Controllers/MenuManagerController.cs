@@ -217,10 +217,6 @@ namespace PT.BE.Areas.Manager.Controllers
                     // Lưu entity vào repository và commit
                     await _iMenuRepository.AddAsync(data);
                     await _iMenuRepository.CommitAsync();
-                    
-                    // Sau khi lưu xong, xóa bộ nhớ đệm liên quan đến module Menu để frontend lấy dữ liệu mới
-                    // Lưu ý: TriggerCacheModuleClear sẽ tuỳ implementation của CommonFunctions để clear cache
-                    CommonFunctions.TriggerCacheModuleClear(data.Content, ModuleType.Menu, data.Code, data.Language, data.PortalId);
 
                     // Ghi log thao tác để audit
                     await AddLog(new LogModel
@@ -307,7 +303,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Template3 = use.Template3;
                     dl.Code = use.Code;
                     dl.PortalId = use.PortalId;
-
+                 
                     // Rebuild lại Content dựa trên template mới và các menu item hiện có
                     dl.Content = await UpdateGroupMenu(dl);
 
@@ -316,8 +312,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iMenuRepository.CommitAsync();
 
                     // Xóa cache module liên quan để frontend lấy nội dung mới
-                    CommonFunctions.TriggerCacheModuleClear(dl.Content, ModuleType.Menu, dl.Code, dl.Language, dl.PortalId);
-
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dl.PortalId, ModuleType.Menu, dl.Code, dl.Language);
                     // Ghi log hành động cập nhật
                     await AddLog(new LogModel
                     {
@@ -358,7 +353,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 kt.Delete = true;
                 // Đánh dấu soft-delete. Không xóa thực tế khỏi DB để giữ lịch sử, backup...
                 // Xóa cache liên quan để frontend không còn hiển thị menu này nữa.
-                CommonFunctions.TriggerCacheModuleClear(null, ModuleType.Menu, kt.Code, kt.Language, kt.PortalId);
+                await _iPortalRepository.TriggerRemoteCacheRefreshAsync(kt.PortalId, ModuleType.Menu, kt.Code, kt.Language);
                 await _iMenuRepository.CommitAsync();
 
                 await AddLog(new LogModel
@@ -405,7 +400,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     dataParent.Content = await UpdateGroupMenu(dataParent);
                     _iMenuRepository.Update(dataParent);
                     await _iMenuRepository.CommitAsync();
-                    CommonFunctions.TriggerCacheModuleClear(dataParent.Content, ModuleType.Menu, dataParent.Code, dataParent.Language, dataParent.PortalId);
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dataParent.PortalId, ModuleType.Menu, dataParent.Code, dataParent.Language);
                 }
 
                 await AddLog(new LogModel
@@ -582,7 +577,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         dataParent.Content = await UpdateGroupMenu(dataParent);
                         _iMenuRepository.Update(dataParent);
                         await _iMenuRepository.CommitAsync();
-                        CommonFunctions.TriggerCacheModuleClear(dataParent.Content, ModuleType.Menu, dataParent.Code, dataParent.Language, dataParent.PortalId);
+                        await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dataParent.PortalId, ModuleType.Menu, dataParent.Code, dataParent.Language);
                     }
 
                     // Ghi log thao tác
@@ -678,7 +673,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         dataParent.Content = await UpdateGroupMenu(dataParent);
                         _iMenuRepository.Update(dataParent);
                         await _iMenuRepository.CommitAsync();
-                        CommonFunctions.TriggerCacheModuleClear(dataParent.Content, ModuleType.Menu, dataParent.Code, dataParent.Language, dataParent.PortalId);
+                        await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dataParent.PortalId, ModuleType.Menu, dataParent.Code, dataParent.Language);
                     }
 
                     // Ghi log hành động
@@ -739,7 +734,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     dataParent.Content = await UpdateGroupMenu(dataParent);
                     _iMenuRepository.Update(dataParent);
                     await _iMenuRepository.CommitAsync();
-                    CommonFunctions.TriggerCacheModuleClear(dataParent.Content, ModuleType.Menu, dataParent.Code, dataParent.Language, dataParent.PortalId);
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dataParent.PortalId, ModuleType.Menu, dataParent.Code, dataParent.Language);
                 }
 
                 // Trả về kết quả thành công
@@ -894,7 +889,6 @@ namespace PT.BE.Areas.Manager.Controllers
         /// </summary>
         #endregion
 
-
         [HttpPost, Authorize]
         public async Task<List<SelectListItem>> SearchLink(string q, string language = null, CategoryType? categoryType = null)
         {
@@ -905,5 +899,7 @@ namespace PT.BE.Areas.Manager.Controllers
             return (await _iLinkRepository.SearchAsync(true, 0, 20, x => (x.Name.ToLower() == q.ToLower() || x.Name.ToLower().Contains(q.ToLower()) || q == null) && (x.Language == language || language == null) && x.Status, x => x.OrderBy(y => y.Name),
                 x => new Link { Id = x.Id, Name = x.Name, Status = x.Status, Type = x.Type, Language = x.Language  })).Select(x => new SelectListItem { Text = $"({x.Language}|{x.Type.GetDisplayName()}) / {x.Name}", Value = x.Id.ToString() }).ToList();
         }
+
+
     }
 }
