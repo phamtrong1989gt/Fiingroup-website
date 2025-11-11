@@ -2,6 +2,12 @@
     --Base-Brand-Blue: rgba(0, 102, 204, 1);
 }
 
+#myVideo {
+    min-width: 100%;
+    max-height: 850px;
+    opacity: .2;
+    object-fit: cover;
+}
 .w700 {
     font-weight: 700 !important;
 }
@@ -129,3 +135,4 @@
         }
     }
 }
+/*end button hover*/
