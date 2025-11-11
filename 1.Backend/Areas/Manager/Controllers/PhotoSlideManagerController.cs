@@ -227,7 +227,6 @@ namespace PT.BE.Areas.Manager.Controllers
                     data.Content = content;
                     _iBannerRepository.Update(data);
                     await _iBannerRepository.CommitAsync();
-                    CommonFunctions.TriggerCacheModuleClear(content, ModuleType.PhotoSlide, data.Code,data.Language, data.PortalId);
 
                     // Ghi log thao tác thêm mới
                     await AddLog(new LogModel
@@ -325,8 +324,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Content = content;
                     _iBannerRepository.Update(dl);
                     await _iBannerRepository.CommitAsync();
-                    CommonFunctions.TriggerCacheModuleClear(content, ModuleType.PhotoSlide, dl.Code,dl.Language, dl.PortalId);
-
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dl.PortalId, ModuleType.PhotoSlide, dl.Code, dl.Language);
                     // Ghi log thao tác cập nhật
                     await AddLog(new LogModel
                     {
@@ -380,8 +378,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 // Lưu thay đổi vào database
                 await _iBannerRepository.CommitAsync();
 
-                CommonFunctions.TriggerCacheModuleClear(null, ModuleType.PhotoSlide, kt.Code, kt.Language, kt.PortalId);
-
+                await _iPortalRepository.TriggerRemoteCacheRefreshAsync(kt.PortalId, ModuleType.PhotoSlide, kt.Code, kt.Language);
                 // Ghi log thao tác xóa
                 await AddLog(new LogModel
                 {
@@ -431,7 +428,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     var content = await UpdateGroupBanner(dataParrent);
                     dataParrent.Content = content;
                     _iBannerRepository.Update(dataParrent);
-                    CommonFunctions.TriggerCacheModuleClear(null, ModuleType.PhotoSlide, dataParrent.Code, dataParrent.Language, dataParrent.PortalId);
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dataParrent.PortalId, ModuleType.Menu, dataParrent.Code, dataParrent.Language);
                     await _iBannerRepository.CommitAsync();
                 }
                 await _iBannerItemRepository.CommitAsync();
@@ -608,7 +605,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         dataParrent.Content = content;
                         _iBannerRepository.Update(dataParrent);
                         await _iBannerRepository.CommitAsync();
-                        CommonFunctions.TriggerCacheModuleClear(content, ModuleType.PhotoSlide, dataParrent.Code, dataParrent.Language, dataParrent.PortalId);
+                        await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dataParrent.PortalId, ModuleType.Menu, dataParrent.Code, dataParrent.Language);
                     }    
                   
                     // Ghi log thao tác thêm mới
@@ -702,7 +699,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         dataParrent.Content = content;
                         _iBannerRepository.Update(dataParrent);
                         await _iBannerRepository.CommitAsync();
-                        CommonFunctions.TriggerCacheModuleClear(content, ModuleType.PhotoSlide, dataParrent.Code, dataParrent.Language, dataParrent.PortalId);
+                        await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dataParrent.PortalId, ModuleType.Menu, dataParrent.Code, dataParrent.Language);
                     }
 
                     // Ghi log thao tác cập nhật
@@ -765,7 +762,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 });
                 // Lấy thông tin banner cha để cập nhật lại module
                 var dataParrent = await _iBannerRepository.SingleOrDefaultAsync(true, x => x.Id == id);
-                CommonFunctions.GenModule(_iHostingEnvironment.WebRootPath, await UpdateGroupBanner(dataParrent), ModuleType.PhotoSlide, dataParrent.Code , dataParrent?.Language);
+                await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dataParrent.PortalId, ModuleType.Menu, dataParrent.Code, dataParrent.Language);
                 // Trả về kết quả thành công
                 return new ResponseModel() { Output = 1, Message = "Cập nhật thành công.", Type = ResponseTypeMessage.Success };
             }

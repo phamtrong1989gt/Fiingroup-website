@@ -203,7 +203,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     };
                     await _iStaticInformationRepository.AddAsync(data);
                     await _iStaticInformationRepository.CommitAsync();
-                    CommonFunctions.TriggerCacheModuleClear(data.Content, ModuleType.StaticInformation, data.Code, data.Language, data.PortalId);
+                    
                     await AddLog(new LogModel
                     {
                         ObjectId = data.Id,
@@ -285,7 +285,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     _iStaticInformationRepository.Update(dl);
                     await _iStaticInformationRepository.CommitAsync();
 
-                    CommonFunctions.TriggerCacheModuleClear(dl.Content, ModuleType.StaticInformation, dl.Code, dl.Language, dl.PortalId);
+                    await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dl.PortalId, ModuleType.StaticInformation, dl.Code, dl.Language);
 
                     await AddLog(new LogModel
                     {
@@ -323,7 +323,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 {
                     return CreateResponse(0, "thông tin tĩnh không tồn tại, vui lòng thử lại.", ResponseTypeMessage.Warning, true);
                 }
-                CommonFunctions.TriggerCacheModuleClear(null, ModuleType.StaticInformation, kt.Code, kt.Language, kt.PortalId);
+                await _iPortalRepository.TriggerRemoteCacheRefreshAsync(kt.PortalId, ModuleType.StaticInformation, kt.Code, kt.Language);
                 kt.Delete = true;
                 await _iStaticInformationRepository.CommitAsync();
 
