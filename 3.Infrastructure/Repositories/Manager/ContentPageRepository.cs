@@ -399,6 +399,68 @@ namespace PT.Infrastructure.Repositories
                 TotalRows = await query.CountAsync()
             };
         }
+
+        public async Task<List<ContentPage>> SearchAdvanceAsync(int skip = 0, int Take = 0, int? categoryId = null, int? tagId = null, Expression<Func<ContentPage, bool>> predicate = null, Func<IQueryable<ContentPage>, IOrderedQueryable<ContentPage>> orderBy = null, Expression<Func<ContentPage, ContentPage>> select = null)
+        {
+            IQueryable<ContentPage> query = _context.ContentPages.AsNoTracking().AsQueryable();
+            if (predicate != null)
+            {
+                query = query.Where(predicate).AsQueryable();
+            }
+            if (tagId != null)
+            {
+                query = query.Where(x => _context.ContentPageTags.Any(m => m.ContentPageId == x.Id && m.TagId == tagId)).AsQueryable();
+            }
+            if (orderBy != null)
+            {
+                query = orderBy(query).AsQueryable();
+            }
+            if (select != null)
+            {
+                query = query.Select(select).AsQueryable();
+            }
+
+            query = query
+                .GroupJoin(_context.Links.Where(x => x.Status == true && x.Type == ESlugType.ContentPage).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
+                {
+                    Link = y,
+                    Id = x.data.Id,
+                    Author = x.data.Author,
+                    Banner = x.data.Banner,
+                    Content = x.data.Content,
+                    DatePosted = x.data.DatePosted,
+                    Name = x.data.Name,
+                    Language = x.data.Language,
+                    Price = x.data.Price,
+                    Serice = x.data.Serice,
+                    ServiceId = x.data.ServiceId,
+                    Status = x.data.Status,
+                    Summary = x.data.Summary,
+                    Tags = x.data.Tags,
+                    Type = x.data.Type,
+                    IsHome = x.data.IsHome,
+                    StartDate = x.data.StartDate,
+                    EndDate = x.data.EndDate,
+                    CategoryId = x.data.CategoryId,
+                    PortalId = x.data.PortalId,
+                    TimeFromTo = x.data.TimeFromTo,
+                    Topic = x.data.Topic,
+                    Pages = x.data.Pages,
+                    Extentions = x.data.Extentions,
+                    FilePath = x.data.FilePath,
+                    Address = x.data.Address,
+                    CategoryType = x.data.CategoryType,
+                    DeliveryTime = x.data.DeliveryTime,
+                    SlugType = x.data.SlugType
+                }).AsQueryable();
+            if (Take > 0)
+            {
+                query = query.Skip(skip < 0 ? 0 : skip).Take(Take).AsQueryable();
+            }
+            return await query.ToListAsync();
+        }
+
         public async Task<List<ContentPage>> SearchAdvanceAsync(CategoryType type, int skip = 0, int Take = 0, int? categoryId =null, int? tagId = null, Expression<Func<ContentPage, bool>> predicate = null, Func<IQueryable<ContentPage>, IOrderedQueryable<ContentPage>> orderBy = null, Expression<Func<ContentPage, ContentPage>> select = null)
         {
             IQueryable<ContentPage> query = _context.ContentPages.AsNoTracking().AsQueryable();
@@ -451,7 +513,7 @@ namespace PT.Infrastructure.Repositories
                     Address = x.data.Address,
                     CategoryType = x.data.CategoryType,
                     DeliveryTime = x.data.DeliveryTime,
-                    SlugType = x.data.SlugType,
+                    SlugType = x.data.SlugType
                 }).AsQueryable();
             if (Take > 0)
             {
