@@ -5,14 +5,41 @@
 @using Microsoft.Extensions.Options
 @using PT.Shared;
 @inject IOptions<BaseSettings> _baseSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
 
 @{
 	Layout = "~/Views/Shared/_Home.cshtml";
 	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 	var portalId = _baseSettings.Value.PortalId;
+	var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 1,
+			   null, null,
+			   m => m.Status
+				   && (m.StartDate >= DateTime.Now || m.StartDate <= DateTime.Now)
+				   && m.Language == language
+				   && (m.CategoryType == ECategoryType.ContentPage_Event),
+			   m => m.OrderByDescending(x => x.StartDate),
+			   a => new ContentPage
+			   {
+				   Banner = a.Banner,
+				   DatePosted = a.DatePosted,
+				   Id = a.Id,
+				   Name = a.Name,
+				   Summary = a.Summary,
+				   Language = a.Language,
+				   Author = a.Author,
+				   CategoryId = a.CategoryId,
+				   StartDate = a.StartDate,
+				   Address = a.Address,
+				   TimeFromTo = a.TimeFromTo,
+				   Link = a.Link
+			   });
 }
 
 <style>
+	body {
+		background: #fff;
+	}
+
 	#Banner {
 		background: url(/Data/news-bg.jpg) no-repeat top;
 		background-size: cover;
@@ -55,36 +82,10 @@
 			width: 126px;
 		}
 
-	.item-date-sub {
-		font-weight: 400;
-		font-size: 18px;
-		line-height: 150%;
-		display: flex;
-		align-items: center;
-		color: #1D2939;
-	}
-
-		.item-date-sub i {
-			padding: 0 10px 0 0;
-			width: 30px;
-			color: #0066CC;
-		}
-
-		.item-date-sub .item-label {
-			padding: 0 10px 0 0;
-			width: 126px;
-		}
-
-		.item-date-sub .item-label-sub {
-			padding: 0 10px 0 0;
-			font-weight: 600;
-			color: #1D2939;
-		}
-
 	#NewButton {
 		align-items: center;
 		justify-content: center;
-		margin: -2% 0 0 0;
+		margin: -1.5% 0 0 0;
 	}
 
 	.btn-active {
@@ -189,6 +190,64 @@
 		border-radius: 200px;
 	}
 
+	.news-title {
+		font-weight: 700;
+		font-size: 28px;
+		height: 102px;
+		line-height: 120%;
+		display: flex;
+		align-items: center;
+		color: #1D2939;
+		flex: none;
+		order: 0;
+		align-self: stretch;
+		flex-grow: 0;
+		overflow: hidden;
+	}
+
+	.no-data-messege {
+		font-style: normal;
+		font-weight: 700;
+		font-size: 28px;
+		text-align: center;
+		color: #093461;
+	}
+
+	.btn-khampha {
+		background: white;
+		color: var(--primary-color);
+		width: 284px;
+		height: 50px;
+		font-size: 24px;
+		border-radius: 200px;
+	}
+
+	.item-date-sub {
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 150%;
+		display: flex;
+		align-items: center;
+		color: #1D2939;
+	}
+
+		.item-date-sub i {
+			padding: 0 10px 0 0;
+			width: 30px;
+			color: #0066CC;
+		}
+
+		.item-date-sub .item-label {
+			padding: 0 10px 0 0;
+			width: 126px;
+		}
+
+		.item-date-sub .item-label-sub {
+			padding: 0 10px 0 0;
+			font-weight: 600;
+			color: #1D2939;
+		}
+
 	.news-title-sub {
 		font-weight: 700;
 		font-size: 20px;
@@ -239,28 +298,34 @@
 	<div class="container">
 		<div class="row">
 			<h1 class="text-white mb-5 mt-5">Khám phá những tin tức, sự kiện và thông tin mới nhất từ FiinGroup </h1>
-			<div class="col-lg-5 col-sm-6 mb-5">
-				<h2 class="text-white mb-4">Vietnam Petrochemical Market 2025 – Investment Needed to Close Domestic Gap</h2>
-				<div class="item-date mb-2">
-					<i class="fa fa-calendar-o" aria-hidden="true"></i>
-					<span class="item-label">Ngày tổ chức</span>
-					<span>12/08/2005</span>
+			@foreach (var item in lstTinLienQuan)
+			{
+				string url = @PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
+				<div class="col-lg-5 col-sm-6 mb-5">
+					<h2 class="text-white mb-4">@item.Name</h2>
+					<div class="item-date mb-2">
+						<i class="fa fa-calendar-o" aria-hidden="true"></i>
+						<span class="item-label">Ngày tổ chức</span>
+						<span>@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
+					</div>
+					<div class="item-date mb-2">
+						<i class="fa fa-clock-o" aria-hidden="true"></i>
+						<span class="item-label">Thời gian</span>
+						<span>@item.TimeFromTo</span>
+					</div>
+					<div class="item-date mb-5">
+						<i class="fa fa-map-marker" aria-hidden="true"></i>
+						<span class="item-label">Địa điểm</span>
+						<span>@item.Address</span>
+					</div>
+					<a class="btn btn-light btn-khampha" href="@url" target="_blank">Khám phá ngay</a>
 				</div>
-				<div class="item-date mb-2">
-					<i class="fa fa-clock-o" aria-hidden="true"></i>
-					<span class="item-label">Thời gian</span>
-					<span>12:24 - 14:50</span>
+				<div class="col-lg-7 col-sm-6 mb-5">
+					<a href="@url" title="@item.Name">
+						<img src="@item.Banner" alt="@item.Name" title="@item.Name" />
+					</a>
 				</div>
-				<div class="item-date mb-5">
-					<i class="fa fa-map-marker" aria-hidden="true"></i>
-					<span class="item-label">Địa điểm</span>
-					<span>Zoom Webinar</span>
-				</div>
-				<a class="btn btn-light btn-khampha" href="#" target="_blank">Khám phá ngay</a>
-			</div>
-			<div class="col-lg-7 col-sm-6 mb-5">
-				<img src="/Data/news.jpg" alt="news" />
-			</div>
+			}
 		</div>
 	</div>
 </section>
@@ -268,147 +333,91 @@
 <section id="NewButton">
 	<div class="container">
 		<div class="row d-flex justify-content-center">
-			<a class="btn btn-noactive">Tin tức</a>
-			<a class="btn btn-active">Sự kiện</a>
+			@if (Model.ParentId == 0)
+			{
+				<a href="#" class="btn btn-active">Tin tức</a>
+				<a href="#" class="btn btn-noactive">Sự kiện</a>
+			}
+			else
+			{
+				<a href="#" class="btn btn-active">@Model.Name</a>
+			}
 		</div>
 	</div>
 </section>
 
 <section id="FiinGroup">
 	<div class="container">
-		<div class="d-flex justify-content-center mt-5 mb-5">
-			<div class="tags">
-				<a href="#" class="sapdienra active" title="News">Sắp diễn ra</a>
-				<a href="#" class="dangdienra" title="News">Đang diễn ra</a>
-				<a href="#" class="dadienra" title="News">Đã diễn ra</a>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-5 col-sm-6">
-				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-01.jpg" alt="News" /></a>
-			</div>
-			<div class="col-lg-7 col-sm-6">
-				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
-				<div class="mt-5">
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-calendar-o" aria-hidden="true"></i>
-						<span class="item-label">Ngày tổ chức</span>
-						<span class="item-label-sub">12/08/2005</span>
-					</div>
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-clock-o" aria-hidden="true"></i>
-						<span class="item-label">Thời gian</span>
-						<span class="item-label-sub">12:24 - 14:50</span>
-					</div>
-					<div class="item-date-sub mb-5">
-						<i class="fa fa-map-marker" aria-hidden="true"></i>
-						<span class="item-label">Địa điểm</span>
-						<span class="item-label-sub">Zoom Webinar</span>
-					</div>
+		<form method="get">
+			<div class="d-flex justify-content-center mt-5 mb-5">
+				<div class="tags">
+					<a href="#" class="sapdienra active" title="News">Sắp diễn ra</a>
+					<a href="#" class="dangdienra" title="News">Đang diễn ra</a>
+					<a href="#" class="dadienra" title="News">Đã diễn ra</a>
 				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-5 col-sm-6">
-				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-02.jpg" alt="News" /></a>
-			</div>
-			<div class="col-lg-7 col-sm-6">
-				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
-				<div class="mt-5">
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-calendar-o" aria-hidden="true"></i>
-						<span class="item-label">Ngày tổ chức</span>
-						<span class="item-label-sub">12/08/2005</span>
+		</form>
+		<div class="row mt-5">
+			@if (Model.PageBlog != null)
+			{
+				@foreach (var item in Model.PageBlog.Data)
+				{
+					string url = @PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
+					@* <div class="col-lg-4 col-sm-6">
+						<a href="@url" title="@item.Name">
+							<img class="news-img" src="@item.Banner" alt="@item.Name">
+						</a>
+						<h3 class="pt-4">
+							<a href="@url" title="@item.Name" class="news-title">@item.Name</a>
+						</h3>
+						<div class="pt-4 pb-4 mb-4">
+							<a href="@url" title="@item.Name" class="show-more">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						</div>
+					</div> *@
+					<div class="row">
+						<div class="col-lg-5 col-sm-6">
+							<a href="@url" title="@item.Name"><img src="Data/new-01.jpg" alt="@item.Name" title="@item.Name" /></a>
+						</div>
+						<div class="col-lg-7 col-sm-6">
+							<h3><a href="@url" class="news-title-sub" title="@item.Name">@item.Name</a></h3>
+							<div class="mt-5">
+								<div class="item-date-sub mb-2">
+									<i class="fa fa-calendar-o" aria-hidden="true"></i>
+									<span class="item-label">Ngày tổ chức</span>
+									<span class="item-label-sub">@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
+								</div>
+								<div class="item-date-sub mb-2">
+									<i class="fa fa-clock-o" aria-hidden="true"></i>
+									<span class="item-label">Thời gian</span>
+									<span class="item-label-sub">@item.TimeFromTo</span>
+								</div>
+								<div class="item-date-sub mb-5">
+									<i class="fa fa-map-marker" aria-hidden="true"></i>
+									<span class="item-label">Địa điểm</span>
+									<span class="item-label-sub">@item.Address</span>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-clock-o" aria-hidden="true"></i>
-						<span class="item-label">Thời gian</span>
-						<span class="item-label-sub">12:24 - 14:50</span>
-					</div>
-					<div class="item-date-sub mb-5">
-						<i class="fa fa-map-marker" aria-hidden="true"></i>
-						<span class="item-label">Địa điểm</span>
-						<span class="item-label-sub">Zoom Webinar</span>
-					</div>
+				}
+			}
+			else
+			{
+				<div class="col-lg-12 col-sm-12 text-center my-5">
+					<img src="/Data/no-data.jpg" alt="No data" />
+					<p class="no-data-messege my-5">Chưa có tin tức, sự kiện nào sắp diễn ra.</p>
+				</div>
+			}
+			<!-- pagination -->
+			<div class="pagination-area">
+				<div aria-label="Page navigation example">
+					<ul class="pagination justify-content-center">
+						@Html.Raw(PT.Shared.Functions.GenPageList("", Model.PageBlog.Page, Model.PageBlog.TotalRows, Model.PageBlog.Limit, $"&key={Context.Request.Query["key"]}" + $"&startDate={Context.Request.Query["startDate"]}" + $"&endDate={Context.Request.Query["endDate"]}", "page-item"))
+					</ul>
 				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-5 col-sm-6">
-				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-03.jpg" alt="News" /></a>
-			</div>
-			<div class="col-lg-7 col-sm-6">
-				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
-				<div class="mt-5">
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-calendar-o" aria-hidden="true"></i>
-						<span class="item-label">Ngày tổ chức</span>
-						<span class="item-label-sub">12/08/2005</span>
-					</div>
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-clock-o" aria-hidden="true"></i>
-						<span class="item-label">Thời gian</span>
-						<span class="item-label-sub">12:24 - 14:50</span>
-					</div>
-					<div class="item-date-sub mb-5">
-						<i class="fa fa-map-marker" aria-hidden="true"></i>
-						<span class="item-label">Địa điểm</span>
-						<span class="item-label-sub">Zoom Webinar</span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-5 col-sm-6">
-				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-02.jpg" alt="News" /></a>
-			</div>
-			<div class="col-lg-7 col-sm-6">
-				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
-				<div class="mt-5">
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-calendar-o" aria-hidden="true"></i>
-						<span class="item-label">Ngày tổ chức</span>
-						<span class="item-label-sub">12/08/2005</span>
-					</div>
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-clock-o" aria-hidden="true"></i>
-						<span class="item-label">Thời gian</span>
-						<span class="item-label-sub">12:24 - 14:50</span>
-					</div>
-					<div class="item-date-sub mb-5">
-						<i class="fa fa-map-marker" aria-hidden="true"></i>
-						<span class="item-label">Địa điểm</span>
-						<span class="item-label-sub">Zoom Webinar</span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-5 col-sm-6">
-				<a href="/vi/news-detail.html" title="news"><img src="/Data/new-01.jpg" alt="News" /></a>
-			</div>
-			<div class="col-lg-7 col-sm-6">
-				<h3><a href="/vi/news-detail.html" class="news-title-sub">Tọa đàm Thị trường vốn nợ Việt Nam 2025: Nguồn vốn cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới</a></h3>
-				<div class="mt-5">
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-calendar-o" aria-hidden="true"></i>
-						<span class="item-label">Ngày tổ chức</span>
-						<span class="item-label-sub">12/08/2005</span>
-					</div>
-					<div class="item-date-sub mb-2">
-						<i class="fa fa-clock-o" aria-hidden="true"></i>
-						<span class="item-label">Thời gian</span>
-						<span class="item-label-sub">12:24 - 14:50</span>
-					</div>
-					<div class="item-date-sub mb-5">
-						<i class="fa fa-map-marker" aria-hidden="true"></i>
-						<span class="item-label">Địa điểm</span>
-						<span class="item-label-sub">Zoom Webinar</span>
-					</div>
-				</div>
-			</div>
+			<!-- pagination end -->
 		</div>
 	</div>
 </section>
-
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsDeliver", language = language, portalId = portalId }))
