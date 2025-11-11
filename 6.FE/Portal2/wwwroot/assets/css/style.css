@@ -959,11 +959,42 @@ a:hover {
 .mb-7 {
     margin-bottom: 5rem !important;
 }
-@media (min-width: 1400px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-        max-width: 1230px;
-    }
+.pagination .page-item {
+    box-sizing: border-box;
+    align-items: center;
+    padding: 10px 19px;
+    gap: 10px;
+    width: 48px;
+    height: 48px;
+    background: #FFFFFF;
+    border: 1px solid #0066CC;
+    border-radius: 24px;
+    font-weight: 600;
+    color: #0066CC;
 }
+.pagination .page-link {
+    box-sizing: border-box;
+    align-items: center;
+    padding: 10px 19px;
+    gap: 10px;
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: none;
+}
+    .pagination .page-link:hover{
+        color:var(--primary-color)
+    }
+    .pagination .page-item a {
+        border: none;
+        background: none;
+        padding: 2px 0 0 0;
+    }
+    @media (min-width: 1400px) {
+        .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+            max-width: 1230px;
+        }
+    }
 
 @media (max-width: 767px) {
     .mbftyt2 {

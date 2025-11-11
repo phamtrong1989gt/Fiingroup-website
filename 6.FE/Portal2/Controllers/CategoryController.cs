@@ -32,7 +32,6 @@ namespace PT.UI.Controllers
             _iTourRepository = iTourRepository;
         }
   
-
         [HttpGet]
         public async Task<IActionResult> Details(int id, string language, int? page, string key, string linkData)
         {
@@ -40,6 +39,7 @@ namespace PT.UI.Controllers
             objectLink.Title = string.IsNullOrEmpty(objectLink.Title) ? objectLink.Name : objectLink.Title;
 
             string viewName = "_404";
+            var Type = ECategoryType.ContentPage_Blog;
             var dl = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == id && x.Status);
             if (dl == null)
             {
@@ -47,10 +47,12 @@ namespace PT.UI.Controllers
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Blog)
             {
+                Type = ECategoryType.ContentPage_Blog;
                 viewName = "News";
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Event)
             {
+                Type = ECategoryType.ContentPage_Event;
                 viewName = "Event";
             }
 
@@ -60,7 +62,7 @@ namespace PT.UI.Controllers
                  id,
                  null,
                  m => (m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key))
-                     && m.CategoryType == ECategoryType.ContentPage_Blog
+                     && m.CategoryType == Type
                      && (m.Language == language)
                      && m.Status
                      , x => x.OrderByDescending(mbox => mbox.DatePosted), x => new ContentPage
@@ -76,7 +78,8 @@ namespace PT.UI.Controllers
                          Summary = x.Summary,
                          Tags = x.Tags,
                          Type = x.Type,
-                         Link = x.Link
+                         Link = x.Link,
+                         Input1 = x.Input1
              });
 
             objectLink.Title = $"{objectLink.Title}{((page == null) ? "" : (language == "vi" ? $" - trang {page}" : $" - page {page}"))}";

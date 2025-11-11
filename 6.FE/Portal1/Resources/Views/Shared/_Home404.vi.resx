@@ -117,10 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="About error" xml:space="preserve">
+    <value>Chúng tôi xin lỗi vì sự bất tiện này. Vui lòng trở lại trang chủ.</value>
+  </data>
   <data name="Home" xml:space="preserve">
     <value>Trang chủ</value>
   </data>
   <data name="This data does not exist, may be deleted or disabled!" xml:space="preserve">
-    <value>Dữ liệu này không tồn tại, có thể bị xóa hoặc bị vô hiệu hóa!</value>
+    <value>Không tìm thấy trang!</value>
   </data>
 </root>
