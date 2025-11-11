@@ -35,6 +35,33 @@
         color: rgba(29, 41, 57, 1) !important;
         font-weight:600!important;
     }
-#HoTro .why-title{
+ .why-title{
     font-weight:700;
+    padding-top:30px
+}
+
+/*for menu*/
+
+.menu-bar a.mn-group-name {
+    padding-left: 20px;
+    font-weight: 700;
+}
+
+    .menu-bar a.mn-group-name:hover {
+        color: #0066CC;
+        background-color: transparent;
+    }
+
+.nav-dropdown-content a:hover {
+    background-color: transparent;
+    color: #0066CC;
+}
+
+.menu-bar .mn-group .mn-group-items img {
+    padding-left: 10px;
+}
+
+.menu-bar .mn-group .mn-group-items .gr-item {
+    display: flex;
+    margin-bottom: 10px;
 }

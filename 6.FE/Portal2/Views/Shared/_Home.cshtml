@@ -61,7 +61,170 @@
 		<!-- header area -->
 		<section id="Header">
 			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeBannerTop", language = language, portalId = portalId })
-			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuPC", language = language, portalId = portalId })
+			@* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuPC", language = language, portalId = portalId }) *@
+			<div class="container">
+				<div class="d-flex flex-row justify-content-between align-items-center">
+					<div class="">
+						<a title="LOGO" href="/" class='logo-avatar'>
+							<img class='imglogo' src="Data/logo.svg" alt="LOGO" width="141" height="32">
+						</a>
+					</div>
+					<div class="flex-fill d-none d-lg-block navbar">
+						<div class="d-flex flex-row flex-wrap justify-content-center align-items-center fs-14 menu-bar main-menu-bar">
+							<div class="nav-dropdown">
+								<a class="nav-dropbtn nav-dropdown py-4 px-2 px-md-3 menu-item" role="button"
+								   href='/Who'>Sản phẩm và Dịch vụ</a>
+								<i class="fa fa-angle-down" aria-hidden="true"></i>
+								<div class="nav-dropdown-content fs-14">
+									<div class="multi-rows">
+										<div class="row mn-group">
+											<a href="/FinancialInformation" class="mn-group-name ">
+												Financial
+												Information
+											</a>
+											<div class="mn-group-items row">
+												<div class="col-sm-4 gr-item">
+													<img src="Data/iconht.svg" alt=""><a href="https://web.fiintrade.vn/">
+														FiinTrade
+														Platform
+													</a>
+												</div>
+												<div class="col-sm-4 gr-item">
+													<img src="Data/iconht.svg" alt=""><a href="http://fiinpro.com/fiinpro-x">
+														FiinPro-X
+														Platform
+													</a>
+												</div>
+												<div class="col-sm-4 gr-item">
+													<img src="Data/iconht.svg" alt=""><a href="/ApiDataFeed">API DataFeed </a>
+												</div>
+												<div class="col-sm-4 gr-item">
+													<img src="Data/iconht.svg" alt=""><a href="https://docs.fiinquant.vn/">
+														FiinQuant
+														Library
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="row mn-group">
+											<a href="/FinancialInformation" class="mn-group-name ">
+												Financial
+												Information
+											</a>
+											<div class="mn-group-items row">
+												<div class="col-sm-4 gr-item">
+													<img src="Data/iconht.svg" alt=""><a href="https://web.fiintrade.vn/">
+														FiinTrade
+														Platform
+													</a>
+												</div>
+												<div class="col-sm-4 gr-item">
+													<img src="Data/iconht.svg" alt=""><a href="http://fiinpro.com/fiinpro-x">
+														FiinPro-X
+														Platform
+													</a>
+												</div>
+												<div class="col-sm-4 gr-item">
+													<img src="Data/iconht.svg" alt=""><a href="/ApiDataFeed">API DataFeed </a>
+												</div>
+												<div class="col-sm-4 gr-item">
+													<img src="Data/iconht.svg" alt=""><a href="https://docs.fiinquant.vn/">
+														FiinQuant
+														Library
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="row mn-group">
+											<a href="/FinancialInformation" class="mn-group-name">
+												Financial
+												Information
+											</a>
+										</div>
+										<div class="row mn-group">
+											<a href="/FinancialInformation" class="mn-group-name">
+												Financial
+												Information
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="nav-dropdown">
+								<a class="nav-dropbtn nav-dropdown py-4 px-2 px-md-3 menu-item" role="button"
+								   href='/Who'>Giải pháp</a>
+								<i class="fa fa-angle-down" aria-hidden="true"></i>
+								<div class="nav-dropdown-content fs-14">
+									<a href="/Products1">Giải pháp 1</a>
+									<a href="/Products2">Giải pháp 2</a>
+								</div>
+							</div>
+							<div class="">
+								<a class="nav-dropbtn py-4 px-2 px-md-3 menu-item" role="button"
+								   href='/News'>
+									Tin
+									tức và Sự kiện
+								</a>
+							</div>
+							<div class="">
+								<a class="nav-dropbtn py-4 px-2 px-md-3 menu-item" role="button"
+								   href='/Publications'>Ấn phẩm báo cáo</a>
+							</div>
+							<div class="nav-dropdown">
+								<a class="nav-dropbtn nav-dropdown py-4 px-2 px-md-3 menu-item" role="button"
+								   href='/Who'>
+									Về
+									FiinGroup
+								</a>
+								<i class="fa fa-angle-down" aria-hidden="true"></i>
+								<div class="nav-dropdown-content fs-14">
+									<a href="/Products1">Về FiinGroup 1</a>
+									<a href="/Products2">Về FiinGroup 2</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="d-flex justify-content-end">
+						<div class="px-2 fs-6 d-none d-lg-block">
+							<div class="dropdown mt-2">
+								<img src="Data/en.svg" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+									 alt="avatar language" height="16" />
+								<i class="fa fa-angle-down" aria-hidden="true"></i>
+								<ul class="dropdown-menu" style="right: 0 !important; left:unset">
+									<li>
+										<a class="dropdown-item fs-14" href="/vi">
+											<img src="https://tngo.vn//Content/Admin/images/vi.png"
+												 alt="avatar language" />
+											Ti&#x1EBF;ng Vi&#x1EC7;t
+										</a>
+									</li>
+									<li>
+										<a class="dropdown-item fs-14" href="/en">
+											<img src="Data/en.svg"
+												 alt="avatar language" height="16" width="24" /> English
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="px-2 px-md-4 fs-6 d-none d-lg-block">
+							<button class="btn btn-primary btn-request" id="btn-modal-login" data-action="login">
+								Request
+								a Demo
+							</button>
+						</div>
+					</div>
+
+					<div class="d-block d-lg-none text-primary">
+						<!--<button class="btn btn-light btn-lg" id="btn-modal-login" data-action="login">
+							<span style="color: Dodgerblue;"><i class="fa fa-user"></i></span>
+						</button>-->
+						<button class="btn btn-light btn-lg" data-bs-toggle="modal" data-bs-target="#menumore">
+							<span style="color: Dodgerblue;"><i class="fa fa-bars"></i></span>
+						</button>
+					</div>
+				</div>
+			</div>
 		</section>
 		<!-- header area end -->
 		@RenderBody()
