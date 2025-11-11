@@ -4,14 +4,23 @@
 @inject IViewLocalizer  Localizer
 @inject ICategoryRepository _iCategoryRepository;
 @inject IContentPageReferenceRepository _iContentPageReferenceRepository;
-@inject IContentPageRepository _iContentPageRepository;
-
 @using PT.Shared;
 @using PT.UI.Models
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    
+    var tinLienQuanModel = new ContentPageComponentModel()
+    {
+        CategoryId = 0,
+        ContentPageId = 0,
+        Href = "",
+        Language = language,
+        TagId = null,
+        Take = 6,
+        Title = "",
+        Type = CategoryType.ContentPageBlog,
+        View = "_NewInBlogDetail"
+    };
 }
 
 <main class="main">

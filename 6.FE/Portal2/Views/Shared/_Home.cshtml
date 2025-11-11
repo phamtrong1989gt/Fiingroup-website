@@ -50,7 +50,7 @@
 	<link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" />
 	<link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" />
 	<link rel="stylesheet" href="/assets/css/custom.css" />
-	<link rel="stylesheet" href="/assets/css/custom2.css?v=1.1.1" />
+	<link rel="stylesheet" href="/assets/css/custom2.css?v=1.1.2" />
 	<link href="/assets/lib/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
 	<script src="/assets/js/jquery.min.js"></script>
 	<partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
@@ -61,7 +61,8 @@
 		<!-- header area -->
 		<section id="Header">
 			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeBannerTop", language = language, portalId = portalId })
-			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuPC", language = language, portalId = portalId }) 
+			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuPC", language = language, portalId = portalId })
+			
 		</section>
 		<!-- header area end -->
 		@RenderBody()

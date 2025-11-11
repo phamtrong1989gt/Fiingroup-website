@@ -747,7 +747,7 @@ a {
 
 #HoTro {
     background: url('/Data/bghotro.jpg?v=1.1.1') no-repeat top;
-     background-position: bottom 85% center;
+     background-position: bottom 100% center;
    
 }
 
@@ -953,11 +953,11 @@ a:hover {
     margin-top: 5rem !important;
 }
 .mb-6 {
-    margin-top: 4rem !important;
+    margin-bottom: 4rem !important;
 }
 
 .mb-7 {
-    margin-top: 5rem !important;
+    margin-bottom: 5rem !important;
 }
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
