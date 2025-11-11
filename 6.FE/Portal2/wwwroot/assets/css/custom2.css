@@ -8,6 +8,7 @@
     opacity: .2;
     object-fit: cover;
 }
+
 .w700 {
     font-weight: 700 !important;
 }
@@ -120,8 +121,7 @@
         left: 0;
         width: 0%;
         height: 100%;
-     
-        background-color: #39cced;
+        background-color: #04417f;
         transition: all .3s;
         border-radius: 10rem;
         z-index: -1;
