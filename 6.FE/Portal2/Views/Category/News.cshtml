@@ -263,8 +263,9 @@
 		<div class="row d-flex justify-content-center">
 			@if (Model.ParentId == 0)
 			{
-				<a href="#" class="btn btn-noactive">Tin tức</a>
-				<a href="#" class="btn btn-active">Sự kiện</a>
+				@* <a href="#" class="btn btn-noactive">Tin tức</a>
+				<a href="#" class="btn btn-active">Sự kiện</a> *@
+				@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsLinkTab", language = language, portalId = portalId })
 			}
 			else
 			{
@@ -337,10 +338,10 @@
 </section>
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsDeliver", language = language, portalId = portalId }))
 <script>
-	$(function () {
-	  $('.btn-clear').on('click', function () {
-		$('#search-input').val('');
-		$('#startDate, #endDate').val('');
-	  });
+	$(function() {
+		$('.btn-clear').on('click', function() {
+			$('#search-input').val('');
+			$('#startDate, #endDate').val('');
+		});
 	});
 </script>

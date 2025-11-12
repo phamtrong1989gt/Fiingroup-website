@@ -1,46 +1,19 @@
 ﻿@addTagHelper *, PT.UI
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
 @using PT.Domain.Model;
 @using PT.Infrastructure.Interfaces;
 @using PT.Shared;
 @inject IViewLocalizer Localizer;
 @using System.Linq.Expressions;
 @using PT.UI.Models
+@inject IOptions<BaseSettings> _baseSettings;
 
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    var portalId = 2;
-
-    // var cplModel = new ContentPageComponentModel()
-    // {
-    //     CategoryId = 1002,
-    //     ContentPageId = 0,
-    //     Href = "",
-    //     Language = language,
-    //     TagId = null,
-    //     Take = 6,
-    //     Title = "",
-    //     Type = CategoryType.Blog,
-    //     View = "_News"
-    // };
-
-
-    // var datbModel = new ContentPageComponentModel()
-    // {
-    //     CategoryId = 2005,
-    //     ContentPageId = 0,
-    //     Href = "",
-    //     Language = language,
-    //     TagId = null,
-    //     Take = 6,
-    //     Title = "",
-    //     Type = CategoryType.Blog,
-    //     View = "_News"
-    // };
+    var portalId = _baseSettings.Value.PortalId;
 }
-
-@* <vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module> *@
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsBanner", language = language, portalId = portalId }))
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsStoryFiin", language = language, portalId = portalId }))
