@@ -19,10 +19,7 @@
 
 #SliderBanner .btn-request {
     font-weight: 500 !important;
-}
-
-#btn-modal-login {
-    font-weight: 600 !important
+    height:52px!important
 }
 
 .btn-slide {
@@ -55,10 +52,34 @@
     font-weight: 700;
     padding-top: 30px
 }
-
-#btn-modal-login {
-    font-size: 14px;
+.btn-dangky{font-size:12px !important}
+.btn-dangky:hover{
+    color:#fff;
 }
+#btn-modal-login {
+    font-weight: 600 !important;
+    font-size: 16px;
+    padding: 7px
+}
+
+.why-desc {
+    color: rgba(9, 52, 97, 1);
+    padding-right: 15px
+}
+
+#WhatWe .number {
+    font-size: 32px !important;
+}
+
+button.btn.btn-primary.btn-join {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 28px;
+    text-align: center;
+    padding: 11px 48px;
+    vertical-align: middle;
+}
+
 /*for menu*/
 .menu-bar .multi-rows {
     border-top: rgba(3, 78, 162, 1) 2px solid;
@@ -92,7 +113,6 @@
 
 .menu-bar .mn-group .mn-group-items .gr-item {
     display: flex;
-    margin-bottom: 10px;
 }
 /*end menu*/
 /*button hover*/
@@ -110,6 +130,46 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 102, 204, 1);
+        border-radius: 10rem;
+        z-index: -2;
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background-color: #04417f;
+        transition: all .3s;
+        border-radius: 10rem;
+        z-index: -1;
+    }
+
+    &:hover {
+        color: #fff;
+
+        &:before {
+            width: 100%;
+        }
+    }
+}
+
+#WhatWe .btn-about, #SliderBanner .btn-request {
+    transition: all .3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+
+    &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
         border-radius: 10rem;
         z-index: -2;
     }
