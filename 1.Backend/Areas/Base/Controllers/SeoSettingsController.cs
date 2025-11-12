@@ -112,6 +112,8 @@ namespace PT.BE.Areas.Setting.Controllers
                         _iSeoSettingRepository.Update(data);
                     }
                     await _iSeoSettingRepository.CommitAsync();
+                    await _iPortalRepository.TriggerRemoteCacheRefreshByKeyAsync(data.PortalId, $"SeoSetting::{data.Language}::{data.PortalId}");
+
                     await AddLog(new LogModel { Name = $"Cập nhật cấu thông tin seo {model.Id}.", Type = LogType.Edit });
 
                     return new ResponseModel() { Output = 1, Message = "Cập nhật cấu hình thành công.", Type = ResponseTypeMessage.Success };

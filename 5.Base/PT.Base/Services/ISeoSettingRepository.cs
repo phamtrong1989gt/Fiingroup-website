@@ -20,18 +20,20 @@ namespace PT.Base.Services
         private readonly ISeoSettingRepository _iSeoSettingRepository;
         private readonly IBindContentSettingRepository _iBindContentSettingRepository;
         private readonly IMemoryCache _memoryCache;
-        public SettingService(ISeoSettingRepository iSeoSettingRepository, IMemoryCache memoryCache, IBindContentSettingRepository iBindContentSettingRepository) 
+        private readonly IEmailSettingRepository _iEmailSettingRepository;
+        public SettingService(ISeoSettingRepository iSeoSettingRepository, IMemoryCache memoryCache, IBindContentSettingRepository iBindContentSettingRepository, IEmailSettingRepository iEmailSettingRepository) 
         {
             _iSeoSettingRepository = iSeoSettingRepository;
             _memoryCache = memoryCache;
             _iBindContentSettingRepository = iBindContentSettingRepository;
+            _iEmailSettingRepository = iEmailSettingRepository;
         }
 
         // Use memory cache for24 hours. Method is async to use GetOrCreateAsync.
         public async Task<SeoSetting> SeoSettingGet(string language, int portalId)
         {
             if (string.IsNullOrEmpty(language)) language = "vi";
-            var cacheKey = $"SeoSetting_{language}_{portalId}";
+            var cacheKey = $"SeoSetting::{language}::{portalId}";
 
             var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
@@ -59,7 +61,7 @@ namespace PT.Base.Services
         // Use memory cache for24 hours. Method is async to use GetOrCreateAsync.
         public async Task<BindContentSetting> BindContentSettingGet(int portalId)
         {
-            var cacheKey = $"BindContentSetting_{portalId}";
+            var cacheKey = $"BindContentSetting::{portalId}";
 
             var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
@@ -78,14 +80,25 @@ namespace PT.Base.Services
             return result;
         }
 
-        // Refresh (invalidate and optionally repopulate) the cache for the given language and portalId
-        public async Task RefreshSeoSettingCache(string language, int portalId)
+        public async Task<EmailSetting> EmailSettingGet(int portalId)
         {
-            if (string.IsNullOrEmpty(language)) language = "vi";
-            var cacheKey = $"SeoSetting_{language}_{portalId}";
-            // Remove existing cache entry
-            _memoryCache.Remove(cacheKey);
-            await SeoSettingGet(language, portalId);
+            var cacheKey = $"EmailSetting::{portalId}";
+
+            var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24);
+                // fetch from underlying repository
+                var data = await _iEmailSettingRepository.SingleOrDefaultAsync(true, s => s.PortalId == portalId);
+                if (data == null)
+                {
+                    data = new EmailSetting
+                    {
+                        PortalId = portalId
+                    };
+                }
+                return data;
+            });
+            return result;
         }
 
         public void RefreshByKey(string cacheKey)

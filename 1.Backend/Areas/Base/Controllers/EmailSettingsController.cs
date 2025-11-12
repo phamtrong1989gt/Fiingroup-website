@@ -25,7 +25,7 @@ namespace PT.BE.Areas.Setting.Controllers
         private readonly IWebHostEnvironment _iHostingEnvironment;
         private readonly IEmailSenderRepository _iEmailSenderRepository;
         private readonly IPortalRepository _iPortalRepository;
-        private readonly IBindContentSettingRepository _iBindContentSettingRepository;
+        private readonly IEmailSettingRepository _iEmailSettingRepository;
         public EmailSettingsController(
             ILogger<EmailSettingsController> logger, 
             IFileRepository iFileRepository, 
@@ -33,7 +33,7 @@ namespace PT.BE.Areas.Setting.Controllers
             IOptions<EmailSettings> emailSettings,
             IEmailSenderRepository iEmailSenderRepository,
             IPortalRepository iPortalRepository,
-            IBindContentSettingRepository iBindContentSettingRepository
+            IEmailSettingRepository iEmailSettingRepository
             )
         {
             controllerName = "Settings";
@@ -45,7 +45,7 @@ namespace PT.BE.Areas.Setting.Controllers
             _emailSettings = emailSettings;
             _iEmailSenderRepository = iEmailSenderRepository;
             _iPortalRepository = iPortalRepository;
-            _iBindContentSettingRepository= iBindContentSettingRepository;
+            _iEmailSettingRepository= iEmailSettingRepository;
         }
 
         [HttpGet]
@@ -56,24 +56,42 @@ namespace PT.BE.Areas.Setting.Controllers
             return View(_emailSettings.Value);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, ActionName("Index")]
-        public async Task<ResponseModel> IndexPost(EmailSettings model)
+        [HttpGet]
+        public async Task<IActionResult> Setting(int portalId)
+        {
+            var dl = await _iEmailSettingRepository.SingleOrDefaultAsync(false, x => x.PortalId == portalId);
+            if (dl == null)
+            {
+                dl = new EmailSetting() { PortalId = portalId };
+                await _iEmailSettingRepository.AddAsync(dl);
+                await _iEmailSettingRepository.CommitAsync();
+            }
+            return View(dl);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, ActionName("Setting")]
+        public async Task<ResponseModel> SettingPost(EmailSetting model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    string valueBeffo = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+                    var dl = await _iEmailSettingRepository.SingleOrDefaultAsync(false, x => x.PortalId == model.PortalId);
+                    if (dl == null)
+                    {
+                        return new ResponseModel() { Output = 2, Message = "Cấu hình không tồn tại.", Type = ResponseTypeMessage.Warning };
+                    }
 
-                    var data = _emailSettings.Value;
-                    data.Email = model.Email;
-                    data.From = model.From;
-                    data.Host = model.Host;
-                    data.Password = model.Password;
-                    data.Port = model.Port;
+                    dl.EmailServer = model.EmailServer;
+                    dl.From = model.From;
+                    dl.Host = model.Host;
+                    dl.Password = model.Password;
+                    dl.Port = model.Port;
+                    dl.CC = model.CC;
 
-                    _iFileRepository.SettingsUpdate(_iHostingEnvironment.ContentRootPath + "/appsettings.Email.json", new { EmailSettings = _emailSettings.Value });
-
+                    _iEmailSettingRepository.Update(dl);
+                    await _iEmailSettingRepository.CommitAsync();
+                    await _iPortalRepository.TriggerRemoteCacheRefreshByKeyAsync(dl.PortalId, $"EmailSetting::{dl.PortalId}");
                     await AddLog(new LogModel { Name = $"Cập nhật cấu hình email.", Type = LogType.Edit});
                     return new ResponseModel() { Output = 1, Message = "Cập nhật cấu hình thành công.", Type = ResponseTypeMessage.Success };
                 }

@@ -89,6 +89,7 @@ namespace PT.BE.Areas.Setting.Controllers
                     _iBindContentSettingRepository.Update(dl);
                     await _iBindContentSettingRepository.CommitAsync();
                     await AddLog(new LogModel { Name = $"Cập nhật cấu thông tin nội dung thêm ", Type = LogType.Edit });
+                    await _iPortalRepository.TriggerRemoteCacheRefreshByKeyAsync(dl.PortalId, $"BindContentSetting::{dl.PortalId}");
                     // Call API refesh
                     return new ResponseModel() { Output = 1, Message = "Cập nhật hình cấu hình thành công.", Type = ResponseTypeMessage.Success };
                 }

@@ -1,12 +1,14 @@
-﻿@model PT.Domain.Model.BaseSettings
+﻿@using PT.Domain.Model
+
 @addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PT.UI
 @{
     Layout = "~/Views/Shared/_Admin.cshtml";
+    var portals = (List<Portal>)ViewData["portals"];
 }
 <div class="block-header">
-    <h2> <i class="material-icons">settings</i> Cấu hình hệ thống <span class="label label-danger label-t">Cấu hình chung</span></h2>
+    <h2> <i class="material-icons">settings</i> CẤU HÌNH EMAIL <span class="label label-danger label-t">Cấu hình</span></h2>
     <ol class="breadcrumb breadcrumb-t">
         <li>
             <a href="/Admin">
@@ -14,26 +16,23 @@
             </a>
         </li>
         <li class="active">
-            Cấu hình hệ thống - Cấu hình chung
         </li>
     </ol>
 </div>
+<div style="height:10px;"></div>
 <div class="row clearfix">
     <div class="col-md-12">
         <div class="card card-t card-loading">
             <div class="body body-tab" tab-list>
                 <ul class="nav nav-tabs nav-tabs-t" role="tablist">
-                    <li role="presentation">
-                        <a tab-link data-tag="#bindContent" data-url="@Url.Action("BindContent")">
-                            <i class="material-icons">local_pharmacy</i> Chèn nội dung
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a tab-link data-tag="#email" data-url="@Url.Action("Email")">
-                            <i class="material-icons">email</i> Cấu email server
-                        </a>
-                    </li>
-
+                    @foreach (var portal in portals)
+                    {
+                        <li role="presentation">
+                            <a tab-link data-tag="#setting_@portal.Id" data-url="@Url.Action("Setting", new { portalId = portal.Id })">
+                                <i class="material-icons">local_pharmacy</i> @portal.Name
+                            </a>
+                        </li>
+                    }
                 </ul>
                 <div class="tab-content tab-content-t" tab-data tab-loading>
                     <div style="min-height:300px;">

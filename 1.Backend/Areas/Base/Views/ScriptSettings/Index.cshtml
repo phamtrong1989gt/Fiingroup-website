@@ -1,12 +1,10 @@
 ﻿@using PT.Domain.Model
-@model PT.Domain.Model.BaseSettings
 @addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PT.UI
 @{
     Layout = "~/Views/Shared/_Admin.cshtml";
     var portals = (List<Portal>)ViewData["portals"];
-
 }
 <div class="block-header">
     <h2> <i class="material-icons">settings</i> CẤU HÌNH CHÈN SCRIPTS <span class="label label-danger label-t">Cấu hình</span></h2>

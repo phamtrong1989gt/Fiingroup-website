@@ -1,22 +1,25 @@
-﻿@model PT.Domain.Model.EmailSettings
+﻿@model PT.Domain.Model.EmailSetting
 @addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, PT.UI
 @{
     Layout = null;
 }
-<form form-edit asp-action="Email">
+<form form-edit asp-action="Setting">
     @Html.AntiForgeryToken()
     <div role="tabpanel" class="tab-pane fade in active" id="tab1">
+        <input type="hidden" asp-for="PortalId" />
+
         <div class="row">
             <div class="col-md-6 mb-0">
                 <div class="form-group">
-                    <label class="form-label" asp-for="Email"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Email"></span>
+                    <label class="form-label" asp-for="EmailServer"></label> <strong class="text-danger">*</strong> <span asp-validation-for="EmailServer"></span>
                     <div class="controls">
-                        <input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Email">
+                        <input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="EmailServer">
                     </div>
                 </div>
             </div>
+
             <div class="col-md-6 mb-0">
                 <div class="form-group">
                     <label class="form-label" asp-for="Password"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Password"></span>
@@ -47,9 +50,9 @@
         <div class="row">
             <div class="col-md-6 mb-0">
                 <div class="form-group">
-                    <label class="form-label" asp-for="From"></label> <strong class="text-danger">*</strong> <span asp-validation-for="From"></span>
+                    <label class="form-label" asp-for="CC"></label> <strong class="text-danger">*</strong> <span asp-validation-for="CC"></span>
                     <div class="controls">
-                        <input type="text" id="emailSent" class="form-control input-sm form-control-t" placeholder="" asp-for="From">
+                        <input type="text" id="emailSent" class="form-control input-sm form-control-t" placeholder="" asp-for="CC">
                     </div>
                 </div>
             </div>
@@ -63,7 +66,7 @@
                         </div>
                         <input type="text" name="emailSent" class="form-control input-sm form-control-t">
                         <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
-                            <a button-post data-action="@Url.Action("SendEmail")" data-loading-text="<i class='material-icons icon-spin iconloadding-gr'>autorenew</i>" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">send</i></a>
+                            <a button-post data-action="@Url.Action("SendEmail", new { portalId= Model.PortalId})" data-loading-text="<i class='material-icons icon-spin iconloadding-gr'>autorenew</i>" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">send</i></a>
                         </div>
                     </div>
                 </div>

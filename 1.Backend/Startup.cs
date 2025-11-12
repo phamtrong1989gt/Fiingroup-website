@@ -182,6 +182,7 @@ namespace PT.UI
             services.AddScoped<IPortalRepository, PortalRepository>();
             services.AddScoped<ISeoSettingRepository, SeoSettingRepository>();
             services.AddScoped<IBindContentSettingRepository, BindContentSettingRepository>();
+            services.AddScoped<IEmailSettingRepository, EmailSettingRepository>();
             // Đăng ký repository tổng quát cho các entity kiểu chung
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
 

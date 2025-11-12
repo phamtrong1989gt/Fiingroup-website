@@ -17,6 +17,7 @@ namespace PT.Infrastructure.Interfaces
         // Trigger remote cache refresh by calling the portal's configured RefeshCacheAPI endpoint.
         Task<bool> TriggerRemoteCacheRefreshAsync(int portalId, ModuleType type, string code, string language);
         Task<bool> TriggerRemoteCacheRefreshAsync(Portal portal, ModuleType type, string code, string language);
+        Task<bool> TriggerRemoteCacheRefreshByKeyAsync(int portalId, string code);
     }
     public class PortalRepository : BaseRepository<Portal>, IPortalRepository
     {
@@ -93,6 +94,44 @@ namespace PT.Infrastructure.Interfaces
 
                 // Use configured domain + API path (no extra Refresh segment)
                 // insert URL-encoded cache key to avoid invalid URL characters
+                var url = $"{domain}{apiPath}?key={encodedCacheKey}";
+                using var http = new HttpClient();
+                http.Timeout = TimeSpan.FromSeconds(10);
+                var response = await http.PostAsync(url, null);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> TriggerRemoteCacheRefreshByKeyAsync(int portalId, string code)
+        {
+            var portal = await _context.Portals.FindAsync(portalId);
+            return await TriggerRemoteCacheRefreshByKeyAsync(portal,  code);
+        }
+
+        public async Task<bool> TriggerRemoteCacheRefreshByKeyAsync(Portal portal, string key)
+        {
+            try
+            {
+                if (portal == null || string.IsNullOrWhiteSpace(key)) return false;
+
+                // URL-encode the cache key để tránh ký tự lạ trong URL
+                var encodedCacheKey = Uri.EscapeDataString(key);
+
+                // Chọn domain phù hợp với môi trường
+                var domain = _env.IsProduction()
+                    ? (portal.Domain ?? string.Empty)
+                    : (!string.IsNullOrWhiteSpace(portal.DomainDev) ? portal.DomainDev : portal.Domain ?? string.Empty);
+
+                domain = domain.TrimEnd('/');
+
+                var apiPath = (portal.RefeshCacheAPI ?? string.Empty).Trim();
+                if (string.IsNullOrWhiteSpace(apiPath)) return false;
+                if (!apiPath.StartsWith("/")) apiPath = "/" + apiPath;
+
                 var url = $"{domain}{apiPath}?key={encodedCacheKey}";
                 using var http = new HttpClient();
                 http.Timeout = TimeSpan.FromSeconds(10);
