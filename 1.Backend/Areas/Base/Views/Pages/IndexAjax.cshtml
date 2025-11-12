@@ -1,0 +1,45 @@
+﻿@model PT.Domain.Model.BaseSearchModel<List<PT.Domain.Model.Link>>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+    int i = 1;
+}
+<tr style="display:none !important;">
+    <td colspan="999999">
+        <input type="hidden" grid-data-page value="@Model.Page" />
+        <input type="hidden" grid-data-totalrows value="@Model.TotalRows" />
+        <input type="hidden" grid-data-limit value="@Model.Limit" />
+    </td>
+</tr>
+@if (Model.TotalRows == 0)
+{
+    <tr>
+        <td colspan="999">Không tìm thấy bản ghi nào</td>
+    </tr>
+}
+@foreach (var item in Model.Data)
+{
+<tr class="tr-status-@(item.IncludeSitemap)">
+    <td class="text-center">@PT.Shared.Functions.GenSTT(i, Model.Page, Model.Limit)</td>
+    <td>
+        @item.Name
+    </td>
+    <td>
+        <a href="@PT.Shared.Functions.FormatUrl(item.Language, item.Slug)">@PT.Shared.Functions.FormatUrl(item.Language, item.Slug)</a>
+    </td>
+    <td>@item.Priority.ConvertToString()</td>
+    <td>@item.Type.GetDisplayName()</td>
+    <td>@item.Title</td>
+    <td>@item.Description</td>
+    <partial name="_AdminTbodyTableModule" model="@(new Tuple<List<PT.Domain.Model.LinkReference>,string,string,bool>(item.LinkReferences,item.Language,Url.Action("SitemapEdit", new { id ="#Id#" }),true))" />
+    <td>
+        <div class="btn-group">
+            <div class="btn-group btn- group-sm" role="group">
+                <a target="_blank" href="@PT.Shared.Functions.FormatUrl(item.Language,item.Slug)" title="Đến trang" class="btn btn-default waves-effect btncontrolgrid"><i class="material-icons iconcontrol">link</i></a>
+                <a button-popup data-target="#myModalBig" asp-action="SitemapEdit" asp-route-id="@item.Id" title="Cập nhật" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
+            </div>
+        </div>
+    </td>
+</tr>
+    i++;
+}
