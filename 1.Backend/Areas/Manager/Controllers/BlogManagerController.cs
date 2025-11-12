@@ -208,7 +208,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
 
-                    await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPageHome", "Details");
+                    await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details");
                     await UpdateCategory(data.Id, categoryIds, data.CategoryId);
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateRelated(data.Id, use.ContentPageRelatedIds);
@@ -338,7 +338,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.TimeFromTo = use.TimeFromTo;
                     dl.IsHome = use.IsHome;
 
-                    await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage,  dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "ContentPageHome", "Details");
+                    await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage,  dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "ContentPage", "Details");
 
                     dl.CategoryType = categoryMain.CategoryType;
 

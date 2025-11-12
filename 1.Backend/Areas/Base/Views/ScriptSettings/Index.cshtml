@@ -1,0 +1,158 @@
+﻿@using PT.Domain.Model
+@model PT.Domain.Model.BaseSettings
+@addTagHelper *, Sakura.AspNetCore.Mvc.PagedList
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PT.UI
+@{
+    Layout = "~/Views/Shared/_Admin.cshtml";
+    var portals = (List<Portal>)ViewData["portals"];
+
+}
+<div class="block-header">
+    <h2> <i class="material-icons">settings</i> CẤU HÌNH CHÈN SCRIPTS <span class="label label-danger label-t">Cấu hình</span></h2>
+    <ol class="breadcrumb breadcrumb-t">
+        <li>
+            <a href="/Admin">
+                Trang điều khiển
+            </a>
+        </li>
+        <li class="active">
+            Cấu hình hệ thống - Cấu hình chung
+        </li>
+    </ol>
+</div>
+<div style="height:10px;"></div>
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card card-t card-loading">
+            <div class="body body-tab" tab-list>
+                <ul class="nav nav-tabs nav-tabs-t" role="tablist">
+                    @foreach (var portal in portals)
+                    {
+                        <li role="presentation">
+                            <a tab-link data-tag="#setting_@portal.Id" data-url="@Url.Action("Setting", new { portalId = portal.Id })">
+                                <i class="material-icons">local_pharmacy</i> @portal.Name
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <div class="tab-content tab-content-t" tab-data tab-loading>
+                    <div style="min-height:300px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/Content/Admin/plugins/codemirror/js/codemirror.js"></script>
+        <link href="~/Content/Admin/plugins/codemirror/css/codemirror.css" rel="stylesheet" />
+        <script src="~/Content/Admin/plugins/codemirror/js/xml.js"></script>
+        <script src="~/Content/Admin/plugins/codemirror/js/javascript.js"></script>
+        <script src="~/Content/Admin/plugins/codemirror/js/css.js"></script>
+        <script src="~/Content/Admin/plugins/codemirror/js/htmlmixed.js"></script>
+        <script src="~/Content/Admin/plugins/codemirror/js/matchbrackets.js"></script>
+    }
+    <script>
+        $("[button-submit]").toSubmit(null, null, function (type) {
+            if (type == "info") {
+                onRefeshValueInfo();
+            }
+            else  if (type == "content") {
+                onRefeshValueContent();
+            }
+        });
+
+        $("[tab-list]").toTab();
+        $("[button-open-file-manager]").toButtonOpenFile();
+        $("[button-post]").toPost(null, function ($data) {
+            $data.email = $("[name='emailSent']").val();
+            return $data;
+        });
+        setIsCapCha();
+        $("#IsCapCha").on("change", function () {
+            setIsCapCha();
+        });
+        function setIsCapCha() {
+            var valCap = $("#IsCapCha").prop("checked");
+            if (valCap) {
+                $(".divIsCapCha").show();
+            }
+            else {
+                $(".divIsCapCha").hide();
+            }
+        }
+        var cm2, cn3;
+        var ct1, ct2, ct3;
+
+
+        function initRickTextInfo() {
+            cm2 = CodeMirror.fromTextArea(document.getElementById("Video"), {
+                lineNumbers: true,
+                mode: "text/html",
+                matchBrackets: true,
+                lineWrapping: true,
+                autoRefresh: true
+            });
+            cm3 = CodeMirror.fromTextArea(document.getElementById("Map"), {
+                lineNumbers: true,
+                mode: "text/html",
+                matchBrackets: true,
+                lineWrapping: true,
+                autoRefresh: true
+            });
+        }
+
+        function onRefeshInfo() {
+            cm2.refresh();
+            cm3.refresh();
+        };
+
+        function onRefeshValueInfo() {
+            document.getElementById("Video").value = cm2.getValue()
+            document.getElementById("Map").value = cm3.getValue()
+        }
+        function onRefeshValueContent() {
+            document.getElementById("Head").value = ct1.getValue()
+            document.getElementById("Body").value = ct2.getValue()
+            document.getElementById("Footer").value = ct3.getValue()
+
+        }
+        function initRickTextContent() {
+            ct1 = CodeMirror.fromTextArea(document.getElementById("Head"), {
+                lineNumbers: true,
+                mode: "text/html",
+                matchBrackets: true,
+                lineWrapping: true,
+                autoRefresh: true
+            });
+            ct2 = CodeMirror.fromTextArea(document.getElementById("Body"), {
+                lineNumbers: true,
+                mode: "text/html",
+                matchBrackets: true,
+                lineWrapping: true,
+                autoRefresh: true
+            });
+              ct3 = CodeMirror.fromTextArea(document.getElementById("Footer"), {
+                lineNumbers: true,
+                mode: "text/html",
+                matchBrackets: true,
+                lineWrapping: true,
+                autoRefresh: true
+            });
+        }
+
+        function onChangeAutoSitemap() {
+            if ($("#IsAuto").prop("checked")) {
+                $("#onAuto").show();
+                $("#offAuto").hide();
+            }
+            else {
+                $("#onAuto").hide();
+                $("#offAuto").show();
+            }
+        }
+    </script>
+}

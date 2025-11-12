@@ -183,7 +183,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
 
-                     await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPageHome", "Details");
+                    await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details");
 
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
@@ -276,7 +276,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     _iContentPageRepository.Update(dl);
                     await _iContentPageRepository.CommitAsync();
 
-                    await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPageHome", "Details");
+                    await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPage", "Details");
 
                     await UpdateTag(id, use.TagIds);
                     await AddLog(new LogModel

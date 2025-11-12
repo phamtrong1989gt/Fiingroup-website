@@ -1,9 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @{
-    var isLogin = PT.Base.DataUserInfo.IsLogin;
-    //var isLogin = true;
-    //int? isView = Convert.ToInt32(_httpContextAccessor.HttpContext.Request.Cookies["AdminView"]);
+    var isLogin = _httpContextAccessor?.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
     int? isView = 1;
 }
 @if (isLogin)

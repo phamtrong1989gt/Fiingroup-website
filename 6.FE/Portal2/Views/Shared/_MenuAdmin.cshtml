@@ -77,6 +77,12 @@
                 </li>
             </ul>
         </li>
+        <li class="cap1" data-checked data-role-1030>
+            <a asp-action="Sitemap" asp-controller="SeoSettings" asp-area="Base">
+                <i class="material-icons">settings</i>
+                <span>Quản lý trang</span>
+            </a>
+        </li>
         @*<li class="header" data-checked data-role-1032 data-role-1033 data-role-1034 data-role-1024>NGHIỆP VỤ</li>
         <li class="cap1" data-checked data-role-1032>
             <a asp-action="Index" asp-controller="AppointmentManager" asp-area="Manager">
@@ -152,25 +158,21 @@
                 <span>Log người dùng</span>
             </a>
         </li>
-        <li class="cap1" data-checked data-role-12>
-            <a asp-action="Index" asp-controller="Settings" asp-area="Base">
-                <i class="material-icons">settings</i>
-                <span>Cấu hình hệ thống</span>
-            </a>
-        </li>
-       
+
+
 
         <li class="cap1" data-checked data-role-1029 data-role-1030 data-role-1031>
             <a href="javascript:void(0);" class="menu-toggle">
                 <i class="material-icons">settings</i>
-                <span>Cấu hình SEO</span>
+                <span>Cấu hình</span>
             </a>
             <ul class="ml-menu">
                 <li class="cap2" data-checked data-role-1029>
-                    <a asp-action="Index" asp-controller="SeoSettings" asp-area="Base">Cấu hình chung</a>
+                    <a asp-action="Index" asp-controller="SeoSettings" asp-area="Base">SEO Website</a>
                 </li>
-                <li class="cap2" data-checked data-role-1030>
-                    <a asp-action="Sitemap" asp-controller="SeoSettings" asp-area="Base">Quản lý trang</a>
+             
+                <li class="cap2" data-checked data-role-12>
+                    <a asp-action="Index" asp-controller="Settings" asp-area="Base">Chèn Scripts</a>
                 </li>
                 @*<li class="cap2">
                     <a asp-action="Index" asp-controller="SearchContent" asp-area="Manager">Tìm kiếm nội dung</a>

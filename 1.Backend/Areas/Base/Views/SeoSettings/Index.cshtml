@@ -43,7 +43,7 @@
                         {
                             <li role="presentation">
                                 <a tab-link data-tag="#@item.Id" data-not-active="true" data-url="@Url.Action("Seo", new { language = item.Id, portalId = portal.Id })" data-toggle="tab">
-                                    <img class="icon-lang" src="@item.Icon" />  @item.Name (@portal.Name)
+                                    <img class="icon-lang" src="@item.Icon" /> @portal.Name > @item.Name
                                 </a>
                             </li>
                         }

@@ -17,7 +17,7 @@ namespace PT.BE.Areas.Setting.Controllers
 {
     [Area("Base")]
     [AuthorizePermission("Index")]
-    public class SettingsController : BaseController
+    public class EmailSettingsController : BaseController
     {
         private readonly ILogger _logger;
         private readonly IFileRepository _iFileRepository;
@@ -26,8 +26,8 @@ namespace PT.BE.Areas.Setting.Controllers
         private readonly IEmailSenderRepository _iEmailSenderRepository;
         private readonly IPortalRepository _iPortalRepository;
         private readonly IBindContentSettingRepository _iBindContentSettingRepository;
-        public SettingsController(
-            ILogger<BaseController> logger, 
+        public EmailSettingsController(
+            ILogger<EmailSettingsController> logger, 
             IFileRepository iFileRepository, 
             IWebHostEnvironment iHostingEnvironment, 
             IOptions<EmailSettings> emailSettings,
@@ -47,21 +47,17 @@ namespace PT.BE.Areas.Setting.Controllers
             _iPortalRepository = iPortalRepository;
             _iBindContentSettingRepository= iBindContentSettingRepository;
         }
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        #region [Email]
 
         [HttpGet]
-        public IActionResult Email()
+        public async Task<IActionResult> Index()
         {
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            ViewData["portals"] = portals;
             return View(_emailSettings.Value);
         }
-        [HttpPost, ValidateAntiForgeryToken, ActionName("Email")]
-        public async Task<ResponseModel> EmailPost(EmailSettings model)
+
+        [HttpPost, ValidateAntiForgeryToken, ActionName("Index")]
+        public async Task<ResponseModel> IndexPost(EmailSettings model)
         {
             try
             {
@@ -92,6 +88,7 @@ namespace PT.BE.Areas.Setting.Controllers
             }
             return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
         }
+
         [HttpPost, ActionName("SendEmail")]
         public async Task<ResponseModel> SendEmailPost(string email)
         {
@@ -113,51 +110,5 @@ namespace PT.BE.Areas.Setting.Controllers
             }
             return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
         }
-        #endregion
-
-        #region [BindContent]
-        [HttpGet]
-        public async Task<IActionResult> BindContent(int portalId)
-        {
-            var dl = await _iBindContentSettingRepository.SingleOrDefaultAsync(false, x => x.PortalId == portalId);
-            if(dl == null)
-            {
-                dl = new BindContentSetting() { PortalId = portalId };
-                await _iBindContentSettingRepository.AddAsync(dl);
-                await _iBindContentSettingRepository.CommitAsync();
-            }    
-            return View(dl);
-        }
-        [HttpPost, ValidateAntiForgeryToken, ActionName("BindContent")]
-        public async Task<ResponseModel> BindContentPost(BindContentSetting model)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var dl = await _iBindContentSettingRepository.SingleOrDefaultAsync(false, x => x.PortalId == model.PortalId);
-                    if(dl == null)
-                    {
-                        return new ResponseModel() { Output = 2, Message = "Cấu hình không tồn tại.", Type = ResponseTypeMessage.Warning };
-                    }    
-                    dl.Head = model.Head;
-                    dl.Body = model.Body;
-                    dl.Footer = model.Footer;
-                    await AddLog(new LogModel { Name = $"Cập nhật cấu thông tin nội dung thêm ", Type = LogType.Edit });
-                    // Call API refesh
-                    return new ResponseModel() { Output = 1, Message = "Cập nhật hình cấu hình thành công.", Type = ResponseTypeMessage.Success };
-                }
-                else
-                {
-                    return new ResponseModel() { Output = 2, Message = "Bạn chưa nhập đầy đủ thông tin.", Type = ResponseTypeMessage.Warning };
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
-            }
-            return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
-        }
-        #endregion
     }
 }

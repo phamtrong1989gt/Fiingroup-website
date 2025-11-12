@@ -118,6 +118,7 @@ namespace PT.BE.Areas.User.Controllers
                         kt.ExpirationWrongPassword = null;
                         _iAspNetUsers.Update(kt);
                         await _iAspNetUsers.CommitAsync();
+                        // -- END cookie --
                         return RedirectToLocal(returnurl);
                     }
                     else if (result.IsLockedOut)
