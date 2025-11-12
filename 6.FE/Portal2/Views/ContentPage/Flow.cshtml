@@ -16,7 +16,7 @@
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = _baseSettings.Value.PortalId;
     var listFlowItems = await _iContentPageRepository.FlowGetsAsync(language, portalId, Model.Id);
-    var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 10,
+    var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 3,
                null, null,
                m => m.Status
                    && m.DatePosted <= DateTime.Now
@@ -316,7 +316,7 @@
 					    }
 				    <div class="pt-3 pb-3">
 					    <div class="news-title text-break">
-							    <a target="_blank" href="#">@item.Name</a>
+                                <a href="@path" title="@item.Name">@item.Name</a>
 					    </div>
 				    </div>
 				    <div>@Html.Raw(item.Summary)</div>

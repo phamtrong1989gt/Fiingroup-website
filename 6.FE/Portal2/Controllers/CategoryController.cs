@@ -60,14 +60,13 @@ namespace PT.UI.Controllers
 
             if (dl.CategoryType == ECategoryType.ContentPage_Event)
             {
+                DateTime? startData = DateTime.Today;
+                key = key ?? "sapdienra";
                 dl.PageBlog = await _iContentPageRepository.SearchPagedListAsync(
-                    page ?? 1,
-                    5,
-                    id,
-                    null,
-                    m => (m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key))
-                        && m.CategoryType == Type
+                    page ?? 1,5,id,null,
+                    m => m.CategoryType == Type
                         && (m.Language == language)
+                        && ((m.StartDate > startData && key == "sapdienra") || (m.StartDate == startData && key == "dangdienra") || (m.StartDate < startData && key == "dadienra"))
                         && m.Status
                         , x => x.OrderByDescending(mbox => mbox.StartDate), x => new ContentPage
                         {
