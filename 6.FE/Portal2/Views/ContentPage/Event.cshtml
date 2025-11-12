@@ -18,7 +18,7 @@
 			 m => m.Status
 				 && m.DatePosted <= DateTime.Now
 				 && m.Language == language
-				 && (m.CategoryType == ECategoryType.ContentPage_Blog),
+				 && (m.CategoryType == ECategoryType.ContentPage_Event),
 			 m => m.OrderByDescending(x => x.DatePosted),
 			 a => new ContentPage
 			 {
@@ -191,7 +191,7 @@
 		font-size: 30px !important;
 	}
 
-	.title-h1{
+	.title-h1 {
 		font-weight: 700;
 		font-size: 40px;
 		line-height: 150%;
@@ -237,7 +237,7 @@
 {
 	<section id="NewsFeatured" class="py-5 mb-5">
 		<div class="container">
-			<h2 class="price-title mb-5"><span style="color: #0066CC;">Featured </span> News</h2>
+			<h2 class="price-title mb-5"><span style="color: #0066CC;">Featured </span> Event</h2>
 			<div class="row news-grid">
 				@foreach (var item in lstTinLienQuan)
 				{

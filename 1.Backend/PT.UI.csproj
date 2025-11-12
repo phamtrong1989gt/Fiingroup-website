@@ -21,7 +21,7 @@
 	</PropertyGroup>-->
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Optimize>True</Optimize>
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -1563,6 +1563,13 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Data\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="wwwroot\Content\Admin\site.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
