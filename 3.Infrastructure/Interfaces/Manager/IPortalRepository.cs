@@ -44,17 +44,40 @@ namespace PT.Infrastructure.Interfaces
         public Task<string> GetFullPathAsync(int portalId, string slug, IEnumerable<Portal> portals, string language = null, bool multipleLanguage = false)
         {
             var portal = portals?.FirstOrDefault(p => p.Id == portalId);
+
             var domain = portal?.Domain?.TrimEnd('/') ?? string.Empty;
-            if(_env.IsDevelopment())
+            if(!_env.IsProduction())
             {
-                domain = portal.DomainDev;
-            }
+                domain = portal?.DomainDev?.TrimEnd('/') ?? string.Empty;
+            }    
             var cleanedSlug = (slug ?? string.Empty).TrimStart('/');
-            if (multipleLanguage && !string.IsNullOrWhiteSpace(language))
+            string rtUrl = null;
+            // Nếu slug là null/rỗng hoặc là "vi" hoặc "en" thì không thêm .html
+            bool isLangRoot = string.IsNullOrWhiteSpace(cleanedSlug) || cleanedSlug.Equals("vi", StringComparison.OrdinalIgnoreCase) || cleanedSlug.Equals("en", StringComparison.OrdinalIgnoreCase);
+
+            if (multipleLanguage)
             {
-                return Task.FromResult($"{domain}/{language}/{cleanedSlug}.html");
+                if (isLangRoot)
+                {
+                    rtUrl = $"{domain}/{language}";
+                }
+                else
+                {
+                    rtUrl = $"{domain}/{language}/{cleanedSlug}.html";
+                }
             }
-            return Task.FromResult($"{domain}/{cleanedSlug}.html");
+            else
+            {
+                if (isLangRoot)
+                {
+                    rtUrl = $"{domain}/{cleanedSlug}";
+                }
+                else
+                {
+                    rtUrl = $"{domain}/{cleanedSlug}.html";
+                }
+            }
+            return Task.FromResult(rtUrl);
         }
 
         /// <summary>

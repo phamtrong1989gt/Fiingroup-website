@@ -162,6 +162,15 @@ namespace PT.Base
                     context.RouteData.Values["portalId"] = baseSettings.Value.PortalId;
                     context.RouteData.Values["parrams"] = link.Parrams;
                     context.RouteData.Values["linkData"] = Newtonsoft.Json.JsonConvert.SerializeObject(link);
+
+                    if(link.Delete)
+                    {
+                        if(!string.IsNullOrEmpty(link.Redirect301))
+                        {
+                            context.HttpContext.Response.Redirect(link.Redirect301, permanent: true);
+                            return; // Dừng xử lý tiếp để tránh thực thi các route khác
+                        }    
+                    }
                 }
                 else
                 {

@@ -7,6 +7,7 @@
 
 @{
     Layout = "~/Views/Shared/_Admin.cshtml";
+    var portals = (SelectList)ViewData["PortalSelectList"];
 }
     <div class="row head-v2">
         <div class="col-md-12">
@@ -26,7 +27,7 @@
         </div>
     </div>
     <div class="row clearfix">
-        <div class="col-md-12" grid-index data-url="@Url.Action("Sitemap")" data-ischangeurl="true">
+        <div class="col-md-12" grid-index data-url="@Url.Action("Index")" data-ischangeurl="true">
             <div class="row clearfix">
                 <div class="col-md-12 mb-0">
                     <div grid-loading class="card card-t card-loading  mb-0" style="box-shadow: none;">
@@ -61,14 +62,13 @@
 
                             <div class="search-table">
                                 <div class="row">
-
                                     <div class="col-md-2 mb-0">
                                         <div class="form-group">
                                             <label class="form-label">Loại</label>
                                             <div class="controls">
                                                 <select grid-input name="type" class="input-sm form-control-t show-tick">
                                                     <option selected value="">Tất cả</option>
-                                                    @foreach (CategoryType name in Enum.GetValues(typeof(CategoryType)))
+                                                    @foreach (ESlugType name in Enum.GetValues(typeof(ESlugType)))
                                                     {
                                                     <option value="@name">@name.GetDisplayName()</option>
                                                     }
@@ -76,19 +76,29 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 mb-0">
+                                    <div class="col-md-1 mb-0">
                                         <div class="form-group">
-                                            <label class="form-label">Trạng thái</label>
+                                            <label class="form-label">Sử dụng Sitemap</label>
                                             <div class="controls">
                                                 <select grid-input name="includeSitemap" class="input-sm form-control-t show-tick">
                                                     <option selected value="">Tất cả</option>
-                                                    <option value="true">Hiển thị trong sitemap</option>
-                                                    <option value="false">Không thị trong sitemap</option>
+                                                    <option value="true">Có</option>
+                                                    <option value="false">Không</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mb-0">
+                                <div class="col-md-1">
+                                    <div class="form-group" style="margin-bottom:0px;">
+                                        <label class="form-label">Cổng</label>
+                                        <div class="controls">
+                                            <select grid-input name="portalId" asp-items="@portals" class="input-sm form-control-t show-tick">
+                                                <option value="">Tất cả</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div class="col-md-3 mb-0">
                                         <div class="form-group">
                                             <label class="form-label">Từ khóa</label>
                                             <div class="input-group mb-0">
@@ -116,7 +126,11 @@
                                             <th>Loại</th>
                                             <th>Seo Title</th>
                                             <th>Meta Description</th>
+                                            <th>Sử dụng Sitemap</th>
+                                            <th>Sử dụng</th>
+                                            <th>Xóa</th>
                                             <partial name="_AdminTheadTableModule" />
+                                            <th>Cổng</th>
                                             <th style="width:120px;">Hành động</th>
                                         </tr>
                                     </thead>

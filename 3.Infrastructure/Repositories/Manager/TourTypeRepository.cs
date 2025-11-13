@@ -43,7 +43,7 @@ namespace PT.Infrastructure.Repositories
             }
 
             query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.TourType && !x.Delete), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .GroupJoin(_context.Links.Where(x =>  !x.Delete), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new TourType
                 {
                     Link = y,

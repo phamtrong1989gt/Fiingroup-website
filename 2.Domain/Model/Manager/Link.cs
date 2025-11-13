@@ -56,5 +56,11 @@ namespace PT.Domain.Model
 
         [NotMapped]
         public List<LinkReference> LinkReferences { get; set; }
+
+        [NotMapped]
+        public Portal Portal { get; set; }
+
+        [NotMapped]
+        public string FullPath { get; set; }
     }
 }

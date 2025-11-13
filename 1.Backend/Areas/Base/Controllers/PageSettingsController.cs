@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PT.Base;
@@ -59,93 +60,21 @@ namespace PT.BE.Areas.Setting.Controllers
         public async Task<IActionResult> Index()
         {
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
-            ViewData["portals"] = portals;
+            ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
             return View();
         }
 
-        #region [Seo]
-        [HttpGet]
+        [HttpPost, ActionName("Index")]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> Seo(string language = "vi", int portalId = 1)
-        {
-            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
-            var data = await _iSeoSettingRepository.SingleOrDefaultAsync(true, x => x.Language == language && x.PortalId == portalId);
-            if (data == null)
-            {
-                return View(new SeoSetting { Language = language, PortalId = portalId, Portals = portals });
-            }
-            else
-            {
-                data.Portals = portals;
-                return View(data);
-            }
-        }
-        [HttpPost, ValidateAntiForgeryToken, ActionName("Seo")]
-        [AuthorizePermission("Index")]
-        public async Task<ResponseModel> SeoPost(SeoSetting model, string language = "vi", int portalId = 1)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var data = await _iSeoSettingRepository.SingleOrDefaultAsync(true, x => x.Language == language && x.PortalId == portalId);
-                    if (data == null)
-                    {
-                        _iSeoSettingRepository.Add(new SeoSetting
-                        {
-                            Language = language,
-                            PortalId = portalId,
-                            Title = model.Title,
-                            Description = model.Description,
-                            Keywords = model.Keywords,
-                            MetaGoogle = model.MetaGoogle,
-                            Robots = model.Robots
-                        });
-                    }
-                    else
-                    {
-                        data.Title = model.Title;
-                        data.Description = model.Description;
-                        data.Keywords = model.Keywords;
-                        data.MetaGoogle = model.MetaGoogle;
-                        data.Robots = model.Robots;
-                        _iSeoSettingRepository.Update(data);
-                    }
-                    await _iSeoSettingRepository.CommitAsync();
-                    await _iPortalRepository.TriggerRemoteCacheRefreshByKeyAsync(data.PortalId, $"SeoSetting::{data.Language}::{data.PortalId}");
-
-                    await AddLog(new LogModel { Name = $"Cập nhật cấu thông tin seo {model.Id}.", Type = LogType.Edit });
-
-                    return new ResponseModel() { Output = 1, Message = "Cập nhật cấu hình thành công.", Type = ResponseTypeMessage.Success };
-                }
-                else
-                {
-                    return new ResponseModel() { Output = 2, Message = "Bạn chưa nhập đầy đủ thông tin.", Type = ResponseTypeMessage.Warning };
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
-            }
-            return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
-        }
-        #endregion
-
-        [HttpGet]
-        [AuthorizePermission("Index")]
-        public IActionResult Sitemap()
-        {
-            return View();
-        }
-
-        [HttpPost, ActionName("Sitemap")]
-        [AuthorizePermission("Index")]
-        public async Task<IActionResult> SitemapPost(
+        public async Task<IActionResult> IndexPost(
             int? page,
             int? limit,
             string key,
+            bool? status,
+            bool? delete,
             bool? includeSitemap,
             ESlugType? type,
+            int? portalId,
             string language = "vi",
             string ordertype = "asc",
             string orderby = "name"
@@ -162,10 +91,20 @@ namespace PT.BE.Areas.Setting.Controllers
                         (m.Slug.Contains(key) || m.Title.Contains(key) || m.Description.Contains(key) || m.Keywords.Contains(key) || m.FocusKeywords.Contains(key) || key == null) &&
                         m.Status &&
                         (m.Type == type || type == null) &&
+                        (m.Status == status || status == null) &&
+                        (m.Delete == delete || delete == null) &&
+                        (m.PortalId == portalId || portalId == null) &&
                         (m.IncludeSitemap == includeSitemap || includeSitemap == null)
                         ,
                 OrderByExtention(ordertype, orderby));
-            return View("SitemapAjax", data);
+
+            var portals = await _iPortalRepository.SearchAsync(true);
+            foreach (var item in data.Data)
+            {
+                item.Portal = portals.FirstOrDefault(x => x.Id == item.PortalId);
+                item.FullPath = await _iPortalRepository.GetFullPathAsync(item.PortalId, item.Slug ?? string.Empty, portals, item.Language, _baseSettings.Value.MultipleLanguage);
+            }
+            return View("IndexAjax", data);
         }
         private Func<IQueryable<Link>, IOrderedQueryable<Link>> OrderByExtention(string ordertype, string orderby)
         {
@@ -179,7 +118,7 @@ namespace PT.BE.Areas.Setting.Controllers
         #region [Edit]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public async Task<IActionResult> SitemapEdit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var dl = await _iLinkRepository.SingleOrDefaultAsync(true, m => m.Id == id);
             if (dl == null || (dl != null && dl.Delete) || (dl != null && !dl.Status))
@@ -203,18 +142,7 @@ namespace PT.BE.Areas.Setting.Controllers
                 name = data?.Name;
                 content = data?.Content;
             }
-            else if (dl.Type == ESlugType.Employee)
-            {
-                var data = await _iEmployeeRepository.SingleOrDefaultAsync(true, x => x.Id == dl.ObjectId);
-                name = "";
-                content = data?.Content;
-            }
-            else if (dl.Type == ESlugType.ImageGallery)
-            {
-                var data = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == dl.ObjectId);
-                name = data?.Name;
-                content = data?.Content;
-            }
+         
             else if (dl.Type == ESlugType.Tag)
             {
                 var data = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == dl.ObjectId);
@@ -233,9 +161,9 @@ namespace PT.BE.Areas.Setting.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("SitemapEdit")]
+        [HttpPost, ActionName("Edit")]
         [AuthorizePermission("Index")]
-        public async Task<ResponseModel> SitemapEditPost(SeoModel use)
+        public async Task<ResponseModel> EditPost(SeoModel use)
         {
             try
             {

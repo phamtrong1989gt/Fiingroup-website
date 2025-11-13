@@ -5,15 +5,22 @@ namespace PT.Domain.Model
     // Quy định các bảng để biết type nào query qua bảng nào
     public enum ESlugType: int
     {
+        [Display(Name ="Danh mục")]
         Category = 1,
+        [Display(Name = "Tag")]
         Tag = 2,
+        [Display(Name = "Trang nội dung")]
         ContentPage = 3,
+        [Display(Name = "Trang thủ công")]
         Static = 10,
-        Employee = 11,
-        ImageGallery = 12,
-        Tour = 13,
-        TourType = 14,
-        FAQ = 15
+        //[Display(Name = "Trang nhân viên")]
+        //Employee = 11,
+        //// Trang thư viện hình ảnh
+        //[Display(Name = "Trang hình ảnh")]
+        //ImageGallery = 12,
+        //Tour = 13,
+        //TourType = 14,
+        //FAQ = 15
     }
     // Qiy định type của category để khi vào các category biết được là loại gì để hiển thị các input tương ứng
     public enum ECategoryType: int
