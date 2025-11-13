@@ -57,9 +57,20 @@ namespace PT.UI.Controllers
             return Redirect($"/");
         }
 
-        public IActionResult Index(string linkData, int portalId)
+        public async Task<IActionResult> Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+
+            var analyzer = new SeoContentAnalyzer();
+
+            //// Cách 1: Lấy HTML content từ URL
+            //string htmlContent = await analyzer.FetchWebContentAsync("https://example.com");
+            //var result = analyzer.Analyze(htmlContent, "từ khóa SEO");
+
+            // Cách 2: Phân tích trực tiếp (tiện lợi hơn)
+            var result = await analyzer.AnalyzeFromUrlAsync("https://example.com", "từ khóa SEO");
+            string a = $"URL: {result.AnalyzedUrl}";
+            string b = $"Điểm: {result.OverallScore} - {result.GetScoreLabel()}";
             return View();
         }
 
@@ -70,6 +81,36 @@ namespace PT.UI.Controllers
                 ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             }
             return View("_Home404");
+        }
+
+        public IActionResult Page301(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return RedirectToAction("/");
+            }
+
+            // Chỉ cho phép redirect nội bộ (relative URL hoặc cùng domain)
+            if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                // Nếu là URL đầy đủ, kiểm tra có phải cùng domain không
+                var currentHost = $"{Request.Scheme}://{Request.Host.Value}";
+                if (!url.StartsWith(currentHost, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Không cho phép redirect ra ngoài domain
+                    return RedirectToAction("Page404");
+                }
+            }
+            else
+            {
+                // Nếu là relative URL, đảm bảo bắt đầu bằng /
+                if (!url.StartsWith("/"))
+                {
+                    url = "/" + url;
+                }
+            }
+
+            return RedirectPermanent(url);
         }
 
         public IActionResult About(string linkData)

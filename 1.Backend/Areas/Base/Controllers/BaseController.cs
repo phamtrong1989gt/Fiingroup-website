@@ -390,7 +390,7 @@ namespace PT.BE.Areas.Base.Controllers
             if (ktLink != null)
             {
                 ktLink.Delete = true;
-                ktLink.Redirect301 = "/"+ktLink.Language;
+                ktLink.Redirect301 = null;
                 _iLinkRepository.Update(ktLink);
                 // Thay vì xóa hẳn thì sẽ đánh dấu đã xóa và auto redirect 301 về trang chủ
                 await _iLinkRepository.CommitAsync();

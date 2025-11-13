@@ -153,24 +153,42 @@ namespace PT.Base
 
                 if (link != null)
                 {
-                    // Lưu 6 tiếng
-                    cache.Set(cacheKey, link, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(60 * 6)));
-                    context.RouteData.Values["controller"] = link.Controller;
-                    context.RouteData.Values["action"] = link.Acction;
-                    context.RouteData.Values["language"] = link.Language;
-                    context.RouteData.Values["id"] = link.ObjectId;
-                    context.RouteData.Values["portalId"] = baseSettings.Value.PortalId;
-                    context.RouteData.Values["parrams"] = link.Parrams;
-                    context.RouteData.Values["linkData"] = Newtonsoft.Json.JsonConvert.SerializeObject(link);
-
-                    if(link.Delete)
+                    cache.Set(cacheKey, link, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(30)));
+                    // Trạng thái xóa kết hợp 301 != null tức là điều hướng đi trang khác, ngược lại tức là link này bị xóa vĩnh viễn sẽ tả về 404
+                    if (link.Delete || !link.Status)
                     {
-                        if(!string.IsNullOrEmpty(link.Redirect301))
+                        if (!string.IsNullOrEmpty(link.Redirect301))
                         {
-                            context.HttpContext.Response.Redirect(link.Redirect301, permanent: true);
-                            return; // Dừng xử lý tiếp để tránh thực thi các route khác
-                        }    
+                            context.RouteData.Values["controller"] = "Home";
+                            context.RouteData.Values["action"] = "Page301";
+                            context.RouteData.Values["url"] = link.Redirect301;
+                        }
+                        else
+                        {
+                            context.RouteData.Values["controller"] = "Home";
+                            context.RouteData.Values["action"] = "Page404";
+                            await _defaultRouter.RouteAsync(context);
+                        }
                     }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(link.Redirect301))
+                        {
+                            context.RouteData.Values["controller"] = "Home";
+                            context.RouteData.Values["action"] = "Page301";
+                            context.RouteData.Values["url"] = link.Redirect301;
+                        }
+                        else
+                        {
+                            context.RouteData.Values["controller"] = link.Controller;
+                            context.RouteData.Values["action"] = link.Acction;
+                            context.RouteData.Values["language"] = link.Language;
+                            context.RouteData.Values["id"] = link.ObjectId;
+                            context.RouteData.Values["portalId"] = baseSettings.Value.PortalId;
+                            context.RouteData.Values["parrams"] = link.Parrams;
+                            context.RouteData.Values["linkData"] = Newtonsoft.Json.JsonConvert.SerializeObject(link);
+                        }    
+                    }    
                 }
                 else
                 {
@@ -180,6 +198,7 @@ namespace PT.Base
                     }
                     context.RouteData.Values["controller"] = "Home";
                     context.RouteData.Values["action"] = "Page404";
+                    context.RouteData.Values["language"] = language;
                 }
                 await _defaultRouter.RouteAsync(context);
             } 

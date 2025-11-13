@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\2.Domain\PT.Domain.csproj" />
     <ProjectReference Include="..\..\3.Infrastructure\PT.Infrastructure.csproj" />
     <ProjectReference Include="..\..\4.Shared\PT.Share.csproj" />
