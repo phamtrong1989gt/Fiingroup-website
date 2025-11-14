@@ -296,8 +296,10 @@ namespace PT.BE.Areas.Manager.Controllers
             var categorys = await CategorysAsync(model.Language, model.PortalId ?? 1);
             ViewData["CategoryJson"] = Newtonsoft.Json.JsonConvert.SerializeObject(categorys.Select(x => new { x.Id, x.CategoryType, x.SlugType }));
             model.CategorySelectList = await GetPortalSelectList(categorys, model.Language, model.PortalId ?? 1, model.CategoryId);
+            model.FullPath = await _iPortalRepository.GetFullPathAsync(model.PortalId ?? 1, model.Slug ?? string.Empty, portals, model.Language, _baseSettings.Value.MultipleLanguage);
             return View(model);
         }
+
         [HttpPost, ActionName("Edit")]
         [AuthorizePermission("Index")]
         public async Task<ResponseModel> EditPost(BlogModel use, int id)

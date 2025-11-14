@@ -235,6 +235,7 @@ namespace PT.BE.Areas.User.Controllers
             model.PortalId = dl.PortalId;
             model.PortalName = portals.FirstOrDefault(x => x.Id == dl.PortalId)?.Name;
             model.CategoryType = dl.CategoryType;
+            model.FullPath = await _iPortalRepository.GetFullPathAsync(model.PortalId ?? 1, model.Slug ?? string.Empty, portals, model.Language, _baseSettings.Value.MultipleLanguage);
             return View(model);
         }
         /// <summary>

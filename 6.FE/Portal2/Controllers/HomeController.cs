@@ -267,9 +267,8 @@ namespace PT.UI.Controllers
             }
         }
 
-
+        [ResponseCache(Duration = 31536000, Location = ResponseCacheLocation.Any)]
         [Route("data/image")]
-        [ResponseCache(VaryByHeader = "User-Agent", Duration = 30000000)]
         public IActionResult Image(string path, int size, bool? s)
         {
             try
@@ -336,7 +335,7 @@ namespace PT.UI.Controllers
             else if (img.RawFormat.Equals(System.Drawing.Imaging.ImageFormat.Gif))
                 return System.Drawing.Imaging.ImageFormat.Gif;
             else if (img.RawFormat.Equals(System.Drawing.Imaging.ImageFormat.Icon))
-                return System.Drawing.Imaging.ImageFormat.Icon;
+                return ImageFormat.Icon;
             else
                 return System.Drawing.Imaging.ImageFormat.Jpeg;
         }

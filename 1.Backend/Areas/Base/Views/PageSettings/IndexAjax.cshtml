@@ -19,29 +19,30 @@
 }
 @foreach (var item in Model.Data)
 {
-<tr class="tr-status-@(item.IncludeSitemap)">
-    <td class="text-center">@PT.Shared.Functions.GenSTT(i, Model.Page, Model.Limit)</td>
-    <td>
-        @item.Name
-    </td>
-    <td>
-            <a target="_blank" href="@item.FullPath">@item.FullPath</a>
-    </td>
-    <td>@item.Priority.ConvertToString()</td>
-    <td>@item.Type.GetDisplayName()</td>
-    <td>@item.Title</td>
-    <td>@item.Description</td>
-    <td>
-        @if (item.IncludeSitemap)
-         {
+    <tr class="tr-status-@(item.IncludeSitemap)">
+        <td class="text-center">@PT.Shared.Functions.GenSTT(i, Model.Page, Model.Limit)</td>
+        <td>
+            <div>@item.Name</div>
+            <div><a target="_blank" href="@item.FullPath">@item.FullPath</a></div>
+        </td>
+        <td>@item.Priority.ConvertToString()</td>
+        <td>@item.Type.GetDisplayName()</td>
+        <td>
+            <div class="text-info">@(item.Title ?? "- - -")</div>
+            <div>@(item.Description ?? "- - - ")</div>
+        </td>
+        <td>@item.Redirect301</td>
+        <td>
+            @if (item.IncludeSitemap)
+            {
                 <span class="label label-success">Có</span>
-         }
-         else
-         {
+            }
+            else
+            {
                 <span class="label label-danger">Không</span>
-         }
-    </td>
-    <td>
+            }
+        </td>
+        <td>
             @if (item.Status)
             {
                 <span class="label label-success">Có</span>
@@ -50,8 +51,8 @@
             {
                 <span class="label label-danger">Không</span>
             }
-    </td>
-    <td>
+        </td>
+        <td>
             @if (item.Delete)
             {
                 <span class="label label-danger">Xóa</span>
@@ -60,17 +61,17 @@
             {
                 <span class="label label-default">Không</span>
             }
-    </td>
-    <partial name="_AdminTbodyTableModule" model="@(new Tuple<List<PT.Domain.Model.LinkReference>,string,string,bool>(item.LinkReferences,item.Language,Url.Action("SitemapEdit", new { id ="#Id#" }),true))" />
+        </td>
+        <partial name="_AdminTbodyTableModule" model="@(new Tuple<List<PT.Domain.Model.LinkReference>, string, string, bool>(item.LinkReferences, item.Language, Url.Action("Edit", new { id = "#Id#" }), true))" />
         <td>@item.Portal?.Name</td>
         <td>
-        <div class="btn-group">
-            <div class="btn-group btn- group-sm" role="group">
-                <a target="_blank" href="@PT.Shared.Functions.FormatUrl(item.Language,item.Slug)" title="Đến trang" class="btn btn-default waves-effect btncontrolgrid"><i class="material-icons iconcontrol">link</i></a>
-                <a button-popup data-target="#myModalBig" asp-action="SitemapEdit" asp-route-id="@item.Id" title="Cập nhật" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
+            <div class="btn-group">
+                <div class="btn-group btn- group-sm" role="group">
+                    <a target="_blank" href="@PT.Shared.Functions.FormatUrl(item.Language, item.Slug)" title="Đến trang" class="btn btn-default waves-effect btncontrolgrid"><i class="material-icons iconcontrol">link</i></a>
+                    <a button-popup data-target="#myModalBig" asp-action="Edit" asp-route-id="@item.Id" title="Cập nhật" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
+                </div>
             </div>
-        </div>
-    </td>
-</tr>
+        </td>
+    </tr>
     i++;
 }

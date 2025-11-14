@@ -64,6 +64,13 @@ namespace PT.UI
             services.AddDataProtection().SetApplicationName("rosedentalclinic");
             // Thêm MemoryCache vào container DI
             services.AddMemoryCache();
+            // Thêm Response Caching
+            services.AddResponseCaching(options =>
+            {
+                options.MaximumBodySize = 64 * 1024 * 1024; // 64MB
+                options.UseCaseSensitivePaths = false;
+                options.SizeLimit = 100 * 1024 * 1024; // 100MB cache size
+            });
             services.AddRouting();
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -275,16 +282,16 @@ namespace PT.UI
             }
 
             AppHttpContext.Services = app.ApplicationServices;
-
+            // Thêm Response Caching TRƯỚC UseStaticFiles
+            app.UseResponseCaching();
             //Gzip
             app.UseResponseCompression();
-            //app.UseHttpsRedirection();
-
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
                 {
-                    ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800* 58}");
+                    // Cache 1 năm cho static files
+                    ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={31536000}");
                 }
             });
 

@@ -154,10 +154,12 @@ namespace PT.BE.Areas.Setting.Controllers
                 name = "";
                 content = "";
             }
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             ViewData["seo-page-name"] = name;
             ViewData["seo-page-content"] = content;
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{dl.Language}" : "";
             ViewData["IsSeoEdit"] = "in";
+            model.FullPath = await _iPortalRepository.GetFullPathAsync(model.PortalId ?? 1, model.Slug ?? string.Empty, portals, model.Language, _baseSettings.Value.MultipleLanguage);
             return View(model);
         }
 

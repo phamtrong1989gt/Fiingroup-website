@@ -249,6 +249,7 @@ namespace PT.BE.Areas.Manager.Controllers
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
             model.PortalId = dl.PortalId;
             model.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == dl.PortalId))?.Name;
+            model.FullPath = await _iPortalRepository.GetFullPathAsync(model.PortalId ?? 1, model.Slug ?? string.Empty, portals, model.Language, _baseSettings.Value.MultipleLanguage);
             return View(model);
         }
 

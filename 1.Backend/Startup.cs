@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -10,9 +11,12 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.FileProviders; // thêm để dùng PhysicalFileProvider
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PT.Base;
+using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure;
 using PT.Infrastructure.Interfaces;
@@ -23,9 +27,9 @@ using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.IO; // thêm để dùng Path và Directory
-using Microsoft.Extensions.FileProviders; // thêm để dùng PhysicalFileProvider
+using System.Linq;
+using System.Text.Json;
 
 namespace PT.UI
 {
@@ -87,10 +91,7 @@ namespace PT.UI
             services.Configure<List<AdvertisingHomepageSettings>>(Configuration.GetSection("AdvertisingHomepageSettings"));
             services.Configure<AuthorizeSettings>(Configuration.GetSection("AuthorizeSettings"));
             services.Configure<List<RedirectLinkSetting>>(Configuration.GetSection("RedirectLinkSettings"));
-
-            // Gọi lại AddMemoryCache nếu cần (không gây lỗi, nhưng có thể thừa)
-            services.AddMemoryCache();
-
+        
             // Cấu hình chính sách mật khẩu, lockout, và yêu cầu email duy nhất
             services.Configure<IdentityOptions>(options =>
             {
@@ -224,6 +225,25 @@ namespace PT.UI
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // chỉ gửi cookie qua HTTPS
             });
 
+            services.AddOutputCache(options =>
+            {
+                // Cache cho trang chủ
+                options.AddBasePolicy(builder => builder
+                    .Expire(TimeSpan.FromMinutes(10))
+                    .Tag("home"));
+
+                // Cache cho static pages
+                options.AddPolicy("StaticPages", builder => builder
+                    .Expire(TimeSpan.FromHours(1))
+                    .SetVaryByQuery("*")
+                    .Tag("static"));
+
+                // Cache cho images endpoint
+                options.AddPolicy("Images", builder => builder
+                    .Expire(TimeSpan.FromDays(30))
+                    .Tag("images"));
+            });
+
             // Cấu hình MVC và localization cho view + data annotations
             // Note: EnableEndpointRouting = false dùng legacy routing (UseMvc)
             services.AddMvc(options =>
@@ -259,7 +279,10 @@ namespace PT.UI
 
             // Kích hoạt response compression đã cấu hình
             app.UseResponseCompression();
-
+            app.UseResponseCaching();
+            app.UseOutputCache(); // Thêm dòng này
+            // Thêm Image Cache Middleware
+            app.UseMiddleware<ImageCacheMiddleware>();
             // Phục vụ file tĩnh và thêm header cache-control để cache lâu trên client/CDN
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -295,11 +318,34 @@ namespace PT.UI
 
                 app.UseStaticFiles(new StaticFileOptions
                 {
-                    FileProvider = new PhysicalFileProvider(dataPath),
-                    RequestPath = "/Data",
                     OnPrepareResponse = ctx =>
                     {
-                        ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800*58}");
+                        var path = ctx.File.PhysicalPath;
+
+                        // Cache khác nhau cho từng loại file
+                        if (path.EndsWith(".jpg") || path.EndsWith(".jpeg") ||
+                            path.EndsWith(".png") || path.EndsWith(".gif") ||
+                            path.EndsWith(".webp"))
+                        {
+                            // Images: cache 1 năm
+                            ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=31536000, immutable");
+                        }
+                        else if (path.EndsWith(".css") || path.EndsWith(".js"))
+                        {
+                            // CSS/JS: cache 1 năm với versioning
+                            ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=31536000, immutable");
+                        }
+                        else if (path.EndsWith(".woff") || path.EndsWith(".woff2") ||
+                                 path.EndsWith(".ttf") || path.EndsWith(".eot"))
+                        {
+                            // Fonts: cache 1 năm
+                            ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=31536000, immutable");
+                        }
+                        else
+                        {
+                            // Other files: cache 1 tuần
+                            ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=604800");
+                        }
                     }
                 });
             }
@@ -328,7 +374,6 @@ namespace PT.UI
 
             // Authentication/Authorization middleware: phải nằm trước routing/controller execution
             app.UseAuthentication();
-            app.UseAuthorization();
 
             // Routing bằng legacy MVC (có support area)
             app.UseMvc(routes =>
