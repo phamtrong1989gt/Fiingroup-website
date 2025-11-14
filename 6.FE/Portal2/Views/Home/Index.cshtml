@@ -21,7 +21,116 @@
 @* <vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module> *@
 <div style="display:none;">@ViewData["CacheTime"]</div>
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSlider", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId })
+
+<section id="VideoFiin">
+    <div class="container videof pb-5">
+        <div class="videoitem">
+            @* <iframe src="https://www.youtube.com/embed/EtbMBXUyE5s?si=gNIrnKBBnKhKIvI0" title="video giới thiệu" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> *@
+            <img onclick="openVideo(this)" data-iframe="https://www.youtube.com/embed/EtbMBXUyE5s?si=gNIrnKBBnKhKIvI0" src="/Data/Banner/video-home.jpg" class="img-fluid w-100" alt="video giới thiệu" title="video giới thiệu"  />
+        </div>
+    </div>
+    <div class="whylastest mt-5">
+        <div class="container">
+            <div class="why pb-4">
+                <h2 class="price-title mb-5 w700">Tại sao là <span style="color: #0066CC;">FiinGroup</span></h2>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6 mb-5">
+                        <img src="/Data/why1.png" alt="why" />
+                        <div class="why-title w700">Hệ sinh thái phân tích​ </br>dữ liệu toàn diện</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Từ doanh nghiệp, ngành đến thị trường vốn, nghiên cứu chuyên sâu – <span style="color: #0066CC">Hệ sinh thái thông tin đa chiều của FiinGroup</span> hỗ trợ nhà đầu tư​ quyết định chính xác, kịp thời.</p>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 mb-5 pr-2">
+                        <img src="/Data/why2.png" alt="why" />
+                        <div class="why-title w700">Sức mạnh </br> dữ liệu tài chính</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Kho dữ liệu lớn nhất Việt Nam với <span style="color: #0066CC">hơn 2 triệu doanh nghiệp Việt Nam và hơn 200 triệu doanh nghiệp toàn cầu</span>, dữ liệu​ vĩ mô và ngành được chuẩn hóa,​ cập nhật theo thời gian thực.</p>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 mb-5">
+                        <img src="/Data/why3.png" alt="why" />
+                        <div class="why-title w700">Đội ngũ chuyên gia thực chiến, thấu hiểu thị trường Việt Nam</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Đội ngũ chuyên gia giàu kinh nghiệm thực chiến, với <span style="color: #0066CC">gần 20 năm thấu hiểu thị trường Việt Nam</span>, kết hợp với tiêu chuẩn quốc tế mang đến phân tích và tư vấn​ sát thực, đáng tin cậy</p>
+                    </div>
+
+                    <div class="col-lg-4 col-sm-6 mb-5">
+                        <img src="/Data/why4.png" alt="why" />
+                        <div class="why-title w700">Phương pháp tiếp cận dựa trên dữ liệu khác biệt</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Tận dụng nguồn dữ liệu <span style="color: #0066CC">khác biệt,​ sâu rộng và minh bạch</span>. Các báo cáo​ và nghiên cứu của FiinGroup đều dựa trên <span style="color: #0066CC">bằng chứng xác thực,​ đảm bảo độ tin cậy cao</span>.</p>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 mb-5">
+                        <img src="/Data/why5.png" alt="why" />
+                        <div class="why-title w700">Báo cáo ngành chuyên sâu,​ "may đo" theo nhu cầu</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Dẫn đầu thị trường với các <span style="color: #0066CC">Báo cáo​ ngành dựa trên dữ liệu độc quyền và chuyên sâu</span>. Ngoài ra còn được thiết kế riêng theo nhu cầu, hỗ trợ khách hàng ra quyết định chiến lược đầu tư, kinh doanh và quản trị rủi ro hiệu quả.</p>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 mb-5">
+                        <img src="/Data/why6.png" alt="why" />
+                        <div class="why-title w700">Ứng dụng công nghệ</br> tiên tiến</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Ứng dụng <span style="color: #0066CC">AI, Machine Learning, và Big Data, dự đoán biến động thị trường</span> và cung cấp thông tin chuyên sâu, chính xác cho khách hàng.</p>
+                    </div>
+                </div>
+                <div class="text-center mb-5">
+                    <button class="btn btn-primary btn-join">Xem ngay tài liệu giới thiệu</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId }) *@
+
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerHeSinhThai", language = language, portalId = portalId })
 
 <section id="HoTro" class="pt-5">
@@ -125,3 +234,193 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderDauAn", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderOurClients", language = language, portalId = portalId })
 <partial name="_Register" />
+
+
+<style>
+    /* Video container styles */
+    .videoitem {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        background: #000;
+        overflow: hidden;
+    }
+
+        .videoitem img,
+        .videoitem iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    /* Play button overlay */
+    .video-play-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.3s ease;
+    }
+
+        .video-play-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-play-button svg {
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+    /* Loading spinner */
+    .video-loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 20;
+    }
+
+        .video-loading::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0066CC;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Fade animations */
+    .fade-out {
+        animation: fadeOut 0.3s forwards;
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s forwards;
+    }
+
+    @@keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+<script>
+   
+    function openVideo(imgElement) {
+        // Nếu click vào play button, lấy img element
+        const videoContainer = imgElement.closest('.videoitem');
+        const thumbnail = videoContainer.querySelector('.video-thumbnail');
+        const playButton = videoContainer.querySelector('.video-play-button');
+
+        if (!thumbnail) {
+            console.error('Không tìm thấy thumbnail');
+            return;
+        }
+
+        // Lấy URL iframe từ data-iframe attribute
+        const iframeUrl = thumbnail.getAttribute('data-iframe');
+
+        if (!iframeUrl) {
+            console.error('Không tìm thấy data-iframe attribute');
+            return;
+        }
+
+        // Ẩn play button với fade effect
+        if (playButton) {
+            playButton.classList.add('fade-out');
+            setTimeout(() => playButton.remove(), 300);
+        }
+
+        // Thêm loading spinner
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'video-loading';
+        videoContainer.appendChild(loadingDiv);
+
+        // Fade out thumbnail
+        thumbnail.classList.add('fade-out');
+
+        // Tạo iframe element với lazy loading
+        const iframe = document.createElement('iframe');
+        iframe.title = thumbnail.getAttribute('title') || 'video giới thiệu';
+        iframe.frameBorder = '0';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+        iframe.allowFullscreen = true;
+        iframe.loading = 'lazy'; // Lazy loading attribute
+
+        // Thêm class để iframe responsive
+        iframe.className = 'fade-in';
+        iframe.style.opacity = '0';
+
+        // Event khi iframe load xong
+        iframe.onload = function() {
+            // Xóa loading spinner
+            loadingDiv.remove();
+
+            // Xóa thumbnail
+            thumbnail.remove();
+
+            // Hiển thị iframe
+            iframe.style.opacity = '1';
+        };
+
+        // Thêm iframe vào container
+        videoContainer.appendChild(iframe);
+
+        // Set src sau khi append để trigger lazy load
+        setTimeout(() => {
+            iframe.src = iframeUrl;
+        }, 100);
+
+        // Fallback: Nếu iframe không load sau 5s, vẫn hiển thị
+        setTimeout(() => {
+            if (loadingDiv.parentNode) {
+                loadingDiv.remove();
+            }
+            iframe.style.opacity = '1';
+        }, 5000);
+    }
+
+    // Preconnect to YouTube để tăng tốc load video
+    (function() {
+        const preconnect = document.createElement('link');
+        preconnect.rel = 'preconnect';
+        preconnect.href = 'https://www.youtube.com';
+        document.head.appendChild(preconnect);
+
+        const preconnectCdn = document.createElement('link');
+        preconnectCdn.rel = 'preconnect';
+        preconnectCdn.href = 'https://i.ytimg.com';
+        document.head.appendChild(preconnectCdn);
+    })();
+</script>

@@ -61,10 +61,11 @@
     font-weight: 600;
     color: #093461;
 }
-    .gallery img {
-        width: 100%;
-        margin-bottom: 20px;
-    }
+
+.gallery img {
+    width: 100%;
+    margin-bottom: 20px;
+}
 
 .manuals header {
     margin-bottom: 50px;
@@ -678,3 +679,22 @@
     left: 3px;
     position: absolute;
 }
+
+#VideoFiin .videoitem {
+    background: #fff;
+    border: 13px solid #fff;
+}
+
+    #VideoFiin .videoitem img {
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+    #VideoFiin .videoitem iframe {
+        border-radius: 16px;
+    }
+        #VideoFiin .videoitem img:hover {
+            filter: brightness(0.8) saturate(1.2);
+        }
+
+
+
