@@ -68,7 +68,7 @@ namespace PT.UI.Controllers
             //var result = analyzer.Analyze(htmlContent, "từ khóa SEO");
 
             // Cách 2: Phân tích trực tiếp (tiện lợi hơn)
-            var result = await analyzer.AnalyzeFromUrlAsync("https://example.com", "từ khóa SEO");
+            var result = await analyzer.AnalyzeFromUrlAsync("https://fg.ept.io.vn", null);
             string a = $"URL: {result.AnalyzedUrl}";
             string b = $"Điểm: {result.OverallScore} - {result.GetScoreLabel()}";
             return View();

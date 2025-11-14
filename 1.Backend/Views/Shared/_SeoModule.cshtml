@@ -14,6 +14,7 @@
                 <li role="presentation" class="active"><a href="#seo1" data-toggle="tab">Cơ bản</a></li>
                 <li role="presentation"><a href="#seo2" data-toggle="tab">Nâng cao</a></li>
                 <li role="presentation"><a href="#seo3" data-toggle="tab">Mạng xã hội</a></li>
+                <li role="presentation"><a href="#seo4" data-toggle="tab">Phân tích SEO</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -225,6 +226,18 @@
                         </div>
                     </div>
                 </div>
+
+                <div role="tabpanel" class="tab-pane fade" id="seo4">
+                    <div class="text-right mb-3">
+                        <a onclick="loadSeoAnalysis()" class="btn btn-icon btn-default waves-effect"><i class="material-icons">refresh</i> <span>Làm mới đánh giá</span></a>
+                    </div>
+                    <div id="noteSeo">
+                        <div class="text-center p-4">
+                            <i class="material-icons" style="font-size: 48px; color: #ccc;">assessment</i>
+                            <p class="text-muted">Nhấn "Làm mới đánh giá" để phân tích SEO</p>
+                        </div>
+                    </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -292,6 +305,76 @@
                 $(elementBind).html("<span class='fb text-success'><span class='fb text-danger'>Không</span></span>");
             }
         }
+
+        function loadSeoAnalysis() {
+            // Lấy URL từ slug
+            var slug = $("[seo-page-url]").val();
+            if (!slug) {
+                showSeoError("Vui lòng nhập Slug trước khi phân tích SEO");
+                return;
+            }
+
+            // Lấy Focus Keyword
+            var keyword = $("#FocusKeywords").val() || "";
+
+            var fullUrl = "@Model.FullPath";
+
+            if(fullUrl == null || fullUrl == "")
+            {
+                showSeoError("Không thể xác định URL đầy đủ của trang. Vui lòng lưu trang trước khi phân tích SEO.");
+                return;
+            }
+
+            // Hiển thị loading
+            showSeoLoading();
+
+            // Gọi AJAX POST
+            $.ajax({
+                url: '/Admin/Base/SeoSettings/SeoAnalysisResult',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                    url: fullUrl,
+                    keyword: keyword
+                },
+                success: function(response) {
+                    // Hiển thị view trả về
+                    $("#noteSeo").html(response);
+                },
+                error: function(xhr, status, error) {
+                    showSeoError("Lỗi khi phân tích SEO: " + error);
+                }
+            });
+        }
+
+        function showSeoLoading() {
+            $("#noteSeo").html(`
+                <div class="text-center p-5">
+                    <div class="preloader pl-size-md">
+                        <div class="spinner-layer">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div>
+                            <div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted mt-3">Đang phân tích SEO...</p>
+                </div>
+            `);
+        }
+
+       
+        function showSeoError(message) {
+            $("#noteSeo").html(`
+                <div class="alert alert-danger">
+                    <i class="material-icons">error</i>
+                    <strong>Lỗi:</strong> ${message}
+                </div>
+            `);
+        }
+
     </script>
 </div>
 
