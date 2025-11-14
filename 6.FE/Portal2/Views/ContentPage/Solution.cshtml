@@ -18,12 +18,13 @@
 	var listFlowItems = await _iContentPageRepository.FlowGetsAsync(language, portalId, Model.Id);
 	var solutions = await _iContentPageRepository.SolutionGetsAsync(language, portalId);
 
-	var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 10,
+	var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 3,
 				   null, null,
 				   m => m.Status
 					   && m.DatePosted <= DateTime.Now
 					   && m.Language == language
-					   && (m.CategoryType == ECategoryType.ContentPage_Blog || m.CategoryType == ECategoryType.ContentPage_Event),
+					   //&& (m.CategoryType == ECategoryType.ContentPage_Blog || m.CategoryType == ECategoryType.ContentPage_Event),
+					   && (m.CategoryType == ECategoryType.ContentPage_Blog),
 				   m => m.OrderByDescending(x => x.DatePosted),
 				   a => new ContentPage
 				   {
@@ -373,7 +374,7 @@
 			{
 				string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
 				<div class="col-sm-4">
-					<img src="@item.Banner" class="img-fluid w-100" alt="@item.Name" title="@item.Name" />
+					<img src="@item.Banner" class="img-fluid w-100 img-anhdaidien" alt="@item.Name" title="@item.Name" />
 					@if (item.Tags != null)
 					{
 						foreach (var tag in item.Tags)
@@ -385,7 +386,7 @@
 					}
 				<div class="pt-3 pb-3">
 					<div class="news-title text-break">
-							<a target="_blank" href="#">@item.Name</a>
+								<a target="_blank" href="@path" title="@item.Name">@item.Name</a>
 					</div>
 				</div>
 				<div>@Html.Raw(item.Summary)</div>

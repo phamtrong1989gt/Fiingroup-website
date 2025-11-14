@@ -403,7 +403,7 @@
 			<div class="pagination-area">
 				<div aria-label="Page navigation example">
 					<ul class="pagination justify-content-center">
-						@Html.Raw(PT.Shared.Functions.GenPageList("", Model.PageBlog.Page, Model.PageBlog.TotalRows, Model.PageBlog.Limit, "", "page-item"))
+						@Html.Raw(PT.Shared.Functions.GenPageList("", Model.PageBlog.Page, Model.PageBlog.TotalRows, Model.PageBlog.Limit, $"&key={Context.Request.Query["key"]}", "page-item"))
 					</ul>
 				</div>
 			</div>
