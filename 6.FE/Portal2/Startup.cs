@@ -308,27 +308,8 @@ namespace PT.UI
 
             // Response Compression phải đặt trước Static Files
             app.UseResponseCompression();
-
-            // Middleware tự động thêm Cache Headers cho tất cả GET requests
-            app.Use(async (context, next) =>
-            {
-                // Chỉ cache GET requests và không phải là request đến Admin area
-                if (context.Request.Method == "GET" &&
-                    !context.Request.Path.StartsWithSegments("/Admin") &&
-                    !context.Request.Path.StartsWithSegments("/Login") &&
-                    !context.Request.Path.StartsWithSegments("/Logout"))
-                // XÓA ĐIỀU KIỆN NÀY: && context.User?.Identity?.IsAuthenticated != true
-                {
-                    // Thêm cache headers cho response
-                    context.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
-                    {
-                        Public = true,
-                        MaxAge = TimeSpan.FromSeconds(30)
-                    };
-                    context.Response.Headers["Vary"] = new string[] { "Accept-Encoding", "Accept-Language" };
-                }
-                await next();
-            });
+            // THÊM middleware cache mới
+            app.UseMiddleware<ResponseCacheMiddleware>();
 
             // Response Caching Middleware
             app.UseResponseCaching();
