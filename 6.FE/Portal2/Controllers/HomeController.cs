@@ -60,17 +60,6 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-
-            var analyzer = new SeoContentAnalyzer();
-
-            //// Cách 1: Lấy HTML content từ URL
-            //string htmlContent = await analyzer.FetchWebContentAsync("https://example.com");
-            //var result = analyzer.Analyze(htmlContent, "từ khóa SEO");
-
-            // Cách 2: Phân tích trực tiếp (tiện lợi hơn)
-            var result = await analyzer.AnalyzeFromUrlAsync("https://fg.ept.io.vn", null);
-            string a = $"URL: {result.AnalyzedUrl}";
-            string b = $"Điểm: {result.OverallScore} - {result.GetScoreLabel()}";
             return View();
         }
 
