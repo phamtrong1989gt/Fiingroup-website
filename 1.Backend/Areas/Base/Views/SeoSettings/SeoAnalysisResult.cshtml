@@ -1,0 +1,251 @@
+﻿@model PT.Base.Services.SeoAnalysisResult
+@{
+    ViewData["Title"] = "Phân Tích SEO";
+}
+
+<div>
+    <div>
+        <div>
+            <h2 class="mb-0 text-name text-center" style="text-transform:uppercase;">
+                <i class="fas fa-chart-line"></i> Báo Cáo Phân Tích SEO
+            </h2>
+        </div>
+
+        <div>
+            <!-- Thông tin URL và Điểm tổng thể -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h5 class="text-center"><i class="fas fa-link"></i> URL phân tích:</h5>
+                    <p class="text-break  text-center"><a href="@Model.AnalyzedUrl" target="_blank">@Model.AnalyzedUrl</a></p>
+                </div>
+                <div class="col-md-12">
+                    <div class="score-badge">
+                        <h3>Điểm SEO</h3>
+                        <div class="score-circle bg-@Model.GetScoreColor()" style="margin:0 auto;">
+                            <span class="score-number">@Model.OverallScore</span>
+                            <span class="score-label">/ 100</span>
+                        </div>
+                        <p style="text-align:center; margin-top:15px;" class="score-status text-@Model.GetScoreColor()">
+                            <strong>@Model.GetScoreLabel()</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- Thống kê nhanh -->
+            <div class="row mb-4">
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stat-card">
+                        <i class="fas fa-file-word text-primary"></i>
+                        <h4>@Model.WordCount</h4>
+                        <p>Số từ</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stat-card">
+                        <i class="fas fa-heading text-success"></i>
+                        <h4>@Model.H1Count / @Model.H2Count / @Model.H3Count</h4>
+                        <p>H1 / H2 / H3</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stat-card">
+                        <i class="fas fa-image text-info"></i>
+                        <h4>@Model.ImageCount</h4>
+                        <p>Hình ảnh</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="stat-card">
+                        <i class="fas fa-link text-warning"></i>
+                        <h4>@Model.InternalLinksCount / @Model.ExternalLinksCount</h4>
+                        <p>Internal / External Links</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keyword Analysis -->
+            @if (Model.FocusKeywordCount > 0)
+            {
+                <div class="alert alert-info mb-4">
+                    <h5><i class="fas fa-key"></i> Phân tích Focus Keyword</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Số lần xuất hiện:</strong> @Model.FocusKeywordCount lần</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Mật độ keyword:</strong> @Model.KeywordDensity%</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- SEO Features -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="feature-check">
+                        <i class="fas fa-@(Model.HasStructuredData ? "check-circle text-success" : "times-circle text-danger")"></i>
+                        <span>Schema Markup (Structured Data)</span>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="feature-check">
+                        <i class="fas fa-@(Model.HasVideo ? "check-circle text-success" : "times-circle text-danger")"></i>
+                        <span>Video Content</span>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="feature-check">
+                        <i class="fas fa-@(Model.HasTableOfContents ? "check-circle text-success" : "times-circle text-danger")"></i>
+                        <span>Table of Contents (TOC)</span>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="feature-check">
+                        <i class="fas fa-@(Model.HasFAQ ? "check-circle text-success" : "times-circle text-danger")"></i>
+                        <span>FAQ Schema</span>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <!-- Errors -->
+            @if (Model.Errors.Any())
+            {
+                <div class="alert alert-danger">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-circle"></i> Lỗi Nghiêm Trọng (@Model.Errors.Count)
+                    </h4>
+                    <ul class="mb-0">
+                        @foreach (var error in Model.Errors)
+                        {
+                            <li>@error</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <!-- Warnings -->
+            @if (Model.Warnings.Any())
+            {
+                <div class="alert alert-warning">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i> Cảnh Báo (@Model.Warnings.Count)
+                    </h4>
+                    <ul class="mb-0">
+                        @foreach (var warning in Model.Warnings)
+                        {
+                            <li>@warning</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <!-- Recommendations -->
+            @if (Model.Recommendations.Any())
+            {
+                <div class="alert alert-success">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-thumbs-up"></i> Điểm Tốt & Khuyến Nghị (@Model.Recommendations.Count)
+                    </h4>
+                    <ul class="mb-0">
+                        @foreach (var recommendation in Model.Recommendations)
+                        {
+                            <li>@recommendation</li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+
+        <div class="card-footer text-muted">
+            <small>
+                <i class="far fa-clock"></i> Phân tích vào: @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") |
+                <i class="fas fa-info-circle"></i> Dựa trên tiêu chuẩn SEO 2024-2025
+            </small>
+        </div>
+    </div>
+</div>
+
+<style>
+    .score-badge {
+        text-align: center;
+    }
+
+    .score-circle {
+        display: inline-block;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 15px 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .score-number {
+        font-size: 36px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .score-label {
+        font-size: 14px;
+        color: #333;
+    }
+
+    .stat-card {
+        text-align: center;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card i {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h4 {
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        .stat-card p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+    .feature-check {
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .feature-check i {
+            font-size: 20px;
+        }
+
+    .alert ul {
+        padding-left: 20px;
+    }
+
+    .alert li {
+        margin-bottom: 5px;
+    }
+</style>

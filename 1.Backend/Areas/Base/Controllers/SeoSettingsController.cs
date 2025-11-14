@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PT.Base;
+using PT.Base.Services;
 using PT.BE.Areas.Base.Controllers;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
@@ -80,6 +82,7 @@ namespace PT.BE.Areas.Setting.Controllers
                 return View(data);
             }
         }
+
         [HttpPost, ValidateAntiForgeryToken, ActionName("Seo")]
         [AuthorizePermission("Index")]
         public async Task<ResponseModel> SeoPost(SeoSetting model, string language = "vi", int portalId = 1)
@@ -130,5 +133,16 @@ namespace PT.BE.Areas.Setting.Controllers
             return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
         }
         #endregion
+
+        [Authorize]
+        [HttpPost, ActionName("SeoAnalysisResult")]
+        public async Task<IActionResult> SeoAnalysisResult(string url, string keyword)
+        {
+            var analyzer = new SeoContentAnalyzer();
+            var result = await analyzer.AnalyzeFromUrlAsync(url, keyword);
+            return View("SeoAnalysisResult", result);
+        }
+
+
     }
 }

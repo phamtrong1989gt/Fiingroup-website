@@ -284,6 +284,7 @@ namespace PT.BE.Areas.Manager.Controllers
             var listRelated = (await _iContentPageRelatedRepository.GetContentPageAsync(id, 0, 0, null, x => x.OrderBy(m => m.DatePosted), x => new ContentPage { Id = x.Id, DatePosted = x.DatePosted, Status = x.Status, Name = x.Name })).Select(x => new { id = x.Id, text = x.Name });
             model.ContentPageRelatedIds = string.Join(',', listRelated.Select(x => x.id));
             model.RelatedString = Newtonsoft.Json.JsonConvert.SerializeObject(listRelated);
+            model.FullPath = await _iPortalRepository.GetFullPathAsync(model.PortalId ?? 1, model.Slug ?? string.Empty, portals, model.Language, _baseSettings.Value.MultipleLanguage);
             return View(model);
         }
 
