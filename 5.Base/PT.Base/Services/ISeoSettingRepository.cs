@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using PT.Infrastructure.Repositories;
 
 namespace PT.Base.Services
 {
@@ -38,6 +37,8 @@ namespace PT.Base.Services
             var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24);
+                entry.Size = 1; // Thêm Size để tránh lỗi khi SizeLimit được set
+                entry.Priority = CacheItemPriority.Normal;
                 // fetch from underlying repository
                 var data = await _iSeoSettingRepository.SingleOrDefaultAsync(true, s => s.Language == language && s.PortalId == portalId);
                 if(data == null)
@@ -66,6 +67,8 @@ namespace PT.Base.Services
             var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24);
+                entry.Size = 1; // Thêm Size để tránh lỗi khi SizeLimit được set
+                entry.Priority = CacheItemPriority.Normal;
                 // fetch from underlying repository
                 var data = await _iBindContentSettingRepository.SingleOrDefaultAsync(true, s => s.PortalId == portalId);
                 if (data == null)
@@ -87,6 +90,8 @@ namespace PT.Base.Services
             var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24);
+                entry.Size = 1; // Thêm Size để tránh lỗi khi SizeLimit được set
+                entry.Priority = CacheItemPriority.Normal;
                 // fetch from underlying repository
                 var data = await _iEmailSettingRepository.SingleOrDefaultAsync(true, s => s.PortalId == portalId);
                 if (data == null)

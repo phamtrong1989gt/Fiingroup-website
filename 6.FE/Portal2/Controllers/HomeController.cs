@@ -57,9 +57,11 @@ namespace PT.UI.Controllers
             return Redirect($"/");
         }
 
+        [ResponseCache(Duration = 10, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "*" })]
         public async Task<IActionResult> Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            ViewData["CacheTime"] = $"{DateTime.Now:dd/MM/yyyy HH:mm:ss}";
             return View();
         }
 

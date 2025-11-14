@@ -110,7 +110,8 @@ namespace PT.Component
                     {
                         //AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24),
                         AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_baseSettings.Value.TimeCache),
-                        Priority = CacheItemPriority.Normal
+                        Priority = CacheItemPriority.Normal,
+                        Size = 1 // Thêm Size để tránh lỗi khi SizeLimit được set
                     };
 
                     _iMemoryCache.Set(cacheKey, newKyTu, cacheOptions);

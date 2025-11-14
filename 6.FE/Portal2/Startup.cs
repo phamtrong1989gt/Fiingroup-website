@@ -61,37 +61,52 @@ namespace PT.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataProtection().SetApplicationName("rosedentalclinic");
+            services.AddDataProtection().SetApplicationName("trong_dz");
+
             // Thêm MemoryCache vào container DI
-            services.AddMemoryCache();
-            // Thêm Response Caching
+            services.AddMemoryCache(options =>
+            {
+                options.CompactionPercentage = 0.25; // Dọn dẹp 25% khi cần thiết
+                options.ExpirationScanFrequency = TimeSpan.FromMinutes(5); // Scan mỗi 5 phút
+            });
+
+            // Thêm Response Caching - Tối ưu hóa
             services.AddResponseCaching(options =>
             {
                 options.MaximumBodySize = 64 * 1024 * 1024; // 64MB
                 options.UseCaseSensitivePaths = false;
                 options.SizeLimit = 100 * 1024 * 1024; // 100MB cache size
             });
-            services.AddRouting();
+
+            services.AddRouting(options =>
+            {
+                options.LowercaseUrls = true; // Tối ưu URL
+                options.LowercaseQueryStrings = false;
+            });
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
+
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(5), errorNumbersToAdd: null);
+                        sqlOptions.CommandTimeout(30);
+                    }),
+                ServiceLifetime.Scoped);
+
             services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
+
             // Add Custom Claims processor
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsPrincipalFactory>();
             services.Configure<BaseSettings>(Configuration.GetSection("BaseSettings"));
-            services.Configure<PaypalSettings>(Configuration.GetSection("PaypalSettings"));
             services.Configure<LogSettings>(Configuration.GetSection("LogSettings"));
-            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
-            services.Configure<SocketSettings>(Configuration.GetSection("SocketSettings"));
-            services.Configure<List<AdvertisingHomepageSettings>>(Configuration.GetSection("AdvertisingHomepageSettings"));
             services.Configure<AuthorizeSettings>(Configuration.GetSection("AuthorizeSettings"));
-            services.Configure<List<RedirectLinkSetting>>(Configuration.GetSection("RedirectLinkSettings"));
-            services.AddMemoryCache();
-
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
@@ -123,14 +138,6 @@ namespace PT.UI
 
             });
 
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //      .AddCookie(options =>
-            //      {
-            //          options.Cookie.HttpOnly = true;
-            //          options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //          options.Cookie.SameSite = SameSiteMode.Lax;
-            //      });
-
             var supportedCultures = ListData.ListLanguage.Select(x => new CultureInfo(x.Id)).ToArray();
             // Lấy cấu hình từ base setting xem mặc định ngôn ngữ là gì
             var baseSettings = Configuration.GetSection("BaseSettings").Get<BaseSettings>();
@@ -140,7 +147,7 @@ namespace PT.UI
                 options.DefaultRequestCulture = new RequestCulture(baseSettings.DefaultLanguage);
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
-            
+
                 options.RequestCultureProviders.Insert(0, new UrlRequestCultureProvider(baseSettings.DefaultLanguage)
                 {
                     Options = options
@@ -148,7 +155,7 @@ namespace PT.UI
             });
 
             // Adding our UrlRequestCultureProvider as first object in the list
-            
+
             // Ngôn ngữ End
             // Add application services.
             services.AddScoped<IEmailSenderRepository, EmailSenderRepository>();
@@ -172,7 +179,7 @@ namespace PT.UI
             services.AddScoped<IContentPageTagRepository, ContentPageTagRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IPaymentTransactionRepository, PaymentTransactionRepository>();
-            
+
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -203,27 +210,33 @@ namespace PT.UI
 
             // Đăng ký DI cho repository tổng quát
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
-            //Gzip
-            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
+
+            //Gzip - Tối ưu hóa
+            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Fastest);
 
             services.AddResponseCompression(options =>
             {
-                //options.EnableForHttps = true;
+                options.EnableForHttps = true; // Bật compression cho HTTPS
                 options.Providers.Add<GzipCompressionProvider>();
-                options.MimeTypes = new string[]{
-                        "text/plain",
-                        "text/css",
-                        "application/javascript",
-                        "text/html",
-                        "application/xml",
-                        "text/xml",
-                        "application/json",
-                        "text/json",
-                        "image/svg+xml",
-                        "application/atom+xml"
-                    };
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+                {
+                    "text/plain",
+                    "text/css",
+                    "application/javascript",
+                    "text/html",
+                    "application/xml",
+                    "text/xml",
+                    "application/json",
+                    "text/json",
+                    "image/svg+xml",
+                    "application/atom+xml",
+                    "font/woff",
+                    "font/woff2",
+                    "application/font-woff",
+                    "application/font-woff2"
+                });
             });
-       
+
             //Content/Admin/plugins/signalr
             services.Configure<FormOptions>(options =>
             {
@@ -242,15 +255,25 @@ namespace PT.UI
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-            //services.AddHttpsRedirection(options =>
-            //{
-            //    options.HttpsPort = 443;
-            //    options.RedirectStatusCode = 301;
-            //});
-
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
+
+                // Thêm Cache Profile cho GET requests - 10 giây
+                options.CacheProfiles.Add("Default10Seconds", new CacheProfile
+                {
+                    Duration = 10,
+                    Location = ResponseCacheLocation.Any,
+                    VaryByQueryKeys = new[] { "*" }
+                });
+
+                // Cache profile cho static content - 1 năm
+                options.CacheProfiles.Add("StaticContent", new CacheProfile
+                {
+                    Duration = 31536000,
+                    Location = ResponseCacheLocation.Any
+                });
+
                 //options.Filters.Add(new RequireHttpsAttribute
                 //{
                 //    Permanent = true
@@ -260,7 +283,7 @@ namespace PT.UI
                 //    IgnoreLocalhost = true,
                 //    Permanent = true
                 //});
-             })
+            })
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = "Resources"; })
                 .AddDataAnnotationsLocalization();
         }
@@ -282,16 +305,41 @@ namespace PT.UI
             }
 
             AppHttpContext.Services = app.ApplicationServices;
-            // Thêm Response Caching TRƯỚC UseStaticFiles
-            app.UseResponseCaching();
-            //Gzip
+
+            // Response Compression phải đặt trước Static Files
             app.UseResponseCompression();
+
+            // Middleware tự động thêm Cache Headers cho tất cả GET requests
+            app.Use(async (context, next) =>
+            {
+                // Chỉ cache GET requests và không phải là request đến Admin area
+                if (context.Request.Method == "GET" &&
+                    !context.Request.Path.StartsWithSegments("/Admin") &&
+                    !context.Request.Path.StartsWithSegments("/Login") &&
+                    !context.Request.Path.StartsWithSegments("/Logout"))
+                // XÓA ĐIỀU KIỆN NÀY: && context.User?.Identity?.IsAuthenticated != true
+                {
+                    // Thêm cache headers cho response
+                    context.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+                    {
+                        Public = true,
+                        MaxAge = TimeSpan.FromSeconds(30)
+                    };
+                    context.Response.Headers["Vary"] = new string[] { "Accept-Encoding", "Accept-Language" };
+                }
+                await next();
+            });
+
+            // Response Caching Middleware
+            app.UseResponseCaching();
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
                 {
                     // Cache 1 năm cho static files
                     ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={31536000}");
+                    ctx.Context.Response.Headers.Append("Expires", DateTime.UtcNow.AddYears(1).ToString("R"));
                 }
             });
 
@@ -309,9 +357,9 @@ namespace PT.UI
                 template: "Admin/{area:exists}/{controller=Home}/{action=Index}/{id?}"
             );
 
-             routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(
+                       name: "default",
+                       template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

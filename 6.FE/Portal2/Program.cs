@@ -16,16 +16,7 @@ namespace PT.UI
                     config.SetBasePath(hostingContext.HostingEnvironment.ContentRootPath);
                     config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("appsettings.Base.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("appsettings.Email.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("appsettings.Socket.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("appsettings.WebsiteInfo.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("appsettings.Authorize.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("appsettings.Seo.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("appsettings.BindContent.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("appsettings.ExchangeRate.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("appsettings.AdvertisingHomepage.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("appsettings.RedirectLink.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("appsettings.Paypal.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("appsettings.Log.json", optional: true, reloadOnChange: true);
                 })
                 .ConfigureLogging((hostingContext, logging) =>
