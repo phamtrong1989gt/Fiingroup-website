@@ -1,7 +1,11 @@
 :root {
     --Base-Brand-Blue: rgba(0, 102, 204, 1);
+    --Text-Primary: rgba(29, 41, 57, 1) ;
+    --Base-Brand-FiinNavy:rgba(9, 52, 97, 1)
 }
-
+#Header a.menu-item, .nav-dropdown-content a {
+    color: var(--Text-Primary) !important
+}
 #myVideo {
     min-width: 100%;
     max-height: 850px;
@@ -12,16 +16,21 @@
 .w700 {
     font-weight: 700 !important;
 }
-
+.testimonial-card .quote, .testimonial-card .client .name {
+    color: var(--Base-Brand-FiinNavy) !important;
+}
+.testimonial-card .client .role { color: rgba(71, 84, 103, 1);}
 .color-primary {
     background: var(--Base-Brand-Blue) !important;
 }
 
-#SliderBanner .btn-request {
+#SliderBanner .btn-request, #WhatWe .btn-about {
     font-weight: 500 !important;
-    height:52px!important
+    height: 52px !important
 }
-
+#WhatWe .btn-about {
+    color: rgba(0, 102, 204, 1)
+}
 .btn-slide {
     box-shadow: 4px 4px 10px 0px rgba(0, 200, 255, 0.25);
     border: 1px solid transparent !important;
@@ -36,7 +45,7 @@
     padding-left: 20px !important;
     box-shadow: inset 2px 1px 2px 2px rgba(3, 78, 162, 0.12);
     font-size: 14.5px;
-    color: rgba(29, 41, 57, 1) !important;
+    color: var(--Text-Primary) !important;
 }
 
     .hotro-list .why-desc {
@@ -44,23 +53,35 @@
     }
 
     .hotro-list a span {
-        color: rgba(29, 41, 57, 1) !important;
+        color: var(--Text-Primary) !important;
         font-weight: 600 !important;
     }
-
+#formLienHe input{font-size:14px !important;border-radius:4px!important}
+#formLienHe .form-label {
+    color: var(--Text-Primary) !important;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+}
+.price-title{
+        font-weight: 700 !important;
+}
 .why-title {
     font-weight: 700;
-    padding-top: 30px
+    padding-top: 10px;
+    font-size: 26px !important;
 }
-.btn-dangky{font-size:12px !important}
-.btn-dangky:hover{
-    color:#fff;
-}
-#btn-modal-login {
-    font-weight: 600 !important;
-    font-size: 16px;
-    padding: 7px
-}
+.btn-dangky{font-size:12px !important;border:none
+        ;font-weight: 500 !important;}
+    .btn-dangky:hover, .btn-dangky:visited, .btn-dangky:active {
+        color: #fff !important;
+    }
+       
+        #btn-modal-login {
+            font-weight: 600 !important;
+            font-size: 16px;
+            padding: 7px 12px;
+        }
 
 .why-desc {
     color: rgba(9, 52, 97, 1);
@@ -72,127 +93,131 @@
 }
 
 button.btn.btn-primary.btn-join {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 500;
     line-height: 28px;
     text-align: center;
     padding: 11px 48px;
     vertical-align: middle;
 }
-
+.btn-yeucau{
+        font-size: 16px !important;
+    font-weight: 500 !important;
+    padding: 12px 20px !important;
+}
 /*for menu*/
-.menu-bar .multi-rows {
-    border-top: rgba(3, 78, 162, 1) 2px solid;
-}
-
-.menu-bar a.mn-group-name {
-    padding-left: 10px;
-    font-weight: 700;
-}
-
-    .menu-bar a.mn-group-name:hover {
-        color: #0066CC;
-        background-color: transparent;
+    .menu-bar .multi-rows {
+        border-top: rgba(3, 78, 162, 1) 2px solid;
     }
 
-.nav-dropdown-content a {
-    display: flex;
-    padding: 12px !important;
-}
-
-    .nav-dropdown-content a:hover {
-        background-color: transparent;
-        color: #0066CC;
+    .menu-bar a.mn-group-name {
+        padding-left: 10px;
+        font-weight: 700;
     }
 
-.menu-bar .mn-group .mn-group-items img {
-    padding-left: 10px;
-    max-height: 16px;
-    margin-top: 17px;
-}
+        .menu-bar a.mn-group-name:hover {
+            color: #0066CC;
+            background-color: transparent;
+        }
 
-.menu-bar .mn-group .mn-group-items .gr-item {
-    display: flex;
-}
-/*end menu*/
-/*button hover*/
-.btn-primary {
-    transition: all .3s;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-
-    &:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 102, 204, 1);
-        border-radius: 10rem;
-        z-index: -2;
+    .nav-dropdown-content a {
+        display: flex;
+        padding: 12px !important;
     }
 
-    &:before {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0%;
-        height: 100%;
-        background-color: #04417f;
+        .nav-dropdown-content a:hover {
+            background-color: transparent;
+            color: #0066CC;
+        }
+
+    .menu-bar .mn-group .mn-group-items img {
+        padding-left: 10px;
+        max-height: 16px;
+        margin-top: 17px;
+    }
+
+    .menu-bar .mn-group .mn-group-items .gr-item {
+        display: flex;
+    }
+    /*end menu*/
+    /*button hover*/
+    .btn-primary {
         transition: all .3s;
-        border-radius: 10rem;
-        z-index: -1;
-    }
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
 
-    &:hover {
-        color: #fff;
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 102, 204, 1);
+            border-radius: 10rem;
+            z-index: -2;
+        }
 
         &:before {
-            width: 100%;
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #04417f;
+            transition: all .3s;
+            border-radius: 10rem;
+            z-index: -1;
+        }
+
+        &:hover {
+            color: #fff;
+
+            &:before {
+                width: 100%;
+            }
         }
     }
-}
 
-#WhatWe .btn-about, #SliderBanner .btn-request {
-    transition: all .3s;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-
-    &:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #fff;
-        border-radius: 10rem;
-        z-index: -2;
-    }
-
-    &:before {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0%;
-        height: 100%;
-        background-color: #04417f;
+    #WhatWe .btn-about, #SliderBanner .btn-request {
         transition: all .3s;
-        border-radius: 10rem;
-        z-index: -1;
-    }
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
 
-    &:hover {
-        color: #fff;
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 10rem;
+            z-index: -2;
+        }
 
         &:before {
-            width: 100%;
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #04417f;
+            transition: all .3s;
+            border-radius: 10rem;
+            z-index: -1;
+        }
+
+        &:hover {
+            color: #fff;
+
+            &:before {
+                width: 100%;
+            }
         }
     }
-}
-/*end button hover*/
+    /*end button hover*/
