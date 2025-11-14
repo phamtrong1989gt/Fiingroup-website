@@ -282,7 +282,7 @@ namespace PT.UI
             app.UseResponseCaching();
             app.UseOutputCache(); // Thêm dòng này
             // Thêm Image Cache Middleware
-            app.UseMiddleware<ImageCacheMiddleware>();
+         //   app.UseMiddleware<ImageCacheMiddleware>();
             // Phục vụ file tĩnh và thêm header cache-control để cache lâu trên client/CDN
             app.UseStaticFiles(new StaticFileOptions
             {
