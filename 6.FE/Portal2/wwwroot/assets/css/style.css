@@ -707,7 +707,8 @@ a {
 }
 
 #VideoFiin .videoitem img {
-    max-height: 574px;
+    max-height: 535px;
+    cursor:pointer;
 }
 
 #VideoFiin .whylastest {

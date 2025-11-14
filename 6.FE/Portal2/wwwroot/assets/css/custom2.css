@@ -47,6 +47,12 @@
     font-size: 14.5px;
     color: var(--Text-Primary) !important;
 }
+    .hotro-list .item .left{
+        width: 23px;
+    }
+    .hotro-list .item .right {
+        width: 86%;
+    }
 
     .hotro-list .why-desc {
         color: rgba(9, 52, 97, 1) !important
@@ -54,6 +60,10 @@
 
     .hotro-list a span {
         color: var(--Text-Primary) !important;
+        font-weight: 600 !important;
+    }
+    .hotro-list a span:hover {
+        color: var(--Base-Brand-Blue) !important;
         font-weight: 600 !important;
     }
 #formLienHe input{font-size:14px !important;border-radius:4px!important}
