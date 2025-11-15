@@ -309,10 +309,10 @@ namespace PT.UI
             // Response Compression phải đặt trước Static Files
             app.UseResponseCompression();
             // THÊM middleware cache mới
-            app.UseMiddleware<ResponseCacheMiddleware>();
+            //app.UseMiddleware<ResponseCacheMiddleware>();
 
             // Response Caching Middleware
-            app.UseResponseCaching();
+            //app.UseResponseCaching();
 
             app.UseStaticFiles(new StaticFileOptions
             {

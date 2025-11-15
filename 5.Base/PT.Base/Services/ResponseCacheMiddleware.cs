@@ -83,9 +83,8 @@ namespace PT.Base.Services
                     var cacheOptions = new MemoryCacheEntryOptions
                     {
                         AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10),
-                        Size = 1
+                        Size = 1,
                     };
-
                     _cache.Set(cacheKey, cached, cacheOptions);
                 }
 
