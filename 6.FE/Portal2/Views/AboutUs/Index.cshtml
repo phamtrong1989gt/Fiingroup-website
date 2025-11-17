@@ -10,9 +10,9 @@
 @inject IOptions<BaseSettings> _baseSettings;
 
 @{
-    Layout = "~/Views/Shared/_Home.cshtml";
-    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    var portalId = _baseSettings.Value.PortalId;
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
 }
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsBanner", language = language, portalId = portalId }))
@@ -33,7 +33,7 @@
                                 links.forEach(l => l.classList.remove('active'));
                                 link.classList.add('active');
                                 // Lấy ID mục tiêu
-                                const targetId = link.getAttribute('href')?.trim();  // <--- FIX
+                                const targetId = link.getAttribute('href')?.trim(); 
                                 // Nếu href null hoặc không phải id hợp lệ thì thoát
                                 if (!targetId || !targetId.startsWith("#")) {
                                     return;
@@ -48,4 +48,4 @@
                             });
                         });
                     });
-            </script>
+</script>

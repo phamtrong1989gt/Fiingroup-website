@@ -993,6 +993,39 @@ a:hover {
         background: none;
         padding: 2px 0 0 0;
     }
+.btn-about {
+    background: white;
+    color: var(--primary-color);
+    width: 284px;
+    height: 45px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 2em;
+}
+.tab {
+    padding: 8px 20px;
+    border: none;
+    background: white;
+    color: #0078d4;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 250px;
+}
+.tab-container {
+    display: inline-flex;
+    justify-content: center;
+    border: 1px solid #0078d4;
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+.tab.active {
+    background: #0078d4;
+    color: white;
+}
+
+
     @media (min-width: 1400px) {
         .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
             max-width: 1230px;

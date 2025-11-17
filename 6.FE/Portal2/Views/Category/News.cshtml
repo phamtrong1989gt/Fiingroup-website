@@ -85,7 +85,7 @@
 	#NewButton {
 		align-items: center;
 		justify-content: center;
-		margin: -1.5% 0 0 0;
+		margin: 2.5% 0 0 0;
 	}
 
 	.btn-active {
@@ -213,14 +213,6 @@
 		color: #093461;
 	}
 
-	.btn-khampha {
-		background: white;
-		color: var(--primary-color);
-		width: 284px;
-		height: 50px;
-		font-size: 24px;
-		border-radius: 200px;
-	}
 </style>
 <section id="Banner">
 	<div class="container">
@@ -246,7 +238,7 @@
 						<span class="item-label">Địa điểm</span>
 						<span>@item.Address</span>
 					</div>
-					<a class="btn btn-light btn-khampha" href="@url" target="_blank">Khám phá ngay</a>
+					<a class="btn btn-light btn-about btn-khampha" href="@url" target="_blank">Khám phá ngay</a>
 				</div>
 				<div class="col-lg-7 col-sm-6 mb-5">
 					<a href="@url" title="@item.Name">
@@ -263,14 +255,16 @@
 		<div class="row d-flex justify-content-center">
 			@if (Model.ParentId == 0)
 			{
-				@* <a href="#" class="btn btn-noactive">Tin tức</a>
-				<a href="#" class="btn btn-active">Sự kiện</a> *@
 				@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsLinkTab", language = language, portalId = portalId })
 			}
 			else
 			{
 				string url = @PT.Shared.Functions.FormatUrl(@language, Model.Link?.Slug);
-				<a href="@url" class="btn btn-noactive" title="@Model.Name">@Model.Name</a>
+				<div class="text-center">
+					<div class="tab-container mb-2">
+						<a class="tab active" title="@Model.Name" href="@url">@Model.Name</a>
+					</div>
+				</div>
 			}
 		</div>
 	</div>
@@ -311,7 +305,7 @@
 						<h3 class="pt-4">
 							<a href="@url" title="@item.Name" class="news-title">@item.Name</a>
 						</h3>
-						<div class="pt-4 pb-4 mb-4">
+						<div class="pt-2 pb-4 mb-4">
 							<a href="@url" title="@item.Name" class="show-more">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
 						</div>
 					</div>

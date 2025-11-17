@@ -86,7 +86,7 @@
 	#NewButton {
 		align-items: center;
 		justify-content: center;
-		margin: -1.5% 0 0 0;
+		margin: 2.5% 0 0 0;
 	}
 
 	.btn-active {
@@ -214,15 +214,6 @@
 		color: #093461;
 	}
 
-	.btn-khampha {
-		background: white;
-		color: var(--primary-color);
-		width: 284px;
-		height: 50px;
-		font-size: 24px;
-		border-radius: 200px;
-	}
-
 	.item-date-sub {
 		font-weight: 400;
 		font-size: 18px;
@@ -319,7 +310,7 @@
 						<span class="item-label">Địa điểm</span>
 						<span>@item.Address</span>
 					</div>
-					<a class="btn btn-light btn-khampha" href="@url" target="_blank">Khám phá ngay</a>
+					<a class="btn btn-light btn-about btn-khampha" href="@url" target="_blank">Khám phá ngay</a>
 				</div>
 				<div class="col-lg-7 col-sm-6 mb-5">
 					<a href="@url" title="@item.Name">
@@ -411,7 +402,7 @@
 		</div>
 	</div>
 </section>
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsDeliver", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "EventDeliver", language = language, portalId = portalId }))
 <script>
 	$(function() {
 		const params = new URLSearchParams(window.location.search);
