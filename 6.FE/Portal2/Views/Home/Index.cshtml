@@ -60,9 +60,8 @@
                                 @for (int j = 0; j < item.Relateds.Count; j++)
                                 {
                                     string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
-                                    string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7";
-
-                                    <div class="mb-4 item d-flex flex-row flex-wrap @cssCol">
+                                    @* string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7"; *@
+                                    <div class="mb-3 item d-flex flex-row flex-wrap col-sm-12">
                                         <div class="left"><img src="Data/iconht.svg" alt="@item.Relateds[j].Input2" /></div>
                                         <div class="right"><a href="@pathItem"><span>@item.Relateds[j].Input2</span></a></div>
                                     </div>
@@ -95,8 +94,8 @@
                                 @for (int j = 0; j < item.Relateds.Count; j++)
                                 {
                                     string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
-                                    string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7";
-                                    <div class="mb-4 item d-flex flex-row flex-wrap @cssCol">
+                                    @* string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7"; *@
+                                    <div class="mb-3 item d-flex flex-row flex-wrap col-sm-12">
                                         <div class="left"><img src="Data/iconht.svg" alt="@item.Relateds[j].Input2" /></div>
                                         <div class="right"><a href="@pathItem"><span>@item.Relateds[j].Input2</span></a></div>
                                     </div>

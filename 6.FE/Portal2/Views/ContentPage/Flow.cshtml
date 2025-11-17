@@ -154,7 +154,8 @@
     }
 
     .solution-item {
-        margin-bottom: 25px;
+        margin-bottom: 50px;
+        margin-right: 30px;
     }
 
         .solution-item h4 {
@@ -167,7 +168,7 @@
         .solution-item p {
             font-size: 13px;
             color: #093461;
-            margin-bottom: 35px;
+            margin-bottom: 6px;
         }
 
     .solution-link {
@@ -203,13 +204,20 @@
             color: white;
         }
 
-        #WhatWe .number {
-            color: white;
-        }
+     #WhatWe .itemwe{
+        padding-right:35px;
+    }
 
         #WhatWe .number {
             font-weight: 700;
             font-size: 24px;
+            color: white;
+            margin:0;
+        }
+        #WhatWe .tochuc {
+            font-size: 28px;
+            color: white;
+            margin: 0;
         }
 
         #WhatWe .desc {
@@ -264,7 +272,7 @@
         <h2 class="price-title mb-4">Sản phẩm <span style="color:#0066CC;">hỗ trợ</span></h2>
 
         <div class="row pdt20">
-            <div class="col-sm-5 mb-4">
+            <div class="col-sm-7 mb-4">
                 <div class="pdt20"></div>
                 @for (int i = 0; i < listFlowItems.Count; i++)
                 {
@@ -277,7 +285,7 @@
                     </div>
                 }
             </div>
-            <div class="col-sm-7 text-center">
+            <div class="col-sm-5 text-center">
                 <img src="@Model.Input5" class="img-fluid solution-img" alt="@Model.Name">
             </div>
         </div>

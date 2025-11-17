@@ -46,11 +46,11 @@
 	<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="/assets/css/style.css" />
+	<link asp-append-version="true" rel="stylesheet" href="/assets/css/style.css?v=1.1.5" />
 	<link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" />
 	<link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" />
-	<link asp-append-version="true" rel="stylesheet" href="/assets/css/custom.css" />
-	<link asp-append-version="true" rel="stylesheet" href="/assets/css/custom2.css?v=1.1.4" />
+	<link asp-append-version="true" rel="stylesheet" href="/assets/css/custom.css?v=1.1.5" />
+	<link asp-append-version="true" rel="stylesheet" href="/assets/css/custom2.css?v=1.1.5" />
 	<link href="/assets/lib/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
 	<script src="/assets/js/jquery.min.js"></script>
 	<partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
@@ -66,7 +66,6 @@
 		</section>
 		<!-- header area end -->
 		@RenderBody()
-
 		<!-- footer area -->
 		<div class="footter hidden-login">
 			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeFooter", language = language, portalId = portalId })

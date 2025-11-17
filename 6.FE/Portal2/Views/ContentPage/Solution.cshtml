@@ -119,6 +119,7 @@
 		background-image: linear-gradient(#f5f9ff, #f2f7ff), linear-gradient(to right, #E6E6E600, #034EA2);
 		background-origin: border-box;
 		background-clip: padding-box, border-box;
+		padding:25px;
 	}
 
 		.box-fingroup:hover {
@@ -150,7 +151,8 @@
 	}
 
 	.solution-item {
-		margin-bottom: 25px;
+		margin-bottom: 50px;
+		margin-right: 30px;
 	}
 
 		.solution-item h4 {
@@ -163,7 +165,7 @@
 		.solution-item p {
 			font-size: 13px;
 			color: #093461;
-			margin-bottom: 35px;
+			margin-bottom: 12px;
 		}
 
 	.solution-link {
@@ -298,7 +300,7 @@
 		<h2 class="price-title mb-4">Giải pháp hỗ trợ <span style="color:#0066CC;">từ FiinGroup</span></h2>
 
 		<div class="row pdt20">
-			<div class="col-sm-5 mb-4">
+			<div class="col-sm-7 mb-4">
 				<div class="pdt20"></div>
 				@for (int i = 0; i < listFlowItems.Count; i++)
 				{
@@ -311,7 +313,7 @@
 					</div>
 				}
 			</div>
-			<div class="col-sm-7 text-center">
+			<div class="col-sm-5 text-center">
 				<img src="@Model.Input6" class="img-fluid solution-img" alt="@Model.Name">
 			</div>
 		</div>

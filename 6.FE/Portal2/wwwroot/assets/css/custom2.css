@@ -1,7 +1,8 @@
 :root {
     --Base-Brand-Blue: rgba(0, 102, 204, 1);
-    --Text-Primary: rgba(29, 41, 57, 1) ;
-    --Base-Brand-FiinNavy:rgba(9, 52, 97, 1)
+    /*--Text-Primary: rgba(29, 41, 57, 1) ;*/
+    --Text-Primary: #093461;
+    --Base-Brand-FiinNavy: rgba(9, 52, 97, 1)
 }
 #Header a.menu-item, .nav-dropdown-content a {
     color: var(--Text-Primary) !important
@@ -60,7 +61,7 @@
 
     .hotro-list a span {
         color: var(--Text-Primary) !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
     }
     .hotro-list a span:hover {
         color: var(--Base-Brand-Blue) !important;
@@ -79,7 +80,9 @@
 .why-title {
     font-weight: 700;
     padding-top: 10px;
-    font-size: 26px !important;
+    font-size: 24px !important;
+    line-height: 32px;
+    padding-right: 35px;
 }
 .btn-dangky{font-size:12px !important;border:none
         ;font-weight: 500 !important;}
@@ -95,7 +98,7 @@
 
 .why-desc {
     color: rgba(9, 52, 97, 1);
-    padding-right: 15px
+    padding-right: 35px
 }
 
 #WhatWe .number {
@@ -142,7 +145,7 @@ button.btn.btn-primary.btn-join {
 
     .menu-bar .mn-group .mn-group-items img {
         padding-left: 10px;
-        max-height: 16px;
+        max-height: 11px;
         margin-top: 17px;
     }
 
