@@ -469,7 +469,9 @@ a {
 .pr-10 {
     padding-right: 10% !important;
 }
-
+.fw-600{font-weight:600;}
+.fw-500{font-weight:500;}
+.fw-700{font-weight:700;}
 .text-right {
     text-align: right !important;
 }
@@ -692,8 +694,8 @@ a {
 }
 
 #VideoFiin .videoitem {
-    border: 20px solid #fff;
-    border-radius: 20px;
+    border: 15px solid #fff;
+    border-radius: 30px;
     max-height: 574px;
     z-index: 99;
     position: relative;

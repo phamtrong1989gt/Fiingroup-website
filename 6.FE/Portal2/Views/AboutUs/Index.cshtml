@@ -22,3 +22,30 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsUserTeam", language = language, portalId = portalId }))
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "AboutUsWordEnvironment", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsDeliver", language = language, portalId = portalId }))
+
+<script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const links = document.querySelectorAll('.narbarstory a');
+                        links.forEach(link => {
+                            link.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                // Xóa class active
+                                links.forEach(l => l.classList.remove('active'));
+                                link.classList.add('active');
+                                // Lấy ID mục tiêu
+                                const targetId = link.getAttribute('href')?.trim();  // <--- FIX
+                                // Nếu href null hoặc không phải id hợp lệ thì thoát
+                                if (!targetId || !targetId.startsWith("#")) {
+                                    return;
+                                }
+                                const targetEl = document.querySelector(targetId);
+                                if (targetEl) {
+                                    targetEl.scrollIntoView({
+                                        behavior: "smooth",
+                                        block: "start"
+                                    });
+                                }
+                            });
+                        });
+                    });
+            </script>
