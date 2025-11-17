@@ -50,9 +50,25 @@
     </div>
     <div id="collapseOne_100" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_100">
         <div class="panel-body">
-            <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-10"></div>
+
+            <div class="form-group">
+                <div style="margin-bottom:10px;">
+                    <img style="height:200px;" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" id="imgInput12" class="img-thumbnail img-preview-t" src="@(Model.Input12 ?? "/Content/Admin/images/no-avatar.jpg")" alt="Ảnh Head" />
+                </div>
+                <label class="form-label" for="FilePath">Ảnh Head</label>
+                <div class="input-group input-group-t">
+                    <input type="text" class="form-control input-sm form-control-t" asp-for="Input12">
+                    <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
+                        <a button-open-file-manager data-img="imgInput12" data-target="Input12" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="form-group">
+                    <input type="checkbox" asp-for="IsShowHeaderContent" class="filled-in chk-col-green" />
+                    <label for="IsShowHeaderContent" asp-for="IsShowHeaderContent"></label>
+                </div>
             </div>
 
             <div class="row">
@@ -95,6 +111,19 @@
     <div id="collapseOne_103" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_103">
         <div class="panel-body">
             <textarea class="form-control form-control-t" placeholder="" asp-for="Input4"></textarea>
+
+            <div class="form-group">
+                <div style="margin-top:10px; margin-bottom:10px;">
+                    <img style="height:200px;" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" id="imgInput11" class="img-thumbnail img-preview-t" src="@(Model.Input11 ?? "/Content/Admin/images/no-avatar.jpg")" alt="Ảnh Head" />
+                </div>
+                <label class="form-label" for="FilePath">Ảnh mô tả thêm</label>
+                <div class="input-group input-group-t">
+                    <input type="text" class="form-control input-sm form-control-t" asp-for="Input11">
+                    <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
+                        <a button-open-file-manager data-img="imgInput11" data-target="Input11" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

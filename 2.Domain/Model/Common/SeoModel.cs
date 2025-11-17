@@ -66,5 +66,8 @@ namespace PT.Domain.Model
         public string PortalName { get; set; }
         public string PrefixSlug { get; set; }
         public string FullPath { get; set; }
+
+        [Display(Name = "Hiển thị tiêu  đề trang")]
+        public bool IsShowHeaderContent { get; set; } = true;
     }
 }
