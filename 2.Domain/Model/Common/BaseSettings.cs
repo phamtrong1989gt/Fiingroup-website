@@ -16,6 +16,44 @@ namespace PT.Domain.Model
 
     }
 
+    public class NewAPISettings
+    {
+
+        [Display(Name = "Token Endpoint")]
+        public string TokenEndpoint { get; set; }
+
+        [Display(Name = "News Endpoint VI")]
+        public string NewsEndpointVI { get; set; }
+
+        [Display(Name = "News Endpoint EN")]
+        public string NewsEndpointEN { get; set; }
+
+        [Display(Name = "Category ID VI")]
+        public List<int> CategoryIdVI { get; set; }
+
+        [Display(Name = "Category ID EN")]
+        public List<int> CategoryIdEN { get; set; }
+
+        [Display(Name = "Grant Type")]
+        public string GrantType { get; set; }
+
+        [Display(Name = "Client ID")]
+        public string ClientId { get; set; }
+
+        [Display(Name = "Client Secret")]
+        public string ClientSecret { get; set; }
+
+        [Display(Name = "Scope")]
+        public string Scope { get; set; }
+
+        [Display(Name = "Username")]
+        public string Username { get; set; }
+
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+    }
+
+
     public class BaseSettings
     {
         [Display(Name = "Ngôn ngữ mặc định")]
@@ -83,5 +121,7 @@ namespace PT.Domain.Model
         public int TimeCache { get; set; }
         public string DataPath { get; set; }
         public string BackendDomain { get; set; }
+
+        public NewAPISettings NewAPI { get; set; }
     }
 }

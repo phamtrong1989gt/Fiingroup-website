@@ -3,7 +3,6 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 @using Microsoft.Extensions.Options
-@using PT.Domain.Model
 @using PT.Shared;
 @inject IOptions<BaseSettings> _baseSettings;
 @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
@@ -12,28 +11,28 @@
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = _baseSettings.Value.PortalId;
-    // var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 1,
-    //            null, null,
-    //            m => m.Status
-    //                && (m.StartDate >= DateTime.Now || m.StartDate <= DateTime.Now)
-    //                && m.Language == language
-    //                && (m.CategoryType == ECategoryType.ContentPage_Event),
-    //            m => m.OrderByDescending(x => x.StartDate),
-    //            a => new ContentPage
-    //            {
-    //                Banner = a.Banner,
-    //                DatePosted = a.DatePosted,
-    //                Id = a.Id,
-    //                Name = a.Name,
-    //                Summary = a.Summary,
-    //                Language = a.Language,
-    //                Author = a.Author,
-    //                CategoryId = a.CategoryId,
-    //                StartDate = a.StartDate,
-    //                Address = a.Address,
-    //                TimeFromTo = a.TimeFromTo,
-    //                Link = a.Link
-    //            });
+    var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 1,
+               null, null,
+               m => m.Status
+                   && (m.StartDate >= DateTime.Now || m.StartDate <= DateTime.Now)
+                   && m.Language == language
+                   && (m.CategoryType == ECategoryType.ContentPage_Event),
+               m => m.OrderByDescending(x => x.StartDate),
+               a => new ContentPage
+               {
+                   Banner = a.Banner,
+                   DatePosted = a.DatePosted,
+                   Id = a.Id,
+                   Name = a.Name,
+                   Summary = a.Summary,
+                   Language = a.Language,
+                   Author = a.Author,
+                   CategoryId = a.CategoryId,
+                   StartDate = a.StartDate,
+                   Address = a.Address,
+                   TimeFromTo = a.TimeFromTo,
+                   Link = a.Link
+               });
 }
 
 <style>
@@ -215,7 +214,7 @@
     }
 
 </style>
-@* <section id="Banner">
+<section id="Banner">
     <div class="container">
         <div class="row">
             <h1 class="text-white mb-5 mt-5">Khám phá những tin tức, sự kiện và thông tin mới nhất từ FiinGroup </h1>
@@ -339,4 +338,4 @@
             $('#startDate, #endDate').val('');
         });
     });
-</script> *@
+</script>

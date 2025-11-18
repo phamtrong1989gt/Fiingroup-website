@@ -88,6 +88,9 @@ namespace PT.Domain.Model
 
         [NotMapped]
         public string FullPath { get; set; }
+
+        [NotMapped]
+        public NewsListResponse DataAPI { get; set; }
     }
     public class CategoryModel:SeoModel
     {
