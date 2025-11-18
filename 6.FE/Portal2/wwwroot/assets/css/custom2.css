@@ -135,12 +135,12 @@ button.btn.btn-primary.btn-join {
 
     .nav-dropdown-content a {
         display: flex;
-        padding: 12px !important;
+        padding: 12px 12px 10px 12px !important;
     }
 
         .nav-dropdown-content a:hover {
             background-color: transparent;
-            color: #0066CC;
+            color: #0066CC !important;
         }
 
     .menu-bar .mn-group .mn-group-items img {

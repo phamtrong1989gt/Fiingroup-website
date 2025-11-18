@@ -13,7 +13,7 @@
 	<div class="container">
 		<h2 class="price-title mb-5">Đăng ký ngay để <span style="color: #0066CC;">nhận tư vấn</span></h2>
 		<div class="row">
-			<div class="col-lg-6 col-sm-12">
+			<div class="col-lg-5 col-sm-12">
 				@* <form form-edit method="post" asp-action="Contact" asp-controller="ContactHome"> *@
 				<form id="formLienHe" method="post">
 					@Html.AntiForgeryToken()
@@ -63,7 +63,7 @@
 					@* <input type="hidden" id="g-recaptcha-response" name="capcha" /> *@
 				</form>
 			</div>
-			<div class="col-lg-6 col-sm-12 img">
+			<div class="col-lg-7 col-sm-12 img">
 				@await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerRegister", language = language, portalId = portalId })
 			</div>
 		</div>
