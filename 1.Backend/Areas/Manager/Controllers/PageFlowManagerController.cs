@@ -120,6 +120,7 @@ namespace PT.BE.Areas.Manager.Controllers
             foreach (var item in data.Data)
             {
                 item.Portal = portals.FirstOrDefault(x => x.Id == item.PortalId);
+            //    item.FullPath = await _iPortalRepository.GetFullPathAsync(item.PortalId, item.Link?.Slug, portals, item.Language, _baseSettings.Value.MultipleLanguage);
             }
             return View("IndexAjax", data);
         }

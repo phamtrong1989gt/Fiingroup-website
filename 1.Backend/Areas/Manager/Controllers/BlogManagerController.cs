@@ -135,6 +135,7 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 item.Portal = portals.FirstOrDefault(x => x.Id == item.PortalId);
                 item.Category = categorys.FirstOrDefault(x => x.Id == item.CategoryId);
+                //item.FullPath = await _iPortalRepository.GetFullPathAsync(item.PortalId, item.Link?.Slug, portals, item.Language, _baseSettings.Value.MultipleLanguage);
             }
             return View("IndexAjax", data);
         }

@@ -35,8 +35,8 @@
     <td>
         <div class="btn-group">
             <div class="btn-group btn- group-sm" role="group">
-                <a target="_blank" href="@PT.Shared.Functions.FormatUrl(item.Language,item.Link?.Slug)" title="Đến trang" class="btn btn-default waves-effect btncontrolgrid"><i class="material-icons iconcontrol">link</i></a>
-                <a onclick="onCopyClipboard('@PT.Shared.Functions.FormatUrl(item.Language,item.Link?.Slug)')" title="Lấy link" class="btn bg-blue waves-effect btncontrolgrid"><i class="material-icons iconcontrol">share</i></a>
+                    <a target="_blank" href="@item.FullPath" title="Đến trang" class="btn btn-default waves-effect btncontrolgrid"><i class="material-icons iconcontrol">link</i></a>
+                    <a onclick="onCopyClipboard('@item.FullPath')" title="Lấy link" class="btn bg-blue waves-effect btncontrolgrid"><i class="material-icons iconcontrol">share</i></a>
                 <a button-popup data-target="#myModalBig" asp-action="Edit" asp-route-id="@item.Id" title="Cập nhật" class="btn bg-indigo waves-effect btncontrolgrid"><i class="material-icons iconcontrol">edit</i></a>
             </div>
         </div>
