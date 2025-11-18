@@ -361,7 +361,7 @@
                          alertify.notify("sản phẩm hỗ trợ đã tồn tại", "warning", 5);
                          return;
                      }
-                     contentPageRelated.push({ id: data.val(), text: data.find("option:selected").text() })
+                     contentPageRelated.push({ id: data.val(), text: data.find("option:selected").text(), order: $("#orderRelate").val() })
                      alertify.notify("Thêm một sản phẩm hỗ trợ, click lưu thay đổi để lưu lại những sản phẩm hỗ trợ vừa thêm", "success", 5);
                      bindRelated();
                  }
@@ -372,7 +372,6 @@
                      contentPageRelated =[];
                  }
                  else {
-                     console.log(str);
                      contentPageRelated = str;
                  }
                  bindRelated();
@@ -380,16 +379,24 @@
 
              function bindRelated() {
                  if (contentPageRelated.length > 0) {
+                           // Sắp xếp mảng theo order tăng dần trước khi render
+                    contentPageRelated.sort((a, b) => {
+                        const orderA = parseInt(a.order) || 0;
+                        const orderB = parseInt(b.order) || 0;
+                        return orderA - orderB;
+                    });
                      var str = "";
                      $(contentPageRelated).each(function (i, item) {
-                         str += "<tr><td class=\"text-center\">" + (i + 1) + "</td><td>" + item.text + "</td><td><a  title=\"Xóa\" class=\"btn btn-danger waves-effect btncontrolgrid\" onclick=\"remoteRelated(" + item.id + ")\"><i class=\"material-icons iconcontrol\">delete_forever</i></a></td></tr>";
+                              str += "<tr><td class=\"text-center\"><input onChange=\"changeOrderRelated(" + item.id + ", this.value)\" type='number' style='width:70px;' value='" + item.order + "'></td><td>" + item.text + "</td><td><a  title=\"Xóa\" class=\"btn btn-danger waves-effect btncontrolgrid\" onclick=\"remoteRelated(" + item.id + ")\"><i class=\"material-icons iconcontrol\">delete_forever</i></a></td></tr>";
                      });
                      $("[bind-related]").html(str);
                  }
                  else {
                      $("[bind-related]").html("<tr><td colspan='369'>Chưa có sản phẩm hỗ trợ nào</td></tr>");
                  }
-                 $("[name='ContentPageRelatedIds']").val(contentPageRelated.map(x => x.id).join(','));
+                // Cập nhật hidden inputs với thứ tự mới
+                $("[name='ContentPageRelatedIds']").val(contentPageRelated.map(x => x.id).join(','));
+                $("[name='ContentPageRelatedOrders']").val(contentPageRelated.map(x => x.order).join(','));
              }
 
              function remoteRelated(id) {
@@ -402,6 +409,17 @@
                      }
                  });
              }
+
+                 function changeOrderRelated(id, newOrder) {
+                     $.each(contentPageRelated, function (i) {
+                         if (contentPageRelated[i].id == id) {
+                             contentPageRelated[i].order = newOrder;
+                             bindRelated();
+                             alertify.notify("Thay đổi thứ tự sản phẩm hỗ trợ, click lưu thay đổi để lưu lại những sản phẩm hỗ trợ vừa thêm", "success", 5);
+                             return false;
+                         }
+                     });
+                 }
 
             // var cmInput1;
             // var cmInput2;

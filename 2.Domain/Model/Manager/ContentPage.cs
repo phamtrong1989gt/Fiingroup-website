@@ -72,6 +72,12 @@ namespace PT.Domain.Model
         public string Input6 { get; set; }
         public string Input7 { get; set; }
         public string Input8 { get; set; }
+        public string Input9 { get; set; }
+        public string Input10 { get; set; }
+        public string Input11 { get; set; }
+        public string Input12 { get; set; }
+        public bool? IsShowHeaderContent { get; set; } = true;
+        public int? Order { get; set; } = 1;
 
         [NotMapped]
         public List<LinkReference> LinkReferences { get; set; }
@@ -86,6 +92,7 @@ namespace PT.Domain.Model
         public ESlugType? SlugType { get; set; }
         [NotMapped]
         public List<ContentPage> Relateds { get; set; }
+
     }
 
     public class BlogModel :SeoModel
@@ -225,7 +232,16 @@ namespace PT.Domain.Model
         public string Input6 { get; set; }
         public string Input7 { get; set; }
         public string Input8 { get; set; }
+        public string Input9 { get; set; }
+        public string Input10 { get; set; }
+        public string Input11 { get; set; }
+        public string Input12 { get; set; }
+
+        [Display(Name = "Thứ tự")]
+        public int? Order { get; set; } = 1;
+
         public ECategoryType? CategoryType { get; set; }
+        public string ContentPageRelatedOrders { get; set; }
     }
   
     public class FAQModel:SeoModel

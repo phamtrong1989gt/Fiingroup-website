@@ -783,7 +783,11 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly string TokenTarget = "[Target]";
         private readonly string TokenName = "[Name]";
         private readonly string TokenImg = "[Img]";
-        private readonly string TokenNote = "[Note]";
+        private readonly string TokenImg1 = "[Img1]";
+        private readonly string TokenImg2 = "[Img2]";
+        private readonly string TokenNote = "[Content]";
+        private readonly string TokenNote1 = "[Content1]";
+        private readonly string TokenNote2 = "[Content2]";
         public string TokenClassActive = "[ClassActive]";
 
         /// <summary>
@@ -828,8 +832,8 @@ namespace PT.BE.Areas.Manager.Controllers
                     {
                         StrFor.Append(_TokenFor
                          .Replace(TokenUrl, item.Href)
-                         .Replace(TokenTarget, item.Target).Replace(TokenNote, item.Content)
-                         .Replace(TokenImg, item.Banner)
+                         .Replace(TokenTarget, item.Target).Replace(TokenNote, item.Content).Replace(TokenNote1, item.Content1).Replace(TokenNote2, item.Content2)
+                         .Replace(TokenImg, item.Banner).Replace(TokenImg1, item.Banner1).Replace(TokenImg2, item.Banner2)
                          .Replace(TokenName, item.Name)
                          .Replace(TokenClassActive, dlGroup.ClassActive)
                          .Replace(TokenI, i.ToString())
@@ -839,8 +843,8 @@ namespace PT.BE.Areas.Manager.Controllers
                     {
                         StrFor.Append(_TokenFor
                          .Replace(TokenUrl, item.Href)
-                         .Replace(TokenTarget, item.Target).Replace(TokenNote, item.Content)
-                         .Replace(TokenImg, item.Banner)
+                         .Replace(TokenTarget, item.Target).Replace(TokenNote, item.Content).Replace(TokenNote1, item.Content1).Replace(TokenNote2, item.Content2)
+                         .Replace(TokenImg, item.Banner).Replace(TokenImg1, item.Banner1).Replace(TokenImg2, item.Banner2)
                          .Replace(TokenName, item.Name)
                          .Replace(TokenI, i.ToString())
                          );
