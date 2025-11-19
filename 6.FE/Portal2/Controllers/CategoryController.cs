@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PT.Base;
+using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
@@ -27,11 +28,13 @@ namespace PT.UI.Controllers
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ICategoryRepository _iCategoryRepository;
         private readonly ITourRepository _iTourRepository;
-        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, ITourRepository iTourRepository)
+        private readonly INewsAPIService _iNewsAPIService;
+        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, ITourRepository iTourRepository, INewsAPIService iNewsAPIService)
         {
             _iContentPageRepository = iContentPageRepository;
             _iCategoryRepository = iCategoryRepository;
             _iTourRepository = iTourRepository;
+            _iNewsAPIService = iNewsAPIService;
         }
 
         [HttpGet]
@@ -50,6 +53,13 @@ namespace PT.UI.Controllers
             else if (dl.CategoryType == ECategoryType.ContentPage_Blog)
             {
                 Type = ECategoryType.ContentPage_Blog;
+                var listNew = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
+                {
+                    Page = page ?? 1,
+                    PageSize = 10,
+                    FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd")
+                }, language ?? "vi");
+                dl.DataAPI = listNew;
                 viewName = "News";
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Event)
@@ -58,99 +68,98 @@ namespace PT.UI.Controllers
                 viewName = "Event";
             }
 
-            if (dl.CategoryType == ECategoryType.ContentPage_Event)
-            {
-                DateTime? startData = DateTime.Today;
-                key = key ?? "sapdienra";
-                dl.PageBlog = await _iContentPageRepository.SearchPagedListAsync(
-                    page ?? 1,5,id,null,
-                    m => m.CategoryType == Type
-                        && (m.Language == language)
-                        && ((m.StartDate > startData && key == "sapdienra") || (m.StartDate == startData && key == "dangdienra") || (m.StartDate < startData && key == "dadienra"))
-                        && m.Status
-                        , x => x.OrderByDescending(mbox => mbox.StartDate), x => new ContentPage
-                        {
-                            Category = x.Category,
-                            Id = x.Id,
-                            Author = x.Author,
-                            Banner = x.Banner,
-                            DatePosted = x.DatePosted,
-                            Name = x.Name,
-                            Language = x.Language,
-                            Status = x.Status,
-                            Summary = x.Summary,
-                            Tags = x.Tags,
-                            Type = x.Type,
-                            Link = x.Link,
-                            StartDate = x.StartDate,
-                            TimeFromTo = x.TimeFromTo,
-                            Address = x.Address,
-                            Input1 = x.Input1
-                        });
-            }
-            else
-            {
+            //if (dl.CategoryType == ECategoryType.ContentPage_Event)
+            //{
+            //    DateTime? startData = DateTime.Today;
+            //    key = key ?? "sapdienra";
+            //    dl.PageBlog = await _iContentPageRepository.SearchPagedListAsync(
+            //        page ?? 1,5,id,null,
+            //        m => m.CategoryType == Type
+            //            && (m.Language == language)
+            //            && ((m.StartDate > startData && key == "sapdienra") || (m.StartDate == startData && key == "dangdienra") || (m.StartDate < startData && key == "dadienra"))
+            //            && m.Status
+            //            , x => x.OrderByDescending(mbox => mbox.StartDate), x => new ContentPage
+            //            {
+            //                Category = x.Category,
+            //                Id = x.Id,
+            //                Author = x.Author,
+            //                Banner = x.Banner,
+            //                DatePosted = x.DatePosted,
+            //                Name = x.Name,
+            //                Language = x.Language,
+            //                Status = x.Status,
+            //                Summary = x.Summary,
+            //                Tags = x.Tags,
+            //                Type = x.Type,
+            //                Link = x.Link,
+            //                StartDate = x.StartDate,
+            //                TimeFromTo = x.TimeFromTo,
+            //                Address = x.Address,
+            //                Input1 = x.Input1
+            //            });
+            //}
+            //else
+            //{
 
 
-                DateTime? start = null, end = null;
-                if (!string.IsNullOrWhiteSpace(startDate)
-                    && DateTime.TryParseExact(startDate, "dd/MM/yyyy",
-                        CultureInfo.GetCultureInfo("vi-VN"), DateTimeStyles.None, out var d))
-                {
-                    start = d.Date;
-                    end = d.Date.AddDays(1);
-                }
-                if (!string.IsNullOrWhiteSpace(endDate)
-                    && DateTime.TryParseExact(endDate, "dd/MM/yyyy",
-                        CultureInfo.GetCultureInfo("vi-VN"), DateTimeStyles.None, out var dE))
-                {
-                    end = dE.Date;
-                }
-                dl.PageBlog = await _iContentPageRepository.SearchPagedListAsync(
-                     page ?? 1,
-                     9,
-                     id,
-                     null,
-                     m => (m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key))
-                         && (!start.HasValue || m.DatePosted >= start.Value)
-                         && (!end.HasValue || m.DatePosted <= end.Value)
-                         && m.CategoryType == Type
-                         && (m.Language == language)
-                         && m.Status
-                         , x => x.OrderByDescending(mbox => mbox.DatePosted), x => new ContentPage
-                         {
-                             Category = x.Category,
-                             Id = x.Id,
-                             Author = x.Author,
-                             Banner = x.Banner,
-                             DatePosted = x.DatePosted,
-                             Name = x.Name,
-                             Language = x.Language,
-                             Status = x.Status,
-                             Summary = x.Summary,
-                             Tags = x.Tags,
-                             Type = x.Type,
-                             Link = x.Link,
-                             Input1 = x.Input1
-                         });
-            }
+            //    DateTime? start = null, end = null;
+            //    if (!string.IsNullOrWhiteSpace(startDate)
+            //        && DateTime.TryParseExact(startDate, "dd/MM/yyyy",
+            //            CultureInfo.GetCultureInfo("vi-VN"), DateTimeStyles.None, out var d))
+            //    {
+            //        start = d.Date;
+            //        end = d.Date.AddDays(1);
+            //    }
+            //    if (!string.IsNullOrWhiteSpace(endDate)
+            //        && DateTime.TryParseExact(endDate, "dd/MM/yyyy",
+            //            CultureInfo.GetCultureInfo("vi-VN"), DateTimeStyles.None, out var dE))
+            //    {
+            //        end = dE.Date;
+            //    }
+            //    dl.PageBlog = await _iContentPageRepository.SearchPagedListAsync(
+            //         page ?? 1,
+            //         9,
+            //         id,
+            //         null,
+            //         m => (m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key))
+            //             && (!start.HasValue || m.DatePosted >= start.Value)
+            //             && (!end.HasValue || m.DatePosted <= end.Value)
+            //             && m.CategoryType == Type
+            //             && (m.Language == language)
+            //             && m.Status
+            //             , x => x.OrderByDescending(mbox => mbox.DatePosted), x => new ContentPage
+            //             {
+            //                 Category = x.Category,
+            //                 Id = x.Id,
+            //                 Author = x.Author,
+            //                 Banner = x.Banner,
+            //                 DatePosted = x.DatePosted,
+            //                 Name = x.Name,
+            //                 Language = x.Language,
+            //                 Status = x.Status,
+            //                 Summary = x.Summary,
+            //                 Tags = x.Tags,
+            //                 Type = x.Type,
+            //                 Link = x.Link,
+            //                 Input1 = x.Input1
+            //             });
+            //}
 
             objectLink.Title = $"{objectLink.Title}{((page == null) ? "" : (language == "vi" ? $" - trang {page}" : $" - page {page}"))}";
-            ViewData["linkData"] = objectLink;
-            int totalPage = (dl.PageBlog.TotalRows % dl.PageBlog.Limit > 0) ? (dl.PageBlog.TotalRows / dl.PageBlog.Limit + 1) : (dl.PageBlog.TotalRows / dl.PageBlog.Limit);
-            if (totalPage >= 2)
-            {
-                page ??= 1;
-                if (page < totalPage)
-                {
-                    ViewData["linkNext"] = $"{Request.Path}?page={page + 1}";
-                }
-                if (page >= totalPage)
-                {
-                    ViewData["linkPrev"] = $"{Request.Path}?page={page - 1}";
-                }
-            }
-
+            //ViewData["linkData"] = objectLink;
+            //int totalPage = (dl.PageBlog.TotalRows % dl.PageBlog.Limit > 0) ? (dl.PageBlog.TotalRows / dl.PageBlog.Limit + 1) : (dl.PageBlog.TotalRows / dl.PageBlog.Limit);
+            //if (totalPage >= 2)
+            //{
+            //    page ??= 1;
+            //    if (page < totalPage)
+            //    {
+            //        ViewData["linkNext"] = $"{Request.Path}?page={page + 1}";
+            //    }
+            //    if (page >= totalPage)
+            //    {
+            //        ViewData["linkPrev"] = $"{Request.Path}?page={page - 1}";
+            //    }
+            //}
             return View(viewName, dl);
         }
     }

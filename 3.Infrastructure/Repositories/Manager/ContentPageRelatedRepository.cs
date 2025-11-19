@@ -48,35 +48,6 @@ namespace PT.Infrastructure.Repositories
                              Link = link
                          }).AsQueryable();
 
-            // ✅ Apply predicate filter
-            //if (predicate != null)
-            //{
-            //    query = query.Where(predicate);
-            //}
-
-            // ✅ Apply custom orderBy (override sắp xếp mặc định)
-            if (orderBy != null)
-            {
-                var tempQuery = query.Select(x => x.ContentPage);
-                var orderedPages = orderBy(tempQuery);
-
-                // Re-join để giữ RelatedOrder và Link
-                query = (from cp in orderedPages
-                         join cpr in _context.ContentPageRelateds.AsNoTracking()
-                             on new { Id = cp.Id, ParentId = contentPageId }
-                             equals new { Id = cpr.ContentPageId, ParentId = cpr.ParentId }
-                         join link in _context.Links.AsNoTracking()
-                                 .Where(l => l.Type == ESlugType.ContentPage && !l.Delete)
-                             on cp.Id equals link.ObjectId into linkGroup
-                         from link in linkGroup.DefaultIfEmpty()
-                         select new
-                         {
-                             ContentPage = cp,
-                             RelatedOrder = cpr.Order ?? 0,
-                             Link = link
-                         }).AsQueryable();
-            }
-
             // ✅ Apply pagination
             if (Take > 0)
             {

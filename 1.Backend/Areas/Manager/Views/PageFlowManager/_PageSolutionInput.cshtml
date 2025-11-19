@@ -133,12 +133,12 @@
     </div>
     <div id="collapseOne_101" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_101">
         <div class="panel-body">
-            <div class="row">
+        @*     <div class="row">
                 <div class="col-md-2"></div>
                 <div class="col-md-10"></div>
-            </div>
+            </div> *@
 
-            <div class="form-group">
+   @*          <div class="form-group">
                 <label class="form-label" for="FilePath">Ảnh đại diện sản phẩm</label>
                 <div class="input-group input-group-t">
                     <input readonly type="text" class="form-control input-sm form-control-t" asp-for="Input6">
@@ -146,15 +146,16 @@
                         <a button-open-file-manager data-img="imgBanner" data-target="Input6" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
                         <div class="input-group input-group-t">
-                            <div class="input-group-addon br-none">Chọn sản phẩm</div>
+                            <div class="input-group-addon br-none">Chọn sản phẩm + Thứ tự</div>
                             <input type="hidden" asp-for="ContentPageRelatedIds" />
                             <select data-live-search="true" id="BlogId" data-action="@Url.Action("SearchContentPage", new { language = Model.Language, portalId = Model.PortalId })" name="BlogId" class="input-sm form-control-t show-tick with-ajax"></select>
+                            <input style="width:150px;" type="number" class="form-control input-sm form-control-t" placeholder="" id="orderRelate">
                             <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
                                 <a button-add-related class="btn btn-icon bg-indigo waves-effect"><i class="material-icons">add</i> Thêm</a>
                             </div>
