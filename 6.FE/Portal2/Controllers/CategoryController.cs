@@ -53,13 +53,22 @@ namespace PT.UI.Controllers
             else if (dl.CategoryType == ECategoryType.ContentPage_Blog)
             {
                 Type = ECategoryType.ContentPage_Blog;
-                var listNew = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
+                if (string.IsNullOrEmpty(dl.ExCategoryIds))
                 {
-                    Page = page ?? 1,
-                    PageSize = 10,
-                    FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd")
-                }, language ?? "vi");
-                dl.DataAPI = listNew;
+                    dl.DataAPI = new NewsListResponse() { Items = new List<NewsItem>() };
+                }
+                else
+                {
+                    var listNew = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
+                    {
+                        Page = page ?? 1,
+                        PageSize = 9,
+                        FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
+                        CategoryIds = dl.ExCategoryIds,
+                    }, language ?? "vi");
+                    dl.DataAPI = listNew;
+                }    
+                    
                 viewName = "News";
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Event)

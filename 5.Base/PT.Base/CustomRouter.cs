@@ -143,6 +143,44 @@ namespace PT.Base
                 {
                     slug = "";
                 }
+                // Custom thêm ở đây
+                // Dictionary mapping slug prefixes to actions
+                var customRoutes = new Dictionary<string, string>
+                {
+                    { "tin-tuc-fg", "FGNews" },
+                    { "su-kien-fg", "FGEvent" }
+                };
+
+                // Check custom routes
+                foreach (var route in customRoutes)
+                {
+                    if (!string.IsNullOrEmpty(slug) && slug.StartsWith(route.Key))
+                    {
+                        // Pattern: {prefix}-{slug}-id{id}
+                        var match = Regex.Match(slug, $@"^{route.Key}.*-id(\d+)$", RegexOptions.IgnoreCase);
+                        if (match.Success)
+                        {
+                            int contentId = int.Parse(match.Groups[1].Value);
+                            context.RouteData.Values["controller"] = "ContentPage";
+                            context.RouteData.Values["action"] = route.Value;
+                            context.RouteData.Values["id"] = contentId;
+                            context.RouteData.Values["language"] = language;
+                            context.RouteData.Values["portalId"] = baseSettings.Value.PortalId;
+                            context.RouteData.Values["linkData"] = Newtonsoft.Json.JsonConvert.SerializeObject(new Link 
+                            { 
+                                Slug = slug, 
+                                Language = language, 
+                                PortalId = baseSettings.Value.PortalId,
+                                Controller = "ContentPage",
+                                Acction = route.Value,
+                                ObjectId = contentId
+                            });
+                            await _defaultRouter.RouteAsync(context);
+                            return;
+                        }
+                    }
+                }
+
                 // Dùng cache để lưu Link object Link theo key là slug và language, nếu null thì query từ database
                 var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
                 var cacheKey = $"Link_{baseSettings.Value.PortalId}_{slug}_{language}";

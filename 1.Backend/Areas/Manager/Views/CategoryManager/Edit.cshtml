@@ -88,6 +88,14 @@
                                             <input type="text" seo-page-name class="form-control input-sm form-control-t" placeholder="Tên danh mục" asp-for="Name">
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" asp-for="ExCategoryIds"></label> <span asp-validation-for="ExCategoryIds"></span>
+                                        <div class="controls">
+                                            <input type="text" class="form-control input-sm form-control-t" placeholder="Ví dụ: 1,2,3" asp-for="ExCategoryIds">
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label class="form-label" asp-for="Summary"></label> <span asp-validation-for="Summary"></span>
                                         <div class="controls">

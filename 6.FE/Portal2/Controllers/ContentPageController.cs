@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PT.Base;
+using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
@@ -16,15 +17,44 @@ namespace PT.UI.Controllers
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly IContentPageTagRepository _iContentPageTagRepository;
         private readonly ICategoryRepository _iCategoryRepository;
+        private readonly INewsAPIService _iNewsAPIService;
 
         public ContentPageController(IContentPageRepository iContentPageRepository,
             IContentPageTagRepository iContentPageTagRepository,
-            ICategoryRepository iCategoryRepository
+            ICategoryRepository iCategoryRepository,
+            INewsAPIService iNewsAPIService
             )
         {
             _iContentPageRepository = iContentPageRepository;
             _iContentPageTagRepository = iContentPageTagRepository;
             _iCategoryRepository = iCategoryRepository;
+            _iNewsAPIService = iNewsAPIService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FGNews(int id, string language, string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            var dl = await _iNewsAPIService.GetNewsByIdAsync(id);
+            if(dl.Success == false)
+            {
+                return View("_Home404");
+            }
+            string viewName = "FGNews";
+            return View(viewName, dl.Data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FGEvent(int id, string language, string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            var dl = await _iNewsAPIService.GetNewsByIdAsync(id);
+            if (dl.Success == false)
+            {
+                return View("_Home404");
+            }
+            string viewName = "FGEvent";
+            return View(viewName, dl.Data);
         }
 
         [HttpGet]
