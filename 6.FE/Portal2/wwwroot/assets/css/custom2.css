@@ -123,19 +123,20 @@ button.btn.btn-primary.btn-join {
         border-top: rgba(3, 78, 162, 1) 2px solid;
     }
 
-    .menu-bar a.mn-group-name {
-        padding-left: 10px;
-        font-weight: 700;
-    }
+.menu-bar a.mn-group-name {
+    padding-left: 10px;
+    font-weight: 700;
+    background: #daf2fa;
+}
 
-        .menu-bar a.mn-group-name:hover {
-            color: #0066CC;
-            background-color: transparent;
-        }
+    .menu-bar a.mn-group-name:hover {
+        color: #0066CC;
+        background: #d0f1fc;
+    }
 
     .nav-dropdown-content a {
         display: flex;
-        padding: 12px 12px 10px 12px !important;
+        padding: 10px 10px 10px 15px !important;
     }
 
         .nav-dropdown-content a:hover {
@@ -144,7 +145,7 @@ button.btn.btn-primary.btn-join {
         }
 
     .menu-bar .mn-group .mn-group-items img {
-        padding-left: 10px;
+        padding-left: 15px;
         max-height: 11px;
         margin-top: 17px;
     }
