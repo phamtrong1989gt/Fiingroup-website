@@ -16,7 +16,7 @@
 	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 	var portalId = _baseSettings.Value.PortalId;
 	var listFlowItems = await _iContentPageRepository.FlowGetsAsync(language, portalId, Model.Id);
-	var solutions = await _iContentPageRepository.SolutionGetsAsync(language, portalId);
+	var solutions = await _iContentPageRepository.SolutionGetsAsync(language, portalId, Model.Id);
 
 	var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 3,
 				   null, null,
