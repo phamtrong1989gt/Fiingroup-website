@@ -341,7 +341,7 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="menusu-container">
-						@foreach (var solution in solutions.Where(z=> z.Id != Model.Id).OrderBy(x=>x.Order))
+						@foreach (var solution in solutions)
 						{
 							string path = PT.Shared.Functions.FormatUrl(solution.Language, solution.Link?.Slug);
 							<a href="@path" class="menusu-item">
@@ -357,7 +357,7 @@
 
 @if (lstTinLienQuan != null)
 {
-<section id="webinars" class="py-5 mb-5">
+	<section id="webinars" class="py-5 mb-5">
 	<div class="container">
 			<h2 class="price-title mb-5">Our <span style="color: #0066CC;">Featured & Insights</span></h2>
 		<div class="row news-grid">
