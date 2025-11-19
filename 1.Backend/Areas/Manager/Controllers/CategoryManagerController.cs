@@ -159,7 +159,8 @@ namespace PT.BE.Areas.User.Controllers
                     Type = CategoryType.CategoryService,
                     PortalId = portalId,
                     SlugType = ESlugType.Category,
-                    CategoryType = use.CategoryType
+                    CategoryType = use.CategoryType,
+                    ExCategoryIds = use.ExCategoryIds
                 };
 
                 await _iCategoryRepository.AddAsync(data);
@@ -286,6 +287,7 @@ namespace PT.BE.Areas.User.Controllers
                 dl.Content = use.Content;
                 dl.Status = use.Status;
                 dl.Summary = use.Summary;
+                dl.ExCategoryIds = use.ExCategoryIds;
                 _iCategoryRepository.Update(dl);
                 await _iCategoryRepository.CommitAsync();
                 _iCategoryRepository.Update(dl);

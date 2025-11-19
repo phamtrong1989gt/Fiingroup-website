@@ -317,6 +317,7 @@ namespace PT.Infrastructure.Repositories
                     PortalId = x.data.PortalId,
                     CategoryType    = x.data.CategoryType,
                     SlugType        = x.data.SlugType,
+                    ExCategoryIds = x.data.ExCategoryIds
                 }).AsQueryable();
            
             if (asNoTracking)

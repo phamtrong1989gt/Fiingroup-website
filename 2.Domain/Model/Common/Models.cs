@@ -214,16 +214,16 @@ namespace PT.Domain.Model
         public List<int> SourceIds { get; set; }
 
         /// <summary>
-        /// Trạng thái
+        /// Trạng thái (1: Active, 0: Inactive)
         /// </summary>
         [JsonProperty("status")]
-        public string Status { get; set; }
+        public int Status { get; set; }
 
         /// <summary>
         /// Danh sách entities
         /// </summary>
         [JsonProperty("entities")]
-        public List<string> Entities { get; set; }
+        public List<object> Entities { get; set; }
 
         /// <summary>
         /// Danh sách tags
@@ -286,11 +286,14 @@ namespace PT.Domain.Model
         [JsonProperty("sourceIds")]
         public List<int> SourceIds { get; set; }
 
+        /// <summary>
+        /// Trạng thái (1: Active, 0: Inactive)
+        /// </summary>
         [JsonProperty("status")]
-        public string Status { get; set; }
+        public int Status { get; set; }
 
         [JsonProperty("entities")]
-        public List<string> Entities { get; set; }
+        public List<object> Entities { get; set; }
 
         [JsonProperty("tags")]
         public List<string> Tags { get; set; }

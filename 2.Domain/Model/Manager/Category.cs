@@ -62,6 +62,7 @@ namespace PT.Domain.Model
         public string Banner { get; set; }
         public string Banner2 { get; set; }
         public string LinkData { get; set; }
+        public string ExCategoryIds { get; set; }
         public int Order { get; set; }
         [MaxLength(10)]
         public string Language { get; set; }
@@ -107,6 +108,10 @@ namespace PT.Domain.Model
         public string Banner { get; set; }
         public int Order { get; set; }
         public int ParentId { get; set; }
+
+        [Display(Name = "Danh mục kết nối")]
+        public string ExCategoryIds { get; set; }
+
         public ESlugType? SlugType { get; set; }
         [Display(Name = "Đặt làm dịch vụ tiêu biểu")]
         public bool IsHome { get; set; }

@@ -256,9 +256,13 @@ namespace PT.Base.Services
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
-            var newsDetail = JsonConvert.DeserializeObject<NewsDetailResponse>(responseContent);
-
-            return newsDetail;
+            var newsDetail = JsonConvert.DeserializeObject<NewsDetail>(responseContent);
+            var outData = new NewsDetailResponse
+            {
+                Data = newsDetail,
+                Success = newsDetail != null
+            };
+            return outData;
         }
     }
 
