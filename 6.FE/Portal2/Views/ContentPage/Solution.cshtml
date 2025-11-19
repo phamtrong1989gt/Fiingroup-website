@@ -352,7 +352,7 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="menusu-container">
-						@foreach (var solution in solutions)
+						@foreach (var solution in solutions.Where(z=> z.Id != Model.Id).OrderBy(x=>x.Order))
 						{
 							string path = PT.Shared.Functions.FormatUrl(solution.Language, solution.Link?.Slug);
 							<a href="@path" class="menusu-item">

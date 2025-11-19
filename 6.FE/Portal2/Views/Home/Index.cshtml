@@ -25,7 +25,12 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId })
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerHeSinhThai", language = language, portalId = portalId })
-
+<style>
+    .why-title a
+    {
+        color: var(--title-color);
+    }
+</style>
 <section id="HoTro" class="pt-5">
     <div class="container">
         <div class="row">
@@ -44,7 +49,7 @@
                     </div>
 
                     <div class="col-lg-5 col-sm-12">
-                        <div class="why-title">@item.Name</div>
+                        <div class="why-title"><a href="@path">@item.Name</a></div>
                         <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
                             <defs>
@@ -78,7 +83,7 @@
                 else
                 {
                     <div class="col-lg-5 col-sm-12">
-                        <div class="why-title">@item.Name</div>
+                        <div class="why-title"><a href="@path">@item.Name</a></div>
                         <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
                             <defs>
