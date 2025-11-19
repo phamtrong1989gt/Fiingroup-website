@@ -197,11 +197,11 @@
         line-height: 120%;
         min-height: calc(28px * 1.2 * 3); /* 3 dòng */
         display: -webkit-box;
-      -webkit-line-clamp: 3;
-     -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-   color: #1D2939;
+        color: #1D2939;
     }
 
     .no-data-messege {
@@ -212,8 +212,7 @@
         color: #093461;
     }
 
-    .news-img
-    {
+    .news-img {
         width: 100%;
         aspect-ratio: 16 / 10;
         object-fit: cover;
@@ -300,50 +299,128 @@
                 <button type="submit" class="btn btn-primary btn-search">Tìm kiếm</button>
             </div>
         </form>
-        <div class="row mt-5">
-            @if (Model.DataAPI != null)
-            {
-                @foreach (var item in Model.DataAPI.Items)
-                {
-                    string url = $"/{language}/tin-tuc-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
-                    <div class="col-lg-4 col-sm-6">
-                        <a href="@url" title="@item.Title">
-                            <img class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.ImageUrl ?? "/Data/Banner/no-img.jpg")" alt="@item.Title">
-                        </a>
-                        <h3 class="pt-4">
-                            <a href="@url" title="@item.Title" class="news-title">@item.Title</a>
-                        </h3>
-                        <div class="pt-2 pb-4 mb-4">
-                            <a href="@url" title="@item.Title" class="show-more">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-lg-12 col-sm-12 text-center my-5">
-                    <img src="/Data/no-data.jpg" alt="No data" />
-                    <p class="no-data-messege my-5">Chưa có tin tức, sự kiện nào sắp diễn ra.</p>
-                </div>
-            }
-            <!-- pagination -->
-          @*   <div class="pagination-area">
-                <div aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        @Html.Raw(PT.Shared.Functions.GenPageList("", Model.PageBlog.Page, Model.PageBlog.TotalRows, Model.PageBlog.Limit, $"&key={Context.Request.Query["key"]}" + $"&startDate={Context.Request.Query["startDate"]}" + $"&endDate={Context.Request.Query["endDate"]}", "page-item"))
-                    </ul>
-                </div>
-            </div> *@
-            <!-- pagination end -->
+        <div class="row mt-5" id="content-bind">
+            <partial name="NewsAjax" model="Model.DataAPI" />
         </div>
     </div>
 </section>
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsDeliver", language = language, portalId = portalId }))
-<script>
-    $(function() {
-        $('.btn-clear').on('click', function() {
-            $('#search-input').val('');
-            $('#startDate, #endDate').val('');
-        });
-    });
-</script>
+@section Scripts {
+    <script>
+        (function ($) {
+            var newsAjaxUrl = '@Url.Action("NewsAjax", "Category")';
+            var currentLanguage = '@language';
+            var hasServerData = @((Model.DataAPI != null && Model.DataAPI.Items != null && Model.DataAPI.Items.Count >0).ToString().ToLower());
+
+            function toYMD(date) {
+                // date: Date object
+                var y = date.getFullYear();
+                var m = (date.getMonth() +1).toString().padStart(2, '0');
+                var d = date.getDate().toString().padStart(2, '0');
+                return y + '-' + m + '-' + d;
+            }
+
+            function normalizeDateInput(selector) {
+                var $el = $(selector);
+                var val = $el.val();
+                if (!val) return;
+
+                // If already in yyyy-MM-dd, keep it
+                if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                    return;
+                }
+
+                // Try parsing common formats (dd/MM/yyyy or MM/dd/yyyy)
+                var parts;
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
+                    parts = val.split('/'); // dd/MM/yyyy
+                    var d = parseInt(parts[0],10);
+                    var m = parseInt(parts[1],10) -1;
+                    var y = parseInt(parts[2],10);
+                    var dt = new Date(y, m, d);
+                    if (!isNaN(dt)) {
+                        $el.val(toYMD(dt));
+                    }
+                    return;
+                }
+
+                // Try Date constructor fallback
+                var dt = new Date(val);
+                if (!isNaN(dt)) {
+                    $el.val(toYMD(dt));
+                }
+            }
+
+            // Format both date inputs to yyyy-MM-dd before any form submit
+            function formatDateInputsBeforeSubmit() {
+                normalizeDateInput('#startDate');
+                normalizeDateInput('#endDate');
+            }
+
+            function buildParams(page) {
+                var keyword = $('#search-input').val() || '';
+                var fromDate = $('#startDate').val() || '';
+                var toDate = $('#endDate').val() || '';
+
+                return {
+                    Page: page ||1,
+                    PageSize:9,
+                    Keyword: keyword,
+                    FromDate: fromDate,
+                    ToDate: toDate,
+                    Language: currentLanguage
+                };
+            }
+
+            window.getNewsAjax = function (page) {
+                page = page ||1;
+                var params = buildParams(page);
+
+                $.get(newsAjaxUrl, params)
+                    .done(function (html) {
+                        $('#content-bind').html(html);
+
+                        // after first AJAX load, mark that client now has data
+                        hasServerData = true;
+                    })
+                    .fail(function () {
+                        $('#content-bind').html('<div class="no-data-messege">No data</div>');
+                    });
+            };
+
+            $(function () {
+                // initial load (if page has query params, keep them)
+                var urlParams = new URLSearchParams(window.location.search);
+                var initialPage = parseInt(urlParams.get('page')) ||1;
+                var initialKey = urlParams.get('key');
+                var initialFrom = urlParams.get('startDate');
+                var initialTo = urlParams.get('endDate');
+
+                if (initialKey) $('#search-input').val(initialKey);
+                if (initialFrom) $('#startDate').val(initialFrom);
+                if (initialTo) $('#endDate').val(initialTo);
+
+                // Only call AJAX if server did NOT render initial data
+                if (!hasServerData) {
+                    getNewsAjax(initialPage);
+                }
+
+                // Ensure date inputs are normalized before full form submit (server-side search)
+                $('form[method="get"]').on('submit', function (e) {
+                    formatDateInputsBeforeSubmit();
+                    // allow normal submit for SEO
+                });
+
+                // Clear button should clear and submit form to reload server-side results
+                $('.btn-clear').on('click', function () {
+                    $('#search-input').val('');
+                    $('#startDate, #endDate').val('');
+                    // submit the form to let server render search results (SEO-friendly)
+                    $(this).closest('form').submit();
+                });
+
+                // Do not intercept pagination links - allow normal navigation / server-side rendered pages
+            });
+        })(jQuery);
+    </script>
+}

@@ -38,6 +38,17 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> NewsAjax([FromQuery] NewsQueryParameters prs)
+        {
+            prs.PageSize = 9;
+            prs.Page = prs.Page <= 0 ? 1 : prs.Page;
+            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
+            prs.Status = null;
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            return View(listNew);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Details(int id, string language, int? page, string key, string startDate, string endDate, string linkData)
         {
             var objectLink = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);

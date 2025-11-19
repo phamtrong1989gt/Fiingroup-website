@@ -63,6 +63,7 @@ namespace PT.Domain.Model
         /// Tags (comma-separated)
         /// </summary>
         public string Tags { get; set; }
+        public string Language { get; set; }
 
         /// <summary>
         /// Convert to query string
