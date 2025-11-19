@@ -50,7 +50,6 @@
 		color: #fff;
 		max-width: 89%;
 		z-index: 2;
-		padding-bottom: 30px;
 	}
 
 	.hero-subtitle {
@@ -58,7 +57,6 @@
 		font-size: 40px;
 		font-weight: 500;
 		color: #fff;
-		padding-top: 60px;
 	}
 
 	.hero-title {
@@ -260,8 +258,11 @@
 <section id="StockEconomy" class="hero-section">
 	<div class="hero-overlay">
 		<div class="container">
-			<div class="hero-content">
-				<span class="hero-subtitle">@Model.Input1</span>
+			<div class="hero-content py-3">
+				@if (!string.IsNullOrEmpty(Model.Input1))
+				{
+					<span class="hero-subtitle">@Model.Input1</span>
+				}
 				<h1 class="hero-title">
 					@Model.Input2
 				</h1>
@@ -273,7 +274,7 @@
 	</div>
 </section>
 <section id="FiinGroup">
-	<div class="container">
+	<div class="container" id="overview">
 		<div class="navbarfin">
 			@Html.Raw(Model.Input4)
 		</div>
@@ -281,18 +282,6 @@
 			@Html.Raw(Model.Input5)
 		</div>
 	</div>
-	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-			const links = document.querySelectorAll('.navbarfin a');
-			links.forEach(link => {
-				link.addEventListener('click', (e) => {
-					e.preventDefault();
-					links.forEach(l => l.classList.remove('active'));
-					link.classList.add('active');
-				});
-			});
-		});
-	</script>
 </section>
 
 <section id="products" class="py-5">
@@ -343,7 +332,7 @@
 </section>
 
 <section id="Solution" class="py-5 mb-5">
-	<div class="container">
+	<div class="container" id="featured-insights">
 		<!-- <div class="overlay"></div> -->
 		<div class="solution">
 			<div class="row">
@@ -368,7 +357,7 @@
 
 @if (lstTinLienQuan != null)
 {
-<section id="Insights" class="py-5 mb-5">
+<section id="webinars" class="py-5 mb-5">
 	<div class="container">
 			<h2 class="price-title mb-5">Our <span style="color: #0066CC;">Featured & Insights</span></h2>
 		<div class="row news-grid">
@@ -401,3 +390,30 @@
 	</div>
 </section>
 }
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const links = document.querySelectorAll('.navbarfin a');
+		links.forEach(link => {
+			link.addEventListener('click', (e) => {
+				e.preventDefault();
+				// Xóa class active
+				links.forEach(l => l.classList.remove('active'));
+				link.classList.add('active');
+				// Lấy ID mục tiêu
+				const targetId = link.getAttribute('href')?.trim();
+				// Nếu href null hoặc không phải id hợp lệ thì thoát
+				if (!targetId || !targetId.startsWith("#")) {
+					return;
+				}
+				const targetEl = document.querySelector(targetId);
+				if (targetEl) {
+					targetEl.scrollIntoView({
+						behavior: "smooth",
+						block: "start"
+					});
+				}
+			});
+		});
+	});
+</script>
