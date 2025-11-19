@@ -636,7 +636,7 @@ namespace PT.Infrastructure.Repositories
             }
         }
 
-        public async Task<List<ContentPage>> SolutionGetsAsync(string language, int portalId)
+        public async Task<List<ContentPage>> SolutionGetsAsync(string language, int portalId, int notId)
         {
             IQueryable<ContentPage> query = _context.ContentPages.Where(x => x.Status == true && (x.CategoryType == ECategoryType.ContentPage_Solution) && x.Language == language && x.PortalId == portalId).AsQueryable();
             query = query
@@ -679,7 +679,8 @@ namespace PT.Infrastructure.Repositories
                     Input5 = x.data.Input5,
                     Input6 = x.data.Input6,
                     Input7 = x.data.Input7,
-                    Input8 = x.data.Input8
+                    Input8 = x.data.Input8,
+                    Order = x.data.Order
                 }).AsQueryable();
 
             return await query.OrderBy(x => x.Order).AsNoTracking().ToListAsync();
