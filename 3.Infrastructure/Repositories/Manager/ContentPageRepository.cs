@@ -636,9 +636,9 @@ namespace PT.Infrastructure.Repositories
             }
         }
 
-        public async Task<List<ContentPage>> SolutionGetsAsync(string language, int portalId, int notId)
+        public async Task<List<ContentPage>> SolutionGetsAsync(string language, int portalId, int notId = 0)
         {
-            IQueryable<ContentPage> query = _context.ContentPages.Where(x => x.Status == true && (x.CategoryType == ECategoryType.ContentPage_Solution) && x.Language == language && x.PortalId == portalId).AsQueryable();
+            IQueryable<ContentPage> query = _context.ContentPages.Where(x => x.Status == true && (x.CategoryType == ECategoryType.ContentPage_Solution) && x.Language == language && x.PortalId == portalId && (notId == 0 || x.Id != notId)).AsQueryable();
             query = query
                 .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
