@@ -40,29 +40,6 @@
 		background: #fff;
 	}
 
-	#Banner {
-		background: url(/Data/news-bg.jpg) no-repeat top;
-		background-size: cover;
-		height: 396px;
-	}
-
-		#Banner h1 {
-			font-style: normal;
-			font-weight: 700;
-			font-size: 36px;
-			line-height: 150%;
-		}
-
-		#Banner h2 {
-			font-weight: 700;
-			font-size: 24px;
-			line-height: 28px;
-		}
-
-		#Banner img {
-			border-radius: 16px;
-		}
-
 	.item-date {
 		font-weight: 400;
 		font-size: 18px;
@@ -85,7 +62,7 @@
 	#NewButton {
 		align-items: center;
 		justify-content: center;
-		margin: -2% 0 0 0;
+		margin: -3% 0 0 0;
 	}
 
 	.btn-active {
@@ -259,24 +236,14 @@
 	}
 
 </style>
-<section id="Banner">
-	<div class="container">
-		<div class="row">
-			<h1 class="text-white my-5">Khám phá báo cáo, phân tích và nhận định chuyên sâu do đội ngũ FiinGroup thực hiện.</h1>
-		</div>
-	</div>
-</section>
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "PublicationsBanner", language = language, portalId = portalId }))
 
 <section id="NewButton">
 	<div class="container">
 		<div class="row d-flex justify-content-center">
 			@if (Model.ParentId == 0)
 			{
-				<div class="row d-flex justify-content-center">
-					<a class="btn btn-noactive" title="Ấn phẩm" href="#">Ấn phẩm</a>
-					<a class="btn btn-active" title="Báo cáo" href="#">Báo cáo</a>
-				</div>
-				@* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsLinkTab", language = language, portalId = portalId }) *@
+				@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "PublicationsLinkTab", language = language, portalId = portalId })
 			}
 			else
 			{
@@ -313,13 +280,13 @@
 				<button type="submit" class="btn btn-primary btn-search">Tìm kiếm</button>
 			</div>
 		</form>
-		<div class="d-flex justify-content-start mt-5 mb-5 pub-list-tag">
+		@* <div class="d-flex justify-content-start mt-5 mb-5 pub-list-tag">
 			<button type="submit" class="btn btn-tag btn-tag-active">Banking</button>
 			<button type="submit" class="btn btn-tag">Credit</button>
 			<button type="submit" class="btn btn-tag">Cement</button>
 			<button type="submit" class="btn btn-tag">Consumer</button>
 			<button type="submit" class="btn btn-tag">Cold Chain</button>
-		</div>
+		</div> *@
 		<div class="row mt-5">
 			@if (Model.PageBlog != null)
 			{
