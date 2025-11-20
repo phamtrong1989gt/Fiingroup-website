@@ -307,7 +307,7 @@
 			    {
 				    string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
 				    <div class="col-sm-4">
-					    <img src="@item.Banner" class="img-fluid w-100" alt="@item.Name" title="@item.Name" />
+					    <img src="@item.Banner" class="img-fluid w-100 img-item" alt="@item.Name" title="@item.Name" />
 					    @if (item.Tags != null)
 					    {
 						    foreach (var tag in item.Tags)
@@ -319,10 +319,12 @@
 					    }
 				    <div class="pt-3 pb-3">
 					    <div class="news-title text-break">
-                                <a href="@path" title="@item.Name">@item.Name</a>
+                                <a href="@path" title="@item.Name">
+                                @(item.Name.Length > 58 ? item.Name.Substring(0, 58) + "..." : item.Name)
+                                </a>
 					    </div>
 				    </div>
-				    <div>@Html.Raw(item.Summary)</div>
+                    <div>@(item.Name.Length > 130 ? Html.Raw(item.Summary.Substring(0, 130)) + "..." : Html.Raw(item.Summary))</div>
 				    <div class="pt-4">
 					    <a class="show-more" href="@path" title="@item.Name">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
 				    </div>

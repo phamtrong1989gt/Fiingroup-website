@@ -117,7 +117,7 @@
 		background-image: linear-gradient(#f5f9ff, #f2f7ff), linear-gradient(to right, #E6E6E600, #034EA2);
 		background-origin: border-box;
 		background-clip: padding-box, border-box;
-		padding:25px;
+		padding: 25px;
 	}
 
 		.box-fingroup:hover {
@@ -358,37 +358,39 @@
 @if (lstTinLienQuan != null)
 {
 	<section id="webinars" class="py-5 mb-5">
-	<div class="container">
+		<div class="container">
 			<h2 class="price-title mb-5">Our <span style="color: #0066CC;">Featured & Insights</span></h2>
-		<div class="row news-grid">
-			@foreach (var item in lstTinLienQuan)
-			{
-				string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
-				<div class="col-sm-4">
-					<img src="@item.Banner" class="img-fluid w-100 img-anhdaidien" alt="@item.Name" title="@item.Name" />
-					@if (item.Tags != null)
-					{
-						foreach (var tag in item.Tags)
+			<div class="row news-grid">
+				@foreach (var item in lstTinLienQuan)
+				{
+					string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
+					<div class="col-sm-4">
+						<img src="@item.Banner" class="img-fluid w-100 img-item" alt="@item.Name" title="@item.Name" />
+						@if (item.Tags != null)
 						{
-							<button class="mt-3 btn btn-news" data-action="login" data-tag="@tag?.Name">
-								@tag?.Name
-							</button>
+							foreach (var tag in item.Tags)
+							{
+								<button class="mt-3 btn btn-news" data-action="login" data-tag="@tag?.Name">
+									@tag?.Name
+								</button>
+							}
 						}
-					}
-				<div class="pt-3 pb-3">
-					<div class="news-title text-break">
-								<a target="_blank" href="@path" title="@item.Name">@item.Name</a>
+						<div class="pt-3 pb-3">
+							<div class="news-title text-break">
+								<a href="@path" title="@item.Name">
+									@(item.Name.Length > 58 ? item.Name.Substring(0, 58) + "..." : item.Name)
+								</a>
+							</div>
+						</div>
+						<div>@(item.Name.Length > 130 ? Html.Raw(item.Summary.Substring(0, 130)) + "..." : Html.Raw(item.Summary))</div>
+						<div class="pt-4">
+							<a class="show-more" href="@path" title="@item.Name">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						</div>
 					</div>
-				</div>
-				<div>@Html.Raw(item.Summary)</div>
-				<div class="pt-4">
-					<a class="show-more" href="@path" title="@item.Name">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
-				</div>
+				}
 			</div>
-			}
 		</div>
-	</div>
-</section>
+	</section>
 }
 
 <script>
