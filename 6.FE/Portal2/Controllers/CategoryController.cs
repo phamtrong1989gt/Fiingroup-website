@@ -45,7 +45,7 @@ namespace PT.UI.Controllers
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.Status = null;
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
-            return View(listNew);
+            return View("NewsAjax", listNew);
         }
 
         [HttpGet]
