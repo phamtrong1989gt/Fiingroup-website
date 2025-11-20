@@ -3,419 +3,421 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 @using Microsoft.Extensions.Options
+@using PT.Domain.Model
 @using PT.Shared;
 @inject IOptions<BaseSettings> _baseSettings;
 @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
 
 @{
-	Layout = "~/Views/Shared/_Home.cshtml";
-	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-	var portalId = _baseSettings.Value.PortalId;
-	var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 1,
-						null, null,
-						m => m.Status
-							&& (m.StartDate >= DateTime.Now || m.StartDate <= DateTime.Now)
-							&& m.Language == language
-							&& (m.CategoryType == ECategoryType.ContentPage_Event),
-						m => m.OrderByDescending(x => x.StartDate),
-						a => new ContentPage
-						{
-							Banner = a.Banner,
-							DatePosted = a.DatePosted,
-							Id = a.Id,
-							Name = a.Name,
-							Summary = a.Summary,
-							Language = a.Language,
-							Author = a.Author,
-							CategoryId = a.CategoryId,
-							StartDate = a.StartDate,
-							Address = a.Address,
-							TimeFromTo = a.TimeFromTo,
-							Link = a.Link
-						});
-	string urlPage = @PT.Shared.Functions.FormatUrl(@language, Model.Link?.Slug);
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var portalId = _baseSettings.Value.PortalId;
 }
 
 <style>
-	body {
-		background: #fff;
-	}
+    body {
+        background: #fff;
+    }
 
-	#Banner {
-		background: url(/Data/news-bg.jpg) no-repeat top;
-		background-size: cover;
-		height: 637px;
-	}
+    #Banner {
+        background: url(/Data/news-bg.jpg) no-repeat top;
+        background-size: cover;
+        height: 637px;
+    }
 
-		#Banner h1 {
-			font-style: normal;
-			font-weight: 700;
-			font-size: 36px;
-			line-height: 150%;
-		}
+        #Banner h1 {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 36px;
+            line-height: 150%;
+        }
 
-		#Banner h2 {
-			font-weight: 700;
-			font-size: 24px;
-			line-height: 28px;
-		}
+        #Banner h2 {
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 28px;
+        }
 
-		#Banner img {
-			border-radius: 16px;
-		}
+        #Banner img {
+            border-radius: 16px;
+        }
 
-	.item-date {
-		font-weight: 400;
-		font-size: 18px;
-		line-height: 150%;
-		display: flex;
-		align-items: center;
-		color: #fff;
-	}
+    .item-date {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 150%;
+        display: flex;
+        align-items: center;
+        color: #fff;
+    }
 
-		.item-date i {
-			padding: 0 10px 0 0;
-			width: 30px;
-		}
+        .item-date i {
+            padding: 0 10px 0 0;
+            width: 30px;
+        }
 
-		.item-date .item-label {
-			padding: 0 10px 0 0;
-			width: 126px;
-		}
+        .item-date .item-label {
+            padding: 0 10px 0 0;
+            width: 126px;
+        }
 
-	#NewButton {
-		align-items: center;
-		justify-content: center;
-		margin: 2.5% 0 0 0;
-	}
+    #NewButton {
+        align-items: center;
+        justify-content: center;
+        margin: 2.5% 0 0 0;
+    }
 
-	.btn-active {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		padding: 12px 40px;
-		gap: 40px;
-		width: 302px;
-		height: 72px;
-		background: #FFFFFF;
-		box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
-		border-radius: 12px;
-		font-size: 24px;
-		font-weight: 500;
-		color: #093461;
-		margin: 0 10px;
-	}
+    .btn-active {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 40px;
+        gap: 40px;
+        width: 302px;
+        height: 72px;
+        background: #FFFFFF;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+        font-size: 24px;
+        font-weight: 500;
+        color: #093461;
+        margin: 0 10px;
+    }
 
-		.btn-active:hover {
-			background: #f6f6f6;
-		}
+        .btn-active:hover {
+            background: #f6f6f6;
+        }
 
-	.btn-noactive {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		padding: 12px 40px;
-		gap: 40px;
-		width: 302px;
-		height: 72px;
-		background: #0066CC;
-		box-shadow: 0px 8px 20px rgba(0, 102, 204, 0.12), 0px -8px 20px rgba(255, 255, 255, 0.2);
-		border-radius: 12px;
-		font-size: 24px;
-		font-weight: 500;
-		color: #fff;
-	}
+    .btn-noactive {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 40px;
+        gap: 40px;
+        width: 302px;
+        height: 72px;
+        background: #0066CC;
+        box-shadow: 0px 8px 20px rgba(0,102,204,0.12), 0px -8px 20px rgba(255,255,255,0.2);
+        border-radius: 12px;
+        font-size: 24px;
+        font-weight: 500;
+        color: #fff;
+    }
 
-		.btn-noactive:hover {
-			background: #0f65ba;
-			color: #fff;
-		}
+        .btn-noactive:hover {
+            background: #0f65ba;
+            color: #fff;
+        }
 
-	.btn-reset {
-		color: #0066CC;
-	}
+    .btn-reset {
+        color: #0066CC;
+    }
 
-	#search #search-input {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		padding: 12px;
-		gap: 10px;
-		width: 485px;
-		height: 38px;
-		background: #FFFFFF;
-		border: 1px solid #034EA2;
-		border-radius: 4px;
-	}
+    #search #search-input {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px;
+        gap: 10px;
+        width: 485px;
+        height: 38px;
+        background: #FFFFFF;
+        border: 1px solid #034EA2;
+        border-radius: 4px;
+    }
 
-	#search {
-		position: relative;
-		font-size: 18px;
-	}
+    #search {
+        position: relative;
+        font-size: 18px;
+    }
 
-		#search label {
-			position: absolute;
-			right: 8px;
-			top: 6px;
-			color: #034EA2;
-		}
+        #search label {
+            position: absolute;
+            right: 8px;
+            top: 6px;
+            color: #034EA2;
+        }
 
-	.date-input {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		padding: 6px;
-		gap: 10px;
-		/*width: 198.5px;*/
-		height: 38px;
-		background: #FFFFFF;
-		border: 1px solid #034EA2;
-		border-radius: 4px;
-		color: #838282;
-	}
+    .date-input {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 6px;
+        gap: 10px;
+        /*width: 198.5px;*/
+        height: 38px;
+        background: #FFFFFF;
+        border: 1px solid #034EA2;
+        border-radius: 4px;
+        color: #838282;
+    }
 
-	.mr-2 {
-		margin: 0 1rem 0;
-	}
+    .mr-2 {
+        margin: 0 1rem 0;
+    }
 
-	.btn-search {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		padding: 10px 50px;
-		height: 40px;
-		background: #0066CC;
-		border-radius: 200px;
-	}
+    .btn-search {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 50px;
+        height: 40px;
+        background: #0066CC;
+        border-radius: 200px;
+    }
 
-	.news-title {
-		font-weight: 700;
-		font-size: 28px;
-		height: 102px;
-		line-height: 120%;
-		display: flex;
-		align-items: center;
-		color: #1D2939;
-		flex: none;
-		order: 0;
-		align-self: stretch;
-		flex-grow: 0;
-		overflow: hidden;
-	}
+    /* loading spinner for button */
+    .loader {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top: 2px solid #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-left: 8px;
+        position: absolute;
+        left: 5px;
+    }
 
-	.no-data-messege {
-		font-style: normal;
-		font-weight: 700;
-		font-size: 28px;
-		text-align: center;
-		color: #093461;
-	}
+    @@keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
 
-	.item-date-sub {
-		font-weight: 400;
-		font-size: 18px;
-		line-height: 150%;
-		display: flex;
-		align-items: center;
-		color: #1D2939;
-	}
+        to {
+            transform: rotate(360deg);
+        }
+    }
 
-		.item-date-sub i {
-			padding: 0 10px 0 0;
-			width: 30px;
-			color: #0066CC;
-		}
+    .news-title {
+        font-weight: 700;
+        font-size: 28px;
+        line-height: 120%;
+        min-height: calc(28px * 1.2 * 3); /* 3 dòng */
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #1D2939;
+    }
 
-		.item-date-sub .item-label {
-			padding: 0 10px 0 0;
-			width: 126px;
-		}
+    .no-data-messege {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 28px;
+        text-align: center;
+        color: #093461;
+    }
 
-		.item-date-sub .item-label-sub {
-			padding: 0 10px 0 0;
-			font-weight: 600;
-			color: #1D2939;
-		}
-
-	.news-title-sub {
-		font-weight: 700;
-		font-size: 20px;
-		line-height: 32px;
-		display: flex;
-		align-items: center;
-		color: #1D2939;
-		flex: none;
-		order: 0;
-		align-self: stretch;
-		flex-grow: 0;
-		overflow: hidden;
-	}
-
-	.tags {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		gap: 20px;
-		height: 40px;
-		/*background: #E1F4FD;*/
-		border-width: 1px 1px 1px 1px;
-		border-style: solid;
-		border-color: #034EA2;
-		border-radius: 8px;
-		color: #034EA2;
-		font-weight: 600;
-	}
-
-		.tags a {
-			padding: 7px 0;
-			text-align: center;
-			width: 119px;
-			color: #034EA2;
-		}
-
-			.tags a:hover {
-				color: #0066CC;
-			}
-
-		.tags .active {
-			background: #E1F4FD;
-			border-radius: 8px;
-		}
+    .news-img {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+        border: 1px solid #eee;
+    }
 </style>
 <section id="Banner">
-	<div class="container">
-		<div class="row">
-			<h1 class="text-white mb-5 mt-5">Khám phá những tin tức, sự kiện và thông tin mới nhất từ FiinGroup </h1>
-			@foreach (var item in lstTinLienQuan)
-			{
-				string url = @PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
-				<div class="col-lg-5 col-sm-6 mb-5">
-					<h2 class="text-white mb-4">@item.Name</h2>
-					<div class="item-date mb-2">
-						<i class="fa fa-calendar-o" aria-hidden="true"></i>
-						<span class="item-label">Ngày tổ chức</span>
-						<span>@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
-					</div>
-					<div class="item-date mb-2">
-						<i class="fa fa-clock-o" aria-hidden="true"></i>
-						<span class="item-label">Thời gian</span>
-						<span>@item.TimeFromTo</span>
-					</div>
-					<div class="item-date mb-5">
-						<i class="fa fa-map-marker" aria-hidden="true"></i>
-						<span class="item-label">Địa điểm</span>
-						<span>@item.Address</span>
-					</div>
-					<a class="btn btn-light btn-about btn-khampha" href="@url" target="_blank">Khám phá ngay</a>
-				</div>
-				<div class="col-lg-7 col-sm-6 mb-5">
-					<a href="@url" title="@item.Name">
-						<img src="@item.Banner" alt="@item.Name" title="@item.Name" />
-					</a>
-				</div>
-			}
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <h1 class="text-white mb-5 mt-5">Khám phá những tin tức, sự kiện và thông tin mới nhất từ FiinGroup </h1>
+            <p style="color: #fff; font-size:20px;">Hiện chưa có sự kiện mới nào</p>
+            @*   @foreach (var item in lstTinLienQuan)
+            {
+                string url = @PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
+                <div class="col-lg-5 col-sm-6 mb-5">
+                    <h2 class="text-white mb-4">@item.Name</h2>
+                    <div class="item-date mb-2">
+                        <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                        <span class="item-label">Ngày tổ chức</span>
+                        <span>@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <div class="item-date mb-2">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                        <span class="item-label">Thời gian</span>
+                        <span>@item.TimeFromTo</span>
+                    </div>
+                    <div class="item-date mb-5">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        <span class="item-label">Địa điểm</span>
+                        <span>@item.Address</span>
+                    </div>
+                    <a class="btn btn-light btn-about btn-khampha" href="@url" target="_blank">Khám phá ngay</a>
+                </div>
+                <div class="col-lg-7 col-sm-6 mb-5">
+                    <a href="@url" title="@item.Name">
+                        <img src="@item.Banner" alt="@item.Name" title="@item.Name" />
+                    </a>
+                </div>
+            } *@
+        </div>
+    </div>
 </section>
 
 <section id="NewButton">
-	<div class="container">
-		<div class="row d-flex justify-content-center">
-			@if (Model.ParentId == 0)
-			{
-				@* <a href="#" class="btn btn-active">Tin tức</a>
-				<a href="#" class="btn btn-noactive">Sự kiện</a> *@
-				@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "EventLinkTab", language = language, portalId = portalId })
-			}
-			else
-			{
-				<a href="@urlPage" class="btn btn-noactive" title="@Model.Name">@Model.Name</a>
-			}
-		</div>
-	</div>
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            @if (Model.ParentId == 0)
+            {
+                @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsLinkTab", language = language, portalId = portalId })
+            }
+            else
+            {
+                string url = @PT.Shared.Functions.FormatUrl(@language, Model.Link?.Slug);
+                <div class="text-center">
+                    <div class="tab-container mb-2">
+                        <a class="tab active" title="@Model.Name" href="@url">@Model.Name</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </section>
 
 <section id="FiinGroup">
-	<div class="container">
-		<form method="get">
-			<div class="d-flex justify-content-center mt-5 mb-5">
-				<div class="tags">
-					<a href="@urlPage?key=sapdienra" class="sapdienra active" title="News">Sắp diễn ra</a>
-					<a href="@urlPage?key=dangdienra" class="dangdienra" title="News">Đang diễn ra</a>
-					<a href="@urlPage?key=dadienra" class="dadienra" title="News">Đã diễn ra</a>
-				</div>
-			</div>
-		</form>
-		<div class="row mt-5">
-			@if (Model.PageBlog != null)
-			{
-				@foreach (var item in Model.PageBlog.Data)
-				{
-					string url = @PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
-					<div class="row">
-						<div class="col-lg-5 col-sm-6">
-							<a href="@url" title="@item.Name"><img src="@item.Banner" alt="@item.Name" title="@item.Name" /></a>
-						</div>
-						<div class="col-lg-7 col-sm-6">
-							<h3><a href="@url" class="news-title-sub" title="@item.Name">@item.Name</a></h3>
-							<div class="mt-5">
-								<div class="item-date-sub mb-2">
-									<i class="fa fa-calendar-o" aria-hidden="true"></i>
-									<span class="item-label">Ngày tổ chức</span>
-									<span class="item-label-sub">@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
-								</div>
-								<div class="item-date-sub mb-2">
-									<i class="fa fa-clock-o" aria-hidden="true"></i>
-									<span class="item-label">Thời gian</span>
-									<span class="item-label-sub">@item.TimeFromTo</span>
-								</div>
-								<div class="item-date-sub mb-5">
-									<i class="fa fa-map-marker" aria-hidden="true"></i>
-									<span class="item-label">Địa điểm</span>
-									<span class="item-label-sub">@item.Address</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				}
-			}
-			else
-			{
-				<div class="col-lg-12 col-sm-12 text-center my-5">
-					<img src="/Data/no-data.jpg" alt="No data" />
-					<p class="no-data-messege my-5">Chưa có tin tức, sự kiện nào sắp diễn ra.</p>
-				</div>
-			}
-			<!-- pagination -->
-			<div class="pagination-area">
-				<div aria-label="Page navigation example">
-					<ul class="pagination justify-content-center">
-						@Html.Raw(PT.Shared.Functions.GenPageList("", Model.PageBlog.Page, Model.PageBlog.TotalRows, Model.PageBlog.Limit, $"&key={Context.Request.Query["key"]}", "page-item"))
-					</ul>
-				</div>
-			</div>
-			<!-- pagination end -->
-		</div>
-	</div>
+    <div class="container">
+        <div class="row" id="content-bind">
+            <partial name="NewsAjax" model="Model.DataAPI" />
+        </div>
+    </div>
 </section>
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "EventDeliver", language = language, portalId = portalId }))
-<script>
-	$(function() {
-		const params = new URLSearchParams(window.location.search);
-		const keyValue = params.get('key');
-		if (keyValue == 'dangdienra') {
-			$('.sapdienra').removeClass('active')
-			$('.dangdienra').addClass('active')
-			$('.dadienra').removeClass('active')
-		}
-		if (keyValue == 'dadienra') {
-			$('.sapdienra').removeClass('active')
-			$('.dangdienra').removeClass('active')
-			$('.dadienra').addClass('active')
-		}
-	});
-</script>
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsDeliver", language = language, portalId = portalId })
+@section Scripts {
+    <script>
+        (function ($) {
+            var newsAjaxUrl = '@Url.Action("NewsAjax", "Category")';
+            var currentLanguage = '@language';
+
+            function toYMD(date) {
+                var y = date.getFullYear();
+                var m = (date.getMonth() +1).toString().padStart(2, '0');
+                var d = date.getDate().toString().padStart(2, '0');
+                return y + '-' + m + '-' + d;
+            }
+
+            function normalizeDateInput(selector) {
+                var $el = $(selector);
+                var val = $el.val();
+                if (!val) return;
+
+                // If already in yyyy-MM-dd, keep it
+                if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                    return;
+                }
+
+                // Try parsing common formats (dd/MM/yyyy or MM/dd/yyyy)
+                var parts;
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) {
+                    parts = val.split('/'); // dd/MM/yyyy
+                    var d = parseInt(parts[0],10);
+                    var m = parseInt(parts[1],10) -1;
+                    var y = parseInt(parts[2],10);
+                    var dt = new Date(y, m, d);
+                    if (!isNaN(dt)) {
+                        $el.val(toYMD(dt));
+                    }
+                    return;
+                }
+
+                // Try Date constructor fallback
+                var dt = new Date(val);
+                if (!isNaN(dt)) {
+                    $el.val(toYMD(dt));
+                }
+            }
+
+            function formatDateInputsBeforeSubmit() {
+                normalizeDateInput('#startDate');
+                normalizeDateInput('#endDate');
+            }
+
+            function buildParams(page) {
+                var keyword = $('#search-input').val() || '';
+                var fromDate = $('#startDate').val() || '';
+                var toDate = $('#endDate').val() || '';
+
+                return {
+                    Page: page ||1,
+                    Keyword: keyword,
+                    FromDate: fromDate,
+                    ToDate: toDate,
+                    Language: currentLanguage,
+                    CategoryIds: '@ViewData["ExCategoryIds"]'
+                };
+            }
+
+            function showLoading() {
+                $('#news-loading').removeClass('d-none');
+                $('#btn-search').prop('disabled', true).attr('aria-busy', 'true');
+            }
+
+            function hideLoading() {
+                $('#news-loading').addClass('d-none');
+                $('#btn-search').prop('disabled', false).removeAttr('aria-busy');
+            }
+
+            window.getNewsAjax = function(page) {
+                page = page ||1;
+                var params = buildParams(page);
+
+                // normalize dates before sending
+                formatDateInputsBeforeSubmit();
+
+                showLoading();
+
+                $.get(newsAjaxUrl, params)
+                    .done(function (html) {
+                        $('#content-bind').html(html);
+                    })
+                    .fail(function () {
+                        $('#content-bind').html('<div class="no-data-messege">No data</div>');
+                    })
+                    .always(function () {
+                        hideLoading();
+                    });
+            };
+
+            $(function () {
+                // initial load (if page has query params, keep them)
+                var urlParams = new URLSearchParams(window.location.search);
+                var initialKey = urlParams.get('key');
+                var initialFrom = urlParams.get('startDate');
+                var initialTo = urlParams.get('endDate');
+
+                if (initialKey) $('#search-input').val(initialKey);
+                if (initialFrom) $('#startDate').val(initialFrom);
+                if (initialTo) $('#endDate').val(initialTo);
+
+                // Clear button should clear and submit form to reload server-side results
+                $('.btn-clear').on('click', function () {
+                    $('#search-input').val('');
+                    $('#startDate, #endDate').val('');
+                });
+
+                 try {
+                    var path = (location.pathname || '').toLowerCase().replace(/\/$/, '');
+                    // tìm tất cả tab links trong tab-container
+                    $('.tab-container a').each(function () {
+                        console.log(1);
+                        var href = ($(this).attr('href') || '').split('?')[0].toLowerCase().replace(/\/$/, '');
+                        if (href && href === path) {
+                            // remove active ở các tab khác, add cho tab đúng
+                            $('.tab-container a').removeClass('active');
+                            $(this).addClass('active');
+                            return false; // thoát each
+                        }
+                    });
+                } catch (e) {
+                    // ignore
+                }
+
+            });
+        })(jQuery);
+    </script>
+}

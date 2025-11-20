@@ -698,3 +698,20 @@
 
 
 
+.pagination .page-item {
+    padding: 11px 19px;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #0066CC;
+    border-radius: 24px;
+    display: inline-block;
+    margin: 2px;
+}
+.pagination .page-active .page-item {
+    background: #034EA2;
+    color: #fff;
+}
+.news-content
+{
+    min-height:400px;
+}

@@ -51,6 +51,31 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> EventAjax([FromQuery] NewsQueryParameters prs)
+        {
+            //await Task.Delay(1000);
+            prs.PageSize = 9;
+            prs.Page = prs.Page <= 0 ? 1 : prs.Page;
+            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
+            prs.Status = null;
+            prs.CategoryIds = prs.CategoryIds ?? "0";
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            return View("NewsAjax", listNew);
+        }
+        [HttpGet]
+        public async Task<ActionResult> PublicationsAjax([FromQuery] NewsQueryParameters prs)
+        {
+            //await Task.Delay(1000);
+            prs.PageSize = 9;
+            prs.Page = prs.Page <= 0 ? 1 : prs.Page;
+            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
+            prs.Status = null;
+            prs.CategoryIds = prs.CategoryIds ?? "0";
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            return View("PublicationsAjax", listNew);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Details(int id, string language, int? page, string key, string startDate, string endDate, string linkData)
         {
             var objectLink = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
@@ -82,50 +107,51 @@ namespace PT.UI.Controllers
                     dl.DataAPI = listNew;
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }    
-                    
                 viewName = "News";
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Event)
             {
                 Type = ECategoryType.ContentPage_Event;
+                if (string.IsNullOrEmpty(dl.ExCategoryIds))
+                {
+                    dl.DataAPI = new NewsListResponse() { Items = new List<NewsItem>() };
+                }
+                else
+                {
+                    var listNew = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
+                    {
+                        Page = page ?? 1,
+                        PageSize = 9,
+                        FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
+                        CategoryIds = dl.ExCategoryIds,
+                    }, language ?? "vi");
+                    dl.DataAPI = listNew;
+                    ViewData["ExCategoryIds"] = dl.ExCategoryIds;
+                }
                 viewName = "Event";
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Publications)
             {
                 Type = ECategoryType.ContentPage_Publications;
+                if (string.IsNullOrEmpty(dl.ExCategoryIds))
+                {
+                    dl.DataAPI = new NewsListResponse() { Items = new List<NewsItem>() };
+                }
+                else
+                {
+                    var listNew = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
+                    {
+                        Page = page ?? 1,
+                        PageSize = 9,
+                        FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
+                        CategoryIds = dl.ExCategoryIds,
+                    }, language ?? "vi");
+                    dl.DataAPI = listNew;
+                    ViewData["ExCategoryIds"] = dl.ExCategoryIds;
+                }
                 viewName = "Publications";
             }
 
-            //if (dl.CategoryType == ECategoryType.ContentPage_Event)
-            //{
-            //    DateTime? startData = DateTime.Today;
-            //    key = key ?? "sapdienra";
-            //    dl.PageBlog = await _iContentPageRepository.SearchPagedListAsync(
-            //        page ?? 1,5,id,null,
-            //        m => m.CategoryType == Type
-            //            && (m.Language == language)
-            //            && ((m.StartDate > startData && key == "sapdienra") || (m.StartDate == startData && key == "dangdienra") || (m.StartDate < startData && key == "dadienra"))
-            //            && m.Status
-            //            , x => x.OrderByDescending(mbox => mbox.StartDate), x => new ContentPage
-            //            {
-            //                Category = x.Category,
-            //                Id = x.Id,
-            //                Author = x.Author,
-            //                Banner = x.Banner,
-            //                DatePosted = x.DatePosted,
-            //                Name = x.Name,
-            //                Language = x.Language,
-            //                Status = x.Status,
-            //                Summary = x.Summary,
-            //                Tags = x.Tags,
-            //                Type = x.Type,
-            //                Link = x.Link,
-            //                StartDate = x.StartDate,
-            //                TimeFromTo = x.TimeFromTo,
-            //                Address = x.Address,
-            //                Input1 = x.Input1
-            //            });
-            //}
             if (dl.CategoryType == ECategoryType.ContentPage_Publications)
             {
                 DateTime? start = null, end = null;

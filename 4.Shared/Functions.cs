@@ -545,7 +545,7 @@ namespace PT.Shared
             int totalPage = (totalRow % size > 0) ? (totalRow / size + 1) : (totalRow / size);
             for (int i = 1; i <= totalPage; i++)
             {
-                str.Append($"<li class=\"{liClass} {(i == curentPage ? classActive : "")}\"><a  role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick = \"{function}({i})\" class=\"page-link\" data-href=\"{url}?page={i}{(query != null ? $"{query}" : "")}\">{i}</a></li>");
+                str.Append($"<li class=\"{liClass} {(i == curentPage ? classActive : "")}\"><a  role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick = \"{function}({i})\" class=\"page-item\" data-href=\"{url}?page={i}{(query != null ? $"{query}" : "")}\">{i}</a></li>");
             }
             return str.ToString();
         }
