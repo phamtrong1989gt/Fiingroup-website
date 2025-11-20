@@ -92,7 +92,6 @@ namespace PT.Domain.Model
         public ESlugType? SlugType { get; set; }
         [NotMapped]
         public List<ContentPage> Relateds { get; set; }
-
     }
 
     public class BlogModel :SeoModel

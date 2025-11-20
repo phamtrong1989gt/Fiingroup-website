@@ -5,9 +5,11 @@
 	var listLanguage = PT.Shared.ListData.ListLanguage;
 	@model PT.UI.Models.ContactHomeModel;
 	@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
+	@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
 	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
 	var portalId = 2;
 	var listServies = await _iContactRepository.ServiesList(language, portalId);
+	var contactType = (int)Contact.ContactType.Product;
 }
 <section class="py-5 mb-3 mt-3" id="DangKy">
 	<div class="container">
@@ -15,6 +17,7 @@
 		<div class="row">
 			<div class="col-lg-5 col-sm-12">
 				@* <form form-edit method="post" asp-action="Contact" asp-controller="ContactHome"> *@
+				<input type="hidden" id="languageId" value="@language" />
 				<form id="formLienHe" method="post">
 					@Html.AntiForgeryToken()
 					<div class="row">
@@ -44,16 +47,24 @@
 							<span class="validate-style" asp-validation-for="Position"></span>
 						</div>
 						<div class="col-sm-12 mb-3">
-							<label for="dichVuQT" class="form-label">Dịch vụ quan tâm <span class="error">*</span></label>
+							<label for="dichVuQT" class="form-label">Nhóm ngành <span class="error">*</span></label>
 							<select asp-for="ServiceId" asp-items="listServies" class="form-select" id="dichVuQT">
-								<option value="">Chọn dịch vụ quan tâm</option>
+								<option value="">Chọn nhóm ngành</option>
 							</select>
 							<span asp-validation-for="ServiceId" class="validate-style"></span>
 						</div>
 						<div class="col-sm-12 mb-3">
-							<label for="yeuCauCT" class="form-label">Yêu cầu chi tiết <span class="error">*</span></label>
-							<textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập yêu cầu chi tiết"></textarea>
+							<label for="sanPhamQT" class="form-label">Sản phẩm & dịch vụ quan tâm </label>
+							<select class="form-select" id="sanPhamQT" multiple="multiple">
+								<option value="">Chọn sản phẩm & dịch vụ quan tâm</option>
+							</select>
+						</div>
+						<div class="col-sm-12 mb-3">
+							<label for="yeuCauCT" class="form-label">Mô tả chi tiết <span class="error">*</span></label>
+							<textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập mô tả chi tiết"></textarea>
 							<span class="validate-style" asp-validation-for="Content"></span>
+							<input type="hidden" class="form-control" id="type" asp-for="Type" value="@contactType">
+							<input type="hidden" class="form-control" id="products" asp-for="Products">
 						</div>
 					</div>
 					<button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>Gửi yêu cầu</button>
@@ -111,13 +122,13 @@
 			}
 	</script> *@
 }
-
+<link href="/plugins/select2/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="/plugins/alertifyjs/css/alertify.min.css" />
 <link rel="stylesheet" href="/plugins/alertifyjs/css/themes/default.min.css" />
 <script src="/plugins/jquery-validate/jquery.validate.min.js"></script>
 <script src="/plugins/jquery-validate/jquery.validate.unobtrusive.min.js"></script>
 <script src="/plugins/alertifyjs/alertify.min.js"></script>
-
+<script src="/plugins/select2/select2.min.js"></script>
 <script>
 	$(function () {
 	  const $form = $('#formLienHe');
@@ -142,4 +153,66 @@
 		});
 	  });
 	});
+
+	 $('#sanPhamQT').select2({
+			placeholder: "Chọn Sản phẩm & dịch vụ quan tâm",
+			closeOnSelect: false,
+			allowHtml: true,
+			allowClear: true,
+			tags: true
+		});
+	$("#sanPhamQT").on("change", function () {
+        let selected = $(this).val(); 
+        if (selected && selected.length > 0) {
+            $("#products").val(selected.join("; "));
+        } else {
+            $("#products").val("");
+        }
+    });
+
+	$("#dichVuQT").on("change", function () {
+		let serviceId = $(this).val();      
+		let language = $("#languageId").val();;             
+		let portId = @portalId; 
+		let parentId = serviceId;
+		$("#products").val("");
+		if (!serviceId) {
+			$("#sanPhamQT").empty()
+				.append('<option value="">Chọn sản phẩm & dịch vụ quan tâm</option>');
+			return;
+		}
+
+		$.ajax({
+			url: '@Url.Action("FlowSelectList", "ContactHome")',
+			method: "POST",
+			data: {
+				language: language,
+				portId: portId,
+				parrentId: parentId
+			},
+			success: function (res) {
+				console.log(res);
+				if (res.output === 1 || res.output === "1") {
+					$("#sanPhamQT").empty();
+					let lst = res.data;
+					if (lst && lst.length > 0) {
+						lst.forEach(x => {
+							$("#sanPhamQT").append(
+								`<option value="${x.id}">${x.name}</option>`
+							);
+						});
+					} else {
+						$("#sanPhamQT").append('<option value="">Không có sản phẩm</option>');
+					}
+				}
+				else {
+					//alert(res.message || "Không thể tải danh sách!");
+				}
+			},
+			error: function () {
+				//alert("Lỗi kết nối máy chủ.");
+			}
+		});
+	});
+
 </script>

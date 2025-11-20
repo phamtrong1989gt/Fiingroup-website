@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
@@ -48,33 +48,33 @@ namespace PT.Infrastructure.Repositories
                     .GroupJoin(_context.Customers, x => x.data.CustomerId, y => y.Id, (x, y) => new { x.data, x.employee, x.service, customers = y })
                 .SelectMany(x => x.customers.DefaultIfEmpty(), (x, y) => new Contact
                 {
-                   Id = x.data.Id,
-                   CustomerId =x.data.CustomerId,
-                   ServiceId = x.data.ServiceId,
-                   Service= x.service,
-                   Address =x.data.Address,
-                   Age =x.data.Age,
-                   AppointmentDate=x.data.AppointmentDate,
-                   AppointmentStatus=x.data.AppointmentStatus,
-                   Content=x.data.Content,
-                   CreatedDate=x.data.CreatedDate,
-                   Customer=y,
-                   Delete=x.data.Delete,
-                   Email=x.data.Email,
-                   Employee= x.employee,
-                   EmployeeId=x.data.EmployeeId,
-                   FullName=x.data.FullName,
-                   Language=x.data.Language,
-                   Note=x.data.Note,
-                   Phone=x.data.Phone,
-                   Status=x.data.Status,
-                   Type=x.data.Type,
-                   AppointmentDateTo = x.data.AppointmentDateTo,
-                   Rating =x.data.Rating,
-                   IsHome = x.data.IsHome,
-                   Avatar= x.data.Avatar,
-                   CountryId = x.data.CountryId,
-                   PhoneCode=x.data.PhoneCode
+                    Id = x.data.Id,
+                    CustomerId = x.data.CustomerId,
+                    ServiceId = x.data.ServiceId,
+                    Service = x.service,
+                    Address = x.data.Address,
+                    Age = x.data.Age,
+                    AppointmentDate = x.data.AppointmentDate,
+                    AppointmentStatus = x.data.AppointmentStatus,
+                    Content = x.data.Content,
+                    CreatedDate = x.data.CreatedDate,
+                    Customer = y,
+                    Delete = x.data.Delete,
+                    Email = x.data.Email,
+                    Employee = x.employee,
+                    EmployeeId = x.data.EmployeeId,
+                    FullName = x.data.FullName,
+                    Language = x.data.Language,
+                    Note = x.data.Note,
+                    Phone = x.data.Phone,
+                    Status = x.data.Status,
+                    Type = x.data.Type,
+                    AppointmentDateTo = x.data.AppointmentDateTo,
+                    Rating = x.data.Rating,
+                    IsHome = x.data.IsHome,
+                    Avatar = x.data.Avatar,
+                    CountryId = x.data.CountryId,
+                    PhoneCode = x.data.PhoneCode
                 }).AsQueryable();
 
             var list = await query.Skip((page - 1) * limit).Take(limit).AsNoTracking().ToListAsync();
@@ -89,14 +89,36 @@ namespace PT.Infrastructure.Repositories
 
         public async Task<SelectList> ServiesList(string language, int portalId, int? parrentId = null)
         {
-            List<Country> lstdata = new List<Country>
-            {
-                new Country { Id = 1, Name = "Bond Report" },
-                new Country { Id = 2, Name = "FiinPro-X & Bond Report" },
-                new Country { Id = 3, Name = "FiinPro-X Platform" }
-            };
-            var lstData = new SelectList(lstdata, "Id", "Name");
+            IQueryable<ContentPage> query = _context.ContentPages.Where(x => x.Status == true && (x.CategoryType == ECategoryType.ContentPage_Solution) && x.Language == language && x.PortalId == portalId).AsQueryable();
+            query = query
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
+                {
+                    Link = y,
+                    Id = x.data.Id,
+                    Name = x.data.Name
+                }).AsQueryable();
+
+            var lstData = new SelectList(query, "Id", "Name");
             return lstData;
+        }
+
+        public async Task<List<ContentPage>> FlowSelectList(string language, int portalId, int parrentId)
+        {
+            var pageLienQuan = _context.ContentPageRelateds.Where(x => x.ParentId == parrentId).OrderBy(x => x.Order).ToList();
+            var idslq = pageLienQuan.Select(x => x.ContentPageId).ToList();
+            var query = _context.ContentPages.Where(x => idslq.Contains(x.Id) && (x.CategoryType == ECategoryType.ContentPage_Flow || x.CategoryType == ECategoryType.ContentPage_FlowItems) && x.Language == language && x.PortalId == portalId).AsQueryable();
+            query = query
+                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
+                 .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
+                 {
+                     Link = y,
+                     Id = x.data.Id,
+                     Name = x.data.Name
+                 }).AsQueryable();
+
+            var list = await query.AsNoTracking().ToListAsync();
+            return list.OrderBy(x => pageLienQuan.FirstOrDefault(m => m.ContentPageId == x.Id)?.Order ?? int.MaxValue).ToList();
         }
     }
 }

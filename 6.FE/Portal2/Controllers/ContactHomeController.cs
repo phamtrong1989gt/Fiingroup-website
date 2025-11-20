@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Domain.Model;
@@ -21,6 +14,14 @@ using PT.Infrastructure.Repositories;
 using PT.Shared;
 using PT.UI.Models;
 using PT.UI.SignalR;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PT.UI.Controllers
 {
@@ -98,8 +99,9 @@ namespace PT.UI.Controllers
                         Position = use.Position,
                         ConpanyName = use.ConpanyName,
                         ServiceId = (int)use.ServiceId,
+                        Type = (Contact.ContactType)use.Type,
+                        Products = (Contact.ContactType)use.Type == Contact.ContactType.Product ? use.Products : "",
                         CreatedDate = DateTime.Now
-                        
                     });
                     await _iContactRepository.CommitAsync();
 
@@ -137,6 +139,36 @@ namespace PT.UI.Controllers
             }
             return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
         }
+
+
+        [HttpPost, ActionName("FlowSelectList")]
+        public async Task<ResponseModel<List<ContentPage>>> FlowSelectList(string language, int portId, int parrentId)
+        {
+            try
+            {
+                var lstSelectList = _iContactRepository.FlowSelectList(language, portId, parrentId);
+
+                return new ResponseModel<List<ContentPage>>
+                {
+                    Output = 1,
+                    Message = "Thành công.",
+                    Type = ResponseTypeMessage.Success,
+                    Data = lstSelectList.Result,
+                    IsClosePopup = false
+                };
+            }
+            catch
+            {
+                return new ResponseModel<List<ContentPage>>
+                {
+                    Output = -1,
+                    Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại",
+                    Type = ResponseTypeMessage.Danger,
+                    Status = false
+                };
+            }
+        }
+
 
         private async void SendEmail(EmailSettings emailSettings,string toEmail,string title, string content)
         {
