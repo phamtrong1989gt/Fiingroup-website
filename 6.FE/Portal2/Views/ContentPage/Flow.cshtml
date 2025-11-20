@@ -241,13 +241,16 @@
 	<div class="hero-overlay">
 		<div class="container">
 			<div class="hero-content">
-				<span class="hero-subtitle">@Model.Input1</span>
-				<h1 class="hero-title">
-					@Model.Input2
-				</h1>
-				<p class="hero-text">
-					@Html.Raw(Model.Input3)
-				</p>
+				@if(Model.IsShowHeaderContent != false)
+				{
+					<span class="hero-subtitle">@Model.Input1</span>
+					<h1 class="hero-title">
+						@Model.Input2
+					</h1>
+					<p class="hero-text">
+						@Html.Raw(Model.Input3)
+					</p>
+				}
 			</div>
 		</div>
 	</div>

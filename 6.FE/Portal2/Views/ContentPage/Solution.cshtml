@@ -303,7 +303,7 @@
 				}
 			</div>
 			<div class="col-sm-5 text-center">
-				<img src="@(Model.Input6 ?? "/Data/solution_giaiphap5.png")" class="img-fluid solution-img" alt="@Model.Name">
+				<img src="@((listFlowItems.FirstOrDefault()?.Input11) ?? "/Data/solution_giaiphap5.png")" class="img-fluid solution-img" alt="@Model.Name">
 			</div>
 		</div>
 	</div>
