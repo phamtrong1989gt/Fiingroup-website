@@ -1,0 +1,48 @@
+﻿@model PT.Domain.Model.NewsListResponse
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using Microsoft.Extensions.Options
+@using PT.Domain.Model
+@using PT.Shared;
+@inject IOptions<BaseSettings> _baseSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+}
+<div class="row mt-5">
+    @if (Model != null)
+    {
+        @foreach (var item in Model.Items)
+        {
+            string url = $"/{language}/tin-tuc-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
+            <div class="col-lg-4 col-sm-6">
+                <a href="@url" title="@item.Title">
+                    <img class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.ImageUrl ?? "/Data/Banner/no-img.jpg")" alt="@item.Title">
+                </a>
+                <h3 class="pt-4">
+                    <a href="@url" title="@item.Title" class="news-title">@item.Title</a>
+                </h3>
+                <div class="pt-2 pb-4 mb-4">
+                    <a href="@url" title="@item.Title" class="show-more">Xem chi tiết <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-lg-12 col-sm-12 text-center my-5">
+            <img src="/Data/no-data.jpg" alt="No data" />
+            <p class="no-data-messege my-5">Chưa có tin tức nào được tìm thấy</p>
+        </div>
+    }
+      <div class="pagination-area">
+                <div aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        @* @Html.Raw(PT.Shared.Functions.GenPageList("", Model.page, Model.PageBlog.TotalRows, Model.PageBlog.Limit, $"&key={Context.Request.Query["key"]}" + $"&startDate={Context.Request.Query["startDate"]}" + $"&endDate={Context.Request.Query["endDate"]}", "page-item")) *@
+                    </ul>
+                </div>
+            </div>
+</div>
