@@ -1024,13 +1024,16 @@ a:hover {
     background: #0078d4;
     color: white;
 }
+.img-item {
+    height: 238px;
+}
 
 
-    @media (min-width: 1400px) {
-        .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-            max-width: 1230px;
-        }
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1230px;
     }
+}
 
 @media (max-width: 767px) {
     .mbftyt2 {
