@@ -48,7 +48,6 @@ namespace PT.Domain.Model
         [Display(Name = "Trang sản phẩm dòng chảy")]
         ContentPage_FlowItems = 110,
     }
-
     public enum CategoryType
     {
         [Display(Name ="Tin bài")]

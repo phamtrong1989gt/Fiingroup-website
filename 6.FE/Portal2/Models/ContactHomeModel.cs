@@ -36,16 +36,22 @@ namespace PT.UI.Models
         [StringLength(100, MinimumLength = 1)]
         public string Position { get; set; }
 
-        [Display(Name = "Yêu cầu chi tiết")]
+        [Display(Name = "Mô tả chi tiết")]
         [Required(ErrorMessage = "{0}  không được để trống")]
         [StringLength(100, MinimumLength = 10)]
         public string Content { get; set; }
         public string Language { get; set; }
         public string Capcha { get; set; }
 
-        [Display(Name = "Dịch vụ quan tâm")]
+        [Display(Name = "Nhóm ngành")]
         [Required(ErrorMessage = "{0} không được để trống")]
         public int? ServiceId { get; set; }
+
+        [Display(Name = "Sản phẩm & dịch vụ quan tâm")]
+        public string Products { get; set; }
+
+        [Display(Name = "Loại liên hệ")]
+        public int Type { get; set; }
         public SelectList CountrySelectlist { get;  set; }
     }
 
