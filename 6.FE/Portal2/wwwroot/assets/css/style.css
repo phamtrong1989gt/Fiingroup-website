@@ -1027,6 +1027,7 @@ a:hover {
 .img-item {
     height: 238px;
 }
+.news-content img{max-width:100%;}
 
 
 @media (min-width: 1400px) {

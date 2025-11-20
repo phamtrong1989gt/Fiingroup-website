@@ -100,7 +100,8 @@ namespace PT.UI.Controllers
                         ConpanyName = use.ConpanyName,
                         ServiceId = (int)use.ServiceId,
                         Type = (Contact.ContactType)use.Type,
-                        Products = (Contact.ContactType)use.Type == Contact.ContactType.Product ? use.Products : "",
+                        //Products = (Contact.ContactType)use.Type == Contact.ContactType.Product ? use.Products : "",
+                        Products = use.Products,
                         CreatedDate = DateTime.Now
                     });
                     await _iContactRepository.CommitAsync();
@@ -140,7 +141,6 @@ namespace PT.UI.Controllers
             return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
         }
 
-
         [HttpPost, ActionName("FlowSelectList")]
         public async Task<ResponseModel<List<ContentPage>>> FlowSelectList(string language, int portId, int parrentId)
         {
@@ -167,6 +167,78 @@ namespace PT.UI.Controllers
                     Status = false
                 };
             }
+        }
+
+        [HttpPost, ActionName("ContactSolution")]
+        [AutoValidateAntiforgeryToken]
+        public async Task<ResponseModel> ContactSolutionPost(ContactSolotionModel use)
+        {
+            try
+            {
+                //var output = await _iUserRepository.VeryfyCapcha(_authorizeSettings.Value.CapchaVerifyUrl, _authorizeSettings.Value.CapChaSecret, use.Capcha);
+                //var capchaOke = output.Success;
+                //if (!capchaOke)
+                //{
+                //    return new ResponseModel() { Output = 69, Message = "Phiên làm việc đã hết hạn hoặc thao tác thực hiện quá nhanh, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
+                //}
+
+                //if (IsCheckRequest("Contact"))
+                //{
+                //    SetRequest("Contact");
+                //}
+                //else
+                //{
+                //    return new ResponseModel() { Output = -1, Message = "Bạn thao tác gửi liên hệ quá nhanh trong một khoảng thời gian, hãy đợi và thực hiện lại", Type = ResponseTypeMessage.Warning };
+                //}
+
+                if (ModelState.IsValid)
+                {
+                    await _iContactRepository.AddAsync(new Contact
+                    {
+                        FullName = Functions.SContent(use.FullName),
+                        Delete = false,
+                        Status = false,
+                        Email = use.Email,
+                        Phone = use.Phone,
+                        Type = (Contact.ContactType)use.Type,
+                        Products = use.Products,
+                        CreatedDate = DateTime.Now
+                    });
+                    await _iContactRepository.CommitAsync();
+
+                    //if(use.FullName.ToLower().Contains("sex") || use.FullName.ToLower().Contains("girl") || use.FullName.ToLower().Contains("human"))
+                    //{
+                    //    return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
+                    //}
+
+                    //if ((use.Content ?? "").ToLower().Contains("sex") || (use.Content ?? "").ToLower().Contains("girl") || (use.Content ?? "").ToLower().Contains("human"))
+                    //{
+                    //    return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
+                    //}
+
+                    //var dlCountry = await _iCountryRepository.SingleOrDefaultAsync(true, x => x.Id == use.CountryId);
+
+                    if (!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
+                    {
+                        var strB = new StringBuilder();
+                        strB.Append($"Họ và tên: {Functions.SContent(use.FullName)}<br>");
+                        strB.Append($"Email: {use.Email}<br>");
+                        strB.Append($"Phone: {use.Phone}<br>");
+                        //strB.Append($"Tên công ty: {use.ConpanyName}<br>");
+                        //strB.Append($"Chức vụ công việc: {use.Position}<br>");
+                        //strB.Append($"Dịch vụ quan tâm: {use.ServiceId}<br>");
+                        //strB.Append($"Nội dung: {Functions.SContent(use.Content)}<br>");
+
+                        //await Task.Run(() => SendEmail(_emailSettings.Value, _baseSettings.Value.ToEmail,  $"Có đăng ký mới từ {use.FullName} địa chỉ email là {use.Email}", strB.ToString())).ConfigureAwait(false);
+                    }
+                    return new ResponseModel() { Output = 1, Message = "Đăng ký nhận tin thành công", Type = ResponseTypeMessage.Success, IsClosePopup = true };
+                }
+                return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
+            }
+            catch
+            {
+            }
+            return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
         }
 
 
