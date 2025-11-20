@@ -9,5 +9,6 @@ namespace PT.Infrastructure.Interfaces
     {
         Task<SelectList> ServiesList(string language, int portalId, int? parrentId = null);
         Task<List<ContentPage>> FlowSelectList(string language, int portalId, int parrentId);
+        Task<SelectList> ServiesNewsList(string language, int portalId);
     }
 }
