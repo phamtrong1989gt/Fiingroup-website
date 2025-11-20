@@ -146,6 +146,7 @@
 		  success: function (res) {
 			alertify.success(res.message);
 			$form[0].reset();
+			$("#products").val("");
 		  },
 		  error: function (xhr) {
 			alertify.warning('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
@@ -155,7 +156,7 @@
 	});
 
 	 $('#sanPhamQT').select2({
-			placeholder: "Chọn Sản phẩm & dịch vụ quan tâm",
+			placeholder: "Chọn sản phẩm & dịch vụ quan tâm",
 			closeOnSelect: false,
 			allowHtml: true,
 			allowClear: true,

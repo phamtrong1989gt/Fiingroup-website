@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -119,6 +121,35 @@ namespace PT.Infrastructure.Repositories
 
             var list = await query.AsNoTracking().ToListAsync();
             return list.OrderBy(x => pageLienQuan.FirstOrDefault(m => m.ContentPageId == x.Id)?.Order ?? int.MaxValue).ToList();
+        }
+        public async Task<SelectList> ServiesNewsList(string language, int portalId)
+        {
+            List<Country> lstdata = new List<Country>();
+            if (string.IsNullOrEmpty(language) && language == "en")
+            {
+                lstdata = new List<Country>
+                {
+                    new Country { Id = 1, Name = "Financial Investment Flow" },
+                    new Country { Id = 2, Name = "Debt Market" },
+                    new Country { Id = 3, Name = "Investment & FDI" },
+                    new Country { Id = 4, Name = "Trade Flow" },
+                    new Country { Id = 5, Name = "Green Finance & ESG" }
+                };
+            }
+            else
+            {
+
+                lstdata = new List<Country>
+                {
+                    new Country { Id = 1, Name = "Đầu tư tài chính" },
+                    new Country { Id = 2, Name = "Tín dụng, Vốn nợ và Trái phiếu doanh nghiệp" },
+                    new Country { Id = 3, Name = "Đầu tư & FDI" },
+                    new Country { Id = 4, Name = "Thương mại" },
+                    new Country { Id = 5, Name = "Tài chính xanh & ESG" }
+                };
+            }
+            var lstData = new SelectList(lstdata, "Id", "Name");
+            return lstData;
         }
     }
 }
