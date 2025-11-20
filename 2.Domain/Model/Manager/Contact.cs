@@ -24,6 +24,7 @@ namespace PT.Domain.Model
             TestimonialVideo,
             [Display(Name = "Người nổi tiếng đánh giá người nổi tiếng")]
             FamousPeopleVideo,
+            Product,
         }
 
         public enum ContactConfirmAppointment
@@ -70,6 +71,7 @@ namespace PT.Domain.Model
         public bool IsHome { get; set; }
         public string ConpanyName { get; set; }
         public string Position { get; set; }
+        public string Products { get; set; }
     }
 
     public class ContactModel
