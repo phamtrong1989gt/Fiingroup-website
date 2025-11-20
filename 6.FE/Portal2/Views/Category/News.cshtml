@@ -12,28 +12,6 @@
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = _baseSettings.Value.PortalId;
-    // var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 1,
-    //            null, null,
-    //            m => m.Status
-    //                && (m.StartDate >= DateTime.Now || m.StartDate <= DateTime.Now)
-    //                && m.Language == language
-    //                && (m.CategoryType == ECategoryType.ContentPage_Event),
-    //            m => m.OrderByDescending(x => x.StartDate),
-    //            a => new ContentPage
-    //            {
-    //                Banner = a.Banner,
-    //                DatePosted = a.DatePosted,
-    //                Id = a.Id,
-    //                Name = a.Name,
-    //                Summary = a.Summary,
-    //                Language = a.Language,
-    //                Author = a.Author,
-    //                CategoryId = a.CategoryId,
-    //                StartDate = a.StartDate,
-    //                Address = a.Address,
-    //                TimeFromTo = a.TimeFromTo,
-    //                Link = a.Link
-    //            });
 }
 
 <style>
@@ -121,7 +99,7 @@
         width: 302px;
         height: 72px;
         background: #0066CC;
-        box-shadow: 0px 8px 20px rgba(0, 102, 204, 0.12), 0px -8px 20px rgba(255, 255, 255, 0.2);
+        box-shadow: 0px 8px 20px rgba(0,102,204,0.12), 0px -8px 20px rgba(255,255,255,0.2);
         border-radius: 12px;
         font-size: 24px;
         font-weight: 500;
@@ -189,6 +167,29 @@
         height: 40px;
         background: #0066CC;
         border-radius: 200px;
+    }
+
+    /* loading spinner for button */
+    .loader {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top: 2px solid #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-left: 8px;
+        position: absolute;
+        left: 5px;
+    }
+
+    .d-none {
+        display: none !important;
+    }
+
+    @@keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
     }
 
     .news-title {
@@ -288,15 +289,10 @@
                 <input id="startDate" name="startDate" class="date-input mr-2" value="@DateTime.Now.Year-01-01" type="date" placeholder="Từ ngày" />
                 <input id="endDate" name="endDate" class="date-input mr-2" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" placeholder="Đến ngày" />
 
-                <button type="reset" class="btn btn-reset btn-clear">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8.0007 15.1666C4.53404 15.1666 1.7207 12.3466 1.7207 8.88659C1.7207 7.63993 2.08737 6.43326 2.7807 5.39326C2.93404 5.16659 3.24737 5.09993 3.47404 5.25326C3.7007 5.4066 3.76737 5.71993 3.61404 5.94659C3.03404 6.81326 2.72737 7.83326 2.72737 8.87993C2.72737 11.7933 5.09404 14.1599 8.00737 14.1599C10.9207 14.1599 13.2874 11.7933 13.2874 8.87993C13.2874 5.96659 10.914 3.59993 8.0007 3.59993C7.38737 3.59993 6.78737 3.68659 6.2207 3.85993C5.95404 3.93993 5.67404 3.79326 5.59404 3.52659C5.51404 3.25993 5.6607 2.97993 5.92737 2.89993C6.59404 2.69993 7.28737 2.59326 8.0007 2.59326C11.4674 2.59326 14.2807 5.41326 14.2807 8.87326C14.2807 12.3333 11.4674 15.1666 8.0007 15.1666Z" fill="#0066CC" />
-                        <path d="M5.24625 4.04658C5.13292 4.04658 5.01292 4.00658 4.91959 3.92658C4.70626 3.73992 4.68626 3.42658 4.86626 3.21992L6.79292 1.00658C6.97292 0.799918 7.29292 0.773251 7.49959 0.959918C7.70625 1.13992 7.72625 1.45992 7.54625 1.66658L5.61959 3.87325C5.51959 3.98658 5.37959 4.04658 5.24625 4.04658Z" fill="#0066CC" />
-                        <path d="M7.49241 5.68659C7.39241 5.68659 7.28574 5.65325 7.19907 5.59325L4.94574 3.94659C4.72574 3.78659 4.67907 3.47325 4.83907 3.25325C4.99907 3.02659 5.31241 2.97992 5.53907 3.13992L7.78574 4.77992C8.00574 4.93992 8.05907 5.25325 7.89241 5.47992C7.79907 5.61992 7.64574 5.68659 7.49241 5.68659Z" fill="#0066CC" />
-                    </svg>
+                <button type="button" class="btn btn-reset btn-clear">
                     Xóa lọc
                 </button>
-                <button type="submit" class="btn btn-primary btn-search">Tìm kiếm</button>
+                <button type="button" class="btn btn-primary btn-search" id="btn-search" onclick="getNewsAjax(1)">Tìm kiếm <span id="news-loading" class="loader d-none" aria-hidden="true"></span></button>
             </div>
         </form>
         <div class="row mt-5" id="content-bind">
@@ -310,10 +306,8 @@
         (function ($) {
             var newsAjaxUrl = '@Url.Action("NewsAjax", "Category")';
             var currentLanguage = '@language';
-            var hasServerData = @((Model.DataAPI != null && Model.DataAPI.Items != null && Model.DataAPI.Items.Count >0).ToString().ToLower());
 
             function toYMD(date) {
-                // date: Date object
                 var y = date.getFullYear();
                 var m = (date.getMonth() +1).toString().padStart(2, '0');
                 var d = date.getDate().toString().padStart(2, '0');
@@ -351,7 +345,6 @@
                 }
             }
 
-            // Format both date inputs to yyyy-MM-dd before any form submit
             function formatDateInputsBeforeSubmit() {
                 normalizeDateInput('#startDate');
                 normalizeDateInput('#endDate');
@@ -364,34 +357,48 @@
 
                 return {
                     Page: page ||1,
-                    PageSize:9,
                     Keyword: keyword,
                     FromDate: fromDate,
                     ToDate: toDate,
-                    Language: currentLanguage
+                    Language: currentLanguage,
+                    CategoryIds: '@ViewData["ExCategoryIds"]'
                 };
             }
 
-            window.getNewsAjax = function (page) {
+            function showLoading() {
+                $('#news-loading').removeClass('d-none');
+                $('#btn-search').prop('disabled', true).attr('aria-busy', 'true');
+            }
+
+            function hideLoading() {
+                $('#news-loading').addClass('d-none');
+                $('#btn-search').prop('disabled', false).removeAttr('aria-busy');
+            }
+
+            window.getNewsAjax = function(page) {
                 page = page ||1;
                 var params = buildParams(page);
+
+                // normalize dates before sending
+                formatDateInputsBeforeSubmit();
+
+                showLoading();
 
                 $.get(newsAjaxUrl, params)
                     .done(function (html) {
                         $('#content-bind').html(html);
-
-                        // after first AJAX load, mark that client now has data
-                        hasServerData = true;
                     })
                     .fail(function () {
                         $('#content-bind').html('<div class="no-data-messege">No data</div>');
+                    })
+                    .always(function () {
+                        hideLoading();
                     });
             };
 
             $(function () {
                 // initial load (if page has query params, keep them)
                 var urlParams = new URLSearchParams(window.location.search);
-                var initialPage = parseInt(urlParams.get('page')) ||1;
                 var initialKey = urlParams.get('key');
                 var initialFrom = urlParams.get('startDate');
                 var initialTo = urlParams.get('endDate');
@@ -400,26 +407,11 @@
                 if (initialFrom) $('#startDate').val(initialFrom);
                 if (initialTo) $('#endDate').val(initialTo);
 
-                // Only call AJAX if server did NOT render initial data
-                if (!hasServerData) {
-                    getNewsAjax(initialPage);
-                }
-
-                // Ensure date inputs are normalized before full form submit (server-side search)
-                $('form[method="get"]').on('submit', function (e) {
-                    formatDateInputsBeforeSubmit();
-                    // allow normal submit for SEO
-                });
-
                 // Clear button should clear and submit form to reload server-side results
                 $('.btn-clear').on('click', function () {
                     $('#search-input').val('');
                     $('#startDate, #endDate').val('');
-                    // submit the form to let server render search results (SEO-friendly)
-                    $(this).closest('form').submit();
                 });
-
-                // Do not intercept pagination links - allow normal navigation / server-side rendered pages
             });
         })(jQuery);
     </script>

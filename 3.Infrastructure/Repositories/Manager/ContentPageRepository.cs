@@ -568,7 +568,12 @@ namespace PT.Infrastructure.Repositories
                         Input4 = x.data.Input4,
                         Input5 = x.data.Input5,
                         Input6 = x.data.Input6,
-                        Input7 = x.data.Input7
+                        Input7 = x.data.Input7,
+                        Input8 = x.data.Input8,
+                        Input9 = x.data.Input9,
+                        Input10 = x.data.Input10,
+                        Input11 = x.data.Input11,
+                        Input12 = x.data.Input12
                     }).AsQueryable();
 
                 var listData = await query.AsNoTracking().ToListAsync();
@@ -627,7 +632,11 @@ namespace PT.Infrastructure.Repositories
          Input4 = x.data.Input4,
          Input5 = x.data.Input5,
          Input6 = x.data.Input6,
-         Input7 = x.data.Input7
+         Input7 = x.data.Input7,
+         Input9 = x.data.Input9,
+         Input10 = x.data.Input10,
+         Input11 = x.data.Input11,
+         Input12 = x.data.Input12
      }).AsQueryable();
 
                 var list = await query.AsNoTracking().ToListAsync();
@@ -680,6 +689,10 @@ namespace PT.Infrastructure.Repositories
                     Input6 = x.data.Input6,
                     Input7 = x.data.Input7,
                     Input8 = x.data.Input8,
+                    Input9 = x.data.Input9,
+                    Input10 = x.data.Input10,
+                    Input11 = x.data.Input11,
+                    Input12 = x.data.Input12,
                     Order = x.data.Order
                 }).AsQueryable();
 

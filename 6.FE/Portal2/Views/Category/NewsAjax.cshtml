@@ -11,6 +11,9 @@
 @{
     Layout = null;
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var stPage = Context.Request.Query["page"].ToString();
+    // Lấy pageIndex từ query string nếu có, mặc định =1
+    var pageIndex = 1;
 }
 <div class="row mt-5">
     @if (Model != null)
@@ -38,11 +41,11 @@
             <p class="no-data-messege my-5">Chưa có tin tức nào được tìm thấy</p>
         </div>
     }
-      <div class="pagination-area">
-                <div aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        @* @Html.Raw(PT.Shared.Functions.GenPageList("", Model.page, Model.PageBlog.TotalRows, Model.PageBlog.Limit, $"&key={Context.Request.Query["key"]}" + $"&startDate={Context.Request.Query["startDate"]}" + $"&endDate={Context.Request.Query["endDate"]}", "page-item")) *@
-                    </ul>
-                </div>
-            </div>
+    <div class="pagination-area">
+        <div aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                @Html.Raw(PT.Shared.Functions.GenPageListAjax2("", pageIndex, Model.Total, 9, $"&key={Context.Request.Query["key"]}" + $"&startDate={Context.Request.Query["startDate"]}" + $"&endDate={Context.Request.Query["endDate"]}", "page-item", null, "getNewsAjax"))
+            </ul>
+        </div>
+    </div>
 </div>

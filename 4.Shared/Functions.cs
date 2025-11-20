@@ -539,6 +539,17 @@ namespace PT.Shared
             return str.ToString();
         }
 
+        public static string GenPageListAjax2(string url, int curentPage, int totalRow, int size, string query = null, string classActive = "uk-active", string liClass = null, string function = null)
+        {
+            var str = new StringBuilder();
+            int totalPage = (totalRow % size > 0) ? (totalRow / size + 1) : (totalRow / size);
+            for (int i = 1; i <= totalPage; i++)
+            {
+                str.Append($"<li class=\"{liClass} {(i == curentPage ? classActive : "")}\"><a  role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick = \"{function}({i})\" class=\"page-link\" data-href=\"{url}?page={i}{(query != null ? $"{query}" : "")}\">{i}</a></li>");
+            }
+            return str.ToString();
+        }
+
         public static string GenPageListAjax(int curentPage, int totalRow, int size, string function, string forcus = null)
         {
             var str = new StringBuilder();

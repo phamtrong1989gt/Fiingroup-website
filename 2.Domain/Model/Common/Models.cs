@@ -14,6 +14,7 @@ namespace PT.Domain.Model
     /// </summary>
     public class NewsQueryParameters
     {
+        public string ExCategoryIds { get; set; }
         /// <summary>
         /// Số trang (default: 1)
         /// </summary>

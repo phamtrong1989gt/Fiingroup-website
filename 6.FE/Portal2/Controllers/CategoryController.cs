@@ -40,10 +40,12 @@ namespace PT.UI.Controllers
         [HttpGet]
         public async Task<ActionResult> NewsAjax([FromQuery] NewsQueryParameters prs)
         {
+            //await Task.Delay(1000);
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.Status = null;
+            prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("NewsAjax", listNew);
         }
@@ -78,6 +80,7 @@ namespace PT.UI.Controllers
                         CategoryIds = dl.ExCategoryIds,
                     }, language ?? "vi");
                     dl.DataAPI = listNew;
+                    ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }    
                     
                 viewName = "News";
