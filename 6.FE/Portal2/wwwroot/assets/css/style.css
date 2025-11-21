@@ -1095,10 +1095,13 @@ a:hover {
     }
     .stat-box{width:28% !important;}
     #FiinGroup img, #ReportDetail img {
-        max-width: 100%;
+        max-width: 100% !important;
     }
     #CoreValue .content {
-        width: 100%;
+        width: 100% !important;
+    }
+    .menu-news, .menu-publications {
+        display: none !important;
     }
 }
 @media (min-width: 375px) and (max-width: 760px) {
@@ -1106,7 +1109,13 @@ a:hover {
         width: 46% !important;
     }
     #FiinGroup img, #ReportDetail img {
-        max-width: 100%;
+        max-width: 100% !important;
     }
-    #CoreValue .content{width:100%;}
+    #CoreValue .content {
+        width: 100% !important;
+    }
+    .tab-container .tab{min-width:auto !important;}
+    .menu-news, .menu-publications {
+        display: none !important;
+    }
 }

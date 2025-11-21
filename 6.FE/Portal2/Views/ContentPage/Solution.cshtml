@@ -289,7 +289,7 @@
 		<h2 class="price-title mb-4">Giải pháp hỗ trợ <span style="color:#0066CC;">từ FiinGroup</span></h2>
 
 		<div class="row pdt20">
-			<div class="col-sm-7 mb-4">
+			<div class="col-lg-7 col-sm-12 mb-4">
 				<div class="pdt20"></div>
 				@for (int i = 0; i < listFlowItems.Count; i++)
 				{
@@ -302,7 +302,7 @@
 					</div>
 				}
 			</div>
-			<div class="col-sm-5 text-center">
+			<div class="col-lg-5 col-sm-12 text-center">
 				<img src="@((listFlowItems.FirstOrDefault()?.Input11) ?? "/Data/solution_giaiphap5.png")" class="img-fluid solution-img" alt="@Model.Name">
 			</div>
 		</div>
@@ -323,7 +323,7 @@
 	</div>
 </section>
 
-<section id="Deliver" class="py-5 mb-5">
+<section id="Deliver" class="py-5 mb-5 d-none d-lg-block">
 	<div class="container">
 		<div class="deliver">
 			@Html.Raw(Model.Input8)
