@@ -235,3 +235,12 @@ button.btn.btn-primary.btn-join {
         }
     }
     /*end button hover*/
+.dang-ky-card:hover {
+    background: #0066cc;
+    color: #fff;
+}
+.dang-ky-card-center:hover {
+    background: #fff;
+    color: #0066cc;
+    border: 1px solid #0066cc;
+}

@@ -39,7 +39,7 @@
 
 <style>
     #StockEconomy {
-        background: url('@(Model.Input12 ?? "/Data/summary-banner.png")') no-repeat top;
+		background: url('@(Model.Input12 ?? "/Data/Banner/bg-giaiphap.jpg")') no-repeat top;
         background-size: cover;
     }
 
@@ -274,7 +274,7 @@
 		<h2 class="price-title mb-4">Sản phẩm <span style="color:#0066CC;">hỗ trợ</span></h2>
 
 		<div class="row pdt20">
-			<div class="col-sm-7 mb-4">
+			<div class="col-lg-7 col-sm-12 mb-4">
 				<div class="pdt20"></div>
 				@for (int i = 0; i < listFlowItems.Count; i++)
 				{
@@ -287,7 +287,7 @@
 					</div>
 				}
 			</div>
-			<div class="col-sm-5 text-center">
+			<div class="col-lg-5 col-sm-12 text-center">
 				<img src="@(Model.Input5 ?? "/Data/solution_giaiphap5.png")" class="img-fluid solution-img" alt="@Model.Name">
 			</div>
 		</div>
@@ -313,7 +313,7 @@
 				@foreach (var item in lstTinLienQuan)
 				{
 					string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
-					<div class="col-sm-4">
+					<div class="col-lg-4 col-sm-6 mb-4">
 						<img src="@item.Banner" class="img-fluid w-100 img-item" alt="@item.Name" title="@item.Name" />
 						@if (item.Tags != null)
 						{

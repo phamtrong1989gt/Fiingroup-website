@@ -42,7 +42,7 @@
 
 <style>
 	#StockEconomy {
-		background: url('@(Model.Input12 ?? "/Data/summary-banner.png")') no-repeat top;
+		background: url('@(Model.Input12 ?? "/Data/Banner/bg-giaiphap.jpg")') no-repeat top;
 		background-size: cover;
 	}
 
@@ -60,14 +60,13 @@
 	}
 
 	.hero-title {
-		font-size: 60px;
+		font-size: 54px;
 		font-weight: 700;
 		line-height: 1.4;
-		margin-bottom: 15px;
 	}
 
 	.hero-text {
-		font-size: 19px;
+		font-size: 18px;
 		line-height: 1.7;
 		color: #d7e9ff;
 		text-align: justify;
@@ -258,12 +257,12 @@
 <section id="StockEconomy" class="hero-section">
 	<div class="hero-overlay">
 		<div class="container">
-			<div class="hero-content py-3">
+			<div class="hero-content py-5">
 				@if (!string.IsNullOrEmpty(Model.Input1))
 				{
 					<span class="hero-subtitle">@Model.Input1</span>
 				}
-				<h1 class="hero-title">
+				<h1 class="hero-title mb-4">
 					@Model.Input2
 				</h1>
 				<div class="hero-text">
@@ -289,7 +288,7 @@
 		<h2 class="price-title mb-4">Giải pháp hỗ trợ <span style="color:#0066CC;">từ FiinGroup</span></h2>
 
 		<div class="row pdt20">
-			<div class="col-sm-7 mb-4">
+			<div class="col-lg-7 col-sm-12 mb-4">
 				<div class="pdt20"></div>
 				@for (int i = 0; i < listFlowItems.Count; i++)
 				{
@@ -302,14 +301,14 @@
 					</div>
 				}
 			</div>
-			<div class="col-sm-5 text-center">
+			<div class="col-lg-5 col-sm-12 text-center">
 				<img src="@((listFlowItems.FirstOrDefault()?.Input11) ?? "/Data/solution_giaiphap5.png")" class="img-fluid solution-img" alt="@Model.Name">
 			</div>
 		</div>
 	</div>
 </section>
 
-<section id="Customer" class="py-5">
+<section id="Customer" class="pt-5 pb-3">
 	<div class="container">
 		<h2 class="text-center price-title mb-5">Khách hàng <span style="color: #0066CC;"> nổi bật</span> </h2>
 	</div>
@@ -323,7 +322,7 @@
 	</div>
 </section>
 
-<section id="Deliver" class="py-5 mb-5">
+<section id="Deliver" class="py-5 mb-5 d-none d-lg-block">
 	<div class="container">
 		<div class="deliver">
 			@Html.Raw(Model.Input8)
