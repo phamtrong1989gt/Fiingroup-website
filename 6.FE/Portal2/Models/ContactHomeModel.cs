@@ -11,7 +11,7 @@ namespace PT.UI.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "FullName")]
+        [Display(Name = "Họ và tên")]
         [Required(ErrorMessage = "{0}  không được để trống")]
         [StringLength(50, MinimumLength =10)]
         public string FullName { get; set; }
@@ -58,7 +58,7 @@ namespace PT.UI.Models
     public class ContactSolotionModel
     {
         public int Id { get; set; }
-        [Display(Name = "FullName")]
+        [Display(Name = "Họ và tên")]
         [Required(ErrorMessage = "{0}  không được để trống")]
         [StringLength(50, MinimumLength = 10)]
         public string FullName { get; set; }
