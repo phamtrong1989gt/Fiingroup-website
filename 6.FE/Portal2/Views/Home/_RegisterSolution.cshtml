@@ -18,7 +18,7 @@
 	<div class="modal-dialog" role="document" style="margin-top:10%;">
 		<div class="modal-content" style="background:#fff;">
 			<div class="text-right">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background:transparent;border:none;width:26px;">
+				<button type="button" id="btnClose" class="close" data-dismiss="modal" aria-label="Close" style="background:transparent;border:none;width:26px;">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -170,6 +170,10 @@
 			allowClear: true,
 			tags: true
 		});
+
+	$("#btnClose").on("click", function () {
+		$('#popsolutionmore').modal('hide');
+	});
 	// $("#dichVuQT").on("change", function () {
 	// 	let selected = $(this).val();
 	// 	console.log("selected: "+ selected);
