@@ -1,4 +1,6 @@
-﻿@inject PT.Infrastructure.Interfaces.IContactRepository _iContactRepository;
+﻿@using Microsoft.Extensions.Options
+@inject PT.Infrastructure.Interfaces.IContactRepository _iContactRepository;
+@inject IOptions<BaseSettings> _baseSettings;
 
 @{
 	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
@@ -7,7 +9,7 @@
 	@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
 	@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
 	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
-	var portalId = 2;
+	var portalId = _baseSettings.Value.PortalId;
 	var listServies = await _iContactRepository.ServiesNewsList(language, portalId);
 	var contactType = (int)Contact.ContactType.Contact;
 }
