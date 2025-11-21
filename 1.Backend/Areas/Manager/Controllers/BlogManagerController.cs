@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PT.Base;
+using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
@@ -34,7 +36,8 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly IWebHostEnvironment _iWebHostEnvironment;
         private readonly IFileRepository _iFileRepository;
         private readonly IPortalRepository _iPortalRepository;
-  
+        private readonly IAsyncNewsService _iAsyncNewsService;
+
         public BlogManagerController(
             ILogger<BlogManagerController> logger,
             IOptions<BaseSettings> baseSettings,
@@ -48,7 +51,8 @@ namespace PT.BE.Areas.Manager.Controllers
             IContentPageReferenceRepository iContentPageReferenceRepository,
             IWebHostEnvironment iWebHostEnvironment,
             IFileRepository iFileRepository,
-            IPortalRepository iPortalRepository
+            IPortalRepository iPortalRepository,
+            IAsyncNewsService iAsyncNewsService
         )
         {
             controllerName = "BlogManager";
@@ -66,6 +70,7 @@ namespace PT.BE.Areas.Manager.Controllers
             _iWebHostEnvironment = iWebHostEnvironment;
             _iFileRepository = iFileRepository;
             _iPortalRepository = iPortalRepository;
+            _iAsyncNewsService = iAsyncNewsService;
         }
 
    
@@ -216,6 +221,22 @@ namespace PT.BE.Areas.Manager.Controllers
                     await UpdateReference(data.Id, use.ContentPageReferenceIds);
                     await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
                     await _iContentPageRepository.CommitTransaction();
+                    // Xử lý thêm data vào Cổng CM thông qua API
+                    try
+                    {
+                        // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
+                        var outData = await _iAsyncNewsService.CreateAsync(data);
+                        if (outData != null)
+                        {
+                            data.NewsId = outData.NewsId;
+                            _iContentPageRepository.Update(data);
+                            await _iContentPageRepository.CommitAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+                    }
 
                     await AddLog(new LogModel
                     {
@@ -365,6 +386,30 @@ namespace PT.BE.Areas.Manager.Controllers
                         Type = LogType.Edit
                     });
                     await _iContentPageRepository.CommitTransaction();
+                    try
+                    {
+                        if (dl.NewsId == null || dl.NewsId <= 0)
+                        {
+                            // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
+                            var outData = await _iAsyncNewsService.CreateAsync(dl);
+                            if (outData != null)
+                            {
+                                dl.NewsId = outData.NewsId;
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
+                            }
+                        }
+                        else
+                        {
+                            // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
+                            var checkAPI = await _iAsyncNewsService.UpdateAsync(dl);
+                            var a = checkAPI;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+                    }
                     return new ResponseModel() { Output = 1, Message = "Cập nhật tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
                 return new ResponseModel() { Output = -2, Message = "Bạn chưa nhập đầy đủ thông tin hoặc liên kết thân thiện/Permalink đã tồn tại, vui lòng thay thêm ký tự bất kỳ đằng sau.", Type = ResponseTypeMessage.Warning };
@@ -610,8 +655,14 @@ namespace PT.BE.Areas.Manager.Controllers
         {
             try
             {
-                var allowed = (_baseSettings.Value.ImagesType ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet(StringComparer.OrdinalIgnoreCase);
+                var contentPage = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == id);
+                if(contentPage == null)
+                {
+                    return new ResponseModel<FileDataModel> { Output = 0, Message = "Bài viết không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
+                }
 
+                var allowed = (_baseSettings.Value.ImagesType ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet(StringComparer.OrdinalIgnoreCase);
+                
                 var folderByDate = Functions.GenFolderByDate();
                 string configuredDataPath = _baseSettings.Value.DataPath;
 
@@ -665,6 +716,18 @@ namespace PT.BE.Areas.Manager.Controllers
                 publicUrl = publicUrl + Uri.EscapeDataString(fileName);
 
                 await AddFileData(id, publicUrl, ESlugType.ContentPage, altId);
+
+                // Chèn thêm domain vào publicUrl để chia sẻ cho các đơn vị khác
+                var portal = await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == contentPage.PortalId);
+                if (portal != null)
+                {
+                    var domain = portal.Domain.TrimEnd('/');
+                    if(_iWebHostEnvironment.IsDevelopment())
+                    {
+                        domain = portal.DomainDev;
+                    }
+                    publicUrl = domain + publicUrl;
+                }
 
                 if (type ==1)
                 {

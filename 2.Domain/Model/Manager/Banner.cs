@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using PT.Domain.Seedwork;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace PT.Domain.Model
 {
-
     public enum BannerType
     {
         Slide,

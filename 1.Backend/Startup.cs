@@ -10,9 +10,11 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders; // thêm để dùng PhysicalFileProvider
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PT.Base;
+using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure;
 using PT.Infrastructure.Interfaces;
@@ -23,9 +25,8 @@ using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.IO; // thêm để dùng Path và Directory
-using Microsoft.Extensions.FileProviders; // thêm để dùng PhysicalFileProvider
+using System.Linq;
 
 namespace PT.UI
 {
@@ -86,6 +87,7 @@ namespace PT.UI
             services.Configure<SocketSettings>(Configuration.GetSection("SocketSettings"));
             services.Configure<List<AdvertisingHomepageSettings>>(Configuration.GetSection("AdvertisingHomepageSettings"));
             services.Configure<AuthorizeSettings>(Configuration.GetSection("AuthorizeSettings"));
+            services.Configure<AsyncNewsSettings>(Configuration.GetSection("AsyncNewsSettings"));
             services.Configure<List<RedirectLinkSetting>>(Configuration.GetSection("RedirectLinkSettings"));
 
             // Gọi lại AddMemoryCache nếu cần (không gây lỗi, nhưng có thể thừa)
@@ -135,7 +137,8 @@ namespace PT.UI
                     Options = options
                 });
             });
-
+            // Register IHttpClientFactory
+            services.AddHttpClient();
             // Đăng ký các repository cho DI (scoped phù hợp với DbContext)
             services.AddScoped<IEmailSenderRepository, EmailSenderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -183,6 +186,8 @@ namespace PT.UI
             services.AddScoped<ISeoSettingRepository, SeoSettingRepository>();
             services.AddScoped<IBindContentSettingRepository, BindContentSettingRepository>();
             services.AddScoped<IEmailSettingRepository, EmailSettingRepository>();
+            services.AddScoped<IAsyncNewsService, AsyncNewsService>();
+            
             // Đăng ký repository tổng quát cho các entity kiểu chung
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
 

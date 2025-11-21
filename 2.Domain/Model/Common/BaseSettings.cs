@@ -124,4 +124,64 @@ namespace PT.Domain.Model
 
         public NewAPISettings NewAPI { get; set; }
     }
+
+    public class AsyncNewsSettings
+    {
+        [Display(Name = "Token Endpoint")]
+        public string TokenEndpoint { get; set; }
+
+        [Display(Name = "News Endpoint VI")]
+        public string NewsEndpointVI { get; set; }
+
+        [Display(Name = "News Endpoint EN")]
+        public string NewsEndpointEN { get; set; }
+
+        [Display(Name = "Category ID VI")]
+        public List<int> CategoryIdVI { get; set; }
+
+        [Display(Name = "Category ID EN")]
+        public List<int> CategoryIdEN { get; set; }
+
+        [Display(Name = "Grant Type")]
+        public string GrantType { get; set; }
+
+        [Display(Name = "Client ID")]
+        public string ClientId { get; set; }
+
+        [Display(Name = "Client Secret")]
+        public string ClientSecret { get; set; }
+
+        [Display(Name = "Scope")]
+        public string Scope { get; set; }
+
+        [Display(Name = "Username")]
+        public string Username { get; set; }
+
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        [Display(Name = "Created Endpoint VI")]
+        public string CreatedEndPointVI { get; set; }
+
+        [Display(Name = "Edit Endpoint VI")]
+        public string EditEndPointVI { get; set; }
+
+        [Display(Name = "Delete Endpoint VI")]
+        public string DeleteEndPointVI { get; set; }
+
+        [Display(Name = "Get Endpoint VI")]
+        public string GetEndPointVI { get; set; }
+
+        [Display(Name = "Created Endpoint EN")]
+        public string CreatedEndPointEN { get; set; }
+
+        [Display(Name = "Edit Endpoint EN")]
+        public string EditEndPointEN { get; set; }
+
+        [Display(Name = "Delete Endpoint EN")]
+        public string DeleteEndPointEN { get; set; }
+
+        [Display(Name = "Get Endpoint EN")]
+        public string GetEndPointEN { get; set; }
+    }
 }

@@ -11,42 +11,6 @@ using System.Threading.Tasks;
 
 namespace PT.Domain.Model
 {
-    public class EmailSetting : IAggregateRoot
-    {
-        public int Id { get; set; }
-
-        public int PortalId { get; set; }
-
-        [Display(Name = "Email server")]
-        public string EmailServer { get; set; }
-
-        [Display(Name = "Mật khẩu hoặc token")]
-        public string Password { get; set; }
-
-        [Display(Name = "Port")]
-        public int Port { get; set; }
-
-        [Display(Name = "Host")]
-        public string Host { get; set; }
-
-        [Display(Name = "From")]
-        public string From { get; set; }
-
-        [Display(Name = "CC")]
-        public string CC { get; set; }
-    }
-
-    public class BindContentSetting : IAggregateRoot
-    {
-        public int Id { get; set; }
-        public int PortalId { get; set; }
-        [Display(Name = "Chèn nội dung vào head")]
-        public string Head { get; set; }
-        [Display(Name = "Chèn nội dung vào body")]
-        public string Body { get; set; }
-        [Display(Name = "Chèn nội dung vào footer")]
-        public string Footer { get; set; }
-    }
 
     public class Category : IAggregateRoot
     {
@@ -63,6 +27,7 @@ namespace PT.Domain.Model
         public string Banner2 { get; set; }
         public string LinkData { get; set; }
         public string ExCategoryIds { get; set; }
+        public int? ReferentCategoryId { get; set; }
         public int Order { get; set; }
         [MaxLength(10)]
         public string Language { get; set; }
@@ -109,7 +74,7 @@ namespace PT.Domain.Model
         public int Order { get; set; }
         public int ParentId { get; set; }
 
-        [Display(Name = "Danh mục kết nối")]
+        [Display(Name = "Những ID danh mục hiển thị tương ứng")]
         public string ExCategoryIds { get; set; }
 
         public ESlugType? SlugType { get; set; }
@@ -122,5 +87,8 @@ namespace PT.Domain.Model
         [Display(Name = "Loại danh mục")]
         [Required(ErrorMessage = "{0} không được để rỗng!")]
         public ECategoryType? CategoryType { get; set; }
+
+        [Display(Name = "ID danh mục tương ứng")]
+        public int? ReferentCategoryId { get; set; }
     }
 }

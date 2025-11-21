@@ -21,6 +21,7 @@ namespace PT.UI
                     config.AddJsonFile("appsettings.AdvertisingHomepage.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("appsettings.RedirectLink.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("appsettings.Paypal.json", optional: true, reloadOnChange: true);
+                    config.AddJsonFile("appsettings.AsyncNews.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("appsettings.Log.json", optional: true, reloadOnChange: true);
                 })
                 .ConfigureLogging((hostingContext, logging) =>
