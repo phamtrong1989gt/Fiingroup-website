@@ -274,7 +274,7 @@
 					string url = @PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
 					<div class="col-lg-4 col-sm-6">
 						<a href="@url" title="@item.Name">
-							<img class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.Banner ?? "/Data/Banner/no-img.jpg")" alt="@item.Name">
+							<img class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.Banner ?? "/Data/Banner/no-img.jpg")" alt="@item.Name" loading="lazy">
 						</a>
 						<div class="news-tag-item pt-4">
 							<span class="date">@item.DatePosted.ToString("HH:mm dd/MM/yyyy")</span>
