@@ -560,6 +560,27 @@ a {
 .nav-dropbtn:hover .nav-dropdown-content2 {
     display: block;
 }
+.menusearch {
+    left: -1300% !important;
+    width: 300px;
+    padding: 5px;
+    background: #fff;
+    margin: 20px 0 0 0 !important;
+}
+.solution-desc {
+    margin: 0 35px 0 0;
+}
+
+    .solution-desc h3 {
+        font-size: 36px;
+        font-weight: 700;
+        color: #093461;
+    }
+
+    .solution-desc p {
+        color: #093461;
+        margin-bottom: 6px;
+    }
 .pl5 {
     padding: 0 0 0 5px;
 }
