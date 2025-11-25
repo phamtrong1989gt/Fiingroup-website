@@ -314,7 +314,7 @@
 				{
 					string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
 					<div class="col-lg-4 col-sm-6 mb-4">
-						<img src="@item.Banner" class="img-fluid w-100 img-item" alt="@item.Name" title="@item.Name" />
+						<img src="@item.Banner" class="img-fluid w-100 img-item" alt="@item.Name" title="@item.Name" loading="lazy" />
 						@if (item.Tags != null)
 						{
 							foreach (var tag in item.Tags)
