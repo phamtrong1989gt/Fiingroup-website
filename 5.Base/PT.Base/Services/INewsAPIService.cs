@@ -187,6 +187,7 @@ namespace PT.Base.Services
             // ✅ Lần 1: Gọi API với token hiện tại
             try
             {
+              //  newsUrl = "http://113.160.94.133:5050/FGFN/api/NewsEN/Get?id=6410206";
                 return await CallNewsDetailAPIAsync(newsUrl, token);
             }
             catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)

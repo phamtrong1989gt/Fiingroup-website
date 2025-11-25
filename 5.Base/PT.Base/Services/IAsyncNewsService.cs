@@ -31,18 +31,23 @@ namespace PT.Base.Services
         private const string TOKEN_CACHE_KEY = "NewsAPI_AccessToken";
         private readonly IPortalRepository _iPortalRepository;
         private readonly IWebHostEnvironment _env;
+        private readonly ICategoryRepository _iCategoryRepository;
+        private readonly ILinkRepository _ilinkRepository;
+
         public AsyncNewsService(
             ISeoSettingRepository iSeoSettingRepository,
             IMemoryCache memoryCache,
             IBindContentSettingRepository iBindContentSettingRepository,
             IEmailSettingRepository iEmailSettingRepository,
             IOptions<AsyncNewsSettings> settings,
-            IHttpClientFactory httpClientFactory, IPortalRepository iPortalRepository, IWebHostEnvironment env)
+            IHttpClientFactory httpClientFactory, IPortalRepository iPortalRepository, IWebHostEnvironment env, ICategoryRepository iCategoryRepository, ILinkRepository iLinkRepository)
         {
             _memoryCache = memoryCache;
             _settings = settings;
             _httpClientFactory = httpClientFactory;
             _iPortalRepository = iPortalRepository;
+            _iCategoryRepository = iCategoryRepository;
+            _ilinkRepository = iLinkRepository;
             _env = env;
         }
   
@@ -156,7 +161,7 @@ namespace PT.Base.Services
                     ImageUrl = $"{domain}{contentPage.Banner}",
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
-                  //  UpdateBy = contentPage.Author,
+                    UpdateBy = "",
                     RecordStatusId = contentPage.Status ? 1 : 4,
                     Categories = [new() { Id = categoryId, PriorityOrder = 1 }],
                     TypeIds = [],
@@ -239,13 +244,22 @@ namespace PT.Base.Services
             }
             try
             {
+                // Theo portal
                 int sourceId = contentPage.PortalId == 1 ? 299 : 5;
 
-                int categoryId = 227;
-                if (contentPage.CategoryType == ECategoryType.ContentPage_Event)
+                var link = await _ilinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == contentPage.Id && x.Type == contentPage.SlugType);
+                if (link == null)
                 {
-                    categoryId = 382;
+                    return null;
                 }
+                // Ánh xạ danh mục
+                var category = await _iCategoryRepository.SingleOrDefaultAsync(true, x=>x.Id == contentPage.CategoryId);
+                if(category == null)
+                {
+                    return null;
+                }
+
+                var categoryId = category.ReferentCategoryId;
 
                 var cmd = new NewsCMD
                 {
@@ -259,10 +273,10 @@ namespace PT.Base.Services
                     ImageUrl = $"{domain}/{contentPage.Banner}",
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
-                    //UpdateBy = contentPage.Author,
+                    UpdateBy = "",
                     RecordStatusId = contentPage.Status ? 1 : 4,
-                    Categories = [new() { Id = categoryId, PriorityOrder = 1 }],
-                    TypeIds = contentPage.ServiceCategorys?.Select(c => c.Id).ToList(),
+                    Categories = (categoryId != null && categoryId > 0) ? [new() { Id = categoryId ?? 0, PriorityOrder = 1 }] : [],
+                    TypeIds = [],
                     SourceIds = [sourceId],
                     Entities = [],
                     Tags = [],
@@ -282,7 +296,7 @@ namespace PT.Base.Services
                     var json = JsonConvert.SerializeObject(cmd);
                     using var content = new StringContent(json, Encoding.UTF8, "application/json");
                     // Use POST for update endpoint to match existing API shape (adjust to PutAsync if API expects PUT)
-                    return await client.PostAsync(endpoint, content);
+                    return await client.PutAsync(endpoint, content);
                 }
 
                 var token = await GetAccessTokenAsync();
