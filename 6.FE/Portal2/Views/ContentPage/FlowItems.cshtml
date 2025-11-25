@@ -382,6 +382,10 @@
 <section id="FiinProX">
     <div class="container">
         @Html.Raw(Model.Input4)
+        @if (!string.IsNullOrEmpty(Model.Input9))
+        {
+            <img src="@Model.Input9" alt="@Model.Name" class="img-content" style="width:100%;" />
+        }
     </div>
 </section>
 
@@ -390,6 +394,10 @@
     <div class="whylastest mt-5">
         <div class="container">
             @Html.Raw(Model.Input5)
+            @if (!string.IsNullOrEmpty(Model.Input8))
+            {
+                <img src="@Model.Input8" alt="@Model.Name" class="img-content" style="width:100%;" />
+            }
         </div>
     </div>
 </section>
@@ -398,6 +406,10 @@
 <section id="FiinReport">
     <div class="container">
         @Html.Raw(Model.Input6)
+        @if (!string.IsNullOrEmpty(Model.Input13))
+        {
+            <img src="@Model.Input13" alt="@Model.Name" class="img-content" style="width:100%;" />
+        }
     </div>
 </section>
 
@@ -405,6 +417,10 @@
 <section id="FiinCard">
     <div class="container">
         @Html.Raw(Model.Input7)
+        @if (!string.IsNullOrEmpty(Model.Input14))
+        {
+            <img src="@Model.Input14" alt="@Model.Name" class="img-content" style="width:100%;" />
+        }
     </div>
 </section>
 

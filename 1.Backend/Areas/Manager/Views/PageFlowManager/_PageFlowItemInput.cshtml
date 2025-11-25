@@ -44,10 +44,11 @@
     <div class="panel-heading" role="tab" id="headingOne_100">
         <h4 class="panel-title">
             <a role="button" data-toggle="collapse" href="#collapseOne_100" aria-expanded="true" aria-controls="headingOne_100">
-                <i class="material-icons">perm_contact_calendar</i> THÔNG TIN TRANG CHI TIẾT
+                <i class="material-icons">perm_contact_calendar</i> Section Header - trang chi tiết
             </a>
         </h4>
     </div>
+
     <div id="collapseOne_100" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_100">
         <div class="panel-body">
 
@@ -111,7 +112,7 @@
     <div class="panel-heading" role="tab" id="headingOne_103">
         <h4 class="panel-title">
             <a role="button" data-toggle="collapse" href="#collapseOne_103" aria-expanded="true" aria-controls="headingOne_103">
-                <i class="material-icons">perm_contact_calendar</i> Scripts: SẢN PHẨM CÓ GÌ?
+                <i class="material-icons">perm_contact_calendar</i> Section I - Scripts SẢN PHẨM CÓ GÌ?
             </a>
         </h4>
     </div>
@@ -121,9 +122,22 @@
 
             <div class="form-group">
                 <div style="margin-top:10px; margin-bottom:10px;">
+                    <img style="height:200px;" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" id="imgInput9" class="img-thumbnail img-preview-t" src="@(Model.Input9 ?? "/Content/Admin/images/no-avatar.jpg")" alt="Ảnh Head" />
+                </div>
+                <label class="form-label" for="FilePath">Nội dung hình ảnh</label>
+                <div class="input-group input-group-t">
+                    <input type="text" class="form-control input-sm form-control-t" asp-for="Input9">
+                    <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
+                        <a button-open-file-manager data-img="imgInput9" data-target="Input9" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div style="margin-top:10px; margin-bottom:10px;">
                     <img style="height:200px;" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" id="imgInput11" class="img-thumbnail img-preview-t" src="@(Model.Input11 ?? "/Content/Admin/images/no-avatar.jpg")" alt="Ảnh Head" />
                 </div>
-                <label class="form-label" for="FilePath">Ảnh mô tả thêm</label>
+                <label class="form-label" for="FilePath">Ảnh mô tả bằng hình ảnh trang dòng chảy</label>
                 <div class="input-group input-group-t">
                     <input type="text" class="form-control input-sm form-control-t" asp-for="Input11">
                     <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
@@ -139,13 +153,25 @@
     <div class="panel-heading" role="tab" id="headingOne_102">
         <h4 class="panel-title">
             <a role="button" data-toggle="collapse" href="#collapseOne_102" aria-expanded="true" aria-controls="headingOne_102">
-                <i class="material-icons">perm_contact_calendar</i> Scripts: TẠI SAO CHỌN SẢN PHẨM CHÚNG TÔI?
+                <i class="material-icons">perm_contact_calendar</i>  Section II -  Scripts TẠI SAO CHỌN SẢN PHẨM CHÚNG TÔI?
             </a>
         </h4>
     </div>
     <div id="collapseOne_102" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_102">
         <div class="panel-body">
             <textarea class="form-control form-control-t" placeholder="" asp-for="Input5"></textarea>
+            <div class="form-group">
+                <div style="margin-top:10px; margin-bottom:10px;">
+                    <img style="height:200px;" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" id="imgInput8" class="img-thumbnail img-preview-t" src="@(Model.Input8 ?? "/Content/Admin/images/no-avatar.jpg")" alt="Ảnh Head" />
+                </div>
+                <label class="form-label" for="FilePath">Nội dung hình ảnh</label>
+                <div class="input-group input-group-t">
+                    <input type="text" class="form-control input-sm form-control-t" asp-for="Input8">
+                    <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
+                        <a button-open-file-manager data-img="imgInput8" data-target="Input8" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -154,13 +180,25 @@
     <div class="panel-heading" role="tab" id="headingOne_106">
         <h4 class="panel-title">
             <a role="button" data-toggle="collapse" href="#collapseOne_106" aria-expanded="true" aria-controls="headingOne_106">
-                <i class="material-icons">perm_contact_calendar</i> Scripts: BOX GIỚI THIỆU CỔNG THÔNG TIN LIÊN QUAN
+                <i class="material-icons">perm_contact_calendar</i> Section III - BOX GIỚI THIỆU CỔNG THÔNG TIN LIÊN QUAN
             </a>
         </h4>
     </div>
     <div id="collapseOne_106" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_106">
         <div class="panel-body">
             <textarea class="form-control form-control-t" placeholder="" asp-for="Input6"></textarea>
+            <div class="form-group">
+                <div style="margin-top:10px; margin-bottom:10px;">
+                    <img style="height:200px;" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" id="imgInput13" class="img-thumbnail img-preview-t" src="@(Model.Input13 ?? "/Content/Admin/images/no-avatar.jpg")" alt="Ảnh Head" />
+                </div>
+                <label class="form-label" for="FilePath">Nội dung hình ảnh</label>
+                <div class="input-group input-group-t">
+                    <input type="text" class="form-control input-sm form-control-t" asp-for="Input13">
+                    <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
+                        <a button-open-file-manager data-img="imgInput13" data-target="Input13" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -169,13 +207,25 @@
     <div class="panel-heading" role="tab" id="headingOne_107">
         <h4 class="panel-title">
             <a role="button" data-toggle="collapse" href="#collapseOne_107" aria-expanded="true" aria-controls="headingOne_107">
-                <i class="material-icons">perm_contact_calendar</i> Scripts: BOX GÓI DỊCH VỤ
+                <i class="material-icons">perm_contact_calendar</i> Section IV - Scripts BOX GÓI DỊCH VỤ
             </a>
         </h4>
     </div>
     <div id="collapseOne_107" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_107">
         <div class="panel-body">
             <textarea class="form-control form-control-t" placeholder="" asp-for="Input7"></textarea>
+            <div class="form-group">
+                <div style="margin-top:10px; margin-bottom:10px;">
+                    <img style="height:200px;" onerror="this.onerror=null;this.src = '/Content/Admin/images/no-avatar.jpg';" id="imgInput14" class="img-thumbnail img-preview-t" src="@(Model.Input14 ?? "/Content/Admin/images/no-avatar.jpg")" alt="Ảnh Head" />
+                </div>
+                <label class="form-label" for="FilePath">Nội dung hình ảnh</label>
+                <div class="input-group input-group-t">
+                    <input type="text" class="form-control input-sm form-control-t" asp-for="Input14">
+                    <div class="input-group-addon btn-group-addon btn-group-addon-form-group">
+                        <a button-open-file-manager data-img="imgInput14" data-target="Input14" class="btn btn-icon btn-danger waves-effect"><i class="material-icons">attach_file</i></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

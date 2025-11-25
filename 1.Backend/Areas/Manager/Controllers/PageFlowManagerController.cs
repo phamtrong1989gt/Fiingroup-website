@@ -216,6 +216,9 @@ namespace PT.BE.Areas.Manager.Controllers
                         Input10 = use.Input10,
                         Input11 = use.Input11,
                         Input12 = use.Input12,
+                        Input13 = use.Input13,
+                        Input14 = use.Input14,
+                        Input15 = use.Input15,
                         IsShowHeaderContent = use.IsShowHeaderContent,
                         Order = use.Order
                     };
@@ -329,6 +332,9 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Input10 = use.Input10;
                     dl.Input11 = use.Input11;
                     dl.Input12 = use.Input12;
+                    dl.Input13 = use.Input13;
+                    dl.Input14 = use.Input14;
+                    dl.Input15 = use.Input15;
                     dl.Order = use.Order;
                     dl.IsShowHeaderContent = use.IsShowHeaderContent;
                     

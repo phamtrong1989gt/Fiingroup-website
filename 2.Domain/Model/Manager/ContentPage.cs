@@ -76,6 +76,9 @@ namespace PT.Domain.Model
         public string Input10 { get; set; }
         public string Input11 { get; set; }
         public string Input12 { get; set; }
+        public string Input13 { get; set; }
+        public string Input14 { get; set; }
+        public string Input15 { get; set; }
         public bool? IsShowHeaderContent { get; set; } = true;
         public int? Order { get; set; } = 1;
 
@@ -236,12 +239,16 @@ namespace PT.Domain.Model
         public string Input10 { get; set; }
         public string Input11 { get; set; }
         public string Input12 { get; set; }
+        public string Input13 { get; set; }
+        public string Input14 { get; set; }
+        public string Input15 { get; set; }
 
         [Display(Name = "Thứ tự")]
         public int? Order { get; set; } = 1;
 
         public ECategoryType? CategoryType { get; set; }
         public string ContentPageRelatedOrders { get; set; }
+
     }
   
     public class FAQModel:SeoModel

@@ -210,22 +210,22 @@ namespace PT.UI
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IBindContentSettingRepository, BindContentSettingRepository>();
             services.AddScoped<IEmailSettingRepository, EmailSettingRepository>();
-            
-        // ✅ Đăng ký NewsAPIService (phải sau AddHttpClient())
-          services.AddScoped<INewsAPIService, NewsAPIService>();
-            
-         // Đăng ký DI cho repository tổng quát
-          services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
 
-     //Gzip - Tối ưu hóa
-    services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Fastest);
+            // ✅ Đăng ký NewsAPIService (phải sau AddHttpClient())
+            services.AddScoped<INewsAPIService, NewsAPIService>();
+
+            // Đăng ký DI cho repository tổng quát
+            services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
+
+            //Gzip - Tối ưu hóa
+            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Fastest);
 
             services.AddResponseCompression(options =>
             {
-   options.EnableForHttps = true; // Bật compression cho HTTPS
-     options.Providers.Add<GzipCompressionProvider>();
-      options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-      {
+                options.EnableForHttps = true; // Bật compression cho HTTPS
+                options.Providers.Add<GzipCompressionProvider>();
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+                {
        "text/plain",
               "text/css",
  "application/javascript",
@@ -241,113 +241,113 @@ namespace PT.UI
   "application/font-woff",
   "application/font-woff2"
      });
-  });
+            });
 
-    //Content/Admin/plugins/signalr
-services.Configure<FormOptions>(options =>
- {
-     options.MultipartBodyLengthLimit = 209_715_200;
-         });
+            //Content/Admin/plugins/signalr
+            services.Configure<FormOptions>(options =>
+             {
+                 options.MultipartBodyLengthLimit = 209_715_200;
+             });
 
-  services.AddDistributedMemoryCache();
+            services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
   {
-       options.IdleTimeout = TimeSpan.FromMinutes(30);
-          options.Cookie.HttpOnly = true;
-        options.Cookie.Name = ".PhamTrong.Session";
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-   });
+      options.IdleTimeout = TimeSpan.FromMinutes(30);
+      options.Cookie.HttpOnly = true;
+      options.Cookie.Name = ".PhamTrong.Session";
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+  });
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-     services.AddMvc(options =>
-      {
-      options.EnableEndpointRouting = false;
+            services.AddMvc(options =>
+             {
+                 options.EnableEndpointRouting = false;
 
-     // Thêm Cache Profile cho GET requests - 10 giây
-  options.CacheProfiles.Add("Default10Seconds", new CacheProfile
-     {
-             Duration = 10,
-    Location = ResponseCacheLocation.Any,
-          VaryByQueryKeys = new[] { "*" }
- });
+                 // Thêm Cache Profile cho GET requests - 10 giây
+                 //options.CacheProfiles.Add("Default10Seconds", new CacheProfile
+                 //{
+                 //    Duration = 10,
+                 //    Location = ResponseCacheLocation.Any,
+                 //    VaryByQueryKeys = new[] { "*" }
+                 //});
 
-     // Cache profile cho static content - 1 năm
-      options.CacheProfiles.Add("StaticContent", new CacheProfile
-   {
-           Duration = 31536000,
-      Location = ResponseCacheLocation.Any
-              });
+                 // Cache profile cho static content - 1 năm
+                 options.CacheProfiles.Add("StaticContent", new CacheProfile
+                 {
+                     Duration = 31536000,
+                     Location = ResponseCacheLocation.Any
+                 });
 
-            //options.Filters.Add(new RequireHttpsAttribute
-                //{
-        //    Permanent = true
-            //});
-   //options.Filters.Add(new RequireWwwAttribute
-   //{
-      //    IgnoreLocalhost = true,
-   //    Permanent = true
-                //});
-            })
-    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = "Resources"; })
-      .AddDataAnnotationsLocalization();
+                 //options.Filters.Add(new RequireHttpsAttribute
+                 //{
+                 //    Permanent = true
+                 //});
+                 //options.Filters.Add(new RequireWwwAttribute
+                 //{
+                 //    IgnoreLocalhost = true,
+                 //    Permanent = true
+                 //});
+             })
+           .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix, opts => { opts.ResourcesPath = "Resources"; })
+             .AddDataAnnotationsLocalization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
 
-         loggerFactory.AddSerilog();
+            loggerFactory.AddSerilog();
             if (env.IsDevelopment())
             {
-         app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
             }
-    else
-    {
-         app.UseExceptionHandler("/Home/Error");
-       app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
-              app.UseHsts();
-       }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
+                app.UseHsts();
+            }
 
-AppHttpContext.Services = app.ApplicationServices;
+            AppHttpContext.Services = app.ApplicationServices;
 
             // Response Compression phải đặt trước Static Files
             app.UseResponseCompression();
             // THÊM middleware cache mới
-          //app.UseMiddleware<ResponseCacheMiddleware>();
+            //app.UseMiddleware<ResponseCacheMiddleware>();
 
-     // Response Caching Middleware
+            // Response Caching Middleware
             //app.UseResponseCaching();
 
-    app.UseStaticFiles(new StaticFileOptions
-      {
-            OnPrepareResponse = ctx =>
-   {
-               // Cache 1 năm cho static files
-ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={31536000}");
-     ctx.Context.Response.Headers.Append("Expires", DateTime.UtcNow.AddYears(1).ToString("R"));
-             }
-      });
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+               {
+                   // Cache 1 năm cho static files
+                   ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={31536000}");
+                   ctx.Context.Response.Headers.Append("Expires", DateTime.UtcNow.AddYears(1).ToString("R"));
+               }
+            });
 
-     var localizationOption = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            var localizationOption = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(localizationOption.Value);
 
             app.UseCookiePolicy();
-    app.UseSession();
-    app.UseAuthentication();
-   app.UseMvc(routes =>
-            {
-                routes.Routes.Add(new CustomRouter(routes.DefaultHandler));
-                routes.MapRoute(
-       name: "areas",
-           template: "Admin/{area:exists}/{controller=Home}/{action=Index}/{id?}"
-    );
+            app.UseSession();
+            app.UseAuthentication();
+            app.UseMvc(routes =>
+                     {
+                         routes.Routes.Add(new CustomRouter(routes.DefaultHandler));
+                         routes.MapRoute(
+                name: "areas",
+                    template: "Admin/{area:exists}/{controller=Home}/{action=Index}/{id?}"
+             );
 
-      routes.MapRoute(
-            name: "default",
- template: "{controller=Home}/{action=Index}/{id?}");
-            });
-   }
+                         routes.MapRoute(
+                      name: "default",
+           template: "{controller=Home}/{action=Index}/{id?}");
+                     });
+        }
     }
 }
