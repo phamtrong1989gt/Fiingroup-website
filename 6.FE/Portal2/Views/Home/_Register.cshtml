@@ -13,6 +13,13 @@
 	var listServies = await _iContactRepository.ServiesList(language, portalId);
 	var contactType = (int)Contact.ContactType.Product;
 }
+<style>
+	.field-validation-error
+	{
+		font-size: 12px;
+		position: absolute;
+	}
+</style>
 <section class="py-5 mb-3 mt-3" id="DangKy">
 	<div class="container">
 		<h2 class="price-title mb-5">Đăng ký ngay để <span style="color: #0066CC;">nhận tư vấn</span></h2>
@@ -23,45 +30,45 @@
 				<form id="formLienHe" method="post">
 					@Html.AntiForgeryToken()
 					<div class="row">
-						<div class="col-sm-6 mb-3">
+						<div class="col-sm-12 mb-2">
 							<label for="hoTen" class="form-label">Họ và tên <span class="error">*</span></label>
 							<input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder="Nhập họ và tên">
 							<span class="validate-style" asp-validation-for="FullName"></span>
 						</div>
-						<div class="col-sm-6 mb-3">
+						<div class="col-sm-6 mb-2">
 							<label for="soDienThoai" class="form-label">Số điện thoại <span class="error">*</span></label>
 							<input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder="Nhập số điện thoại">
 							<span class="validate-style" asp-validation-for="Phone"></span>
 						</div>
-						<div class="col-sm-12 mb-3">
+						<div class="col-sm-6 mb-2">
 							<label for="email" class="form-label">Email <span class="error">*</span></label>
 							<input type="email" class="form-control" id="email" asp-for="Email" placeholder="Nhập email">
 							<span class="validate-style" asp-validation-for="Email"></span>
 						</div>
-						<div class="col-sm-6 mb-3">
+						<div class="col-sm-6 mb-2">
 							<label for="tenCongTy" class="form-label">Tên công ty <span class="error">*</span></label>
 							<input type="text" class="form-control" id="tenCongTy" asp-for="ConpanyName" placeholder="Nhập công ty">
 							<span class="validate-style" asp-validation-for="ConpanyName"></span>
 						</div>
-						<div class="col-sm-6 mb-3">
+						<div class="col-sm-6 mb-2">
 							<label for="chucDanhCV" class="form-label">Chức danh công việc <span class="error">*</span></label>
 							<input type="text" class="form-control" id="chucDanhCV" asp-for="Position" placeholder="Nhập chức danh công việc">
 							<span class="validate-style" asp-validation-for="Position"></span>
 						</div>
-						<div class="col-sm-12 mb-3">
+						<div class="col-sm-12 mb-2">
 							<label for="dichVuQT" class="form-label">Nhóm ngành <span class="error">*</span></label>
 							<select asp-for="ServiceId" asp-items="listServies" class="form-select" id="dichVuQT">
 								<option value="">Chọn nhóm ngành</option>
 							</select>
 							<span asp-validation-for="ServiceId" class="validate-style"></span>
 						</div>
-						<div class="col-sm-12 mb-3">
+						<div class="col-sm-12 mb-2">
 							<label for="sanPhamQT" class="form-label">Sản phẩm & dịch vụ quan tâm </label>
 							<select class="form-select" id="sanPhamQT" multiple="multiple">
 								<option value="">Chọn sản phẩm & dịch vụ quan tâm</option>
 							</select>
 						</div>
-						<div class="col-sm-12 mb-3">
+						<div class="col-sm-12 mb-2">
 							<label for="yeuCauCT" class="form-label">Mô tả chi tiết <span class="error">*</span></label>
 							<textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập mô tả chi tiết"></textarea>
 							<span class="validate-style" asp-validation-for="Content"></span>
@@ -69,6 +76,7 @@
 							<input type="hidden" class="form-control" id="products" asp-for="Products">
 						</div>
 					</div>
+					<div class="mb-2"></div>
 					<button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>Gửi yêu cầu</button>
 					@* <div class="row">
 						<div class="sumaryValidateForm" asp-validation-summary="All"></div>

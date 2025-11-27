@@ -195,17 +195,20 @@ namespace PT.UI.Controllers
         [Route("sitemap.xml")]
         public Task<FileStreamResult> SitemapAll(string language = "vi")
         {
-            return GetFileSitemap("");
+            return GetFileSitemap(language);
         }
 
         private async Task<FileStreamResult> GetFileRobots(string language)
         {
             string str = "";
-
             var dl = await _iSettingService.SeoSettingGet(language, _baseSettings.Value.PortalId);
-            if (dl != null)
+            if (dl != null && !string.IsNullOrEmpty(dl.Robots))
             {
                 str = dl.Robots;
+            }
+            else
+            {
+                str = "# Robots.txt configuration not found\nUser-agent: *\nDisallow:";
             }
             var ms = new MemoryStream(Encoding.ASCII.GetBytes(str));
             return new FileStreamResult(ms, "text/plain");
@@ -223,7 +226,7 @@ namespace PT.UI.Controllers
                 }
                 var stringBuilder = new StringBuilder();
 
-                var listItem = await _iLinkRepository.SearchAsync(true, 0, 0, x => (x.Language == language || language == "") && !x.Delete && x.Status && x.IncludeSitemap);
+                var listItem = await _iLinkRepository.SearchAsync(true, 0, 0, x => (x.Language == language || language == "") && x.Status && x.IncludeSitemap && x.PortalId == _baseSettings.Value.PortalId);
                 stringBuilder.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 stringBuilder.AppendLine("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd\">");
 

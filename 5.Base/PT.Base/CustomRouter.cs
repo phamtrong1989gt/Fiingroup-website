@@ -123,7 +123,12 @@ namespace PT.Base
         public async Task RouteAsync(RouteContext context)
         {
             string path = context.HttpContext.Request.Path.Value.ToString().ToLower();
-            if (path.ToLower().EndsWith(".html") || path.ToLower() == "" ||  path.ToLower() == "/" || ListData.ListLanguage.Any(x=> $"/{x.Id}" == path || $"/{x.Id}/" == path))
+            if(path.EndsWith("/robots.txt") || path.EndsWith("sitemap.xml"))
+            {
+                await _defaultRouter.RouteAsync(context);
+                return;
+            }
+            else if (path.ToLower().EndsWith(".html") || path.ToLower() == "" || path.ToLower() == "/" || ListData.ListLanguage.Any(x => $"/{x.Id}" == path || $"/{x.Id}/" == path))
             {
                 var baseSettings = (IOptions<BaseSettings>)AppHttpContext.Current.RequestServices.GetService(typeof(IOptions<BaseSettings>));
                 string language = baseSettings.Value.DefaultLanguage;
@@ -166,10 +171,10 @@ namespace PT.Base
                             context.RouteData.Values["id"] = contentId;
                             context.RouteData.Values["language"] = language;
                             context.RouteData.Values["portalId"] = baseSettings.Value.PortalId;
-                            context.RouteData.Values["linkData"] = Newtonsoft.Json.JsonConvert.SerializeObject(new Link 
-                            { 
-                                Slug = slug, 
-                                Language = language, 
+                            context.RouteData.Values["linkData"] = Newtonsoft.Json.JsonConvert.SerializeObject(new Link
+                            {
+                                Slug = slug,
+                                Language = language,
                                 PortalId = baseSettings.Value.PortalId,
                                 Controller = "ContentPage",
                                 Acction = route.Value,
@@ -186,7 +191,7 @@ namespace PT.Base
                 var cacheKey = $"Link_{baseSettings.Value.PortalId}_{slug}_{language}";
                 if (!cache.TryGetValue(cacheKey, out Link link))
                 {
-                    link = await _iLinkRepository.SingleOrDefaultAsync(true, x=>x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
+                    link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
                 }
 
                 if (link != null)
@@ -225,8 +230,8 @@ namespace PT.Base
                             context.RouteData.Values["portalId"] = baseSettings.Value.PortalId;
                             context.RouteData.Values["parrams"] = link.Parrams;
                             context.RouteData.Values["linkData"] = Newtonsoft.Json.JsonConvert.SerializeObject(link);
-                        }    
-                    }    
+                        }
+                    }
                 }
                 else
                 {
@@ -239,7 +244,7 @@ namespace PT.Base
                     context.RouteData.Values["language"] = language;
                 }
                 await _defaultRouter.RouteAsync(context);
-            } 
+            }
             else
             {
                 await _defaultRouter.RouteAsync(context);
