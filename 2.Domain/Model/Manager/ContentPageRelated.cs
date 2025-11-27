@@ -16,5 +16,6 @@ namespace PT.Domain.Model
         public int ParentId { get; set; }
         public int ContentPageId { get; set; }
         public int? Order { get; set; } = 1;
+        public string Note { get; set; }
     }
 }

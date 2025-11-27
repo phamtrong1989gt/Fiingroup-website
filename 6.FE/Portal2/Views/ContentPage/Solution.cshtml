@@ -296,7 +296,7 @@
 					string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
 					<div class="solution-item" data-img="@item.Input11">
 						<a href="@path" title="@item.Name"><h4>@item.Name</h4></a>
-						<p>@Html.Raw(item.Summary)</p>
+						<p>@Html.Raw(item.RelatedNote)</p>
 						<a href="@path" class="solution-link">Xem chi tiết <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
 					</div>
 				}

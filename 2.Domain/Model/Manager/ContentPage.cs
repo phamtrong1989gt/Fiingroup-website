@@ -96,6 +96,9 @@ namespace PT.Domain.Model
         [NotMapped]
         public List<ContentPage> Relateds { get; set; }
         public int? NewsId { get; set; }
+
+        [NotMapped]
+        public string RelatedNote { get; set; }
     }
 
     public class BlogModel :SeoModel
@@ -248,6 +251,7 @@ namespace PT.Domain.Model
 
         public ECategoryType? CategoryType { get; set; }
         public string ContentPageRelatedOrders { get; set; }
+        public string ContentPageRelatedNotes { get; set; }
 
     }
   

@@ -85,6 +85,7 @@
                         }
                         <input type="hidden" asp-for="ContentPageRelatedIds" />
                         <input type="hidden" asp-for="ContentPageRelatedOrders" />
+                        <input type="hidden" asp-for="ContentPageRelatedNotes" />
                         <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language = Model.Language, Type = Model.Type, LinkId = Model.LinkId, PortalId = Model.PortalId })" />
                         <partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
                     </div>

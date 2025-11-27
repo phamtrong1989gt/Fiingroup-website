@@ -45,6 +45,7 @@ namespace PT.Infrastructure.Repositories
                          {
                              ContentPage = cp,
                              RelatedOrder = cpr.Order ?? 0,
+                             RelatedNote = cpr.Note,
                              Link = link
                          }).AsQueryable();
 
@@ -117,7 +118,8 @@ namespace PT.Infrastructure.Repositories
                 Order = x.RelatedOrder,
 
                 // ✅ Navigation property: Link đã join sẵn
-                Link = x.Link
+                Link = x.Link,
+                RelatedNote = x.RelatedNote
             });
 
             // ✅ Apply select projection (nếu có)

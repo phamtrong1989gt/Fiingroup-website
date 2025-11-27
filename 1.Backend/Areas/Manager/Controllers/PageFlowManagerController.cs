@@ -226,7 +226,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.CommitAsync();
 
                     await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details", data.PortalId);
-                    await UpdateRelated(data.Id, use.ContentPageRelatedIds, use.ContentPageRelatedOrders);
+                    await UpdateRelated(data.Id, use.ContentPageRelatedIds, use.ContentPageRelatedOrders, use.ContentPageRelatedNotes);
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
                     await _iContentPageRepository.CommitTransaction();
@@ -291,10 +291,11 @@ namespace PT.BE.Areas.Manager.Controllers
             model.PortalSelectList = new SelectList(portals, "Id", "Name");
             model.PortalId = dl.PortalId;
             model.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == dl.PortalId))?.Name;
-            var listRelated = (await _iContentPageRelatedRepository.GetContentPageAsync(id, 0, 0, null, x => x.OrderBy(m => m.DatePosted), x => new ContentPage { Id = x.Id, DatePosted = x.DatePosted, Status = x.Status, Name = x.Name, Order = x.Order })).Select(x => new { id = x.Id, text = x.Name, order = x.Order ?? 0 });
+            var listRelated = (await _iContentPageRelatedRepository.GetContentPageAsync(id, 0, 0, null, x => x.OrderBy(m => m.DatePosted), x => new ContentPage { Id = x.Id, DatePosted = x.DatePosted, Status = x.Status, Name = x.Name, Order = x.Order, RelatedNote = x.RelatedNote })).Select(x => new { id = x.Id, text = x.Name, order = x.Order ?? 0 , note = x.RelatedNote });
            
             model.ContentPageRelatedIds = string.Join(',', listRelated.Select(x => x.id));
             model.ContentPageRelatedOrders = string.Join(',', listRelated.Select(x => x.order));
+            model.ContentPageRelatedNotes = string.Join(',', listRelated.Select(x => x.note ?? ""));
             model.RelatedString = Newtonsoft.Json.JsonConvert.SerializeObject(listRelated.OrderBy(x=>x.order));
             model.FullPath = await _iPortalRepository.GetFullPathAsync(model.PortalId ?? 1, model.Slug ?? string.Empty, portals, model.Language, _baseSettings.Value.MultipleLanguage);
             return View(model);
@@ -342,7 +343,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.CommitAsync();
 
                     await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage, dl.Id, dl.Language, MapModel<SeoModel>.Go(use),dl.Name, "", "ContentPage", "Details");
-                    await UpdateRelated(dl.Id, use.ContentPageRelatedIds, use.ContentPageRelatedOrders);
+                    await UpdateRelated(dl.Id, use.ContentPageRelatedIds, use.ContentPageRelatedOrders, use.ContentPageRelatedNotes);
                     await UpdateTag(id, use.TagIds);
                     await AddLog(new LogModel
                     {
@@ -554,10 +555,11 @@ namespace PT.BE.Areas.Manager.Controllers
         }
 
 
-        private async Task UpdateRelated(int blogId, string strData, string strOrder)
+        private async Task UpdateRelated(int blogId, string strData, string strOrder, string strNote)
         {
             var list = new List<int>();
             var orderList = new List<int>();
+            var noteList = new List<string>();
 
             // Parse danh sách IDs
             if (!string.IsNullOrEmpty(strData))
@@ -575,12 +577,21 @@ namespace PT.BE.Areas.Manager.Controllers
                                    .ToList();
             }
 
+            // Parse danh sách Notes tương ứng (nếu cần)
+            if (!string.IsNullOrEmpty(strNote))
+            {
+                noteList = strNote.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(x => x.Trim())
+                                   .ToList();
+            }
+
             // Đảm bảo số lượng order khớp với số lượng IDs
             // Nếu thiếu order thì gán giá trị mặc định là 0
             while (orderList.Count < list.Count)
             {
                 orderList.Add(0);
             }
+
 
             // Lấy danh sách related hiện tại
             var _current = await _iContentPageRelatedRepository.SearchAsync(
@@ -602,12 +613,13 @@ namespace PT.BE.Areas.Manager.Controllers
                 var contentPageId = idsAdd[i];
                 var index = list.IndexOf(contentPageId);
                 var order = (index >= 0 && index < orderList.Count) ? orderList[index] : 0;
-
+                var note = (index >= 0 && index < noteList.Count) ? noteList[index] : string.Empty;
                 await _iContentPageRelatedRepository.AddAsync(new ContentPageRelated
                 {
                     ParentId = blogId,
                     ContentPageId = contentPageId,
-                    Order = order
+                    Order = order,
+                    Note = note
                 });
             }
 
@@ -618,13 +630,13 @@ namespace PT.BE.Areas.Manager.Controllers
                 if (index >= 0 && index < orderList.Count)
                 {
                     var newOrder = orderList[index];
-
+                    existing.Note = (index < noteList.Count) ? noteList[index] : existing.Note;
                     // Chỉ update nếu order thay đổi
                     if (existing.Order != newOrder)
                     {
                         existing.Order = newOrder;
-                        _iContentPageRelatedRepository.Update(existing);
                     }
+                    _iContentPageRelatedRepository.Update(existing);
                 }
             }
 

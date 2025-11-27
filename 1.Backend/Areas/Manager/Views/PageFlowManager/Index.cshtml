@@ -387,7 +387,7 @@
                     });
                      var str = "";
                      $(contentPageRelated).each(function (i, item) {
-                              str += "<tr><td class=\"text-center\"><input onChange=\"changeOrderRelated(" + item.id + ", this.value)\" type='number' style='width:70px;' value='" + item.order + "'></td><td>" + item.text + "</td><td><a  title=\"Xóa\" class=\"btn btn-danger waves-effect btncontrolgrid\" onclick=\"remoteRelated(" + item.id + ")\"><i class=\"material-icons iconcontrol\">delete_forever</i></a></td></tr>";
+                                  str += "<tr><td class=\"text-center\"><input onChange=\"changeOrderRelated(" + item.id + ", this.value)\" type='number' style='width:70px;' value='" + item.order + "'></td><td>" + item.text + "</td><td><input onChange=\"changeNoteRelated(" + item.id + ", this.value)\" type='text' style='width:100%;'  value='" + item.note + "'></td><td><a  title=\"Xóa\" class=\"btn btn-danger waves-effect btncontrolgrid\" onclick=\"remoteRelated(" + item.id + ")\"><i class=\"material-icons iconcontrol\">delete_forever</i></a></td></tr>";
                      });
                      $("[bind-related]").html(str);
                  }
@@ -396,7 +396,8 @@
                  }
                 // Cập nhật hidden inputs với thứ tự mới
                 $("[name='ContentPageRelatedIds']").val(contentPageRelated.map(x => x.id).join(','));
-                $("[name='ContentPageRelatedOrders']").val(contentPageRelated.map(x => x.order).join(','));
+                    $("[name='ContentPageRelatedOrders']").val(contentPageRelated.map(x => x.order).join(','));
+                    $("[name='ContentPageRelatedNotes']").val(contentPageRelated.map(x => x.note).join(','));
              }
 
              function remoteRelated(id) {
@@ -404,7 +405,6 @@
                      if (contentPageRelated[i].id == id) {
                          contentPageRelated.splice(i, 1);
                          bindRelated();
-                         alertify.notify("Xóa một sản phẩm hỗ trợ, click lưu thay đổi để lưu lại những sản phẩm hỗ trợ vừa thêm", "success", 5);
                          return false;
                      }
                  });
@@ -415,11 +415,21 @@
                          if (contentPageRelated[i].id == id) {
                              contentPageRelated[i].order = newOrder;
                              bindRelated();
-                             alertify.notify("Thay đổi thứ tự sản phẩm hỗ trợ, click lưu thay đổi để lưu lại những sản phẩm hỗ trợ vừa thêm", "success", 5);
                              return false;
                          }
                      });
                  }
+
+
+                     function changeNoteRelated(id, newNote) {
+                         $.each(contentPageRelated, function (i) {
+                             if (contentPageRelated[i].id == id) {
+                                 contentPageRelated[i].note = newNote;
+                                 bindRelated();
+                                 return false;
+                             }
+                         });
+                     }
 
             // var cmInput1;
             // var cmInput2;

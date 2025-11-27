@@ -640,6 +640,10 @@ namespace PT.Infrastructure.Repositories
      }).AsQueryable();
 
                 var list = await query.AsNoTracking().ToListAsync();
+                foreach (var item in list)
+                {
+                    item.RelatedNote = pageLienQuan.FirstOrDefault(x=>x.ContentPageId == item.Id)?.Note;
+                }
                 // Sắp xếp theo Order từ ContentPageRelateds
                 return list.OrderBy(x => pageLienQuan.FirstOrDefault(m => m.ContentPageId == x.Id)?.Order ?? int.MaxValue).ToList();
             }
