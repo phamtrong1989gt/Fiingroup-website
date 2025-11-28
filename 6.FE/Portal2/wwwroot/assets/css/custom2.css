@@ -113,6 +113,14 @@ button.btn.btn-primary.btn-join {
     padding: 11px 48px;
     vertical-align: middle;
 }
+a.btn.btn-primary.btn-join {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 28px;
+    text-align: center;
+    padding: 11px 48px;
+    vertical-align: middle;
+}
 .btn-yeucau{
         font-size: 16px !important;
     font-weight: 500 !important;

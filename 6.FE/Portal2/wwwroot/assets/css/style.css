@@ -1128,7 +1128,7 @@ a:hover {
     #CoreValue .content {
         width: 100% !important;
     }
-    .menu-news, .menu-publications {
+    .menu-news, .menu-publications, .narbarstory {
         display: none !important;
     }
 }
@@ -1143,7 +1143,7 @@ a:hover {
         width: 100% !important;
     }
     .tab-container .tab{min-width:auto !important;}
-    .menu-news, .menu-publications {
+    .menu-news, .menu-publications, .narbarstory {
         display: none !important;
     }
 }
