@@ -1057,6 +1057,20 @@ a:hover {
 }
 .news-content img{max-width:100%;}
 
+.animate-on-scroll {
+    opacity: 0;
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.fade-from-left {
+    transform: translateX(-100px); 
+}
+.fade-from-right {
+    transform: translateX(100px); 
+}
+.animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
 
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
