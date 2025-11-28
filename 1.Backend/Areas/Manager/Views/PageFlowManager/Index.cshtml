@@ -394,10 +394,10 @@
                  else {
                      $("[bind-related]").html("<tr><td colspan='369'>Chưa có sản phẩm hỗ trợ nào</td></tr>");
                  }
-                // Cập nhật hidden inputs với thứ tự mới
-                $("[name='ContentPageRelatedIds']").val(contentPageRelated.map(x => x.id).join(','));
-                    $("[name='ContentPageRelatedOrders']").val(contentPageRelated.map(x => x.order).join(','));
-                    $("[name='ContentPageRelatedNotes']").val(contentPageRelated.map(x => x.note).join(','));
+                 // Cập nhật hidden inputs với thứ tự mới
+                 $("[name='ContentPageRelatedIds']").val(contentPageRelated.map(x => x.id).join(','));
+                 $("[name='ContentPageRelatedOrders']").val(contentPageRelated.map(x => x.order).join(','));
+                 $("[name='ContentPageRelatedNotes']").val(contentPageRelated.map(x => x.note).join('|||'));
              }
 
              function remoteRelated(id) {

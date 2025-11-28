@@ -16,7 +16,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.BE.Areas.Manager.Controllers
 {
@@ -580,7 +579,7 @@ namespace PT.BE.Areas.Manager.Controllers
             // Parse danh sách Notes tương ứng (nếu cần)
             if (!string.IsNullOrEmpty(strNote))
             {
-                noteList = strNote.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                noteList = strNote.Split("|||", StringSplitOptions.RemoveEmptyEntries)
                                    .Select(x => x.Trim())
                                    .ToList();
             }
