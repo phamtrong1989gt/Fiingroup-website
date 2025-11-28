@@ -42,13 +42,13 @@
                 var isEven = (i % 2 == 0);
                 if (isEven)
                 {
-                    <div class="col-sm-7 d-none d-md-block">
+                    <div class="col-sm-7 d-none d-md-block animate-on-scroll fade-from-left">
                         <a href="@path" title="Hỗ trợ">
                             <img src="@item.Banner" class="img-hotro" alt="Hỗ trợ" loading="lazy" />
                         </a>
                     </div>
 
-                    <div class="col-lg-5 col-sm-12">
+                    <div class="col-lg-5 col-sm-12 animate-on-scroll fade-from-right">
                         <div class="why-title"><a href="@path">@item.Name</a></div>
                         <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
@@ -82,7 +82,7 @@
                 }
                 else
                 {
-                    <div class="col-lg-5 col-sm-12">
+                    <div class="col-lg-5 col-sm-12 animate-on-scroll fade-from-left">
                         <div class="why-title"><a href="@path">@item.Name</a></div>
                         <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
@@ -111,7 +111,7 @@
                             <a class="show-more" href="@path">Khám phá thêm <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
                         </div>
                     </div>
-                    <div class="col-sm-7 d-none d-md-block text-right">
+                    <div class="col-sm-7 d-none d-md-block text-right animate-on-scroll fade-from-right">
                         <a href="@path" title="Hỗ trợ">
                             <img src="@item.Banner" class="img-hotro" alt="Hỗ trợ" loading="lazy" />
                         </a>
@@ -297,4 +297,21 @@
         preconnectCdn.href = 'https://i.ytimg.com';
         document.head.appendChild(preconnectCdn);
     })();
+
+    document.addEventListener("DOMContentLoaded", function() {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            animatedElements.forEach(element => {
+                observer.observe(element);
+            });
+        });
 </script>
