@@ -1,0 +1,428 @@
+﻿@using Microsoft.Extensions.Options
+@using PT.Shared;
+@using PT.UI.Models
+
+@model PT.Domain.Model.ContentPage
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject ICategoryRepository _iCategoryRepository;
+@inject IContentPageReferenceRepository _iContentPageReferenceRepository;
+@inject IOptions<BaseSettings> _baseSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+	var listFlowItems = await _iContentPageRepository.FlowGetsAsync(language, portalId, Model.Id);
+	var solutions = await _iContentPageRepository.SolutionGetsAsync(language, portalId, Model.Id);
+
+	var lstTinLienQuan = await _iContentPageRepository.SearchAdvanceAsync(0, 3,
+				   null, null,
+				   m => m.Status
+					   && m.DatePosted <= DateTime.Now
+					   && m.Language == language
+					   //&& (m.CategoryType == ECategoryType.ContentPage_Blog || m.CategoryType == ECategoryType.ContentPage_Event),
+					   && (m.CategoryType == ECategoryType.ContentPage_Blog),
+				   m => m.OrderByDescending(x => x.DatePosted),
+				   a => new ContentPage
+				   {
+					   Banner = a.Banner,
+					   DatePosted = a.DatePosted,
+					   Id = a.Id,
+					   Name = a.Name,
+					   Summary = a.Summary,
+					   Language = a.Language,
+					   Author = a.Author,
+					   CategoryId = a.CategoryId,
+					   Link = a.Link
+				   });
+}
+
+<style>
+	#StockEconomy {
+		background: url('@(Model.Input12 ?? "/Data/Banner/bg-giaiphap.jpg")') no-repeat top;
+		background-size: cover;
+	}
+
+	.hero-content {
+		color: #fff;
+		max-width: 89%;
+		z-index: 2;
+	}
+
+	.hero-subtitle {
+		display: inline-block;
+		font-size: 40px;
+		font-weight: 500;
+		color: #fff;
+	}
+
+	.hero-title {
+		font-size: 54px;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+
+	.hero-text {
+		font-size: 18px;
+		line-height: 1.7;
+		color: #d7e9ff;
+		text-align: justify;
+		position: relative;
+		padding-left: 25px;
+	}
+
+		.hero-text::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 5px;
+			height: 100%;
+			background: linear-gradient(to bottom, #5086c0, #E2F2FB7A, #badcf1);
+			border-radius: 2px;
+		}
+
+	.navbarfin {
+		padding: 50px 0;
+	}
+
+		.navbarfin a {
+			color: #093461;
+			text-decoration: none;
+			font-size: 18px;
+			padding: 5px 40px;
+			transition: color 0.3s;
+			cursor: pointer;
+		}
+
+			.navbarfin a.active {
+				color: #0066CC;
+				border-bottom: 3px solid #093461;
+			}
+
+	.box-fingroup {
+		position: relative;
+		border-radius: 15px;
+		margin: 10px 0;
+		box-shadow: 0 4px 8px #0000001a;
+		transition: transform 0.3s;
+		max-width: 31%;
+		min-width: 350px;
+		/* border gradient bo góc mượt */
+		border: 1px solid transparent;
+		background-image: linear-gradient(#f5f9ff, #f2f7ff), linear-gradient(to right, #E6E6E600, #034EA2);
+		background-origin: border-box;
+		background-clip: padding-box, border-box;
+		padding: 25px;
+	}
+
+		.box-fingroup:hover {
+			transform: translateY(-5px);
+		}
+
+	.dangkytuvan {
+		background: #0066CC;
+		color: #ffffff;
+		padding: 10px 110px;
+		border-radius: 30px;
+		cursor: pointer;
+		display: inline-block;
+		font-size: 16px;
+		font-weight: 500;
+		text-decoration: none;
+		transition: 0.3s ease;
+		max-width: fit-content;
+	}
+
+	.row.justify-content-center {
+		text-align: center;
+	}
+
+	.dangkytuvan:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 8px 20px rgba(3, 78, 162, 0.25);
+		color: #fff;
+	}
+
+	.solution-item {
+		margin-bottom: 50px;
+		margin-right: 30px;
+	}
+
+		.solution-item h4 {
+			font-size: 28px;
+			font-weight: 700;
+			color: #093461;
+			margin-bottom: 6px;
+		}
+
+		.solution-item p {
+			font-size: 13px;
+			color: #093461;
+			margin-bottom: 12px;
+		}
+
+	.solution-link {
+		font-size: 14px;
+		color: #034EA2;
+		text-decoration: none;
+		font-weight: 500;
+		transition: 0.3s;
+	}
+
+		.solution-link:hover {
+			text-decoration: underline;
+			padding-left: 4px;
+		}
+
+	.solution-img {
+		border-radius: 12px;
+		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+	}
+
+	.pdt20 {
+		padding-top: 20px;
+	}
+
+	#Partner img {
+		background: transparent;
+	}
+
+	#Partner {
+		background: rgba(192, 230, 255, 0.2);
+		height: 152px;
+		display: flex;
+		align-items: center;
+	}
+
+		#Partner h2 {
+			background: transparent;
+		}
+
+	.contact-us {
+		background: linear-gradient(to right, #0018A8, #166BF2, #3B7EEE);
+		color: #ffffff;
+		padding: 7px 80px;
+		border-radius: 25px;
+		cursor: pointer;
+		display: inline-block;
+		margin-top: 10px;
+	}
+
+	.deliver {
+		padding: 60px;
+		text-align: center;
+	}
+
+		.deliver .price-title {
+			font-size: 30px !important;
+		}
+
+	.giaiphap-title {
+		color: white;
+		font-size: 40px;
+		font-weight: 600;
+		padding: 10px;
+	}
+
+	.menusu-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		text-decoration: none;
+		color: #fff;
+		font-size: 25px;
+		padding: 20px 0;
+		font-weight: 600;
+		transition: color 0.3s;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+		.menusu-item:hover {
+			color: #004d99;
+		}
+
+		.menusu-item .arrow {
+			color: #fff;
+			font-size: 16px;
+		}
+
+		.menusu-item:last-child {
+			border-bottom: none;
+		}
+</style>
+<section id="StockEconomy" class="hero-section">
+	<div class="hero-overlay">
+		<div class="container">
+			<div class="hero-content py-5">
+				@if (!string.IsNullOrEmpty(Model.Input1))
+				{
+					<span class="hero-subtitle">@Model.Input1</span>
+				}
+				<h1 class="hero-title mb-4">
+					@Model.Input2
+				</h1>
+				<div class="hero-text">
+					@Html.Raw(Model.Input3)
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section id="FiinGroup">
+	<div class="container" id="overview">
+		<div class="navbarfin">
+			@Html.Raw(Model.Input4)
+		</div>
+		<div class="why pb-4">
+			@Html.Raw(Model.Input5)
+		</div>
+	</div>
+</section>
+
+<section id="products" class="py-5">
+	<div class="container">
+		<h2 class="price-title mb-4">Giải pháp hỗ trợ <span style="color:#0066CC;">từ FiinGroup</span></h2>
+
+		<div class="row pdt20">
+			<div class="col-lg-7 col-sm-12 mb-4">
+				<div class="pdt20"></div>
+				@for (int i = 0; i < listFlowItems.Count; i++)
+				{
+					var item = listFlowItems[i];
+					string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
+					<div class="solution-item" data-img="@item.Input11">
+						<a href="@path" title="@item.Name"><h4>@item.Name</h4></a>
+						<p>@Html.Raw(item.RelatedNote)</p>
+						<a href="@path" class="solution-link">Xem chi tiết <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+					</div>
+				}
+			</div>
+			<div class="col-lg-5 col-sm-12 text-center">
+				<img src="@((listFlowItems.FirstOrDefault()?.Input11) ?? "/Data/Banner/solution_giaiphap5.png")" class="img-fluid solution-img" alt="@Model.Name">
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="Customer" class="pt-5 pb-3">
+	<div class="container">
+		<h2 class="text-center price-title mb-3">Khách hàng <span style="color: #0066CC;"> nổi bật</span> </h2>
+	</div>
+</section>
+
+<section id="Partner" class="py-5 mb-5">
+	<div class="container">
+		<div class="owl-carousel owl-theme" id="manualsct">
+			@Html.Raw(Model.Input7)
+		</div>
+	</div>
+</section>
+
+<section id="Deliver" class="py-5 mb-5 d-none d-lg-block">
+	<div class="container">
+		<div class="deliver">
+			@Html.Raw(Model.Input8)
+		</div>
+	</div>
+</section>
+
+<section id="Solution" class="py-5 mb-5">
+	<div class="container" id="featured-insights">
+		<!-- <div class="overlay"></div> -->
+		<div class="solution">
+			<div class="row">
+				<div class="col-sm-6">
+					<h2 class="giaiphap-title">Giải pháp phù hợp cho từng <br>nhóm ngành</h2>
+				</div>
+				<div class="col-sm-6">
+					<div class="menusu-container">
+						@foreach (var solution in solutions)
+						{
+							string path = PT.Shared.Functions.FormatUrl(solution.Language, solution.Link?.Slug);
+							<a href="@path" class="menusu-item">
+								<span>@solution.Name</span><span class="arrow"><i class="fa fa-long-arrow-right"></i></span>
+							</a>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+@if (lstTinLienQuan != null)
+{
+	<section id="webinars" class="py-5 mb-5">
+		<div class="container">
+			<h2 class="price-title mb-5">Our <span style="color: #0066CC;">Featured & Insights</span></h2>
+			<div class="row news-grid">
+				@foreach (var item in lstTinLienQuan)
+				{
+					string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
+					<div class="col-sm-4">
+						<img src="@item.Banner" class="img-fluid w-100 img-item" alt="@item.Name" title="@item.Name" />
+						@if (item.Tags != null)
+						{
+							foreach (var tag in item.Tags)
+							{
+								<button class="mt-3 btn btn-news" data-action="login" data-tag="@tag?.Name">
+									@tag?.Name
+								</button>
+							}
+						}
+						<div class="pt-3 pb-3">
+							<div class="news-title text-break">
+								<a href="@path" title="@item.Name">
+									@(item.Name.Length > 58 ? item.Name.Substring(0, 58) + "..." : item.Name)
+								</a>
+							</div>
+						</div>
+						<div>@(item.Name.Length > 130 ? Html.Raw(item.Summary.Substring(0, 130)) + "..." : Html.Raw(item.Summary))</div>
+						<div class="pt-4">
+							<a class="show-more" href="@path" title="@item.Name">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</section>
+}
+
+<partial name="~/Views/Home/_RegisterSolution.cshtml" model="@(new ContactSolotionModel { })" />
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const links = document.querySelectorAll('.navbarfin a');
+		links.forEach(link => {
+			link.addEventListener('click', (e) => {
+				e.preventDefault();
+				// Xóa class active
+				links.forEach(l => l.classList.remove('active'));
+				link.classList.add('active');
+				// Lấy ID mục tiêu
+				const targetId = link.getAttribute('href')?.trim();
+				// Nếu href null hoặc không phải id hợp lệ thì thoát
+				if (!targetId || !targetId.startsWith("#")) {
+					return;
+				}
+				const targetEl = document.querySelector(targetId);
+				if (targetEl) {
+					targetEl.scrollIntoView({
+						behavior: "smooth",
+						block: "start"
+					});
+				}
+			});
+		});
+	});
+	$('.solution-item').hover(function () {
+		let imgUrl = $(this).data('img');
+		if(imgUrl !=""){
+			$('.solution-img').attr('src', imgUrl);
+		}
+	});
+</script>

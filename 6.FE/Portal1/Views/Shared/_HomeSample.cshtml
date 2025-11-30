@@ -14,10 +14,10 @@
     var portalId = _baseSettings.Value.PortalId;
     var seoSettings = await _settingService.SeoSettingGet(language, portalId);
     var homeModel = new HomeModel
-            {
-                Domain = domain,
-                SeoSetting = seoSettings ?? new SeoSetting()
-            };
+    {
+        Domain = domain,
+        SeoSetting = seoSettings ?? new SeoSetting()
+    };
     var currentType = PT.Base.CookieExtensions.Get("CurrentPrice");
 
     var linkData = new Link();
@@ -27,7 +27,7 @@
     }
 }
 
-<partial name="_HomeHead" model="@(new Tuple<HomeModel,Link>(homeModel,linkData))" />
+<partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
 
 @RenderBody()
 

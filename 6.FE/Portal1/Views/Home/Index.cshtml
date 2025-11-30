@@ -1,42 +1,1039 @@
 ﻿@addTagHelper *, PT.UI
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
 @using PT.Domain.Model;
 @using PT.Infrastructure.Interfaces;
 @using PT.Shared;
 @inject IViewLocalizer Localizer;
 @using System.Linq.Expressions;
 @using PT.UI.Models
-@inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+@inject IOptions<BaseSettings> _baseSettings;
 
 @{
-    Layout = "~/Views/Shared/_Home.cshtml";
-    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-    int portalId = _baseSettings.Value.PortalId;
-    var cplModel = new ContentPageComponentModel()
-    {
-        CategoryId = 1002,
-        ContentPageId = 0,
-        Href = "",
-        Language = language,
-        TagId = null,
-        Take = 6,
-        Title = "",
-        Type = CategoryType.ContentPageBlog,
-        View = "_News"
-    };
-
-
-    var datbModel = new ContentPageComponentModel()
-    {
-        CategoryId = 2005,
-        ContentPageId = 0,
-        Href = "",
-        Language = language,
-        TagId = null,
-        Take = 6,
-        Title = "",
-        Type = CategoryType.ContentPageBlog,
-        View = "_News"
-    };
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+	var listFlow = await _iContentPageRepository.FlowGetsAsync(language, portalId);
+	int flowi = 0;
 }
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "Home Test", language = language, portalId = 2 })
+
+<div style="display:none;">@ViewData["CacheTime"]</div>
+
+<!-- Slide banner -->
+<section id="SliderBanner">
+	<div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-touch="true">
+		<div class="carousel-inner">
+			<div class="carousel-item active" data-bs-interval="3000">
+				<img src="Data/Banner/home_banner.png" class="d-block w-100" alt="Banner">
+				<div class="event-box" id="eventBox">
+					<button class="event-close" id="closeEventBox">
+						<i class="fas fa-times"></i>
+					</button>
+					<h4>Event of the year</h4>
+					<p>Light your way</p>
+					<a href="#" class="event-btn">Join now!</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="Find" class="py-5">
+	<div class="container">
+		@* <h2 class="price-title txt-center">
+			Tìm kiếm <span style="color: #0066CC;">FiinRatings</span>
+		</h2> *@
+		<div class="input-group pt-5">
+			<input class="form-control border-end-0 border" type="text" value=""
+				   placeholder="Find a Rating or Search Insights..." id="example-search-input">
+			<span class="input-group-append txt-center">
+				<button class="btn btn-outline-secondary bg-white border-start-0 border ms-n3" type="button">
+					<i class="fa fa-search"></i>
+				</button>
+			</span>
+		</div>
+		<div class="txt-center pt-5">
+			<a class="show-more" href="#">
+				Browse Ratings by FiinRatings <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+			</a>
+		</div>
+	</div>
+
+</section>
+
+
+<section id="WhyLastest" class="mb-5">
+    <div class="whylastest mt-5">
+        <div class="container">
+            <div class="why pb-4">
+                <h2 class="price-title mb-5">Tại sao là <span style="color: #0066CC;">FiinRatings</span></h2>
+                <div class="row">
+                    <div class="col-sm-4 mb-5">
+                        <img src="Data/Banner/why1.png" alt="why" />
+                        <div class="why-title">Hệ sinh thái phân tích​
+                            ​ </br> dữ liệu toàn diện</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7"
+                                    x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Từ doanh nghiệp, ngành đến thị trường vốn, nghiên cứu chuyên sâu –
+                            <span style="color: #0066CC;">Hệ sinh thái thông tin đa chiều của FiinGroup
+                            </span>hỗ trợ nhà đầu tư​ quyết định chính
+                            xác, kịp thời.
+                        </p>
+                    </div>
+                    <div class="col-sm-4 mb-5 pr-2">
+                        <img src="Data/Banner/why2.png" alt="why" />
+                        <div class="why-title">Sức mạnh dữ liệu tài chính</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7"
+                                    x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Kho dữ liệu lớn nhất Việt Nam với <span style="color: #0066CC;">hơn
+                                2 triệu doanh nghiệp Việt Nam
+                                và hơn 200 triệu doanh nghiệp toàn cầu</span>, dữ liệu​ vĩ mô và ngành được
+                            chuẩn hóa,​ cập
+                            nhật theo thời gian thực.
+                    </div>
+                    <div class="col-sm-4 mb-5">
+                        <img src="Data/Banner/why3.png" alt="why" />
+                        <div class="why-title">Đội ngũ chuyên gia thực chiến, thấu hiểu thị trường Việt Nam
+                        </div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7"
+                                    x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Đội ngũ chuyên gia giàu kinh nghiệm thực chiến, với <span
+                                style="color: #0066CC;">gần 20 năm thấu
+                                hiểu thị trường Việt Nam</span>, kết hợp với tiêu chuẩn quốc tế mang đến phân
+                            tích và tư
+                            vấn​ sát thực, đáng tin cậy.
+                        </p>
+                    </div>
+
+                    <div class="col-sm-4 mb-5">
+                        <img src="Data/Banner/why4.png" alt="why" />
+                        <div class="why-title">Phương pháp tiếp cận dựa <br> trên dữ liệu khác biệt</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7"
+                                    x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Tận dụng nguồn dữ liệu <span style="color: #0066CC;">khác biệt,​ sâu
+                                rộng và minh bạch </span>. Các báo
+                            cáo​ và nghiên cứu của FiinGroup đều dựa trên bằng <span
+                                style="color: #0066CC;">chứng xác thực,​ đảm bảo độ tin
+                                cậy cao</span>.
+                        </p>
+                    </div>
+                    <div class="col-sm-4 mb-5">
+                        <img src="Data/Banner/why5.png" alt="why" />
+                        <div class="why-title">Báo cáo ngành chuyên sâu,​ <br>"may đo" theo nhu cầu</div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7"
+                                    x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Dẫn đầu thị trường với các<span style="color: #0066CC;"> Báo cáo​
+                                ngành dựa trên dữ liệu độc quyền
+                                và chuyên sâu</span>. Ngoài ra còn được thiết kế riêng theo nhu cầu, hỗ trợ
+                            khách hàng ra
+                            quyết định chiến lược đầu tư, kinh doanh và quản trị rủi ro hiệu quả.</p>
+                    </div>
+                    <div class="col-sm-4 mb-5">
+                        <img src="Data/Banner/why6.png" alt="why" />
+                        <div class="why-title">Ứng dụng công nghệ<br>tiên tiến
+                        </div>
+                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                            <defs>
+                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7"
+                                    x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0.384615" stop-color="#034EA2" />
+                                    <stop offset="1" stop-color="#53DFFF" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <p class="why-desc">Ứng dụng<span style="color: #0066CC;"> AI, Machine Learning, và Big
+                                Data, dự đoán biến động thị trường</span> và cung cấp thông tin chuyên sâu,
+                            chính xác cho khách hàng.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="view-now-wrapper">
+                <div class="view-now">
+                    <span>Xem ngay tài liệu giới thiệu</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeWhatWe", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeImprint", language = language, portalId = portalId }))
+
+
+<section id="Thinking" class="py-5">
+    <div class="container">
+        <h2 class="price-title mb-5">Lastest <span style="color: #0066CC;">Thinking</span></h2>
+        <div class="thinks-grid">
+
+            <!-- Bài viết nổi bật -->
+            <div class="thinks-featured">
+                <img src="Data/Banner/think1.png" alt="Main thinks" class="thinks-img" />
+                <div class="thinks-info">
+                    <div class="thinks-tags">
+                        <span class="tag">Market News</span>
+                        <span class="date">September 17, 2025</span>
+                    </div>
+                    <h3 class="thinks-title">
+                        Nhận định thị trường: Luật hóa Nghị quyết 42 – Từ góc nhìn của Tổ chức xếp hạng tín
+                        nhiệm nội địa
+                    </h3>
+                    <p class="thinks-desc">
+                        Nghị quyết 42/2017/QH14 được ban hành trong bối cảnh nợ xấu tăng mạnh giai đoạn 2012 –
+                        2017, trao quyền cho các Tổ chức tín dụng (TCTD) chủ động xử lý tài sản bảo đảm.
+                    </p>
+                    <a href="#" class="show-more">Show more <i class="fa fa-long-arrow-right"
+                            aria-hidden="true"></i></a>
+                </div>
+            </div>
+
+            <!-- Danh sách tin nhỏ -->
+            <div class="thinks-list">
+                <div class="thinks-item">
+                    <img src="Data/Banner/think2.png" alt="thinks 1" />
+                    <div class="thinks-content">
+                        <div class="thinks-tags">
+                            <span class="tag">Market News</span>
+                            <span class="date">September 17, 2025</span>
+                        </div>
+                        <p>
+                            Chủ tịch FiinGroup và FiinRatings chia sẻ tại Diễn đàn Ngân hàng bán lẻ Việt Nam
+                            2025 về vai trò dữ liệu trong chuyển đổi số ngân hàng
+                        </p>
+                    </div>
+                </div>
+
+                <div class="thinks-item">
+                    <img src="Data/Banner/think3.png" alt="thinks 2" />
+                    <div class="thinks-content">
+                        <div class="thinks-tags">
+                            <span class="tag">Market News</span>
+                            <span class="date">September 17, 2025</span>
+                        </div>
+                        <p>
+                            Chủ tịch Điều hành FiinRatings và FiinGroup tham gia chia sẻ tại Hội nghị quốc tế về
+                            Tài chính Xanh do Nam Á Bank tổ chức
+                        </p>
+                    </div>
+                </div>
+
+                <div class="thinks-item">
+            <img src="Data/Banner/think4.png" alt="thinks 3" />
+                    <div class="thinks-content">
+                        <div class="thinks-tags">
+                            <span class="tag">Market News</span>
+                            <span class="date">September 17, 2025</span>
+                        </div>
+                        <p>
+                            Diễn giả và khách mời tham gia Toạ đàm "Thị trường Vốn Nợ Việt Nam 2025: Nguồn vốn
+                            cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới”
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nút đăng ký -->
+        <div class="think-now-wrapper">
+            <div class="think-now">
+                <span>Sign up to receive reports</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section id="Insights" class="py-5 mb-5">
+
+<div class="container">
+    <h2 class="price-title mb-5">S&P Global Ratings' Insights</h2>
+    <div class="row news-grid">
+        <div class="col-sm-4">
+            <img src="Data/Banner/news1.jpg" class="img-fluid w-100" />
+            <div class="pt-3 pb-3">
+                <div class="news-title text-break"><a target="_blank" href="#">Vietnam Corporate Bond Market
+                        Report – June 2025</a></div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <img src="Data/Banner/news2.jpg" class="img-fluid w-100" />
+            <div class="pt-3 pb-3">
+                <div class="news-title text-break"><a target="_blank" href="#">Vietnam Corporate Bond Market
+                        Report – June 2025</a></div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <img src="Data/Banner/news3.jpg" class="img-fluid w-100" />
+            <div class="pt-3 pb-3">
+                <div class="news-title text-break"><a target="_blank" href="#">Vietnam Corporate Bond Market
+                        Report – June 2025</a></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="btn-center">
+        <a href="#" class="btn-view-all">
+            Xem tất cả <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+</section>
+
+
+<section id="Testimonials" class="py-5">
+<div class="container">
+    <h2 class="price-title mb-5">Testimonials</h2>
+    <div class="testimonials-grid">
+        <!-- Item 1 -->
+        <div class="testimonial-item">
+            <div class="testimonial-inner">
+                <!-- LEFT (8) -->
+                <div class="testimonial-left">
+                    <div class="top-row">
+                        <img src="Data/Banner/test-note.png" alt="quote" class="quote-icon">
+                    </div>
+
+                    <div class="testimonial-content">
+                        <p>
+                            Professional collaboration requires clear communication, respect for timelines,
+                            and a commitment to shared goals.
+                        </p>
+                    </div>
+
+                    <div class="client-details pt-5">
+                        <h4>Name of Client</h4>
+                        <p>Position</p>
+                    </div>
+                </div>
+
+                <!-- RIGHT (4) -->
+                <div class="testimonial-right">
+                    <div class="company-logo-wrap">
+                        <img src="Data/Banner/test-icon1.png" alt="company" class="company-logo">
+                    </div>
+
+                    <div class="client-photo-wrap">
+                        <div class="corner-decor1">
+                            <img src="Data/Banner/decor1.png" alt="decor" class="decor1">
+                        </div>
+                        <img src="Data/Banner/test-image1.png" alt="client" class="client-img">
+                        <div class="corner-decor2">
+                            <img src="Data/Banner/decor2.png" alt="decor" class="decor2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="testimonial-item">
+            <div class="testimonial-inner">
+                <div class="testimonial-left">
+                    <div class="top-row">
+                        <img src="Data/Banner/test-note.png" alt="quote" class="quote-icon">
+                    </div>
+                    <div class="testimonial-content">
+                        <p>
+                            Professional collaboration requires clear communication, respect for timelines,
+                            and a commitment to shared goals.
+                        </p>
+                    </div>
+                    <div class="client-details pt-5">
+                        <h4>Name of Client</h4>
+                        <p>Position</p>
+                    </div>
+                </div>
+
+                <div class="testimonial-right">
+                    <div class="company-logo-wrap">
+                        <img src="Data/Banner/test-icon2.png" alt="company" class="company-logo">
+                    </div>
+
+                    <div class="client-photo-wrap">
+                        <div class="corner-decor1">
+                            <img src="Data/Banner/decor1.png" alt="decor" class="decor1">
+                        </div>
+                        <img src="Data/Banner/test-image2.png" alt="client" class="client-img">
+                        <div class="corner-decor2">
+                            <img src="Data/Banner/decor2.png" alt="decor" class="decor2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="testimonial-item">
+            <div class="testimonial-inner">
+                <div class="testimonial-left">
+                    <div class="top-row">
+                        <img src="Data/Banner/test-note.png" alt="quote" class="quote-icon">
+                    </div>
+                    <div class="testimonial-content">
+                        <p>
+                            Professional collaboration requires clear communication, respect for timelines,
+                            and a commitment to shared goals.
+                        </p>
+                    </div>
+                    <div class="client-details pt-5">
+                        <h4>Name of Client</h4>
+                        <p>Position</p>
+                    </div>
+                </div>
+
+                <div class="testimonial-right">
+                    <div class="company-logo-wrap">
+                        <img src="Data/Banner/test-icon2.png" alt="company" class="company-logo">
+                    </div>
+
+                    <div class="client-photo-wrap">
+                        <div class="corner-decor1">
+                            <img src="Data/Banner/decor1.png" alt="decor" class="decor1">
+                        </div>
+                        <img src="Data/Banner/test-image3.png" alt="client" class="client-img">
+                        <div class="corner-decor2">
+                            <img src="Data/Banner/decor2.png" alt="decor" class="decor2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</section>
+
+<partial name="_Register" />
+
+
+<style>
+
+	/* Banner */
+	#SliderBanner img {
+		max-height: 100%;
+	}
+
+	.event-box {
+		position: absolute;
+		bottom: 30px;
+		left: 30px;
+		width: 26%;
+		padding: 30px;
+		border-radius: 12px;
+		background: url('Data/Banner/bg-joinnew.png') no-repeat center/cover;
+		background-blend-mode: overlay;
+		/* tăng độ rõ của text */
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+		border: 1px solid rgba(255, 255, 255, 0.6);
+		animation: fadeInUp 0.8s ease;
+		transition: opacity 0.3s ease, transform 0.3s ease;
+		z-index: 10;
+	}
+
+	@@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(15px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* Tiêu đề và nội dung */
+	.event-box h4 {
+		font-size: 18px;
+		color: #1D2939;
+		font-weight: 600;
+		margin-bottom: 5px;
+	}
+
+	.event-box p {
+		font-size: 28px;
+		color: #034EA2;
+		font-weight: 500;
+		margin-bottom: 12px;
+	}
+
+	/* Nút Join */
+	.event-btn {
+		display: inline-block;
+		background: linear-gradient(135deg, #034EA2, #53DFFF);
+		color: white;
+		font-size: 14px;
+		font-weight: 500;
+		padding: 6px 18px;
+		border-radius: 6px;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+		.event-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 8px rgba(3, 78, 162, 0.3);
+		}
+
+	/* Nút đóng góc phải */
+	.event-close {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		background: transparent;
+		border: none;
+		color: #004b8d;
+		font-size: 16px;
+		cursor: pointer;
+		transition: color 0.2s ease, transform 0.2s ease;
+	}
+
+		.event-close:hover {
+			color: #0078d4;
+			transform: rotate(90deg);
+		}
+
+	/* Ẩn box khi nhấn nút */
+	.event-box.hidden {
+		opacity: 0;
+		transform: translateY(10px);
+		pointer-events: none;
+	}
+
+	/* Responsive cho mobile */
+	@@media (max-width: 992px) {
+		.event-box {
+			width: 60%;
+			padding: 20px;
+			bottom: 20px;
+			left: 20px;
+		}
+
+			.event-box p {
+				font-size: 22px;
+			}
+	}
+
+	@@media (max-width: 576px) {
+		.event-box {
+			display: none;
+		}
+	}
+
+
+	/* FIND */
+	#Find {
+		background: url('Data/Banner/search_banner.png') no-repeat center;
+		background-size: cover;
+		background-position: center center;
+	}
+
+
+	/* WhyLastest */
+	.view-now {
+		display: inline-block;
+		background-color: #0066cc;
+		color: #ffffff;
+		padding: 7px 70px;
+		border-radius: 25px;
+		cursor: pointer;
+	}
+
+	.view-now-wrapper {
+		text-align: center;
+	}
+
+	.view-now:hover {
+		background-color: #004c9b;
+	}
+
+    @@media (max-width: 576px) {
+        .why-desc {
+        padding-right: 10px;
+        }
+    }
+
+    /* Thinking */
+
+    .thinks-grid {
+        display: grid;
+        grid-template-columns: 0.8fr 1.1fr;
+        gap: 30px;
+    }
+
+    .thinks-featured {
+        border-radius: 12px;
+        overflow: hidden;
+        /* box-shadow: 0 4px 12px rgba(0, 76, 152, 0.08); */
+        transition: transform 0.3s ease;
+    }
+
+    .thinks-featured:hover {
+        transform: translateY(-3px);
+    }
+
+    .thinks-featured .thinks-img {
+        width: 100%;
+        /* height: 230px; */
+        object-fit: cover;
+    }
+
+    .thinks-info {
+        padding: 18px 0;
+    }
+
+    .thinks-tags {
+        display: flex;
+        gap: 10px;
+        font-size: 13px;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+    .thinks-tags .tag {
+        background: #eaf4ff;
+        color: #0066cc;
+        padding: 10px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .thinks-tags .date {
+        color: #777;
+        font-size: 15px;
+    }
+
+    .thinks-title {
+        color: #093461;
+        font-weight: 700;
+        font-size: 28px;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+
+    .thinks-desc {
+        color: #093461;
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    /* thinks nhỏ */
+    .thinks-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .thinks-item {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .thinks-item:not(:first-child) {
+        border-top: 1px solid #ccc;
+        padding: 20px 0;
+    }
+
+    .thinks-item img {
+        width: 280px;
+        height: 140px;
+        border-radius: 6px;
+        object-fit: cover;
+    }
+
+    .thinks-content p {
+        color: #093461;
+        font-size: 18px;
+        margin: 0;
+        font-weight: 500;
+        line-height: 1.5;
+    }
+
+    /* Nút dưới cùng */
+    .think-now {
+        background-color: #0066cc;
+        color: #ffffff;
+        padding: 8px 40px;
+        border-radius: 25px;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+        margin: 40px auto 0;
+        transition: all 0.3s ease;
+    }
+
+    .think-now:hover {
+        background-color: #004c9b;
+    }
+
+    .think-now-wrapper {
+        text-align: center;
+    }
+
+
+    /* RESPONSIVE */
+
+    @@media (max-width: 992px) {
+        .thinks-grid {
+            grid-template-columns: 1fr;
+            /* 1 cột duy nhất */
+            gap: 40px;
+        }
+
+        .thinks-featured .thinks-img {
+            height: 260px;
+        }
+
+        .thinks-title {
+            font-size: 22px;
+        }
+
+        .thinks-item {
+            flex-direction: row;
+        }
+
+        .thinks-item img {
+            width: 180px;
+            height: 100px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        #Thinking {
+            clear: both;
+            position: relative;
+            z-index: 5;
+        }
+
+        .thinks-title {
+            margin-top: 10px;
+        }
+
+        .thinks-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .thinks-featured .thinks-img {
+            height: 200px;
+        }
+
+        .thinks-item {
+            flex-direction: column;
+        }
+
+        .thinks-item img {
+            width: 100%;
+            height: auto;
+        }
+
+        .thinks-content p {
+            font-size: 15px;
+        }
+
+        .thinks-title {
+            font-size: 20px;
+        }
+
+        .thinks-tags {
+            flex-wrap: wrap;
+        }
+
+        .think-now {
+            width: 100%;
+            max-width: 280px;
+            font-size: 15px;
+        }
+
+     
+    }
+
+
+    /* Insights */
+     .news-title a {
+            font-size: 30px;
+        }
+
+    .btn-center {
+        width: 100%;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .btn-view-all {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 100px;
+        border: 1.5px solid #0066CC;
+        border-radius: 40px;
+        color: #0066CC;
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: none;
+        background: #fff;
+        transition: .2s ease;
+    }
+
+    .btn-view-all:hover {
+        background: #E8F3FF;
+    }
+
+    .btn-view-all i {
+        font-size: 16px;
+    }
+
+    @@media (max-width: 576px) {
+        .news-title a {
+            font-size: 18px;
+        }
+
+        .news-item {
+            margin-bottom: 30px;
+        }
+    }
+
+    /* Tablet */
+    @@media (min-width: 577px) and (max-width: 992px) {
+        .news-title a {
+            font-size: 20px;
+        }
+    }
+
+    /* Testimonials */
+    #Testimonials {
+        background: url('Data/Banner/bg-testimonials.png') no-repeat center;
+        background-size: cover;
+        background-position: center center;
+        font-family: "Inter", sans-serif;
+        padding: 60px 0;
+    }
+
+    .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    /* card*/
+    .testimonial-item {
+        background: #F2FAFF;
+        /* border-radius: 12px;
+        border: 1px solid #d5e4ff;
+        box-shadow: 0 4px 12px rgba(0, 76, 152, 0.06); */
+        padding: 22px;
+        overflow: visible;
+        /* allow corner to overflow */
+    }
+
+    .testimonial-inner {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 18px;
+        align-items: start;
+    }
+
+    .testimonial-left {
+        display: flex;
+        flex-direction: column;
+        padding-top: 15px;
+    }
+
+    .top-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    /* quote icon */
+    .quote-icon {
+        width: 28px;
+        height: auto;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    /* text area */
+    .testimonial-content p {
+        margin: 0 0 18px 0;
+        color: #093461;
+        font-size: 12px;
+        line-height: 1.6;
+        text-align: justify;
+    }
+
+    /* name & position */
+    .client-details h4 {
+        margin: 0;
+        color: #093461;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .client-details p {
+        margin: 4px 0 0;
+        color: #6c7b92;
+        font-size: 13px;
+    }
+
+    .testimonial-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        /* push content to the right */
+        gap: 10px;
+    }
+
+    .client-photo-wrap {
+        position: relative;
+        width: 135px;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* client photo */
+    .client-img {
+        border-radius: 6px;
+        object-fit: cover;
+        display: block;
+        box-shadow: 0 6px 18px rgba(3, 78, 162, 0.08);
+    }
+
+    /* decor nhỏ ở góc trên (bé) */
+    .corner-decor1 {
+        position: absolute;
+        top: -5px;
+        right: 107px;
+        width: 30px;
+        height: auto;
+        z-index: 1;
+    }
+
+    .decor1 {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    /* decor lớn ở góc dưới (to hơn) */
+    .corner-decor2 {
+        position: absolute;
+        bottom: -21px;
+        right: -1px;
+        width: 65px;
+        height: auto;
+        z-index: 1;
+    }
+
+    .decor2 {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    /* hover lift */
+    .testimonial-item:hover {
+        transform: translateY(-6px);
+        transition: transform .25s ease;
+    }
+
+    /* 1) Màn hình ≤ 1200px */
+    @@media (max-width: 1200px) {
+        .testimonials-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* 2) Màn hình ≤ 992px (tablet) */
+    @@media (max-width: 992px) {
+            .testimonials-grid {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+
+</style>
+
+
+<script>
+	/* Banner */
+	document.getElementById("closeEventBox").addEventListener("click", function () {
+		const box = document.getElementById("eventBox");
+		box.classList.add("hidden");
+		setTimeout(() => {
+			box.style.display = "none";
+		}, 300); // khớp với transition
+	});
+
+
+
+	document.addEventListener("DOMContentLoaded", function() {
+			const animatedElements = document.querySelectorAll('.animate-on-scroll');
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('is-visible');
+						observer.unobserve(entry.target);
+					}
+				});
+			}, {
+				threshold: 0.1
+			});
+			animatedElements.forEach(element => {
+				observer.observe(element);
+			});
+		});
+</script>

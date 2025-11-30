@@ -1,0 +1,62 @@
+﻿@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@inject IViewLocalizer Localizer
+@inject IOptions<BaseSettings> _baseSettings;
+
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+
+}
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "TrustBanner", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "TrustResult", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "TrustIssuer", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "TrustDeliver", language = language, portalId = portalId })
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('.narbartrust a');
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+    });
+    document.querySelectorAll('.pagination div').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.pagination div').forEach(div => div.classList.remove('active'));
+            item.classList.add('active');
+        });
+    });
+
+
+    // Xử lý chevron
+    let currentPage = 2; // Bắt đầu với trang 2 (do có class active mặc định)
+
+    document.querySelector('.chevron-left').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updateActivePage();
+        }
+    });
+
+    document.querySelector('.chevron-right').addEventListener('click', () => {
+        if (currentPage < 4) { // Giả sử có 4 trang
+            currentPage++;
+            updateActivePage();
+        }
+    });
+
+    function updateActivePage() {
+        document.querySelectorAll('.pagination div').forEach((div, index) => {
+            div.classList.remove('active');
+            if (parseInt(div.textContent) === currentPage) {
+                div.classList.add('active');
+            }
+        });
+    }
+</script>

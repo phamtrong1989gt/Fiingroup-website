@@ -1,20 +1,30 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
+using PT.Shared;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.UI.Controllers
 {
@@ -35,6 +45,7 @@ namespace PT.UI.Controllers
             _iLinkReferenceRepository = iLinkReferenceRepository;
             _iSettingService = iSettingService;
         }
+
         public IActionResult Error(int? statusCode = null)
         {
             if (statusCode == null)
@@ -46,38 +57,53 @@ namespace PT.UI.Controllers
             return Redirect($"/");
         }
 
-        public IActionResult Index(string linkData, int portalId)
+        public async Task<IActionResult> Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            ViewData["CacheTime"] = $"[{DateTime.Now:HH:mm:ss}] HomeController.Index được gọi!";
             return View();
         }
+
         public IActionResult Page404(string linkData)
         {
-            if(linkData!= null)
+            if (linkData != null)
             {
                 ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            }    
+            }
             return View("_Home404");
         }
+
+        public IActionResult Page301(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return RedirectToAction("/");
+            }
+
+            // Chỉ cho phép redirect nội bộ (relative URL hoặc cùng domain)
+            if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                // Nếu là URL đầy đủ, kiểm tra có phải cùng domain không
+                var currentHost = $"{Request.Scheme}://{Request.Host.Value}";
+                if (!url.StartsWith(currentHost, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Không cho phép redirect ra ngoài domain
+                    return RedirectToAction("Page404");
+                }
+            }
+            else
+            {
+                // Nếu là relative URL, đảm bảo bắt đầu bằng /
+                if (!url.StartsWith("/"))
+                {
+                    url = "/" + url;
+                }
+            }
+
+            return RedirectPermanent(url);
+        }
+
         public IActionResult About(string linkData)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View();
-        }
-
-        public IActionResult FAQ(string linkData)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View();
-        }
-
-        public IActionResult Clinic1(string linkData)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View();
-        }
-
-        public IActionResult Clinic2( string linkData)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();
@@ -87,10 +113,10 @@ namespace PT.UI.Controllers
         {
             var objectLink = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             objectLink.Title = string.IsNullOrEmpty(objectLink.Title) ? objectLink.Name : objectLink.Title;
-            objectLink.Title = $"{ objectLink.Title }{ ((page == null || page == 1) ? "" : (language == "vi" ? " - trang" : " - page"))} {page}";
+            objectLink.Title = $"{objectLink.Title}{((page == null || page == 1) ? "" : (language == "vi" ? " - trang" : " - page"))} {page}";
             ViewData["linkData"] = objectLink;
 
-            
+
             var data = await _iContentPageRepository.SearchPagedListAsync(
                      page ?? 1,
                      10,
@@ -169,17 +195,20 @@ namespace PT.UI.Controllers
         [Route("sitemap.xml")]
         public Task<FileStreamResult> SitemapAll(string language = "vi")
         {
-            return GetFileSitemap("");
+            return GetFileSitemap(language);
         }
 
         private async Task<FileStreamResult> GetFileRobots(string language)
         {
             string str = "";
-            
             var dl = await _iSettingService.SeoSettingGet(language, _baseSettings.Value.PortalId);
-            if (dl != null)
+            if (dl != null && !string.IsNullOrEmpty(dl.Robots))
             {
                 str = dl.Robots;
+            }
+            else
+            {
+                str = "# Robots.txt configuration not found\nUser-agent: *\nDisallow:";
             }
             var ms = new MemoryStream(Encoding.ASCII.GetBytes(str));
             return new FileStreamResult(ms, "text/plain");
@@ -190,14 +219,14 @@ namespace PT.UI.Controllers
             try
             {
                 bool IsMuti = _baseSettings.Value.MultipleLanguage;
-                string Domain = $"{ AppHttpContext.Current.Request.Scheme }://{Request.Host}";
-                if(!string.IsNullOrEmpty(domain))
+                string Domain = $"{AppHttpContext.Current.Request.Scheme}://{Request.Host}";
+                if (!string.IsNullOrEmpty(domain))
                 {
-                    Domain = $"{ AppHttpContext.Current.Request.Scheme }://{domain}";
+                    Domain = $"{AppHttpContext.Current.Request.Scheme}://{domain}";
                 }
                 var stringBuilder = new StringBuilder();
 
-                var listItem = await _iLinkRepository.SearchAsync(true, 0, 0, x => (x.Language == language || language =="") && !x.Delete && x.Status && x.IncludeSitemap);
+                var listItem = await _iLinkRepository.SearchAsync(true, 0, 0, x => (x.Language == language || language == "") && x.Status && x.IncludeSitemap && x.PortalId == _baseSettings.Value.PortalId);
                 stringBuilder.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 stringBuilder.AppendLine("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd\">");
 
@@ -231,9 +260,8 @@ namespace PT.UI.Controllers
             }
         }
 
-
+        [ResponseCache(Duration = 31536000, Location = ResponseCacheLocation.Any)]
         [Route("data/image")]
-        [ResponseCache(VaryByHeader = "User-Agent", Duration = 30000000)]
         public IActionResult Image(string path, int size, bool? s)
         {
             try
@@ -300,7 +328,7 @@ namespace PT.UI.Controllers
             else if (img.RawFormat.Equals(System.Drawing.Imaging.ImageFormat.Gif))
                 return System.Drawing.Imaging.ImageFormat.Gif;
             else if (img.RawFormat.Equals(System.Drawing.Imaging.ImageFormat.Icon))
-                return System.Drawing.Imaging.ImageFormat.Icon;
+                return ImageFormat.Icon;
             else
                 return System.Drawing.Imaging.ImageFormat.Jpeg;
         }
@@ -326,5 +354,42 @@ namespace PT.UI.Controllers
         {
             return View("BannerHomePage", language);
         }
+
+        public IActionResult NewTrust(string linkData)
+        {
+            if (linkData != null) { ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData); }
+            return View("NewTrust");
+        }
+
+        public IActionResult NewPublications(string linkData)
+        {
+            if (linkData != null) { ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData); }
+            return View("NewPublications");
+        }
+
+        public IActionResult Policy(string linkData)
+        {
+            if (linkData != null) { ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData); }
+            return View("Policy");
+        }
+
+        public IActionResult Process(string linkData)
+        {
+            if (linkData != null) { ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData); }
+            return View("Process");
+        }
+
+        public IActionResult ScoreScale(string linkData)
+        {
+            if (linkData != null) { ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData); }
+            return View("ScoreScale");
+        }
+
+        public IActionResult Methodology(string linkData)
+        {
+            if (linkData != null) { ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData); }
+            return View("Methodology");
+        }
+
     }
 }
