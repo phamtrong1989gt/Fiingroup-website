@@ -9,6 +9,7 @@ using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
 using System;
+using System.Drawing.Printing;
 using System.Threading.Tasks;
 
 namespace PT.Component
@@ -33,7 +34,7 @@ namespace PT.Component
             _baseSettings = baseSettings;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(ModuleType type, string code, string language = "vi", int portalId = 1)
+        public async Task<IViewComponentResult> InvokeAsync(ModuleType type, string code, string language = "vi", int? portalId = 1)
         {
             try
             {
@@ -109,7 +110,8 @@ namespace PT.Component
                     {
                         //AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24),
                         AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_baseSettings.Value.TimeCache),
-                        Priority = CacheItemPriority.Normal
+                        Priority = CacheItemPriority.Normal,
+                        Size = 1 // Thêm Size để tránh lỗi khi SizeLimit được set
                     };
 
                     _iMemoryCache.Set(cacheKey, newKyTu, cacheOptions);

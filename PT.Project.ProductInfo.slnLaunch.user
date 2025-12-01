@@ -3,14 +3,14 @@
     "Name": "DuyHK",
     "Projects": [
       {
-        "Path": "6.FE\\Portal2\\PT.UI.csproj",
+        "Path": "1.Backend\\PT.UI.csproj",
         "Action": "Start",
         "DebugTarget": "IIS Express"
       },
       {
-        "Path": "1.Backend\\PT.UI.csproj",
+        "Path": "6.FE\\Portal1\\PT.UI.csproj",
         "Action": "Start",
-        "DebugTarget": "IIS Express"
+        "DebugTarget": "PT.UI"
       }
     ]
   }

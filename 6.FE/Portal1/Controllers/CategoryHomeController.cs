@@ -10,15 +10,6 @@ using PT.Shared;
 
 namespace PT.UI.Controllers
 {
-    public class TourSearchModel
-    {
-        public int[] Categorys { get; set; }
-        public string[] Days { get; set; }
-        public int[] TourTypes { get; set; }
-        public int Page { get; set; }
-        public string Lang { get; set; }
-        public TourStyle? TourStyle { get; set; }
-    }
 
     public class CategoryHomeController : Controller
     {

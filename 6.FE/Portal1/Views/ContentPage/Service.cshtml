@@ -1,0 +1,13 @@
+﻿@model PT.Domain.Model.ContentPage
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject ICategoryRepository _iCategoryRepository;
+@inject IContentPageReferenceRepository _iContentPageReferenceRepository;
+
+
+@inject IViewLocalizer  Localizer
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var listLinkRefe = await _iContentPageReferenceRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == Model.Id);
+}

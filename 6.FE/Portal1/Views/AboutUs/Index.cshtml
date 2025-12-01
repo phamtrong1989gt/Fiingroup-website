@@ -1,0 +1,140 @@
+﻿@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@using PT.Domain.Model;
+@using PT.Infrastructure.Interfaces;
+@using PT.Shared;
+@inject IViewLocalizer Localizer;
+@using System.Linq.Expressions;
+@using PT.UI.Models
+@inject IOptions<BaseSettings> _baseSettings;
+
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+}
+
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsBanner", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsStoryFiin", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsTimeLine", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsUserTeam", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsPartners", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsLegalDocs", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsDeliver", language = language, portalId = portalId })
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('.narbarstory a');
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+    });
+
+      const timelineData = [
+        {
+            year: "2008",
+            title: "Cột mốc nổi bật",
+            text: `<span style="color: #0066CC;">FiinGroup (tiền thân là StoxPlus) </span> được thành lập, ban đầu tập trung cung cấp dữ liệu thị trường chứng khoán.`,
+            img: "../Data/Banner/about_hisdetail.png"
+        },
+        {
+            year: "2020",
+            title: "Cột mốc mở rộng - 2020",
+            text: "Mở rộng sang mảng dịch vụ phân tích tài chính doanh nghiệp.",
+            img: "../Data/Banner/about_hisdetail.png"
+        },
+        {
+            year: "2021",
+            title: "Thị trường mới - 2021",
+            text: "Ra mắt sản phẩm dữ liệu mới cho thị trường trái phiếu.",
+            img: "../Data/Banner/about_hisdetail.png"
+        },
+        {
+            year: "2022",
+            title: "Chính thức cấp phép - 2022",
+            text: "FiinRatings được Bộ Tài chính cấp phép chính thức.",
+            img: "../Data/Banner/about_hisdetail.png"
+        },
+        {
+            year: "2025",
+            title: "Tầm nhìn tương lai - 2025",
+            text: "Mục tiêu trở thành nhà cung cấp dữ liệu hàng đầu khu vực.",
+            img: "../Data/Banner/about_hisdetail.png"
+        }
+    ];
+
+    let currentIndex = 0;
+
+    const contentBox = document.getElementById("timelineContent");
+    const yeartabs = document.querySelectorAll(".year-tab");
+
+    function loadSlide(index) {
+        currentIndex = index;
+
+        // update tabs
+        yeartabs.forEach(tab => tab.classList.remove("active"));
+        yeartabs[index].classList.add("active");
+
+        // load content
+        const d = timelineData[index];
+        contentBox.innerHTML = `
+            <div class="timeline-text">
+                <h3>${d.title}</h3>
+                <div class="gach"></div>
+                <p>${d.text}</p>
+                <div class="img-his"><img src="../Data/Banner/about_hislogo.png"></div>
+            </div>
+            <img src="${d.img}" class="timeline-img">
+        `;
+    }
+
+    // Tab click
+    yeartabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            const idx = parseInt(tab.dataset.index);
+            loadSlide(idx);
+        });
+    });
+
+    // Prev / Next
+    document.getElementById("prevBtn").onclick = () => {
+        const next = (currentIndex - 1 + timelineData.length) % timelineData.length;
+        loadSlide(next);
+    };
+
+    document.getElementById("nextBtn").onclick = () => {
+        const next = (currentIndex + 1) % timelineData.length;
+        loadSlide(next);
+    };
+
+    // Load first slide
+    loadSlide(0);
+
+    const tabs = document.querySelectorAll('.tab');
+        const contents = {
+            'Hội đồng xếp hạng': document.getElementById('hđqt'),
+            'Chuyên viên phân tích': document.getElementById('ban-dieu-hanh')
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Xóa trạng thái active và ẩn toàn bộ nội dung
+                tabs.forEach(t => t.classList.remove('active'));
+                Object.values(contents).forEach(content => content.style.display = 'none');
+
+                // Kích hoạt tab hiện tại
+                tab.classList.add('active');
+
+                // Hiển thị nội dung tương ứng với text của tab
+                const selected = tab.textContent.trim();
+                contents[selected].style.display = 'block';
+            });
+        });
+
+</script>
+

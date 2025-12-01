@@ -1,14 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.Options
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@inject IOptions<BaseSettings> _baseSettings;
 @{
-    var isLogin = _httpContextAccessor?.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
     int? isView = 1;
+    var isedit = _httpContextAccessor.HttpContext?.Request.Query["isedit"].ToString();
+    if (isedit != "1")
+    {
+        isView = 0;
+    }
 }
-@if (isLogin)
+@if (isView == 1)
 {
     <style>
-
-      
         .editcontrol {
             display: inline-block;
             position: absolute;
@@ -159,104 +163,60 @@
         .adminlink a:hover {
             color: #cecece;
         }
+
+        .formadmin {
+            position: relative;
+            border: 2px dotted red;
+            overflow: hidden;
+            opacity: 0.5;
+        }
+            .formadmin:hover {
+                opacity: 1;
+                z-index: 99999;
+            }
     </style>
 
-@*     <div class="menuadmin">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a href="/Admin" style="color:#fff;" class="navbar-brand">T-CMS</a>
-                </div>
-                <div class="adminlink">
-                    <a href="/Admin">Trang quản trị</a>
-                    <a href="#" onclick="logout()">Thoát</a>
-                </div>
-
-                <div class="navbar-form navbar-right">
-                    @if (ViewData["UrlAdmin"] != null)
-                    {
-                        <div class="form-group" style="margin-right: 20px;">
-                            <a target="_blank" href="@ViewData["UrlAdmin"]" class="btn btn-primary btn-sm btnadmin"><span class="fa fa-pencil"></span> Chỉnh sửa trang này </a>
-                        </div>
-                    }
-                    <select style="background: #fff;border: 1px solid #2d40a8;" data-url="@Context.Request.Path" class="form-control input-sm" id="chedoxemadmin">
-                        @if (isView == 1)
-                        {
-                            <option value="1" selected>Chế độ xem quản trị</option>
-                            <option value="0">Chế độ xem người dùng</option>
-                        }
-                        else
-                        {
-                            <option value="1">Chế độ xem quản trị</option>
-                            <option value="0" selected>Chế độ xem người dùng</option>
-                        }
-                    </select>
-                </div>
-            </div>
-        </nav>
-    </div> *@
-
-    if (isView == 1)
-    {
-        <style>
-            .formadmin {
-                position: relative;
-                border: 2px dotted red;
-                overflow: hidden;
-                opacity: 0.5;
-            }
-
-                .formadmin:hover {
-                    opacity: 1;
-                    z-index: 99999;
-                }
-        </style>
-        <script>
-            $(function () {
-                var $data = $(".formadmin");
-                $data.each(function (i, data) {
-                    var $this = $(data).find(".bindata");
-                    $this.html("<a target='_blank' href='" + $this.attr("data-href") + "' class='editcontrol'><i class='fa fa-pencil'></i> Chỉnh sửa</a>")
-                });
+    <script>
+        $(function () {
+            var $data = $(".formadmin");
+            $data.each(function (i, data) {
+                var $this = $(data).find(".bindata");
+                $this.html("<a target='_blank' href='" + '@_baseSettings.Value.BackendDomain' + $this.attr("data-href") + "' class='editcontrol'><i class='fa fa-pencil'></i> Chỉnh sửa</a>")
             });
-        </script>
-    }
-<script>
-        $("#chedoxemadmin").on("change",function() {
-           var $this = $(this);
-            $.post('admin/AdminView', { status: $this.val() }, function () {
-              window.location.href = $this.attr("data-url");
-           });
-       });
-        function logout() {
-            $("#formLogout").submit();
-        }
-             $(document).on('click', '.editcontrol', function (e) {
-            e.preventDefault();
-            var url = $(this).attr('href');
-            var width = 1000;
-            var height = 700;
-            var left = (window.screen.width / 2) - (width / 2);
-            var top = (window.screen.height / 2) - (height / 2);
-            var popup = window.open(
-                url,
-                'popupWindow',
-                'width=' + width +
-                ',height=' + height +
-                ',top=' + top +
-                ',left=' + left +
-                ',scrollbars=yes'
-            );
-            // Theo dõi popup, khi đóng thì reload lại trang chính
-            var timer = setInterval(function () {
-                if (popup.closed) {
-                    clearInterval(timer);
-                    window.location.reload();
-                }
-            }, 500);
         });
-</script>
-    <form id="formLogout" method="post" asp-action="LogOut" asp-controller="Account" asp-area="User">
-        @Html.AntiForgeryToken()
-    </form>
+
+          $("#chedoxemadmin").on("change",function() {
+            var $this = $(this);
+             $.post('admin/AdminView', { status: $this.val() }, function () {
+               window.location.href = $this.attr("data-url");
+            });
+        });
+         function logout() {
+             $("#formLogout").submit();
+         }
+              $(document).on('click', '.editcontrol', function (e) {
+             e.preventDefault();
+             var url = $(this).attr('href');
+             var width = 1300;
+             var height = 700;
+             var left = (window.screen.width / 2) - (width / 2);
+             var top = (window.screen.height / 2) - (height / 2);
+             var popup = window.open(
+                 url,
+                 'popupWindow',
+                 'width=' + width +
+                 ',height=' + height +
+                 ',top=' + top +
+                 ',left=' + left +
+                 ',scrollbars=yes'
+             );
+             // Theo dõi popup, khi đóng thì reload lại trang chính
+             var timer = setInterval(function () {
+                 if (popup.closed) {
+                     clearInterval(timer);
+                     window.location.reload();
+                 }
+             }, 500);
+         });
+    </script>
 }

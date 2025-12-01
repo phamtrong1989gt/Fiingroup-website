@@ -117,13 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="About error" xml:space="preserve">
-    <value>We apologize for the inconvenience. Please return to the home page.</value>
-  </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
   </data>
   <data name="This data does not exist, may be deleted or disabled!" xml:space="preserve">
-    <value>Page not found!</value>
+    <value>This data does not exist, may be deleted or disabled!</value>
   </data>
 </root>
