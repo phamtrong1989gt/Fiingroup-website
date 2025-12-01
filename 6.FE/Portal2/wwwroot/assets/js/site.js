@@ -11,7 +11,7 @@ if (menuItems.length > 0) {
     const currentLink = window.location.href;
     menuItems.each(function() {
         const aHreft = $(this).attr('href');
-        if (currentLink.toLowerCase().includes(aHreft.toLowerCase())) {
+        if (currentLink.toLowerCase().includes(aHreft?.toLowerCase())) {
             $(this).addClass( "active-link" );
         } else {
             const nextElement = $(this).next();
@@ -21,7 +21,7 @@ if (menuItems.length > 0) {
                 if (nextElementClass.includes('nav-dropdown-content')) {
                     nextElement.children().each(function () {
                         const aHreft = $(this).attr('href');
-                        if (currentLink.toLowerCase().includes(aHreft.toLowerCase())) {
+                        if (currentLink.toLowerCase().includes(aHreft?.toLowerCase())) {
                             $(appMenu).addClass( "active-link" );
                             $(this).addClass( "active-link" );
                         }

@@ -27,7 +27,7 @@
             string url = $"/{language}/tin-tuc-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
             <div class="col-lg-4 col-sm-6">
                 <a href="@url" title="@item.Title">
-                    <img class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.ImageUrl ?? "/Data/Banner/no-img.jpg")" alt="@item.Title">
+                    <img loading="lazy" class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.ImageUrl ?? "/Data/Banner/no-img.jpg")" alt="@item.Title">
                 </a>
                 <h3 class="pt-4">
                     <a href="@url" title="@item.Title" class="news-title">@item.Title</a>

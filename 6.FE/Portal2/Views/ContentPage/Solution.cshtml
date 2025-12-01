@@ -286,20 +286,21 @@
 <section id="products" class="py-5">
 	<div class="container">
 		<h2 class="price-title mb-4">Giải pháp hỗ trợ <span style="color:#0066CC;">từ FiinGroup</span></h2>
-
 		<div class="row pdt20">
 			<div class="col-lg-7 col-sm-12 mb-4">
-				<div class="pdt20"></div>
-				@for (int i = 0; i < listFlowItems.Count; i++)
-				{
-					var item = listFlowItems[i];
-					string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
-					<div class="solution-item" data-img="@item.Input11">
-						<a href="@path" title="@item.Name"><h4>@item.Name</h4></a>
-						<p>@Html.Raw(item.RelatedNote)</p>
-						<a href="@path" class="solution-link">Xem chi tiết <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
-					</div>
-				}
+				<div class="bao-item" style="overflow-y:auto;">
+					@for (int i = 0; i < listFlowItems.Count; i++)
+					{
+						var item = listFlowItems[i];
+						string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
+						<div class="solution-item" data-img="@item.Input11">
+							<a href="@path" title="@item.Name"><h4>@item.Name</h4></a>
+							<p>@Html.Raw(item.RelatedNote)</p>
+							<a href="@path" class="solution-link">Xem chi tiết <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+						</div>
+					}
+				</div>
+
 			</div>
 			<div class="col-lg-5 col-sm-12 text-center">
 				<img src="@((listFlowItems.FirstOrDefault()?.Input11) ?? "/Data/Banner/solution_giaiphap5.png")" class="img-fluid solution-img" alt="@Model.Name">
@@ -419,10 +420,63 @@
 			});
 		});
 	});
-	$('.solution-item').hover(function () {
-		let imgUrl = $(this).data('img');
-		if(imgUrl !=""){
-			$('.solution-img').attr('src', imgUrl);
+
+	// Keep .bao-item height equal to .solution-img height.
+	(function ($) {
+		if (typeof $ === 'undefined') return;
+
+		function setBaoItemHeight() {
+			const $img = $('.solution-img');
+			const $bao = $('.bao-item');
+			if (!$img.length || !$bao.length) return;
+
+			const applyHeight = function () {
+				const imgHeight = $img.outerHeight() || 0;
+				if (imgHeight > 0) {
+					$bao.height(imgHeight);
+				} else {
+					$bao.css('height', '');
+				}
+			};
+
+			// If image already loaded
+			if ($img.prop('complete')) {
+				applyHeight();
+			} else {
+				$img.off('load.copilot').on('load.copilot', applyHeight);
+			}
+
+			// Ensure height recalculation after a short delay (image may change src)
+			setTimeout(applyHeight, 120);
 		}
-	});
+
+		let resizeTimer;
+		$(window).on('resize', function () {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(setBaoItemHeight, 120);
+		});
+
+		// initial sync
+		$(function () {
+			setBaoItemHeight();
+		});
+
+		// when hovering solution items we change the image src — recalc height after image load
+		$('.solution-item').hover(function () {
+			let imgUrl = $(this).data('img');
+			if (imgUrl && imgUrl !== "") {
+				const $img = $('.solution-img');
+				$img.attr('src', imgUrl);
+				// set height after the image actually loads
+				$img.off('load.sync').on('load.sync', function () {
+					setBaoItemHeight();
+				});
+			}
+		});
+
+		// also recalc if the source image element is changed elsewhere
+		$('.solution-img').on('load', function () {
+			setBaoItemHeight();
+		});
+	})(window.jQuery);
 </script>

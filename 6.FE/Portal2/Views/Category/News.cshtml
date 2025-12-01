@@ -7,11 +7,20 @@
 @using PT.Shared;
 @inject IOptions<BaseSettings> _baseSettings;
 @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
-
+@inject PT.Infrastructure.Interfaces.ICategoryRepository _iCategoryRepository;
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = _baseSettings.Value.PortalId;
+    var listCategory = new List<Category>();    
+    if(Model.ParentId == 0)
+    {
+        listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Event || x.CategoryType == ECategoryType.ContentPage_Blog) && x.ParentId == 0 && x.Status);
+    }
+    else
+    {
+        listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Event || x.CategoryType == ECategoryType.ContentPage_Blog) && x.Status && x.ParentId == Model.ParentId);
+    }
 }
 
 <style>
@@ -64,7 +73,7 @@
     #NewButton {
         align-items: center;
         justify-content: center;
-        margin: 2.5% 0 0 0;
+        margin: -1.5% 0 0 0;
     }
 
     .btn-active {
@@ -82,7 +91,6 @@
         font-size: 24px;
         font-weight: 500;
         color: #093461;
-        margin: 0 10px;
     }
 
         .btn-active:hover {
@@ -99,7 +107,7 @@
         width: 302px;
         height: 72px;
         background: #0066CC;
-        box-shadow: 0px 8px 20px rgba(0,102,204,0.12), 0px -8px 20px rgba(255,255,255,0.2);
+        box-shadow: 0px 8px 20px rgba(0, 102, 204, 0.12), 0px -8px 20px rgba(255, 255, 255, 0.2);
         border-radius: 12px;
         font-size: 24px;
         font-weight: 500;
@@ -144,7 +152,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        padding: 6px;
+        padding: 6px 10px;
         gap: 10px;
         /*width: 198.5px;*/
         height: 38px;
@@ -217,6 +225,52 @@
         border-radius: 12px;
         border: 1px solid #eee;
     }
+
+    #NewButton .btn{
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+
+    .item-date-sub {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 150%;
+        display: flex;
+        align-items: center;
+        color: #1D2939;
+    }
+
+        .item-date-sub i {
+            padding: 0 10px 0 0;
+            width: 30px;
+            color: #0066CC;
+        }
+
+        .item-date-sub .item-label {
+            padding: 0 10px 0 0;
+            width: 126px;
+        }
+
+        .item-date-sub .item-label-sub {
+            padding: 0 10px 0 0;
+            font-weight: 600;
+            color: #1D2939;
+        }
+
+    .news-title-sub {
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 32px;
+        display: flex;
+        align-items: center;
+        color: #1D2939;
+        flex: none;
+        order: 0;
+        align-self: stretch;
+        flex-grow: 0;
+        overflow: hidden;
+    }
 </style>
   <section id="Banner">
     <div class="container">
@@ -254,23 +308,23 @@
         </div>
     </div>
 </section> 
-
 <section id="NewButton">
     <div class="container">
         <div class="row d-flex justify-content-center">
-            @if (Model.ParentId == 0)
-            {
-                @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsLinkTab", language = language, portalId = portalId })
-            }
-            else
-            {
-                string url = @PT.Shared.Functions.FormatUrl(@language, Model.Link?.Slug);
-                <div class="text-center">
-                    <div class="tab-container mb-2">
-                        <a class="tab active" title="@Model.Name" href="@url">@Model.Name</a>
-                    </div>
-                </div>
-            }
+            <div class="row d-flex justify-content-center">
+                @foreach (var item in listCategory)
+                {
+                    string url = PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
+                    if(item.Id == Model.Id)
+                    {
+                        <a class="btn btn-active" title="@item.Name" href="@url">@item.Name</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-noactive" title="@item.Name" href="@url">@item.Name</a>
+                    }
+                }
+            </div>
         </div>
     </div>
 </section>

@@ -127,6 +127,8 @@ namespace PT.Domain.Model
 
         [Newtonsoft.Json.JsonIgnore]
         public List<NewsItem> Data => Items;
+
+  
     }
 
     /// <summary>
@@ -239,6 +241,11 @@ namespace PT.Domain.Model
 
         [Newtonsoft.Json.JsonIgnore]
         public DateTime? PublishedDate => PublicDate;
+        public DateTime? StartDate { get; set; }
+
+        public string TimeFromTo { get; set; }
+        public string Address { get; set; }
+
     }
 
     /// <summary>

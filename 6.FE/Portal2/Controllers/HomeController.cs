@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Base.Services;
@@ -80,27 +81,54 @@ namespace PT.UI.Controllers
                 return RedirectToAction("/");
             }
 
-            // Chỉ cho phép redirect nội bộ (relative URL hoặc cùng domain)
-            if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            // If url is relative (no scheme/host) allow (normalize leading slash)
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
             {
-                // Nếu là URL đầy đủ, kiểm tra có phải cùng domain không
-                var currentHost = $"{Request.Scheme}://{Request.Host.Value}";
-                if (!url.StartsWith(currentHost, StringComparison.OrdinalIgnoreCase))
-                {
-                    // Không cho phép redirect ra ngoài domain
-                    return RedirectToAction("Page404");
-                }
-            }
-            else
-            {
-                // Nếu là relative URL, đảm bảo bắt đầu bằng /
                 if (!url.StartsWith("/"))
                 {
                     url = "/" + url;
                 }
+                return RedirectPermanent(url);
             }
 
-            return RedirectPermanent(url);
+            // At this point we have an absolute URI.
+            // Allow redirects if:
+            //  - same host as current site OR
+            //  - host is in the configured whitelist (AllowedRedirectDomains)
+            var currentHost = $"{Request.Scheme}://{Request.Host.Value}";
+            if (absoluteUri.AbsoluteUri.StartsWith(currentHost, StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectPermanent(absoluteUri.AbsoluteUri);
+            }
+
+            // Read whitelist from configuration key "AllowedRedirectDomains"
+            // Format: "fiinratings.vn,other-domain.com"
+            try
+            {
+                var allowedListRaw = "fiinratings.vn";
+                var allowedDomains = allowedListRaw
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(d => d.Trim().ToLowerInvariant())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .ToArray();
+
+                var host = absoluteUri.Host?.ToLowerInvariant() ?? "";
+
+                bool isAllowedExternal = allowedDomains.Length > 0 &&
+                    allowedDomains.Any(d => host == d || host.EndsWith("." + d, StringComparison.OrdinalIgnoreCase));
+
+                if (isAllowedExternal)
+                {
+                    return RedirectPermanent(absoluteUri.AbsoluteUri);
+                }
+            }
+            catch
+            {
+                // If any error reading configuration, fall through to deny external redirect.
+            }
+
+            // Not allowed to redirect outside domain
+            return RedirectToAction("Page404");
         }
 
         public IActionResult About(string linkData)
