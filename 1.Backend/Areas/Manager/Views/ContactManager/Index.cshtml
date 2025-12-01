@@ -3,61 +3,82 @@
 @addTagHelper *, PT.UI
 @{
     Layout = "~/Views/Shared/_Admin.cshtml";
+    var listSolution = (SelectList)ViewData["SolutionSelectList"];
 }
 
 <div grid-index data-url="@Url.Action("index")">
     <div class="row head-v2">
-        <div class="col-md-4">
+        <div class="col-md-12">
             <div class="block-header">
-                <h2><i class="material-icons">markunread</i> QUẢN LÝ LIÊN HỆ KHÁCH HÀNG <span class="label label-danger label-t">Danh sách</span></h2>
-                <ol class="breadcrumb breadcrumb-t">
-                    <li>
-                        <a href="/Admin">
-                            Trang điều khiển
-                        </a>
-                    </li>
-                    <li class="active">
-                        Danh sách liên hệ khách hàng
-                    </li>
-                </ol>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div search-advance class="input-group mb-0">
-                <div class="input-group-addon input-group-addon-t">
-                    <span class="text-addonsearch">Tìm kiếm</span>
-                </div>
-                <div class="divcansearch">
-                    <input grid-input type="text" name="key" class="form-control inputsearch keywidth" placeholder="Tìm theo tên, email, số điện thoại">
-                    <div search-form class="searchExtensionForm">
-                        <a search-close title="Đóng" class="btnCloseSearchEx"><span aria-hidden="true">×</span></a>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="form-label">Trạng thái</label>
-                                    <div class="controls">
-                                        <input @(Context.Request.Query["status"].ToString() == "" ? "checked='checked'" : "" ) grid-input type="radio" id="radio_0" value="" name="status" class="with-gap radio-col-blue" />
-                                        <label for="radio_0" class="labelradio">Tất cả</label>
-                                        &nbsp;
-                                        <input @(Context.Request.Query["status"].ToString() == "true" ? "checked='checked'" : "" ) grid-input type="radio" id="radio_2" value="true" name="status" class="with-gap radio-col-green" />
-                                        <label for="radio_2" class="labelradio">Đã xem</label>
-                                        &nbsp;
-                                        <input @(Context.Request.Query["status"].ToString() == "false" ? "checked='checked'" : "" ) grid-input type="radio" id="radio_3" value="false" name="status" class="with-gap radio-col-red" />
-                                        <label for="radio_3" class="labelradio">chưa xem</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a search-menu class="searchExtension" title="Tìm kiếm nâng cao"><i class="material-icons">keyboard_arrow_down</i></a>
-                </div>
-                <span class="input-group-addon btn-group-addon">
-                    <button onclick="getDataGrid(1)" type="button" class="btn bg-indigo waves-effect btn-search"><i class="material-icons">search</i></button>
-                </span>
+                <h2><i class="material-icons">markunread</i> LIÊN HỆ NHẬN TƯ VẤN <span class="label label-danger label-t">Danh sách</span></h2>
             </div>
         </div>
     </div>
     <div class="row clearfix">
+        <div class="col-md-12">
+            <div class="new-form-search">
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Thời gian gửi từ (>=)</label>
+                            <div class="controls">
+                                <input grid-input type="text" value="@DateTime.Now.ToString("dd/MM/yyyy 00:00")" class="form-control input-sm form-control-t" name="startTime" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Thời gian đến (@("<"))</label>
+                            <div class="controls">
+                                <input grid-input type="text" value="@DateTime.Now.AddDays(1).ToString("dd/MM/yyyy 00:00")" class="form-control input-sm form-control-t" name="startTime" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Tên công ty</label>
+                            <div class="controls">
+                                <input class="form-control input-sm form-control-t" grid-input type="text" name="conpanyName">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Nhóm ngành</label>
+                            <div class="controls">
+                                <select grid-input data-live-search="true" name="serviceId" asp-items="@listSolution" class="input-sm form-control-t show-tick">
+                                    <option value="">Chọn nhóm ngành</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Cổng</label>
+                            <div class="controls">
+                                <select grid-input name="portalId" asp-items="@((SelectList)ViewData["PortalSelectList"])" class="input-sm form-control-t show-tick">
+                                    <option value="">Tất cả</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="col-md-2">
+                        <div class="can-button-search">
+                            <a onclick="getDataGrid(1)" class="btn bg-indigo dropdown-toggle">
+                                <i class="material-icons">search</i><span>Tìm kiếm</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-12">
             <div grid-loading class="card card-t card-loading">
                 <div class="header bg-indigo">
@@ -70,7 +91,6 @@
                                 <i class="material-icons">apps</i>
                             </a>
                             <ul class="dropdown-menu pull-left">
-                                @* <li><a href="javascript:void(0);">Khóa tài khoản đã chọn</a></li>*@
                                 <li><a href="javascript:void(0);">Đóng lại</a></li>
                             </ul>
                         </li>
@@ -95,13 +115,16 @@
                         <table class="table table-striped table-bordered table-hover table-t">
                             <thead>
                                 <tr>
+                                    <th style="width:60px;">STT</th>
                                     <th>Họ và tên</th>
-                                    <th>Số điện thoại</th>
+                                    <th>SĐT</th>
                                     <th>Email</th>
-                                    <th>Nội dung</th>
-                                    <th style="width:160px;">Ngày tạo</th>
-                                    <th style="width:100px;">Đã xem</th>
-                                    @*<th style="width:90px;">Hành động</th>*@
+                                    <th>Tên Công Ty</th>
+                                    <th>Chức Danh Công Việc</th>
+                                    <th>Nhóm Ngành</th>
+                                    <th>Sản Phẩm & Dịch Vụ Quan Tâm</th>
+                                    <th>Mô Tả Chi Tiết</th>
+                                    <th style="width:160px;">Ngày Gửi</th>
                                 </tr>
                             </thead>
                             <tbody grid-data></tbody>
@@ -145,6 +168,9 @@
     <script>
         var _page = 1;
         $(function () {
+            $("[name='startTime']").toDateTimePicker();
+            $("[name='endTime']").toDateTimePicker();
+
             $("[search-advance]").toSearch();
             $("[button-popup]").toPopup();
             $("[button-open-file-manager]").toButtonOpenFile();

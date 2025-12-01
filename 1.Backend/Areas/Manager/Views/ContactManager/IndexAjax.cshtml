@@ -21,21 +21,16 @@
 {
     @*<tr class="tr-status-@(item.Status) @(item.Status==false?"chuaDoc":"daDoc")">*@
     <tr>
+        <td>@((Model.Page - 1) * Model.Limit + i)</td>
         <td><span class="text-primary text-name">@item.FullName</span></td>
         <td>@item.Phone</td>
         <td>@item.Email</td>
-        <td>@item.Content</td>
+        <td>@item.ConpanyName</td>
+        <td>@item.Position</td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>@item.CreatedDate.ToStringDateTime()</td>
-        <td>
-            @if (item.Status)
-            {
-                <span class="label label-success">Đã xem</span>
-            }
-            else
-            {
-                <span class="label label-danger">Chưa xem</span>
-            }
-        </td>
     </tr>
     i++;
 }

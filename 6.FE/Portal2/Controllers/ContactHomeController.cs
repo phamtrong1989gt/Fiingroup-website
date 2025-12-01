@@ -99,7 +99,7 @@ namespace PT.UI.Controllers
                         Position = use.Position,
                         ConpanyName = use.ConpanyName,
                         ServiceId = (int)use.ServiceId,
-                        Type = (Contact.ContactType)use.Type,
+                        Type = Contact.ContactType.Product,
                         //Products = (Contact.ContactType)use.Type == Contact.ContactType.Product ? use.Products : "",
                         Products = use.Products,
                         CreatedDate = DateTime.Now

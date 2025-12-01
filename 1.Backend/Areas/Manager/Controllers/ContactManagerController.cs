@@ -22,46 +22,47 @@ namespace PT.BE.Areas.Manager.Controllers
 
         private readonly ILogger _logger;
         private readonly IContactRepository _iContactRepository;
-
+        private readonly IPortalRepository _iPortalRepository;
+        private readonly IContentPageRepository _iContentPageRepository;
         public ContactManagerController(
             ILogger<ContactManagerController> logger,
-            IContactRepository iContactRepository
+            IContactRepository iContactRepository,
+            IPortalRepository iPortalRepository,
+            IContentPageRepository iContentPageRepository
         )
         {
             controllerName = "ContactManager";
             tableName = "Contact";
             _logger = logger;
             _iContactRepository = iContactRepository;
+            _iPortalRepository = iPortalRepository;
+            _iContentPageRepository = iContentPageRepository;
         }
 
         #region [Index]
         [AuthorizePermission]
-        public IActionResult Index(string language = "vi")
+        public async Task<IActionResult> Index(string language = null, int? portalId = 1)
         {
+            var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+            ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
+
+            var listService = await _iContentPageRepository.SearchAsync(true, 0, 0, x=>x.Status && x.CategoryType == ECategoryType.ContentPage_Solution, x=>x.OrderBy(z=>z.Order));
+            ViewData["SolutionSelectList"] = new SelectList(listService.Select(x=> new { Id = x.Id, Name = x.Name}), "Id", "Name");
             return View();
         }
         [HttpPost, ActionName("Index")]
         [AuthorizePermission]
-        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, bool? status, string ordertype = "asc", string orderby = "name")
+        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, bool? status, string startTime, string endTime, string ordertype = "asc", string orderby = "name")
         {
             limit = (limit > 100 || limit < 10) ? 10 : limit;
             var data = await _iContactRepository.SearchPagedListAsync(
                 page ?? 1,
                 limit ?? 10,
-                    m => (m.FullName.Contains(key) || m.Email.Contains(key) || m.Phone.Contains(key) || key == null) &&
-                        (m.Status == status || status == null) && m.Type==Contact.ContactType.Contact &&
-                        !m.Delete,
+                    m =>
+                        (m.FullName.Contains(key) || m.Email.Contains(key) || m.Phone.Contains(key) || m.Position.Contains(key) || m.ConpanyName.Contains(key) || key == null) &&
+                        (m.Status == status || status == null) && m.Type == Contact.ContactType.Product
+                       ,
                 OrderByExtention(ordertype, orderby));
-            data.ReturnUrl = Url.Action("Index",
-                new
-                {
-                    page,
-                    limit,
-                    key,
-                    status,
-                    ordertype,
-                    orderby
-                });
             return View("IndexAjax", data);
         }
         private Func<IQueryable<Contact>, IOrderedQueryable<Contact>> OrderByExtention(string ordertype, string orderby)
@@ -90,7 +91,7 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 return View("404");
             }
-            if(!dl.Status)
+            if (!dl.Status)
             {
                 dl.Status = true;
                 _iContactRepository.Update(dl);
@@ -100,38 +101,5 @@ namespace PT.BE.Areas.Manager.Controllers
             return View(model);
         }
         #endregion
-
-        #region [Delete]
-        [HttpPost, ActionName("Delete")]
-        [AuthorizePermission("Index")]
-        public async Task<ResponseModel> DeletePost(int id)
-        {
-            try
-            {
-                var kt = await _iContactRepository.SingleOrDefaultAsync(false, m => m.Id == id);
-                if (kt == null || (kt != null && kt.Delete))
-                {
-                    return new ResponseModel() { Output = 0, Message = "khách hàng không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
-                }
-                kt.Delete = true;
-                await _iContactRepository.CommitAsync();
-                await AddLog(new LogModel
-                {
-                    ObjectId = kt.Id,
-                    ActionTime = DateTime.Now,
-                    Name = $"Xóa liên hệ khách hàng \"{kt.FullName}\".",
-                    Type = LogType.Delete
-                });
-
-                return new ResponseModel() { Output = 1, Message = "Xóa khách hàng thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
-            }
-            return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại.", Type = ResponseTypeMessage.Danger, Status = false };
-        }
-        #endregion
-
     }
 }

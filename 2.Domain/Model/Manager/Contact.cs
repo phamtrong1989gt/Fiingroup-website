@@ -24,6 +24,7 @@ namespace PT.Domain.Model
             TestimonialVideo,
             [Display(Name = "Người nổi tiếng đánh giá người nổi tiếng")]
             FamousPeopleVideo,
+            [Display(Name = "Đăng ký nhận tư vấn")]
             Product,
         }
 
