@@ -530,24 +530,161 @@ namespace PT.Shared
         }
         public static string GenPageList(string url, int curentPage, int totalRow, int size, string query = null, string classActive = "uk-active", string liClass = null)
         {
-            StringBuilder str = new StringBuilder();
+            size = 1;
+            var sb = new StringBuilder();
             int totalPage = (totalRow % size > 0) ? (totalRow / size + 1) : (totalRow / size);
-            for (int i = 1; i <= totalPage; i++)
+            if (totalPage <= 1)
             {
-                str.Append($"<li class=\"{liClass} {(i == curentPage ? classActive : "")}\"><a rel='nofollow' class=\"page-link\" href=\"{url}?page={i}{(query != null ? $"{query}" : "")}\">{i}</a></li>");
+                return string.Empty;
             }
-            return str.ToString();
+
+            curentPage = Math.Max(1, curentPage);
+            string q = query ?? string.Empty;
+
+            // previous button
+            if (curentPage > 1)
+            {
+                int prev = curentPage - 1;
+                sb.Append($"<li class=\"{liClass}\"><a rel='nofollow' class=\"page-link\" href=\"{url}?page={prev}{q}\">&laquo;</a></li>");
+            }
+
+            // If few pages, show all
+            if (totalPage <= 9)
+            {
+                for (int i = 1; i <= totalPage; i++)
+                {
+                    sb.Append($"<li class=\"{liClass} {(i == curentPage ? classActive : "")}\"><a rel='nofollow' class=\"page-link\" href=\"{url}?page={i}{q}\">{i}</a></li>");
+                }
+            }
+            else
+            {
+                // always show first page
+                sb.Append($"<li class=\"{liClass} {(1 == curentPage ? classActive : "")}\"><a rel='nofollow' class=\"page-link\" href=\"{url}?page=1{q}\">1</a></li>");
+
+                int start = Math.Max(2, curentPage - 2);
+                int end = Math.Min(totalPage - 1, curentPage + 2);
+
+                if (start > 2)
+                {
+                    sb.Append($"<li class=\"{liClass}\"><span class=\"page-ellipsis\">...</span></li>");
+                }
+
+                for (int i = start; i <= end; i++)
+                {
+                    sb.Append($"<li class=\"{liClass} {(i == curentPage ? classActive : "")}\"><a rel='nofollow' class=\"page-link\" href=\"{url}?page={i}{q}\">{i}</a></li>");
+                }
+
+                if (end < totalPage - 1)
+                {
+                    sb.Append($"<li class=\"{liClass}\"><span class=\"page-ellipsis\">...</span></li>");
+                }
+
+                // last page
+                sb.Append($"<li class=\"{liClass} {(totalPage == curentPage ? classActive : "")}\"><a rel='nofollow' class=\"page-link\" href=\"{url}?page={totalPage}{q}\">{totalPage}</a></li>");
+            }
+
+            // next button
+            if (curentPage < totalPage)
+            {
+                int next = curentPage + 1;
+                sb.Append($"<li class=\"{liClass}\"><a rel='nofollow' class=\"page-link\" href=\"{url}?page={next}{q}\">&raquo;</a></li>");
+            }
+
+            return sb.ToString();
         }
 
         public static string GenPageListAjax2(string url, int curentPage, int totalRow, int size, string query = null, string classActive = "uk-active", string liClass = null, string function = null)
         {
-            var str = new StringBuilder();
+            var sb = new StringBuilder();
             int totalPage = (totalRow % size > 0) ? (totalRow / size + 1) : (totalRow / size);
-            for (int i = 1; i <= totalPage; i++)
+            if (totalPage <= 1)
             {
-                str.Append($"<li class=\"{liClass} {(i == curentPage ? classActive : "")}\"><a  role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick = \"{function}({i})\" class=\"page-item\" data-href=\"{url}?page={i}{(query != null ? $"{query}" : "")}\">{i}</a></li>");
+                return string.Empty;
             }
-            return str.ToString();
+
+            curentPage = Math.Max(1, curentPage);
+            string q = query ?? string.Empty;
+            var baseLiClass = liClass ?? string.Empty;
+
+            // previous button - always rendered (disabled when on first page)
+            if (curentPage > 1)
+            {
+                int prev = curentPage - 1;
+                if (!string.IsNullOrEmpty(function))
+                    sb.Append($"<li class=\"{baseLiClass}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick=\"{function}({prev})\" class=\"page-item\" data-href=\"{url}?page={prev}{q}\">&laquo;</a></li>");
+                else
+                    sb.Append($"<li class=\"{baseLiClass}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' class=\"page-item\" data-href=\"{url}?page={prev}{q}\">&laquo;</a></li>");
+            }
+            else
+            {
+                sb.Append($"<li class=\"{baseLiClass} disabled\"><span class=\"page-item disabled\">&laquo;</span></li>");
+            }
+
+            if (totalPage <= 9)
+            {
+                for (int i = 1; i <= totalPage; i++)
+                {
+                    var active = i == curentPage ? classActive : string.Empty;
+                    if (!string.IsNullOrEmpty(function))
+                        sb.Append($"<li class=\"{baseLiClass} {active}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick=\"{function}({i})\" class=\"page-item\" data-href=\"{url}?page={i}{q}\">{i}</a></li>");
+                    else
+                        sb.Append($"<li class=\"{baseLiClass} {active}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' class=\"page-item\" data-href=\"{url}?page={i}{q}\">{i}</a></li>");
+                }
+            }
+            else
+            {
+                // first page
+                var firstActive = 1 == curentPage ? classActive : string.Empty;
+                if (!string.IsNullOrEmpty(function))
+                    sb.Append($"<li class=\"{baseLiClass} {firstActive}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick=\"{function}(1)\" class=\"page-item\" data-href=\"{url}?page=1{q}\">1</a></li>");
+                else
+                    sb.Append($"<li class=\"{baseLiClass} {firstActive}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' class=\"page-item\" data-href=\"{url}?page=1{q}\">1</a></li>");
+
+                int start = Math.Max(2, curentPage - 2);
+                int end = Math.Min(totalPage - 1, curentPage + 2);
+
+                if (start > 2)
+                {
+                    sb.Append($"<li class=\"{baseLiClass}\"><span class=\"page-ellipsis\">...</span></li>");
+                }
+
+                for (int i = start; i <= end; i++)
+                {
+                    var active = i == curentPage ? classActive : string.Empty;
+                    if (!string.IsNullOrEmpty(function))
+                        sb.Append($"<li class=\"{baseLiClass} {active}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick=\"{function}({i})\" class=\"page-item\" data-href=\"{url}?page={i}{q}\">{i}</a></li>");
+                    else
+                        sb.Append($"<li class=\"{baseLiClass} {active}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' class=\"page-item\" data-href=\"{url}?page={i}{q}\">{i}</a></li>");
+                }
+
+                if (end < totalPage - 1)
+                {
+                    sb.Append($"<li class=\"{baseLiClass}\"><span class=\"page-ellipsis\">...</span></li>");
+                }
+
+                // last page
+                var lastActive = totalPage == curentPage ? classActive : string.Empty;
+                if (!string.IsNullOrEmpty(function))
+                    sb.Append($"<li class=\"{baseLiClass} {lastActive}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick=\"{function}({totalPage})\" class=\"page-item\" data-href=\"{url}?page={totalPage}{q}\">{totalPage}</a></li>");
+                else
+                    sb.Append($"<li class=\"{baseLiClass} {lastActive}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' class=\"page-item\" data-href=\"{url}?page={totalPage}{q}\">{totalPage}</a></li>");
+            }
+
+            // next button - always rendered (disabled when on last page)
+            if (curentPage < totalPage)
+            {
+                int next = curentPage + 1;
+                if (!string.IsNullOrEmpty(function))
+                    sb.Append($"<li class=\"{baseLiClass}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' onclick=\"{function}({next})\" class=\"page-item\" data-href=\"{url}?page={next}{q}\">&raquo;</a></li>");
+                else
+                    sb.Append($"<li class=\"{baseLiClass}\"><a role=\"button\" tabindex=\"0\" aria-pressed=\"false\" rel='nofollow' class=\"page-item\" data-href=\"{url}?page={next}{q}\">&raquo;</a></li>");
+            }
+            else
+            {
+                sb.Append($"<li class=\"{baseLiClass} disabled\"><span class=\"page-item disabled\">&raquo;</span></li>");
+            }
+
+            return sb.ToString();
         }
 
         public static string GenPageListAjax(int curentPage, int totalRow, int size, string function, string forcus = null)
@@ -620,10 +757,10 @@ namespace PT.Shared
  "áàṭảãâấầuậẩẫăắằặẳẵ",
  "ÁẠ̀ẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
  "éèẹẻẽêếềệểễ",
- "ÉÈẸẺẼÊẾỀỆỂỄ",
+ "ÉÈẸẺẼÊẾỀệỂỄ",
  "óòọỏõôốồộổỗơớờợởỡ",
- "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠ",
- "úùụủũưứừựửữ",
+ "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỬ",
+ "úùụủũưứừựửूस",
  "ÚÙỤỦŨƯỨỪỰỬỮ",
  "íìịỉĩ",
  "ÍÌỊỈĨ",

@@ -171,6 +171,7 @@ namespace PT.Base
                             context.RouteData.Values["id"] = contentId;
                             context.RouteData.Values["language"] = language;
                             context.RouteData.Values["portalId"] = baseSettings.Value.PortalId;
+
                             context.RouteData.Values["linkData"] = Newtonsoft.Json.JsonConvert.SerializeObject(new Link
                             {
                                 Slug = slug,
@@ -178,7 +179,7 @@ namespace PT.Base
                                 PortalId = baseSettings.Value.PortalId,
                                 Controller = "ContentPage",
                                 Acction = route.Value,
-                                ObjectId = contentId
+                                ObjectId = contentId,
                             });
                             await _defaultRouter.RouteAsync(context);
                             return;
@@ -197,6 +198,10 @@ namespace PT.Base
                 if (link != null)
                 {
                     cache.Set(cacheKey, link, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(30)));
+                    if (link.Title == null || link.Title == "")
+                    {
+                        link.Title = link.Name;
+                    }
                     // Trạng thái xóa kết hợp 301 != null tức là điều hướng đi trang khác, ngược lại tức là link này bị xóa vĩnh viễn sẽ tả về 404
                     if (link.Delete || !link.Status)
                     {
@@ -215,6 +220,7 @@ namespace PT.Base
                     }
                     else
                     {
+                       
                         if (!string.IsNullOrEmpty(link.Redirect301))
                         {
                             context.RouteData.Values["controller"] = "Home";

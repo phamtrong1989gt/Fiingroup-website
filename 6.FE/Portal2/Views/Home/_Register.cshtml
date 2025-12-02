@@ -14,11 +14,7 @@
 	var contactType = (int)Contact.ContactType.Product;
 }
 <style>
-	.field-validation-error
-	{
-		font-size: 12px;
-		position: absolute;
-	}
+
 </style>
 <section class="py-5 mb-3 mt-3" id="DangKy">
 	<div class="container">
@@ -90,57 +86,20 @@
 		</div>
 	</div>
 </section>
-
-@section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
-
-	@* <script src="https://www.google.com/recaptcha/api.js?render=@_authorizeSettings.Value.CapChaDataSitekey"></script>
-
-	<script>
-			  // Hàm lấy token reCAPTCHA, trả về Promise
-		function getCapchaToken() {
-			return new Promise(function (resolve) {
-				grecaptcha.ready(function () {
-					grecaptcha.execute('@_authorizeSettings.Value.CapChaDataSitekey', { action: 'submit' }).then(function (token) {
-						$("#g-recaptcha-response").val(token);
-						resolve(token);
-					});
-				});
-			});
-		}
-			$("[btnSendLH]").toSubmit(async function(data){
-				$("[btnSendLH]").prop("disabled", true);
-				await getCapchaToken();
-				// Sau khi có token, plugin sẽ tiếp tục submit như bình thường
-			}, function(rs){
-				if(rs.output == 1)
-				{
-				   resetInput();
-				}
-
-				setTimeout(function(){
-					$("[btnSendLH]").prop("disabled", false);
-				}, 6000);
-			});
-
-			function resetInput()
-			{
-				var $form = $("[form-edit]");
-				$form[0].reset(); // Reset tất cả các input, textarea về giá trị mặc định
-			}
-	</script> *@
+@section Scripts
+{
 }
-<link href="/plugins/select2/select2.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="/plugins/alertifyjs/css/alertify.min.css" />
-<link rel="stylesheet" href="/plugins/alertifyjs/css/themes/default.min.css" />
-<script src="/plugins/jquery-validate/jquery.validate.min.js"></script>
-<script src="/plugins/jquery-validate/jquery.validate.unobtrusive.min.js"></script>
-<script src="/plugins/alertifyjs/alertify.min.js"></script>
-<script src="/plugins/select2/select2.min.js"></script>
+
 <script>
+
 	$(function () {
+			$('#sanPhamQT').select2({
+			   placeholder: "Chọn sản phẩm & dịch vụ quan tâm",
+			   closeOnSelect: false,
+			   allowHtml: true,
+			   allowClear: true,
+		tags: true
+	});
 	  const $form = $('#formLienHe');
 	  $form.on('submit', function (e) {
 		e.preventDefault();
@@ -165,13 +124,8 @@
 	  });
 	});
 
-	 $('#sanPhamQT').select2({
-			placeholder: "Chọn sản phẩm & dịch vụ quan tâm",
-			closeOnSelect: false,
-			allowHtml: true,
-			allowClear: true,
-			tags: true
-		});
+	
+
 	$("#sanPhamQT").on("change", function () {
         let selected = $(this).val(); 
         if (selected && selected.length > 0) {
@@ -202,7 +156,6 @@
 				parrentId: parentId
 			},
 			success: function (res) {
-				console.log(res);
 				if (res.output === 1 || res.output === "1") {
 					$("#sanPhamQT").empty();
 					let lst = res.data;
