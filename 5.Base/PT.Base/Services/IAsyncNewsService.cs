@@ -143,13 +143,12 @@ namespace PT.Base.Services
                 if(contentPage.PortalId == 1)
                 {
                     sourceId = 299;
-                }  
-                
-                int categoryId = 277; // danh mục tin tức
-                if(contentPage.CategoryType == ECategoryType.ContentPage_Event)
-                {
-                    categoryId = 382; // danh mục sự kiện
-                }    
+                }
+
+                // Ánh xạ danh mục
+                var category = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == contentPage.CategoryId);
+
+                int? categoryId = category?.ReferentCategoryId;
 
                 var cmd = new NewsCMD
                 {
@@ -163,7 +162,7 @@ namespace PT.Base.Services
                     Author = contentPage.Author,
                     UpdateBy = "",
                     RecordStatusId = contentPage.Status ? 1 : 4,
-                    Categories = [new() { Id = categoryId, PriorityOrder = 1 }],
+                    Categories = (categoryId != null && categoryId > 0) ? [new() { Id = categoryId ?? 0, PriorityOrder = 1 }] : [],
                     TypeIds = [],
                     SourceIds = [sourceId],
                     Entities = [],
@@ -254,12 +253,8 @@ namespace PT.Base.Services
                 }
                 // Ánh xạ danh mục
                 var category = await _iCategoryRepository.SingleOrDefaultAsync(true, x=>x.Id == contentPage.CategoryId);
-                if(category == null)
-                {
-                    return null;
-                }
 
-                var categoryId = category.ReferentCategoryId;
+                var categoryId = category?.ReferentCategoryId;
 
                 var cmd = new NewsCMD
                 {

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace PT.UI.Controllers
 {
@@ -16,13 +17,15 @@ namespace PT.UI.Controllers
         private readonly IWebHostEnvironment _iHostingEnvironment;
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ISettingService _iSettingService;
-        public CacheController(ISettingService iSettingService, ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository)
+        private readonly ILogger<CacheController> _logger;
+        public CacheController(ISettingService iSettingService, ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILogger<CacheController> logger)
         {
             _iLinkRepository = iLinkRepository;
             _baseSettings = baseSettings;
             _iHostingEnvironment = iHostingEnvironment;
             _iContentPageRepository = iContentPageRepository;
             _iSettingService = iSettingService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -32,6 +35,7 @@ namespace PT.UI.Controllers
             {
                 if (string.IsNullOrEmpty(key))
                 {
+                    _logger.LogWarning("Cache.Refresh called with empty key.");
                     return BadRequest();
                 }
                 // Allow only when request comes from localhost (or 127.0.0.1).
@@ -41,17 +45,23 @@ namespace PT.UI.Controllers
                     ? forwardedHost.Split(',')[0].Trim().ToLowerInvariant()
                     : HttpContext.Request.Host.Host?.ToLowerInvariant();
 
-                if (host != "localhost" && host != "127.0.0.1")
-                {
-                    // Deny non-localhost callers
-                    return Forbid();
-                }
+                var remoteIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+                _logger.LogInformation("Cache.Refresh called. key={Key}, host={Host}, forwardedHost={ForwardedHost}, remoteIp={RemoteIp}", key, host, forwardedHost, remoteIp);
+
+                //if (host != "localhost" && host != "127.0.0.1")
+                //{
+                //    _logger.LogWarning("Cache.Refresh forbidden from host={Host}, remoteIp={RemoteIp}", host, remoteIp);
+                //    // Deny non-localhost callers
+                //    return Forbid();
+                //}
 
                 _iSettingService.RefreshByKey(key);
+                _logger.LogInformation("Cache.Refresh succeeded for key={Key}", key);
                 return Ok();
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                _logger.LogError(ex, "Cache.Refresh failed for key={Key}", key);
                 return BadRequest();
             }
         }

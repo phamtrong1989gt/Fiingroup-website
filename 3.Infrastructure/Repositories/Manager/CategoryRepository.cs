@@ -318,7 +318,8 @@ namespace PT.Infrastructure.Repositories
                     CategoryType    = x.data.CategoryType,
                     SlugType        = x.data.SlugType,
                     ExCategoryIds = x.data.ExCategoryIds,
-                    ReferentCategoryId = x.data.ReferentCategoryId
+                    ReferentCategoryId = x.data.ReferentCategoryId,
+                    
                 }).AsQueryable();
            
             if (asNoTracking)
@@ -328,9 +329,9 @@ namespace PT.Infrastructure.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public List<PT.Domain.Model.CategoryTreeModel> GetCategoryAncestors(PT.Domain.Model.CategoryTreeModel category, List<PT.Domain.Model.CategoryTreeModel> allCategories)
+        public List<PT.Domain.Model.CategoryTreeModel> GetCategoryAncestors(CategoryTreeModel category, List<PT.Domain.Model.CategoryTreeModel> allCategories)
         {
-            var ancestors = new List<PT.Domain.Model.CategoryTreeModel>();
+            var ancestors = new List<CategoryTreeModel>();
             var current = category;
             while (current?.ParentId != null && current.ParentId != 0)
             {

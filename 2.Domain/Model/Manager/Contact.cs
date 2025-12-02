@@ -73,6 +73,7 @@ namespace PT.Domain.Model
         public string ConpanyName { get; set; }
         public string Position { get; set; }
         public string Products { get; set; }
+        public int PortalId { get; set; }
     }
 
     public class ContactModel

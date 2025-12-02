@@ -66,25 +66,16 @@ namespace PT.UI.Controllers
 
         [HttpPost, ActionName("Contact")]
         [AutoValidateAntiforgeryToken]
-        public async Task<ResponseModel> ContactPost(ContactHomeModel use)
+        public async Task<ResponseModel> ContactPost(ContactHomeModel use, string language)
         {
             try
             {
-                //var output = await _iUserRepository.VeryfyCapcha(_authorizeSettings.Value.CapchaVerifyUrl, _authorizeSettings.Value.CapChaSecret, use.Capcha);
-                //var capchaOke = output.Success;
-                //if (!capchaOke)
-                //{
-                //    return new ResponseModel() { Output = 69, Message = "Phiên làm việc đã hết hạn hoặc thao tác thực hiện quá nhanh, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
-                //}
-
-                //if (IsCheckRequest("Contact"))
-                //{
-                //    SetRequest("Contact");
-                //}
-                //else
-                //{
-                //    return new ResponseModel() { Output = -1, Message = "Bạn thao tác gửi liên hệ quá nhanh trong một khoảng thời gian, hãy đợi và thực hiện lại", Type = ResponseTypeMessage.Warning };
-                //}
+                var output = await _iUserRepository.VeryfyCapcha(_authorizeSettings.Value.CapchaVerifyUrl, _authorizeSettings.Value.CapChaSecret, use.Capcha);
+                var capchaOke = output.Success;
+                if (!capchaOke)
+                {
+                    return new ResponseModel() { Output = 69, Message = "Phiên làm việc đã hết hạn hoặc thao tác thực hiện quá nhanh, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
+                }
 
                 if (ModelState.IsValid)
                 {
@@ -100,24 +91,13 @@ namespace PT.UI.Controllers
                         ConpanyName = use.ConpanyName,
                         ServiceId = (int)use.ServiceId,
                         Type = Contact.ContactType.Product,
-                        //Products = (Contact.ContactType)use.Type == Contact.ContactType.Product ? use.Products : "",
                         Products = use.Products,
-                        CreatedDate = DateTime.Now
+                        CreatedDate = DateTime.Now,
+                        PortalId = _baseSettings.Value.PortalId,
+                        Language = language
                     });
                     await _iContactRepository.CommitAsync();
-
-                    //if(use.FullName.ToLower().Contains("sex") || use.FullName.ToLower().Contains("girl") || use.FullName.ToLower().Contains("human"))
-                    //{
-                    //    return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
-                    //}
-
-                    //if ((use.Content ?? "").ToLower().Contains("sex") || (use.Content ?? "").ToLower().Contains("girl") || (use.Content ?? "").ToLower().Contains("human"))
-                    //{
-                    //    return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
-                    //}
-
-                    //var dlCountry = await _iCountryRepository.SingleOrDefaultAsync(true, x => x.Id == use.CountryId);
-
+                
                     if(!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
                     {
                         var strB = new StringBuilder();
@@ -171,25 +151,16 @@ namespace PT.UI.Controllers
 
         [HttpPost, ActionName("ContactSolution")]
         [AutoValidateAntiforgeryToken]
-        public async Task<ResponseModel> ContactSolutionPost(ContactSolotionModel use)
+        public async Task<ResponseModel> ContactSolutionPost(ContactSolotionModel use, string language)
         {
             try
             {
-                //var output = await _iUserRepository.VeryfyCapcha(_authorizeSettings.Value.CapchaVerifyUrl, _authorizeSettings.Value.CapChaSecret, use.Capcha);
-                //var capchaOke = output.Success;
-                //if (!capchaOke)
-                //{
-                //    return new ResponseModel() { Output = 69, Message = "Phiên làm việc đã hết hạn hoặc thao tác thực hiện quá nhanh, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
-                //}
-
-                //if (IsCheckRequest("Contact"))
-                //{
-                //    SetRequest("Contact");
-                //}
-                //else
-                //{
-                //    return new ResponseModel() { Output = -1, Message = "Bạn thao tác gửi liên hệ quá nhanh trong một khoảng thời gian, hãy đợi và thực hiện lại", Type = ResponseTypeMessage.Warning };
-                //}
+                var output = await _iUserRepository.VeryfyCapcha(_authorizeSettings.Value.CapchaVerifyUrl, _authorizeSettings.Value.CapChaSecret, use.Capcha);
+                var capchaOke = output.Success;
+                if (!capchaOke)
+                {
+                    return new ResponseModel() { Output = 69, Message = "Phiên làm việc đã hết hạn hoặc thao tác thực hiện quá nhanh, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
+                }
 
                 if (ModelState.IsValid)
                 {
@@ -202,21 +173,11 @@ namespace PT.UI.Controllers
                         Phone = use.Phone,
                         Type = (Contact.ContactType)use.Type,
                         Products = use.Products,
-                        CreatedDate = DateTime.Now
+                        CreatedDate = DateTime.Now,
+                        PortalId = _baseSettings.Value.PortalId,
+                        Language = language
                     });
                     await _iContactRepository.CommitAsync();
-
-                    //if(use.FullName.ToLower().Contains("sex") || use.FullName.ToLower().Contains("girl") || use.FullName.ToLower().Contains("human"))
-                    //{
-                    //    return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
-                    //}
-
-                    //if ((use.Content ?? "").ToLower().Contains("sex") || (use.Content ?? "").ToLower().Contains("girl") || (use.Content ?? "").ToLower().Contains("human"))
-                    //{
-                    //    return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
-                    //}
-
-                    //var dlCountry = await _iCountryRepository.SingleOrDefaultAsync(true, x => x.Id == use.CountryId);
 
                     if (!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
                     {
