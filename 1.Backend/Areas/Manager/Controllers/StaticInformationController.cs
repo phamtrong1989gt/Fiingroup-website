@@ -97,7 +97,7 @@ namespace PT.BE.Areas.Manager.Controllers
             var data = await _iStaticInformationRepository.SearchPagedListAsync(
                 page ?? 1,
                 limit ?? 10,
-                m => (m.Name.Contains(key) || key == null) &&
+                m => (m.Code.Contains(key) || m.Name.Contains(key) || key == null) &&
                      (m.Code == code || code == null) &&
                      (m.Status == status || status == null) &&
                      (m.PortalId == portalId || portalId == null) &&

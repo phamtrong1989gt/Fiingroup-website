@@ -104,7 +104,7 @@ namespace PT.BE.Areas.Manager.Controllers
             var data = await _iMenuRepository.SearchPagedListAsync(
                 page ?? 1,
                 limit ?? 10,
-                    m => (m.Name.Contains(key) || key == null) 
+                    m => (m.Code.Contains(key) || m.Name.Contains(key) || key == null) 
                     && (m.Code == code || code == null)
                     && (m.PortalId == portalId || portalId == null)
                     && (m.Status == status || status == null)

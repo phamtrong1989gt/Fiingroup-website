@@ -123,7 +123,7 @@ namespace PT.Base
         public async Task RouteAsync(RouteContext context)
         {
             string path = context.HttpContext.Request.Path.Value.ToString().ToLower();
-            if(path.EndsWith("/robots.txt") || path.EndsWith("sitemap.xml"))
+            if(path.EndsWith("/robots.txt") || path.EndsWith("sitemap.xml") || path.StartsWith("/Cache/Refresh"))
             {
                 await _defaultRouter.RouteAsync(context);
                 return;
