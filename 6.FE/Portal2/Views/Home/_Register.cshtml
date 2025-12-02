@@ -3,88 +3,85 @@
 @inject IOptions<BaseSettings> _baseSettings;
 
 @{
-	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-	var listLanguage = PT.Shared.ListData.ListLanguage;
-	@model PT.UI.Models.ContactHomeModel;
-	@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
-	@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
-	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
-	var portalId = _baseSettings.Value.PortalId;
-	var listServies = await _iContactRepository.ServiesList(language, portalId);
-	var contactType = (int)Contact.ContactType.Product;
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var listLanguage = PT.Shared.ListData.ListLanguage;
+    @model PT.UI.Models.ContactHomeModel;
+    @inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
+    @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+    var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
+    var portalId = _baseSettings.Value.PortalId;
+    var listServies = await _iContactRepository.ServiesList(language, portalId);
+    var contactType = (int)Contact.ContactType.Product;
 }
 <style>
 
 </style>
 <section class="py-5 mb-3 mt-3" id="DangKy">
-	<div class="container">
-		<h2 class="price-title mb-5">Đăng ký ngay để <span style="color: #0066CC;">nhận tư vấn</span></h2>
-		<div class="row">
-			<div class="col-lg-6 col-sm-12">
-				@* <form form-edit method="post" asp-action="Contact" asp-controller="ContactHome"> *@
-				<input type="hidden" id="languageId" value="@language" />
-				<form id="formLienHe" method="post">
-					@Html.AntiForgeryToken()
-					<div class="row">
-						<div class="col-sm-12 mb-2">
-							<label for="hoTen" class="form-label">Họ và tên <span class="error">*</span></label>
-							<input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder="Nhập họ và tên">
-							<span class="validate-style" asp-validation-for="FullName"></span>
-						</div>
-						<div class="col-sm-6 mb-2">
-							<label for="soDienThoai" class="form-label">Số điện thoại <span class="error">*</span></label>
-							<input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder="Nhập số điện thoại">
-							<span class="validate-style" asp-validation-for="Phone"></span>
-						</div>
-						<div class="col-sm-6 mb-2">
-							<label for="email" class="form-label">Email <span class="error">*</span></label>
-							<input type="email" class="form-control" id="email" asp-for="Email" placeholder="Nhập email">
-							<span class="validate-style" asp-validation-for="Email"></span>
-						</div>
-						<div class="col-sm-6 mb-2">
-							<label for="tenCongTy" class="form-label">Tên công ty <span class="error">*</span></label>
-							<input type="text" class="form-control" id="tenCongTy" asp-for="ConpanyName" placeholder="Nhập công ty">
-							<span class="validate-style" asp-validation-for="ConpanyName"></span>
-						</div>
-						<div class="col-sm-6 mb-2">
-							<label for="chucDanhCV" class="form-label">Chức danh công việc <span class="error">*</span></label>
-							<input type="text" class="form-control" id="chucDanhCV" asp-for="Position" placeholder="Nhập chức danh công việc">
-							<span class="validate-style" asp-validation-for="Position"></span>
-						</div>
-						<div class="col-sm-12 mb-2">
-							<label for="dichVuQT" class="form-label">Nhóm ngành <span class="error">*</span></label>
-							<select asp-for="ServiceId" asp-items="listServies" class="form-select" id="dichVuQT">
-								<option value="">Chọn nhóm ngành</option>
-							</select>
-							<span asp-validation-for="ServiceId" class="validate-style"></span>
-						</div>
-						<div class="col-sm-12 mb-2">
-							<label for="sanPhamQT" class="form-label">Sản phẩm & dịch vụ quan tâm </label>
-							<select class="form-select" id="sanPhamQT" multiple="multiple">
-								<option value="">Chọn sản phẩm & dịch vụ quan tâm</option>
-							</select>
-						</div>
-						<div class="col-sm-12 mb-2">
-							<label for="yeuCauCT" class="form-label">Mô tả chi tiết <span class="error">*</span></label>
-							<textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập mô tả chi tiết"></textarea>
-							<span class="validate-style" asp-validation-for="Content"></span>
-							<input type="hidden" class="form-control" id="type" asp-for="Type" value="@contactType">
-							<input type="hidden" class="form-control" id="products" asp-for="Products">
-						</div>
-					</div>
-					<div class="mb-2"></div>
-					<button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>Gửi yêu cầu</button>
-					@* <div class="row">
-						<div class="sumaryValidateForm" asp-validation-summary="All"></div>
-					</div> *@
-					@* <input type="hidden" id="g-recaptcha-response" name="capcha" /> *@
-				</form>
-			</div>
-			<div class="col-lg-6 col-sm-12 img">
-				@await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerRegister", language = language, portalId = portalId })
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <h2 class="price-title mb-5">Đăng ký ngay để <span style="color: #0066CC;">nhận tư vấn</span></h2>
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+                @* <form form-edit method="post" asp-action="Contact" asp-controller="ContactHome"> *@
+                <input type="hidden" id="languageId" value="@language" />
+                <form id="formLienHe" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-sm-12 mb-2">
+                            <label for="hoTen" class="form-label">Họ và tên <span class="error">*</span></label>
+                            <input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder="Nhập họ và tên">
+                            <span class="validate-style" asp-validation-for="FullName"></span>
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <label for="soDienThoai" class="form-label">Số điện thoại <span class="error">*</span></label>
+                            <input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder="Nhập số điện thoại">
+                            <span class="validate-style" asp-validation-for="Phone"></span>
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <label for="email" class="form-label">Email <span class="error">*</span></label>
+                            <input type="email" class="form-control" id="email" asp-for="Email" placeholder="Nhập email">
+                            <span class="validate-style" asp-validation-for="Email"></span>
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <label for="tenCongTy" class="form-label">Tên công ty <span class="error">*</span></label>
+                            <input type="text" class="form-control" id="tenCongTy" asp-for="ConpanyName" placeholder="Nhập công ty">
+                            <span class="validate-style" asp-validation-for="ConpanyName"></span>
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <label for="chucDanhCV" class="form-label">Chức danh công việc <span class="error">*</span></label>
+                            <input type="text" class="form-control" id="chucDanhCV" asp-for="Position" placeholder="Nhập chức danh công việc">
+                            <span class="validate-style" asp-validation-for="Position"></span>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <label for="dichVuQT" class="form-label">Nhóm ngành <span class="error">*</span></label>
+                            <select asp-for="ServiceId" asp-items="listServies" class="form-select" id="dichVuQT">
+                                <option value="">Chọn nhóm ngành</option>
+                            </select>
+                            <span asp-validation-for="ServiceId" class="validate-style"></span>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <label for="sanPhamQT" class="form-label">Sản phẩm & dịch vụ quan tâm </label>
+                            <select class="form-select" id="sanPhamQT" multiple="multiple">
+                                <option value="">Chọn sản phẩm & dịch vụ quan tâm</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <label for="yeuCauCT" class="form-label">Mô tả chi tiết <span class="error">*</span></label>
+                            <textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập mô tả chi tiết"></textarea>
+                            <span class="validate-style" asp-validation-for="Content"></span>
+                            <input type="hidden" class="form-control" id="type" asp-for="Type" value="@contactType">
+                            <input type="hidden" class="form-control" id="products" asp-for="Products">
+                        </div>
+                    </div>
+                    <div class="mb-2"></div>
+                    <button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>Gửi yêu cầu</button>
+                    <input type="hidden" class="Capcha" id="g-recaptcha-response" name="capcha" />
+                </form>
+            </div>
+            <div class="col-lg-6 col-sm-12 img">
+                @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerRegister", language = language, portalId = portalId })
+            </div>
+        </div>
+    </div>
 </section>
 @section Scripts
 {
@@ -92,42 +89,51 @@
 
 <script>
 
-	$(function () {
-			$('#sanPhamQT').select2({
-			   placeholder: "Chọn sản phẩm & dịch vụ quan tâm",
-			   closeOnSelect: false,
-			   allowHtml: true,
-			   allowClear: true,
-		tags: true
-	});
-	  const $form = $('#formLienHe');
-	  $form.on('submit', function (e) {
-		e.preventDefault();
-		if (!$form.valid()) {
-		  return;
-		}
-		const token = $form.find('input[name="__RequestVerificationToken"]').val();
-		$.ajax({
-		  url: '@Url.Action("Contact", "ContactHome")',
-		  type: 'POST',
-		  data: $form.serialize(),
-		  headers: { 'RequestVerificationToken': token },
-		  success: function (res) {
-			alertify.success(res.message);
-			$form[0].reset();
-			$("#products").val("");
-		  },
-		  error: function (xhr) {
-			alertify.warning('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
-		  }
-		});
-	  });
-	});
+    $(function () {
+            $('#sanPhamQT').select2({
+               placeholder: "Chọn sản phẩm & dịch vụ quan tâm",
+               closeOnSelect: false,
+               allowHtml: true,
+               allowClear: true,
+        tags: true
+    });
+      const $form = $('#formLienHe');
+      $form.on('submit', function (e) {
+        e.preventDefault();
+        if (!$form.valid()) {
+          return;
+        }
+        const token = $form.find('input[name="__RequestVerificationToken"]').val();
+        $.ajax({
+          url: '@Url.Action("Contact", "ContactHome")',
+          type: 'POST',
+          data: $form.serialize(),
+          headers: { 'RequestVerificationToken': token },
+          success: function (res) {
+            if(res.output == 1)
+            {
+                alertify.success(res.message);
+                $form[0].reset();
+                $("#products").val("");
+                hideRecaptchaPopup();
+                if (recaptchaWidgetId !== null) {
+                    grecaptcha.reset(recaptchaWidgetId);
+                }
+            }
+            else if (res.output == 69) {
+                showRecaptchaPopup("[btnSendLH]");
+                return;
+            }
+          },
+          error: function (xhr) {
+            alertify.warning('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
+          }
+        });
+      });
+    });
 
-	
-
-	$("#sanPhamQT").on("change", function () {
-        let selected = $(this).val(); 
+    $("#sanPhamQT").on("change", function () {
+        let selected = $(this).val();
         if (selected && selected.length > 0) {
             $("#products").val(selected.join("; "));
         } else {
@@ -135,48 +141,47 @@
         }
     });
 
-	$("#dichVuQT").on("change", function () {
-		let serviceId = $(this).val();      
-		let language = $("#languageId").val();;             
-		let portId = @portalId; 
-		let parentId = serviceId;
-		$("#products").val("");
-		if (!serviceId) {
-			$("#sanPhamQT").empty()
-				.append('<option value="">Chọn sản phẩm & dịch vụ quan tâm</option>');
-			return;
-		}
+    $("#dichVuQT").on("change", function () {
+        let serviceId = $(this).val();
+        let language = $("#languageId").val();;
+        let portId = @portalId;
+        let parentId = serviceId;
+        $("#products").val("");
+        if (!serviceId) {
+            $("#sanPhamQT").empty()
+                .append('<option value="">Chọn sản phẩm & dịch vụ quan tâm</option>');
+            return;
+        }
 
-		$.ajax({
-			url: '@Url.Action("FlowSelectList", "ContactHome")',
-			method: "POST",
-			data: {
-				language: language,
-				portId: portId,
-				parrentId: parentId
-			},
-			success: function (res) {
-				if (res.output === 1 || res.output === "1") {
-					$("#sanPhamQT").empty();
-					let lst = res.data;
-					if (lst && lst.length > 0) {
-						lst.forEach(x => {
-							$("#sanPhamQT").append(
-								`<option value="${x.id}">${x.name}</option>`
-							);
-						});
-					} else {
-						$("#sanPhamQT").append('<option value="">Không có sản phẩm</option>');
-					}
-				}
-				else {
-					//alert(res.message || "Không thể tải danh sách!");
-				}
-			},
-			error: function () {
-				//alert("Lỗi kết nối máy chủ.");
-			}
-		});
-	});
-
+        $.ajax({
+            url: '@Url.Action("FlowSelectList", "ContactHome")',
+            method: "POST",
+            data: {
+                language: language,
+                portId: portId,
+                parrentId: parentId
+            },
+            success: function (res) {
+                if (res.output === 1 || res.output === "1") {
+                    $("#sanPhamQT").empty();
+                    let lst = res.data;
+                    if (lst && lst.length > 0) {
+                        lst.forEach(x => {
+                            $("#sanPhamQT").append(
+                                `<option value="${x.id}">${x.name}</option>`
+                            );
+                        });
+                    } else {
+                        $("#sanPhamQT").append('<option value="">Không có sản phẩm</option>');
+                    }
+                }
+                else {
+                    //alert(res.message || "Không thể tải danh sách!");
+                }
+            },
+            error: function () {
+                //alert("Lỗi kết nối máy chủ.");
+            }
+        });
+    });
 </script>

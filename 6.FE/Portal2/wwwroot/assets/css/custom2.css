@@ -74,6 +74,17 @@
     font-size: 14px;
     line-height: 14px;
 }
+#formLienHe2 input {
+    font-size: 14px !important;
+    border-radius: 4px !important
+}
+
+#formLienHe2 .form-label {
+    color: var(--Text-Primary) !important;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+}
 .price-title{
         font-weight: 700 !important;
 }
@@ -251,4 +262,11 @@ a.btn.btn-primary.btn-join {
     background: #fff;
     color: #0066cc;
     border: 1px solid #0066cc;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #ddd !important;
+}
+.select2-container {
+    z-index: 9999;
 }
