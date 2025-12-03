@@ -17,7 +17,6 @@
     var listFlow = await _iContentPageRepository.FlowGetsAsync(language, portalId);
     int flowi = 0;
 }
-
 @* <vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module> *@
 <div style="display:none;">@ViewData["CacheTime"]</div>
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSlider", language = language, portalId = portalId })
