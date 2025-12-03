@@ -24,28 +24,56 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsDeliver", language = language, portalId = portalId }))
 
 <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const links = document.querySelectorAll('.narbarstory a');
-                        links.forEach(link => {
-                            link.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                // Xóa class active
-                                links.forEach(l => l.classList.remove('active'));
-                                link.classList.add('active');
-                                // Lấy ID mục tiêu
-                                const targetId = link.getAttribute('href')?.trim(); 
-                                // Nếu href null hoặc không phải id hợp lệ thì thoát
-                                if (!targetId || !targetId.startsWith("#")) {
-                                    return;
-                                }
-                                const targetEl = document.querySelector(targetId);
-                                if (targetEl) {
-                                    targetEl.scrollIntoView({
-                                        behavior: "smooth",
-                                        block: "start"
-                                    });
-                                }
-                            });
-                        });
-                    });
+	document.addEventListener('DOMContentLoaded', () => {
+		const links = document.querySelectorAll('.narbarstory a');
+		links.forEach(link => {
+			link.addEventListener('click', (e) => {
+				e.preventDefault();
+				// Xóa class active
+				links.forEach(l => l.classList.remove('active'));
+				link.classList.add('active');
+				// Lấy ID mục tiêu
+				const targetId = link.getAttribute('href')?.trim();
+				// Nếu href null hoặc không phải id hợp lệ thì thoát
+				if (!targetId || !targetId.startsWith("#")) {
+					return;
+				}
+				const targetEl = document.querySelector(targetId);
+				if (targetEl) {
+					targetEl.scrollIntoView({
+						behavior: "smooth",
+						block: "start"
+					});
+				}
+			});
+		});
+	});
+	 const tabs = document.querySelectorAll('.tab');
+		const contents = {
+			'Hội đồng quản trị': document.getElementById('hđqt'),
+			'Ban điều hành': document.getElementById('ban-dieu-hanh')
+		};
+		const title = document.getElementById('team-title');
+
+		tabs.forEach(tab => {
+			tab.addEventListener('click', () => {
+				// Xóa trạng thái active cũ
+				tabs.forEach(t => t.classList.remove('active'));
+				Object.values(contents).forEach(content => content.style.display = 'none');
+
+				// Kích hoạt tab hiện tại
+				tab.classList.add('active');
+
+				// Hiển thị nội dung tương ứng với nút được bấm
+				const selected = tab.textContent.trim();
+				if (contents[selected]) {
+					contents[selected].style.display = 'block';
+				}
+				if (selected === 'Hội đồng quản trị') {
+					title.innerHTML = 'Đội ngũ quản lý';
+				} else if (selected === 'Ban điều hành') {
+					title.innerHTML = 'Đội ngũ quản lý <span style="color:#0078d4;">giàu kinh nghiệm</span>';
+				}
+			});
+		});
 </script>
