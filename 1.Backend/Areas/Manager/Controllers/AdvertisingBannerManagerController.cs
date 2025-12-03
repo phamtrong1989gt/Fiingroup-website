@@ -5,11 +5,13 @@ using Microsoft.Extensions.Logging;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
+using PT.Infrastructure.Repositories;
 using PT.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -216,6 +218,58 @@ namespace PT.BE.Areas.Manager.Controllers
                 banner.Content = await UpdateGroupBanner(banner);
                 _bannerRepository.Update(banner);
                 await _bannerRepository.CommitAsync();
+
+                if (model.IsCopy)
+                {
+                    // Xử lý tự động tạo bản ghi giống hệt khác mỗi ngôn ngữ mục đích để đỡ phải tạo thủ công
+                    var listLanguage = Shared.ListData.ListLanguage.Where(x => x.Id != banner.Language).ToList();
+                    foreach (var language in listLanguage)
+                    {
+                        // Kiểm tra mã banner đã tồn tại chưa
+                        var checkCodeCopy = await _bannerRepository.SingleOrDefaultAsync(false, m => m.Code == banner.Code && m.Type == BannerType.Advertising && m.Language == language.Id && m.PortalId == banner.PortalId);
+                        if (checkCodeCopy == null)
+                        {
+                            // Tạo mới đối tượng banner
+                            var newData = new Banner
+                            {
+                                Name = banner.Name,
+                                Delete = false,
+                                Status = banner.Status,
+                                Language = language.Id,
+                                Template = banner.Template,
+                                Type = BannerType.Advertising,
+                                ClassActive = banner.ClassActive,
+                                Code = banner.Code,
+                                PortalId = banner.PortalId
+                            };
+                            // Thêm banner vào database
+                            await _bannerRepository.AddAsync(newData);
+                            await _bannerRepository.CommitAsync();
+                            // Add bản ghi item giống hệt
+                            var listItem = await _bannerItemRepository.SearchAsync(true, 0, 0, x => x.BannerId == banner.Id);
+                            foreach (var item in listItem)
+                            {
+                                _bannerItemRepository.Add(new BannerItem
+                                {
+                                    Name = item.Name,
+                                    Status = item.Status,
+                                    Order = item.Order,
+                                    Href = item.Href,
+                                    BannerId = newData.Id,
+                                    Banner = item.Banner,
+                                    Template = item.Template,
+                                    Target = item.Target,
+                                    Content = item.Content,
+                                    Banner1 = item.Banner1,
+                                    Banner2 = item.Banner2,
+                                    Content1 = item.Content1,
+                                    Content2 = item.Content2
+                                });
+                            }
+                            await _bannerItemRepository.CommitAsync();
+                        }
+                    }
+                }
 
                 await _iPortalRepository.TriggerRemoteCacheRefreshAsync(banner.PortalId, ModuleType.AdvertisingBanner, banner.Code, banner.Language);
 

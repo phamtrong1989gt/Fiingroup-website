@@ -7,6 +7,7 @@
 @inject IViewLocalizer Localizer;
 @using System.Linq.Expressions;
 @using PT.UI.Models
+@* ✅ GIỮ NGUYÊN INJECT REPOSITORY - Output Caching sẽ cache HTML cuối cùng *@
 @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
 @inject IOptions<BaseSettings> _baseSettings;
 
@@ -14,22 +15,30 @@
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = _baseSettings.Value.PortalId;
+    
+    // ✅ Query data trực tiếp trong View (như cũ)
+    // Output Caching sẽ cache toàn bộ HTML response sau khi render
     var listFlow = await _iContentPageRepository.FlowGetsAsync(language, portalId);
     int flowi = 0;
 }
-@* <vc:view-module type="StaticInformation" code="KinhNghiem" language="@language" portalId="1"></vc:view-module> *@
-<div style="display:none;">@ViewData["CacheTime"]</div>
+
+@* ✅ Hiển thị timestamp để kiểm tra cache *@
+<div style="display:none;">ServerTime: @ViewData["ServerTime"]</div>
+<div style="display:none;">CacheInfo: @ViewData["CacheTime"]</div>
+
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSlider", language = language, portalId = portalId })
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId })
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerHeSinhThai", language = language, portalId = portalId })
+
 <style>
     .why-title a
     {
         color: var(--title-color);
     }
 </style>
+
 <section id="HoTro" class="pt-5">
     <div class="container">
         <div class="row">
@@ -64,7 +73,6 @@
                                 @for (int j = 0; j < item.Relateds.Count; j++)
                                 {
                                     string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
-                                    @* string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7"; *@
                                     <div class="mb-3 item d-flex flex-row flex-wrap col-sm-12">
                                         <div class="left"><img src="/Data/Banner/iconht.svg" alt="@item.Relateds[j].Input2" /></div>
                                         <div class="right"><a href="@pathItem"><span>@item.Relateds[j].Input2</span></a></div>
@@ -98,7 +106,6 @@
                                 @for (int j = 0; j < item.Relateds.Count; j++)
                                 {
                                     string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
-                                    @* string cssCol = (j % 2 == 0) ? "col-sm-5" : "col-sm-7"; *@
                                     <div class="mb-3 item d-flex flex-row flex-wrap col-sm-12">
                                         <div class="left"><img src="/Data/Banner/iconht.svg" alt="@item.Relateds[j].Input2" /></div>
                                         <div class="right"><a href="@pathItem"><span>@item.Relateds[j].Input2</span></a></div>
@@ -125,7 +132,6 @@
         </div>
     </div>
 </section>
-@* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeHeSinhThai", language = language, portalId = portalId })) *@
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderDauAn", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderOurClients", language = language, portalId = portalId })
@@ -201,7 +207,6 @@
             target = target.currentTarget;
         }
 
-        // Lấy container và thumbnail
         const videoContainer = target.closest('.videoitem');
         if (!videoContainer) {
             console.error('Không tìm thấy video container');
@@ -216,7 +221,6 @@
             return;
         }
 
-        // Lấy URL iframe từ data-iframe attribute
         const iframeUrl = thumbnail.getAttribute('data-iframe');
         
         if (!iframeUrl) {
@@ -224,58 +228,46 @@
             return;
         }
 
-        // Ẩn play button với fade effect
         if (playButton) {
             playButton.classList.add('fade-out');
             setTimeout(() => playButton.remove(), 300);
         }
 
-        // Thêm loading spinner
         const loadingDiv = document.createElement('div');
         loadingDiv.className = 'video-loading';
         videoContainer.appendChild(loadingDiv);
 
-        // Fade out thumbnail
         thumbnail.classList.add('fade-out');
 
-        // Tạo iframe element với lazy loading
         const iframe = document.createElement('iframe');
         iframe.title = thumbnail.getAttribute('title') || 'video giới thiệu';
         iframe.frameBorder = '0';
         iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
         iframe.referrerPolicy = 'strict-origin-when-cross-origin';
         iframe.allowFullscreen = true;
-        iframe.loading = 'lazy'; // Lazy loading attribute
+        iframe.loading = 'lazy';
         
-        // Thêm class để iframe responsive
         iframe.className = 'fade-in';
         iframe.style.opacity = '0';
 
-        // Event khi iframe load xong
         iframe.onload = function() {
-            // Xóa loading spinner
             if (loadingDiv.parentNode) {
                 loadingDiv.remove();
             }
             
-            // Xóa thumbnail
             if (thumbnail.parentNode) {
                 thumbnail.remove();
             }
             
-            // Hiển thị iframe
             iframe.style.opacity = '1';
         };
 
-        // Thêm iframe vào container
         videoContainer.appendChild(iframe);
 
-        // Set src sau khi append để trigger lazy load
         setTimeout(() => {
             iframe.src = iframeUrl;
         }, 100);
 
-        // Fallback: Nếu iframe không load sau 5s, vẫn hiển thị
         setTimeout(() => {
             if (loadingDiv.parentNode) {
                 loadingDiv.remove();
@@ -284,7 +276,6 @@
         }, 5000);
     }
 
-    // Preconnect to YouTube để tăng tốc load video
     (function() {
         const preconnect = document.createElement('link');
         preconnect.rel = 'preconnect';

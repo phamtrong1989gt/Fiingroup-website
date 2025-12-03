@@ -91,7 +91,8 @@ namespace PT.Base.Services
                 var cacheOptions = new MemoryCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = cacheExpiration,
-                    Priority = CacheItemPriority.High
+                    Priority = CacheItemPriority.High,
+                    Size = 10
                 };
 
                 _memoryCache.Set(TOKEN_CACHE_KEY, tokenResponse.AccessToken, cacheOptions);

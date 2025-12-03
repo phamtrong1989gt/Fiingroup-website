@@ -311,6 +311,128 @@ namespace PT.BE.Areas.Manager.Controllers
                     _iMenuRepository.Update(dl);
                     await _iMenuRepository.CommitAsync();
 
+                    if (use.IsCopy)
+                    {
+                        // Xử lý tự động tạo bản ghi giống hệt khác mỗi ngôn ngữ mục đích để đỡ phải tạo thủ công
+                        var listLanguage = Shared.ListData.ListLanguage.Where(x => x.Id != dl.Language).ToList();
+                        foreach (var lang in listLanguage)
+                        {
+                            // Kiểm tra xem menu đã tồn tại cho ngôn ngữ này chưa
+                            var existsCopy = await _iMenuRepository.SingleOrDefaultAsync(
+                                false, m => m.Code == dl.Code && m.Language == lang.Id && m.PortalId == dl.PortalId);
+
+                            if (existsCopy != null)
+                            {
+                                // Nếu tồn tại, không tạo lại
+                                continue;
+                            }
+
+                            // Tạo bản sao Menu cho ngôn ngữ mới
+                            var newMenu = new Menu
+                            {
+                                Name = dl.Name,
+                                Delete = dl.Delete,
+                                Language = lang.Id,
+                                PortalId = dl.PortalId,
+                                Code = dl.Code,
+                                Template = dl.Template,
+                                Template1 = dl.Template1,
+                                Template2 = dl.Template2,
+                                Template3 = dl.Template3,
+                                Content = dl.Content,
+                                Status = dl.Status,
+                                HasChildrentClass1 = dl.HasChildrentClass1,
+                                HasChildrentClass2 = dl.HasChildrentClass2,
+                                HasChildrentClass3 = dl.HasChildrentClass3
+                            };
+                            await _iMenuRepository.AddAsync(newMenu);
+                            await _iMenuRepository.CommitAsync(); // Commit để có Id cho newMenu
+
+                            // Xử lý thêm menu items với mapping ParentId
+                            var menuItems = await _iMenuItemRepository.SearchAsync(true, 0, 0, x => x.MenuId == dl.Id);
+
+                            // Dictionary để map Id cũ sang Id mới
+                            var idMapping = new Dictionary<int, int>();
+
+                            // Bước 1: Tạo tất cả các items có ParentId = 0 (root level) trước
+                            var rootItems = menuItems.Where(x => x.ParentId == 0).OrderBy(x => x.Order).ToList();
+                            foreach (var item in rootItems)
+                            {
+                                var newItem = new MenuItem
+                                {
+                                    MenuId = newMenu.Id,
+                                    ParentId = 0,
+                                    Name = item.Name,
+                                    Href = item.Href,
+                                    Icon = item.Icon,
+                                    Target = item.Target,
+                                    Class = item.Class,
+                                    Order = item.Order,
+                                    IsLinkLocal = item.IsLinkLocal,
+                                    Status = item.Status,
+                                    LinkId = item.LinkId,
+                                    Language = lang.Id
+                                };
+                                await _iMenuItemRepository.AddAsync(newItem);
+                                await _iMenuItemRepository.CommitAsync(); // Commit để có Id cho newItem
+
+                                // Lưu mapping từ Id cũ sang Id mới
+                                idMapping[item.Id] = newItem.Id;
+                            }
+
+                            // Bước 2: Tạo các items con (children) - lặp cho đến khi tạo hết tất cả
+                            var remainingItems = menuItems.Where(x => x.ParentId != 0).ToList();
+                            while (remainingItems.Any())
+                            {
+                                var processedIds = new List<int>();
+
+                                foreach (var item in remainingItems)
+                                {
+                                    // Chỉ tạo item nếu parent của nó đã được tạo (có trong idMapping)
+                                    if (idMapping.ContainsKey(item.ParentId))
+                                    {
+                                        var newItem = new MenuItem
+                                        {
+                                            MenuId = newMenu.Id,
+                                            ParentId = idMapping[item.ParentId], // Map sang ParentId mới
+                                            Name = item.Name,
+                                            Href = item.Href,
+                                            Icon = item.Icon,
+                                            Target = item.Target,
+                                            Class = item.Class,
+                                            Order = item.Order,
+                                            IsLinkLocal = item.IsLinkLocal,
+                                            Status = item.Status,
+                                            LinkId = item.LinkId,
+                                            Language = lang.Id
+                                        };
+                                        await _iMenuItemRepository.AddAsync(newItem);
+                                        await _iMenuItemRepository.CommitAsync(); // Commit để có Id cho newItem
+
+                                        // Lưu mapping từ Id cũ sang Id mới
+                                        idMapping[item.Id] = newItem.Id;
+                                        processedIds.Add(item.Id);
+                                    }
+                                }
+
+                                // Loại bỏ các items đã được xử lý
+                                remainingItems = remainingItems.Where(x => !processedIds.Contains(x.Id)).ToList();
+
+                                // Nếu không còn item nào được xử lý trong vòng lặp này, thoát để tránh vòng lặp vô hạn
+                                if (!processedIds.Any())
+                                {
+                                    _logger.LogWarning($"Có {remainingItems.Count} menu items không thể tạo do thiếu parent mapping cho menu {newMenu.Id}");
+                                    break;
+                                }
+                            }
+
+                            // Rebuild content cho menu mới
+                            newMenu.Content = await UpdateGroupMenu(newMenu);
+                            _iMenuRepository.Update(newMenu);
+                            await _iMenuRepository.CommitAsync();
+                        }
+                    }
+
                     // Xóa cache module liên quan để frontend lấy nội dung mới
                     await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dl.PortalId, ModuleType.Menu, dl.Code, dl.Language);
                     // Ghi log hành động cập nhật

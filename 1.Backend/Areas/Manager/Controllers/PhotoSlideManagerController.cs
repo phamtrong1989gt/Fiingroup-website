@@ -324,6 +324,59 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Content = content;
                     _iBannerRepository.Update(dl);
                     await _iBannerRepository.CommitAsync();
+
+                    if(use.IsCopy)
+                    {
+                        // Xử lý tự động tạo bản ghi giống hệt khác mỗi ngôn ngữ mục đích để đỡ phải tạo thủ công
+                        var listLanguage = Shared.ListData.ListLanguage.Where(x => x.Id != dl.Language).ToList();
+                        foreach (var language in listLanguage)
+                        {
+                            // Kiểm tra mã banner đã tồn tại chưa
+                            var checkCodeCopy = await _iBannerRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && m.Type == BannerType.Slide && m.Language == language.Id && m.PortalId == use.PortalId);
+                            if (checkCodeCopy == null)
+                            {
+                                // Tạo mới đối tượng banner
+                                var newData = new Banner
+                                {
+                                    Name = use.Name,
+                                    Delete = false,
+                                    Status = use.Status,
+                                    Language = language.Id,
+                                    Template = use.Template,
+                                    Type = BannerType.Slide,
+                                    ClassActive = use.ClassActive,
+                                    Code = use.Code,
+                                    PortalId = use.PortalId
+                                };
+                                // Thêm banner vào database
+                                await _iBannerRepository.AddAsync(newData);
+                                await _iBannerRepository.CommitAsync();
+                                // Add bản ghi item giống hệt
+                                var listItem = await _iBannerItemRepository.SearchAsync(true, 0, 0, x => x.BannerId == dl.Id);
+                                foreach (var item in listItem)
+                                {
+                                    _iBannerItemRepository.Add(new BannerItem
+                                    {
+                                        Name = item.Name,
+                                        Status = item.Status,
+                                        Order = item.Order,
+                                        Href = item.Href,
+                                        BannerId = newData.Id,
+                                        Banner = item.Banner,
+                                        Template = item.Template,
+                                        Target = item.Target,
+                                        Content = item.Content,
+                                        Banner1 = item.Banner1,
+                                        Banner2 = item.Banner2,
+                                        Content1 = item.Content1,
+                                        Content2 = item.Content2
+                                    });
+                                }
+                                await _iBannerRepository.CommitAsync();
+                            }
+                        }
+                    }
+
                     await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dl.PortalId, ModuleType.PhotoSlide, dl.Code, dl.Language);
                     // Ghi log thao tác cập nhật
                     await AddLog(new LogModel

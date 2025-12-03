@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using PT.Base;
@@ -61,7 +62,11 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            ViewData["CacheTime"] = $"[{DateTime.Now:HH:mm:ss}] HomeController.Index được gọi!";
+            
+            // ✅ Timestamp để kiểm tra cache
+            ViewData["ServerTime"] = DateTime.Now.ToString("HH:mm:ss.fff");
+            ViewData["CacheTime"] = $"[{DateTime.Now:HH:mm:ss}] Page rendered";
+            
             return View();
         }
 
@@ -131,12 +136,17 @@ namespace PT.UI.Controllers
             return RedirectToAction("Page404");
         }
 
+        // ✅ TRANG GIỚI THIỆU - Cache 1 giờ (static content)
+        [OutputCache(PolicyName = "StaticPage")]
         public IActionResult About(string linkData)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();
         }
 
+        // ✅ TRANG TÌM KIẾM - Cache 30 giây (dynamic content)
+        // Vary theo keyword (k) và page number
+        [OutputCache(PolicyName = "SearchPage")]
         public async Task<IActionResult> Search(string language, string k, int? page, string linkData)
         {
             var objectLink = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
@@ -200,6 +210,7 @@ namespace PT.UI.Controllers
             }
         }
 
+        // ✅ POST REQUEST - Tự động BỎ QUA cache (không cần config gì)
         [HttpPost]
         [Route("admin/AdminView")]
         [Authorize]
@@ -213,14 +224,18 @@ namespace PT.UI.Controllers
             Response.Cookies.Append("AdminView", status.ToString(), option);
         }
 
+        // ✅ ROBOTS.TXT - Cache 1 giờ (ít thay đổi)
         [Route("robots.txt")]
         [Route("{language}/robots.txt")]
+        [OutputCache(PolicyName = "StaticPage")]
         public async Task<FileResult> Robots(string language = "vi")
         {
             return await GetFileRobots(language);
         }
 
+        // ✅ SITEMAP.XML - Cache 1 giờ (ít thay đổi)
         [Route("sitemap.xml")]
+        [OutputCache(PolicyName = "StaticPage")]
         public Task<FileStreamResult> SitemapAll(string language = "vi")
         {
             return GetFileSitemap(language);
@@ -370,14 +385,18 @@ namespace PT.UI.Controllers
             }
         }
 
+        // ✅ POST REQUEST - Tự động BỎ QUA cache
         [HttpPost]
         public void ChangePriceType(string type = "VND")
         {
             CookieExtensions.Set("CurrentPrice", type);
         }
 
+        // ✅ BANNER HOMEPAGE - Có thể cache nếu muốn (tuỳ bạn)
+        // Nếu banner thay đổi thường xuyên thì comment [OutputCache] đi
         [HttpGet]
         [Route("data/BannerHomePage")]
+        [OutputCache(PolicyName = "HomePage")]
         public IActionResult BannerHomePage(string language)
         {
             return View("BannerHomePage", language);

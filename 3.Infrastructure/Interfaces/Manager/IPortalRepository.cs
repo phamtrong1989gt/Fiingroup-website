@@ -121,6 +121,7 @@ namespace PT.Infrastructure.Interfaces
                 using var http = new HttpClient();
                 http.Timeout = TimeSpan.FromSeconds(10);
                 var response = await http.PostAsync(url, null);
+                var str = await response.Content.ReadAsStringAsync(); // Optionally read response content for logging
                 return response.IsSuccessStatusCode;
             }
             catch

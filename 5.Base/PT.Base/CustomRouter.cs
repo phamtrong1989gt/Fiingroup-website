@@ -61,48 +61,179 @@ namespace PT.Base
 
     public class UrlRequestCultureProvider : RequestCultureProvider
     {
-        private static  string _defaultCulture = "vi";
+        private static string _defaultCulture = "vi";
+        
+        // Cache language mappings to avoid repeated LINQ queries (thread-safe, read-only after init)
+        private static readonly Lazy<Dictionary<string, string>> _cultureIdToId2Map = new(() =>
+        {
+            return ListData.ListLanguage?.ToDictionary(
+                x => x.Id.ToLowerInvariant(),
+                x => x.Id2,
+                StringComparer.OrdinalIgnoreCase) ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        });
+
+        private static readonly Lazy<Dictionary<string, string>> _cultureId2ToIdMap = new(() =>
+        {
+            return ListData.ListLanguage?.ToDictionary(
+                x => x.Id2,
+                x => x.Id.ToLowerInvariant(),
+                StringComparer.OrdinalIgnoreCase) ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        });
+
+        private static readonly Lazy<HashSet<string>> _validLanguages = new(() =>
+        {
+            return ListData.ListLanguage?.Select(x => x.Id.ToLowerInvariant()).ToHashSet(StringComparer.OrdinalIgnoreCase)
+                ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "vi", "en" };
+        });
+
         public UrlRequestCultureProvider(string defaultCulture = null)
         {
-            _defaultCulture = defaultCulture;
+            _defaultCulture = defaultCulture ?? "vi";
         }
 
-       
         public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
             if (httpContext == null)
             {
                 throw new ArgumentNullException(nameof(httpContext));
             }
-            var path = httpContext.Request.Path.ToString().ToLower();
-            if (path.StartsWith("/admin"))
+
+            // Get path once (avoid multiple accesses)
+            var pathValue = httpContext.Request.Path.Value;
+            if (string.IsNullOrEmpty(pathValue))
             {
-                return Task.FromResult(new ProviderCultureResult("vi"));
-            }   
-            else if(path == "/" || path == "")
+                return Task.FromResult((ProviderCultureResult)null);
+            }
+
+            // Fast path: check static files using Span (zero-allocation)
+            // This handles cases like /en.svg, /vi.png, etc. (skip culture processing)
+            var pathSpan = pathValue.AsSpan();
+            if (pathSpan.Length > 4) // Minimum ".xxx"
             {
-                return Task.FromResult(new ProviderCultureResult(_defaultCulture));
-            }    
-            else
-            {
-                var pathSegments = httpContext.Request.Path.Value.Split('/');
-                if (pathSegments.Length <= 1)
+                var lastDotIndex = pathSpan.LastIndexOf('.');
+                if (lastDotIndex > 0 && IsStaticExtension(pathSpan.Slice(lastDotIndex)))
                 {
-                    return Task.FromResult(new ProviderCultureResult(_defaultCulture));
+                    return Task.FromResult((ProviderCultureResult)null);
                 }
-                else
+            }
+
+            // Normalize path once
+            var path = pathValue.TrimEnd('/').ToLowerInvariant();
+
+            // Quick check for special paths (e.g., /data/, /css/, /api/)
+            if (IsSpecialPathPrefix(path))
+            {
+                return Task.FromResult((ProviderCultureResult)null);
+            }
+
+            // SPECIAL CASE: Root path "/" always uses default culture (homepage rule)
+            if (path.Length == 0 || path == "/")
+            {
+                var currentThreadCulture = Thread.CurrentThread.CurrentCulture.Name;
+                var defaultCultureId2 = _cultureIdToId2Map.Value.GetValueOrDefault(_defaultCulture);
+                
+                // Skip if already in default culture
+                if (string.Equals(currentThreadCulture, defaultCultureId2, StringComparison.OrdinalIgnoreCase))
                 {
-                    string checkSegment = pathSegments[1].ToLower();
-                    if (string.IsNullOrEmpty(checkSegment))
-                    {
-                        return Task.FromResult(new ProviderCultureResult(_defaultCulture));
-                    }
-                    else
-                    {
-                        return Task.FromResult(new ProviderCultureResult(_defaultCulture));
-                    }
-                }    
-            }    
+                    return Task.FromResult((ProviderCultureResult)null);
+                }
+                
+                // Force default culture for homepage
+                return Task.FromResult(new ProviderCultureResult(_defaultCulture));
+            }
+
+            // Extract URL language if present
+            // Valid patterns: /vi/, /vi/news.html, /en/about.html
+            // Invalid patterns: /news.html (no language), /en.svg (static file - already handled above)
+            string urlLanguage = null;
+            if (path.Length > 1) // Has content after /
+            {
+                // Extract first segment efficiently
+                var firstSlashIndex = path.IndexOf('/', 1);
+                var firstSegment = firstSlashIndex > 1 
+                    ? path.Substring(1, firstSlashIndex - 1) 
+                    : path.Substring(1);
+
+                // IMPORTANT: Only consider it a language if it's in our valid list
+                // This prevents false positives like /about, /contact being treated as languages
+                if (_validLanguages.Value.Contains(firstSegment))
+                {
+                    urlLanguage = firstSegment;
+                }
+            }
+
+            // Get current thread culture
+            var currentCulture = Thread.CurrentThread.CurrentCulture.Name;
+            var currentLanguage = _cultureId2ToIdMap.Value.TryGetValue(currentCulture, out var langId) 
+                ? langId 
+                : _defaultCulture;
+
+            // Determine target language:
+            // - If URL has explicit language (/vi/, /en/) → use it (URL wins)
+            // - Otherwise → preserve current culture (user preference)
+            var targetLanguage = urlLanguage ?? currentLanguage;
+
+            // OPTIMIZATION: Skip if target matches current culture
+            // This handles cases where:
+            // - User on /vi/page-a.html navigates to /vi/page-b.html (already in vi)
+            // - User on /news.html (no explicit language) stays in same culture
+            var targetCultureId2 = _cultureIdToId2Map.Value.GetValueOrDefault(targetLanguage);
+            if (string.Equals(currentCulture, targetCultureId2, StringComparison.OrdinalIgnoreCase))
+            {
+                return Task.FromResult((ProviderCultureResult)null);
+            }
+
+            // Need to change culture
+            return Task.FromResult(new ProviderCultureResult(targetLanguage));
+        }
+
+        // Optimized static extension check using Span (zero allocation)
+        private static bool IsStaticExtension(ReadOnlySpan<char> extension)
+        {
+            // Most common extensions first for early exit
+            return extension.Equals(".css", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".js", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".svg", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".ico", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".woff", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".woff2", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".ttf", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".eot", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".map", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".json", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".pdf", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".txt", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".mp4", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".mp3", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".webp", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".zip", StringComparison.OrdinalIgnoreCase);
+        }
+
+        // Optimized prefix check (most common paths first)
+        private static bool IsSpecialPathPrefix(string path)
+        {
+            // Most common paths first for early exit
+            return path.StartsWith("/data/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/css/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/js/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/images/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/lib/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/fonts/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/uploads/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/_framework/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/_vs/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/api/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/swagger/", StringComparison.OrdinalIgnoreCase) ||
+                   path.StartsWith("/cache/", StringComparison.OrdinalIgnoreCase) ||
+                   path == "/robots.txt" ||
+                   path == "/sitemap.xml" ||
+                   path == "/favicon.ico";
         }
     }
 
@@ -190,14 +321,21 @@ namespace PT.Base
                 // Dùng cache để lưu Link object Link theo key là slug và language, nếu null thì query từ database
                 var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
                 var cacheKey = $"Link_{baseSettings.Value.PortalId}_{slug}_{language}";
-                //if (!cache.TryGetValue(cacheKey, out Link link))
-                //{
-                //    link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
-                //}
-                var link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
+                if (!cache.TryGetValue(cacheKey, out Link link))
+                {
+                    link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
+                }
+                //var link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
                 if (link != null)
                 {
-                    cache.Set(cacheKey, link, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(30)));
+                    // ✅ SỬA LỖI: Thêm Size property khi set cache (vì MemoryCache có SizeLimit)
+                    // Mỗi Link object ước tính ~1KB, set Size = 1 unit
+                    var cacheOptions = new MemoryCacheEntryOptions()
+                        .SetSlidingExpiration(TimeSpan.FromSeconds(30))
+                        .SetSize(1); // 1 unit = 1KB (theo quy ước trong Startup.cs)
+                    
+                    cache.Set(cacheKey, link, cacheOptions);
+                    
                     if (link.Title == null || link.Title == "")
                     {
                         link.Title = link.Name;
