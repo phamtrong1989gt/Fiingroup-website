@@ -38,205 +38,7 @@
 }
 
 <style>
-    #StockEconomy {
-		background: url('@(Model.Input12 ?? "/Data/Banner/bg-giaiphap.jpg")') no-repeat top;
-        background-size: cover;
-    }
-
-	.hero-content {
-		color: #fff;
-		max-width: 89%;
-		z-index: 2;
-		padding-bottom: 30px;
-	}
-
-	.hero-subtitle {
-		display: inline-block;
-		font-size: 40px;
-		font-weight: 500;
-		color: #fff;
-		padding-top: 60px;
-	}
-
-	.hero-title {
-		font-size: 54px;
-		font-weight: 700;
-		line-height: 1.4;
-		margin-bottom: 15px;
-	}
-
-	.hero-text {
-		font-size: 18px;
-		line-height: 1.7;
-		color: #d7e9ff;
-		text-align: justify;
-		position: relative;
-		padding-left: 25px;
-	}
-
-		.hero-text::before {
-			content: "";
-			position: absolute;
-			left: 0;
-			top: 0;
-			width: 5px;
-			height: 100%;
-			background: linear-gradient(to bottom, #5086c0, #E2F2FB7A, #badcf1);
-			border-radius: 2px;
-		}
-
-	.customer-box {
-		position: relative;
-		border-radius: 15px;
-		border: 1px solid transparent;
-		background-image: linear-gradient(#f5f9ff, #fff), linear-gradient(to right, #e6e6e6 0%, #034ea2 100%);
-		background-origin: border-box;
-		background-clip: padding-box, border-box;
-		box-shadow: 0 6px 15px rgba(3, 78, 162, 0.08);
-		text-align: center;
-		padding: 50px 30px 30px 30px;
-	}
-
-	/* --- Decor Images --- */
-	.decor {
-		position: absolute;
-		pointer-events: none;
-		z-index: 5;
-	}
-
-	.decor-left {
-		left: -45px;
-		top: 55%;
-		width: 75px;
-	}
-
-	.decor-topright {
-		right: 12%;
-		top: -35px;
-		width: 90px;
-	}
-
-	.decor-bottomright {
-		right: -2%;
-		bottom: 25px;
-		width: 60px;
-	}
-
-	/* --- Grid --- */
-	.customer-grid {
-		display: flex;
-		justify-content: space-around;
-		flex-wrap: wrap;
-	}
-
-	.customer-item {
-		text-align: center;
-		color: #1d2939;
-		font-size: 16px;
-		font-weight: 500;
-	}
-
-	.customer-icon {
-		width: 60px;
-		margin-bottom: 15px;
-		transition: transform 0.3s ease;
-	}
-
-	.customer-item:hover .customer-icon {
-		transform: scale(1.1);
-	}
-
-	.customer-name {
-		font-size: 18px;
-		color: #093461;
-		font: 22px;
-		font-weight: bold;
-	}
-
-	.solution-item {
-		margin-bottom: 50px;
-		margin-right: 30px;
-	}
-
-		.solution-item h4 {
-			font-size: 28px;
-			font-weight: 700;
-			color: #093461;
-			margin-bottom: 6px;
-		}
-
-		.solution-item h4:hover {
-			color: #034EA2;
-		}
-
-		.solution-item p {
-			font-size: 13px;
-			color: #093461;
-			margin-bottom: 6px;
-		}
-
-	.solution-link {
-		font-size: 14px;
-		color: #034EA2;
-		text-decoration: none;
-		font-weight: 500;
-		transition: 0.3s;
-	}
-
-		.solution-link:hover {
-			text-decoration: underline;
-			padding-left: 4px;
-		}
-
-	.solution-img {
-		border-radius: 12px;
-		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-	}
-
-	.pdt20 {
-		padding-top: 20px;
-	}
-
-	#WhatWe {
-		background: url('/Data/Banner/bg-what.jpg') no-repeat center;
-		background-size: cover;
-		background-position: center center;
-	}
-
-		#WhatWe h2 {
-			color: white;
-		}
-
-		#WhatWe .itemwe {
-			padding-right: 35px;
-		}
-
-		#WhatWe .number {
-			font-weight: 700;
-			font-size: 24px;
-			color: white;
-			margin: 0;
-		}
-
-		#WhatWe .tochuc {
-			font-size: 28px;
-			color: white;
-			margin: 0;
-		}
-
-		#WhatWe .desc {
-			font-weight: 500;
-			font-size: 16px;
-			color: white;
-			text-align: justify;
-		}
-
-		#WhatWe .gach {
-			border-bottom: 1px solid #ffff;
-			padding: 0px;
-			margin: 10px 0;
-			width: 155px;
-		}
+ #StockEconomy{background:url('@(Model.Input12 ?? "/Data/Banner/bg-giaiphap.jpg")') top/cover no-repeat}.hero-content{color:#fff;max-width:89%;z-index:2;padding-bottom:30px}.hero-subtitle{display:inline-block;font-size:40px;font-weight:500;color:#fff;padding-top:60px}.hero-title{font-size:54px;font-weight:700;line-height:1.4;margin-bottom:15px}.hero-text{font-size:18px;line-height:1.7;color:#d7e9ff;text-align:justify;position:relative;padding-left:25px}.hero-text::before{content:"";position:absolute;left:0;top:0;width:5px;height:100%;background:linear-gradient(to bottom,#5086c0,#e2f2FB7A,#badcf1);border-radius:2px}.customer-box{position:relative;border-radius:15px;border:1px solid transparent;background-image:linear-gradient(#f5f9ff,#fff),linear-gradient(to right,#e6e6e6 0,#034ea2 100%);background-origin:border-box;background-clip:padding-box,border-box;box-shadow:0 6px 15px rgba(3,78,162,.08);text-align:center;padding:50px 30px 30px}.decor{position:absolute;pointer-events:none;z-index:5}.decor-left{left:-45px;top:55%;width:75px}.decor-topright{right:12%;top:-35px;width:90px}.decor-bottomright{right:-2%;bottom:25px;width:60px}.customer-grid{display:flex;justify-content:space-around;flex-wrap:wrap}.customer-item{text-align:center;color:#1d2939;font-size:16px;font-weight:500}.customer-icon{width:60px;margin-bottom:15px;transition:transform .3s}.customer-item:hover .customer-icon{transform:scale(1.1)}.customer-name{font-size:18px;color:#093461;font-weight:700}.solution-item{margin-bottom:50px;margin-right:30px}.solution-item h4{font-size:28px;font-weight:700;color:#093461;margin-bottom:6px}.solution-item h4:hover{color:#034ea2}.solution-item p{font-size:13px;color:#093461;margin-bottom:6px}.solution-link{font-size:14px;color:#034ea2;text-decoration:none;font-weight:500;transition:.3s}.solution-link:hover{text-decoration:underline;padding-left:4px}.solution-img{border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.12)}.pdt20{padding-top:20px}#WhatWe{background:url('/Data/Banner/bg-what.jpg') center center/cover no-repeat}#WhatWe h2{color:#fff}#WhatWe .itemwe{padding-right:35px}#WhatWe .number{font-weight:700;font-size:24px;color:#fff;margin:0}#WhatWe .tochuc{font-size:28px;color:#fff;margin:0}#WhatWe .desc{font-weight:500;font-size:16px;color:#fff;text-align:justify}#WhatWe .gach{border-bottom:1px solid #ffff;padding:0;margin:10px 0;width:155px}
 </style>
 <section id="StockEconomy" class="hero-section">
 	<div class="hero-overlay">
@@ -276,7 +78,7 @@
 
 		<div class="row pdt20">
 			<div class="col-lg-7 col-sm-12 mb-4">
-				<div class="bao-item" style="overflow-y:auto;">
+				<div class="bao-item" style="overflow-y:auto;max-height: 600px;">
 					@for (int i = 0; i < listFlowItems.Count; i++)
 					{
 						var item = listFlowItems[i];
@@ -345,87 +147,15 @@
 }
 
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const links = document.querySelectorAll('.navbarfin a');
-		links.forEach(link => {
-			link.addEventListener('click', (e) => {
-				e.preventDefault();
-				// Xóa class active
-				links.forEach(l => l.classList.remove('active'));
-				link.classList.add('active');
-				// Lấy ID mục tiêu
-				const targetId = link.getAttribute('href')?.trim();
-				// Nếu href null hoặc không phải id hợp lệ thì thoát
-				if (!targetId || !targetId.startsWith("#")) {
-					return;
-				}
-				const targetEl = document.querySelector(targetId);
-				if (targetEl) {
-					targetEl.scrollIntoView({
-						behavior: "smooth",
-						block: "start"
-					});
-				}
-			});
-		});
-	});
-
 	// Keep .bao-item height equal to .solution-img height.
 	(function ($) {
-		if (typeof $ === 'undefined') return;
-
-		function setBaoItemHeight() {
-			const $img = $('.solution-img');
-			const $bao = $('.bao-item');
-			if (!$img.length || !$bao.length) return;
-
-			const applyHeight = function () {
-				const imgHeight = $img.outerHeight() || 0;
-				if (imgHeight > 0) {
-					$bao.height(imgHeight);
-				} else {
-					$bao.css('height', '');
-				}
-			};
-
-			// If image already loaded
-			if ($img.prop('complete')) {
-				applyHeight();
-			} else {
-				$img.off('load.copilot').on('load.copilot', applyHeight);
-			}
-
-			// Ensure height recalculation after a short delay (image may change src)
-			setTimeout(applyHeight, 120);
-		}
-
-		let resizeTimer;
-		$(window).on('resize', function () {
-			clearTimeout(resizeTimer);
-			resizeTimer = setTimeout(setBaoItemHeight, 120);
-		});
-
-		// initial sync
-		$(function () {
-			setBaoItemHeight();
-		});
-
 		// when hovering solution items we change the image src — recalc height after image load
 		$('.solution-item').hover(function () {
 			let imgUrl = $(this).data('img');
 			if (imgUrl && imgUrl !== "") {
 				const $img = $('.solution-img');
 				$img.attr('src', imgUrl);
-				// set height after the image actually loads
-				$img.off('load.sync').on('load.sync', function () {
-					setBaoItemHeight();
-				});
 			}
-		});
-
-		// also recalc if the source image element is changed elsewhere
-		$('.solution-img').on('load', function () {
-			setBaoItemHeight();
 		});
 	})(window.jQuery);
 </script>

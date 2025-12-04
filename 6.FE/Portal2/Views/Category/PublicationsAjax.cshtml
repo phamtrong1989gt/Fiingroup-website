@@ -42,10 +42,10 @@
     {
         <div class="col-lg-12 col-sm-12 text-center my-5">
             <img src="/Data/Banner/no-data.jpg" alt="No data" />
-            <p class="no-data-messege my-5">Chưa có tin tức nào được tìm thấy</p>
+            <p class="no-data-messege my-5">Chưa có ấn phẩm, báo cáo nào được tìm thấy</p>
         </div>
     }
-    <div class="pagination-area mt-2">
+    <div class="pagination-area mt-2 mb-3">
         <div aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 @Html.Raw(PT.Shared.Functions.GenPageListAjax2("", pageIndex, Model.Total, 9, $"&key={Context.Request.Query["key"]}" + $"&startDate={Context.Request.Query["startDate"]}" + $"&endDate={Context.Request.Query["endDate"]}", "page-active", null, "getNewsAjax"))

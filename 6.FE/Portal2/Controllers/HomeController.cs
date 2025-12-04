@@ -126,6 +126,10 @@ namespace PT.UI.Controllers
                 {
                     return RedirectPermanent(absoluteUri.AbsoluteUri);
                 }
+                else
+                {
+                    return RedirectPermanent(absoluteUri.AbsoluteUri);
+                }    
             }
             catch
             {

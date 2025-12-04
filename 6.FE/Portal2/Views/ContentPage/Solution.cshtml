@@ -288,7 +288,7 @@
 		<h2 class="price-title mb-4">Giải pháp hỗ trợ <span style="color:#0066CC;">từ FiinGroup</span></h2>
 		<div class="row pdt20">
 			<div class="col-lg-7 col-sm-12 mb-4">
-				<div class="bao-item" style="overflow-y:auto;">
+				<div class="bao-item" style="overflow-y:auto;max-height: 600px;">
 					@for (int i = 0; i < listFlowItems.Count; i++)
 					{
 						var item = listFlowItems[i];
@@ -393,89 +393,15 @@
 	</section>
 }
 
-
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const links = document.querySelectorAll('.navbarfin a');
-		links.forEach(link => {
-			link.addEventListener('click', (e) => {
-				e.preventDefault();
-				// Xóa class active
-				links.forEach(l => l.classList.remove('active'));
-				link.classList.add('active');
-				// Lấy ID mục tiêu
-				const targetId = link.getAttribute('href')?.trim();
-				// Nếu href null hoặc không phải id hợp lệ thì thoát
-				if (!targetId || !targetId.startsWith("#")) {
-					return;
-				}
-				const targetEl = document.querySelector(targetId);
-				if (targetEl) {
-					targetEl.scrollIntoView({
-						behavior: "smooth",
-						block: "start"
-					});
-				}
-			});
-		});
-	});
-
 	// Keep .bao-item height equal to .solution-img height.
 	(function ($) {
-		if (typeof $ === 'undefined') return;
-
-		function setBaoItemHeight() {
-			const $img = $('.solution-img');
-			const $bao = $('.bao-item');
-			if (!$img.length || !$bao.length) return;
-
-			const applyHeight = function () {
-				const imgHeight = $img.outerHeight() || 0;
-				if (imgHeight > 0) {
-					$bao.height(imgHeight);
-				} else {
-					$bao.css('height', '');
-				}
-			};
-
-			// If image already loaded
-			if ($img.prop('complete')) {
-				applyHeight();
-			} else {
-				$img.off('load.copilot').on('load.copilot', applyHeight);
-			}
-
-			// Ensure height recalculation after a short delay (image may change src)
-			setTimeout(applyHeight, 120);
-		}
-
-		let resizeTimer;
-		$(window).on('resize', function () {
-			clearTimeout(resizeTimer);
-			resizeTimer = setTimeout(setBaoItemHeight, 120);
-		});
-
-		// initial sync
-		$(function () {
-			setBaoItemHeight();
-		});
-
-		// when hovering solution items we change the image src — recalc height after image load
 		$('.solution-item').hover(function () {
 			let imgUrl = $(this).data('img');
 			if (imgUrl && imgUrl !== "") {
 				const $img = $('.solution-img');
 				$img.attr('src', imgUrl);
-				// set height after the image actually loads
-				$img.off('load.sync').on('load.sync', function () {
-					setBaoItemHeight();
-				});
 			}
-		});
-
-		// also recalc if the source image element is changed elsewhere
-		$('.solution-img').on('load', function () {
-			setBaoItemHeight();
 		});
 	})(window.jQuery);
 </script>

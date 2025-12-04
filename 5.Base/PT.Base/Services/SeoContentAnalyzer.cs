@@ -573,7 +573,7 @@ namespace PT.Base.Services
 
             bool hasArticleSchema = false;
             bool hasBreadcrumbSchema = false;
-            bool hasOrganizationSchema = false;
+            //bool hasOrganizationSchema = false;
 
             foreach (var script in jsonLdScripts)
             {
@@ -582,8 +582,8 @@ namespace PT.Base.Services
                     hasArticleSchema = true;
                 if (content.Contains("\"@type\":\"breadcrumblist\""))
                     hasBreadcrumbSchema = true;
-                if (content.Contains("\"@type\":\"organization\""))
-                    hasOrganizationSchema = true;
+                //if (content.Contains("\"@type\":\"organization\""))
+                //    hasOrganizationSchema = true;
             }
 
             if (hasArticleSchema)
