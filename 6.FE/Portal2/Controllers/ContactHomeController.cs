@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace PT.UI.Controllers
 {
@@ -25,6 +26,7 @@ namespace PT.UI.Controllers
         private readonly ICountryRepository _iCountryRepository;
         private readonly IUserRepository _iUserRepository;
         private readonly IOptions<AuthorizeSettings> _authorizeSettings;
+        private readonly ILogger<ContactHomeController> _logger;
 
         public ContactHomeController(
             IContactRepository iContactRepository, 
@@ -36,7 +38,8 @@ namespace PT.UI.Controllers
             ICategoryRepository iCategoryRepository,
             ICountryRepository iCountryRepository,
             IUserRepository iUserRepository,
-            IOptions<AuthorizeSettings> authorizeSettings
+            IOptions<AuthorizeSettings> authorizeSettings,
+            ILogger<ContactHomeController> logger
         )
         {
             _iContactRepository = iContactRepository;
@@ -49,6 +52,7 @@ namespace PT.UI.Controllers
             _iCountryRepository = iCountryRepository;
             _iUserRepository = iUserRepository;
             _authorizeSettings = authorizeSettings;
+            _logger = logger;
         }
 
         [HttpPost, ActionName("Contact")]
@@ -87,23 +91,24 @@ namespace PT.UI.Controllers
                 
                     if(!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
                     {
-                        var strB = new StringBuilder();
-                        strB.Append($"Họ và tên: {Functions.SContent(use.FullName)}<br>");
-                        strB.Append($"Email: {use.Email}<br>");
-                        strB.Append($"Phone: {use.Phone}<br>");
-                        strB.Append($"Tên công ty: {use.ConpanyName}<br>");
-                        strB.Append($"Chức vụ công việc: {use.Position}<br>");
-                        strB.Append($"Dịch vụ quan tâm: {use.ServiceId}<br>");
-                        strB.Append($"Nội dung: {Functions.SContent(use.Content)}<br>");
-
+                        //var strB = new StringBuilder();
+                        //strB.Append($"Họ và tên: {Functions.SContent(use.FullName)}<br>");
+                        //strB.Append($"Email: {use.Email}<br>");
+                        //strB.Append($"Phone: {use.Phone}<br>");
+                        //strB.Append($"Tên công ty: {use.ConpanyName}<br>");
+                        //strB.Append($"Chức danh công việc: {use.Position}<br>");
+                        //strB.Append($"Nhóm ngành : {use.ServiceId}<br>");
+                        //strB.Append($"Sản phẩm & dịch vụ quan tâm: {use.Products}<br>");
+                        //strB.Append($"Nội dung: {Functions.SContent(use.Content)}<br>");
                         //await Task.Run(() => SendEmail(_emailSettings.Value, _baseSettings.Value.ToEmail,  $"Có đăng ký mới từ {use.FullName} địa chỉ email là {use.Email}", strB.ToString())).ConfigureAwait(false);
                     }
                     return new ResponseModel() { Output = 1, Message = "Đăng ký thành công", Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
                 return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
             }
-            catch
+            catch(Exception ex)
             {
+                _logger?.LogError(ex, "Error in ContactPost: {Message}", ex.Message);
             }
             return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
         }
@@ -124,8 +129,9 @@ namespace PT.UI.Controllers
                     IsClosePopup = false
                 };
             }
-            catch
+            catch(Exception ex)
             {
+                _logger?.LogError(ex, "Error in FlowSelectList: {Message} | language={language} | portId={portId} | parrentId={parrentId}", ex.Message, language, portId, parrentId);
                 return new ResponseModel<List<ContentPage>>
                 {
                     Output = -1,
@@ -158,7 +164,7 @@ namespace PT.UI.Controllers
                         Status = false,
                         Email = use.Email,
                         Phone = use.Phone,
-                        Type = (Contact.ContactType)use.Type,
+                        Type = Contact.ContactType.Contact,
                         Products = use.Products,
                         CreatedDate = DateTime.Now,
                         PortalId = _baseSettings.Value.PortalId,
@@ -168,10 +174,10 @@ namespace PT.UI.Controllers
 
                     if (!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
                     {
-                        var strB = new StringBuilder();
-                        strB.Append($"Họ và tên: {Functions.SContent(use.FullName)}<br>");
-                        strB.Append($"Email: {use.Email}<br>");
-                        strB.Append($"Phone: {use.Phone}<br>");
+                        //var strB = new StringBuilder();
+                        //strB.Append($"Họ và tên: {Functions.SContent(use.FullName)}<br>");
+                        //strB.Append($"Email: {use.Email}<br>");
+                        //strB.Append($"Phone: {use.Phone}<br>");
                         //strB.Append($"Tên công ty: {use.ConpanyName}<br>");
                         //strB.Append($"Chức vụ công việc: {use.Position}<br>");
                         //strB.Append($"Dịch vụ quan tâm: {use.ServiceId}<br>");
@@ -183,8 +189,9 @@ namespace PT.UI.Controllers
                 }
                 return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
             }
-            catch
+            catch(Exception ex)
             {
+                _logger?.LogError(ex, "Error in ContactSolutionPost: {Message}", ex.Message);
             }
             return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
         }

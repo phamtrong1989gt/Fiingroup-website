@@ -68,7 +68,6 @@
                             <label for="yeuCauCT" class="form-label">Mô tả chi tiết <span class="error">*</span></label>
                             <textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập mô tả chi tiết"></textarea>
                             <span class="validate-style" asp-validation-for="Content"></span>
-                            <input type="hidden" class="form-control" id="type" asp-for="Type" value="@contactType">
                             <input type="hidden" class="form-control" id="products" asp-for="Products">
                         </div>
                     </div>
@@ -144,7 +143,7 @@
     $("#dichVuQT").on("change", function () {
         let serviceId = $(this).val();
         let language = $("#languageId").val();;
-        let portId = @portalId;
+        let portId = '@portalId';
         let parentId = serviceId;
         $("#products").val("");
         if (!serviceId) {

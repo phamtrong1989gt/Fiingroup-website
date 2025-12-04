@@ -76,7 +76,11 @@ namespace PT.Infrastructure.Repositories
                     IsHome = x.data.IsHome,
                     Avatar = x.data.Avatar,
                     CountryId = x.data.CountryId,
-                    PhoneCode = x.data.PhoneCode
+                    PhoneCode = x.data.PhoneCode,
+                    ConpanyName = x.data.ConpanyName,
+                    Position = x.data.Position,
+                    Products = x.data.Products,
+                    PortalId = x.data.PortalId
                 }).AsQueryable();
 
             var list = await query.Skip((page - 1) * limit).Take(limit).AsNoTracking().ToListAsync();

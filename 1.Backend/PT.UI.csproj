@@ -1587,6 +1587,7 @@
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="EPPlus" Version="8.3.1" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.0" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
 		  <PrivateAssets>all</PrivateAssets>
@@ -1611,6 +1612,8 @@
 
 
   <ItemGroup>
+    <Folder Include="Export\Files\" />
+    <Folder Include="Export\Teamplates\" />
     <Folder Include="wwwroot\Data\" />
   </ItemGroup>
 

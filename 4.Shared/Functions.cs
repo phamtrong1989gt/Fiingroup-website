@@ -122,8 +122,8 @@ namespace PT.Shared
 
         public static string ZipStringHTML(string value)
         {
-            var REGEX_TAGS = new Regex(@">\s+<", RegexOptions.Compiled);
-            var REGEX_ALL = new Regex(@"\s+|\t\s+|\n\s+|\r\s+", RegexOptions.Compiled);
+            var REGEX_TAGS = new Regex(@">\\s+<", RegexOptions.Compiled);
+            var REGEX_ALL = new Regex(@"\\s+|\\t\\s+|\\n\\s+|\\r\\s+", RegexOptions.Compiled);
             if (value != null)
             {
                 var html = value.ToString();
@@ -137,43 +137,158 @@ namespace PT.Shared
             }
         }
 
-        public static string SContent(string content)
+        /// <summary>
+        /// Sanitizes user input content to prevent XSS, SQL Injection, and other security threats.
+        /// Removes dangerous HTML tags, scripts, event handlers, and malicious protocols.
+        /// Returns a safe plain text string.
+        /// </summary>
+        /// <param name="content">The user input content to sanitize</param>
+        /// <param name="maxLength">Maximum allowed length (default: 10000 characters)</param>
+        /// <returns>Sanitized plain text content</returns>
+        public static string SContent(string content, int maxLength = 10000)
         {
-            if (!string.IsNullOrEmpty(content))
+            if (string.IsNullOrEmpty(content))
             {
-                string newString = Regex.Replace(content, "<.*?>", String.Empty);
-                newString = newString.Replace("https://", String.Empty).Replace("http://", String.Empty).Replace("//", String.Empty);
-                return newString;
+                return string.Empty;
             }
-            return "";
+
+            try
+            {
+                // 0. Enforce maximum length to prevent DoS attacks
+                if (content.Length > maxLength)
+                {
+                    content = content.Substring(0, maxLength);
+                }
+
+                // 1. Remove null bytes and control characters (except newline, carriage return, tab)
+                content = Regex.Replace(content, @"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]", string.Empty, RegexOptions.Compiled);
+
+                // 2. Remove script/style/iframe/object/embed/form/svg tags and their content
+                content = Regex.Replace(content, @"<(script|style|iframe|object|embed|form|svg|math|applet|base|frame|frameset|noscript|xml)[\s\S]*?</\1\s*>", 
+                    string.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                
+                // Remove self-closing dangerous tags
+                content = Regex.Replace(content, @"<(iframe|embed|object|link|meta|base|svg|script|style|img|video|audio|source|track)[^>]*\/?>", 
+                    string.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+                // 3. Remove ALL event handler attributes (on* attributes)
+                content = Regex.Replace(content, @"\s+on\w+\s*=\s*(?:'[^']*'|""[^""]*""|[^\s>]+)", 
+                    string.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+                // 4. Remove dangerous protocols in attributes and standalone
+                var dangerousProtocols = new[] { "javascript", "vbscript", "data", "file", "about", "jar", "ms-", "mocha", "livescript" };
+                foreach (var protocol in dangerousProtocols)
+                {
+                    content = Regex.Replace(content, $@"{protocol}\s*:", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                }
+
+                // 5. Remove dangerous attribute names (src, href, action, formaction, etc. in remaining tags)
+                content = Regex.Replace(content, @"\s+(src|href|action|formaction|background|lowsrc|ping|poster|xlink:href)\s*=\s*(?:'[^']*'|""[^""]*""|[^\s>]+)", 
+                    string.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+                // 6. Remove CSS expressions and imports
+                content = Regex.Replace(content, @"expression\s*\(", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                content = Regex.Replace(content, @"@import", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+                // 7. Remove HTML comments (can hide malicious code)
+                content = Regex.Replace(content, @"<!--[\s\S]*?-->", string.Empty, RegexOptions.Compiled);
+
+                // 8. Remove CDATA sections
+                content = Regex.Replace(content, @"<!\[CDATA\[[\s\S]*?\]\]>", string.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+                // 9. Remove ALL remaining HTML/XML tags
+                content = Regex.Replace(content, @"<[^>]+>", string.Empty, RegexOptions.Compiled);
+                
+                // 10. Remove potential SQL injection patterns (basic defense in depth)
+                // Note: This is NOT a replacement for parameterized queries!
+                var sqlPatterns = new[]
+                {
+                    @"\b(union|select|insert|update|delete|drop|create|alter|exec|execute|script|declare)\b",
+                    @"--|;|\/\*|\*\/",
+                    @"xp_|sp_|0x[0-9a-f]+",
+                    @"char\s*\(|ascii\s*\(|concat\s*\("
+                };
+                
+                foreach (var pattern in sqlPatterns)
+                {
+                    content = Regex.Replace(content, pattern, string.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                }
+
+                // 11. Decode HTML entities multiple times to catch nested encoding
+                for (int i = 0; i < 3; i++)
+                {
+                    var previousContent = content;
+                    content = System.Net.WebUtility.HtmlDecode(content);
+                    
+                    // If no change after decode, break to avoid infinite loop
+                    if (content == previousContent)
+                        break;
+                }
+
+                // 12. Remove Unicode directional override characters (can hide malicious content)
+                content = Regex.Replace(content, @"[\u202A-\u202E\u2066-\u2069]", string.Empty, RegexOptions.Compiled);
+
+                // 13. Remove zero-width characters
+                content = Regex.Replace(content, @"[\u200B-\u200D\uFEFF]", string.Empty, RegexOptions.Compiled);
+
+                // 14. Normalize and collapse whitespace
+                content = Regex.Replace(content, @"[ \t]+", " ", RegexOptions.Compiled); // Collapse spaces/tabs
+                content = Regex.Replace(content, @"\r?\n\s*\r?\n+", "\n\n", RegexOptions.Compiled); // Collapse multiple newlines
+                
+                // 15. Trim and final validation
+                content = content.Trim();
+
+                // 16. Final sanity check: if content looks suspicious, return empty
+                if (IsSuspiciousContent(content))
+                {
+                    return string.Empty;
+                }
+
+                return content;
+            }
+            catch (Exception)
+            {
+                // On any error return empty to avoid returning potentially unsafe content
+                return string.Empty;
+            }
         }
 
-        public static bool CheckIPValid(string strIP)
+        /// <summary>
+        /// Performs additional checks to detect potentially malicious content patterns
+        /// </summary>
+        private static bool IsSuspiciousContent(string content)
         {
-            //  Split string by ".", check that array length is 3
-            char chrFullStop = '.';
-            string[] arrOctets = strIP.Split(chrFullStop);
-            if (arrOctets.Length != 4)
-            {
+            if (string.IsNullOrEmpty(content))
                 return false;
-            }
-            //  Check each substring checking that the int value is less than 255 and that is char[] length is !> 2
-            int MAXVALUE = 255;
-            int temp; // Parse returns Int32
-            foreach (string strOctet in arrOctets)
-            {
-                if (strOctet.Length > 3)
-                {
-                    return false;
-                }
 
-                temp = int.Parse(strOctet);
-                if (temp > MAXVALUE)
-                {
-                    return false;
-                }
+            // Check for excessive special characters (may indicate obfuscation)
+            int specialCharCount = content.Count(c => !char.IsLetterOrDigit(c) && !char.IsWhiteSpace(c));
+            if (content.Length > 0 && (double)specialCharCount / content.Length > 0.5)
+                return true;
+
+            // Check for patterns that survived sanitization but are still suspicious
+            var suspiciousPatterns = new[]
+            {
+                @"eval\s*\(",
+                @"setTimeout\s*\(",
+                @"setInterval\s*\(",
+                @"Function\s*\(",
+                @"\\x[0-9a-f]{2}",  // Hex encoding
+                @"\\u[0-9a-f]{4}",  // Unicode encoding
+                @"%[0-9a-f]{2}",    // URL encoding
+                @"&#\d+;",          // Numeric HTML entities that survived
+                @"&#x[0-9a-f]+;",   // Hex HTML entities
+                @"\{.*?\$.*?\}",    // Template injection patterns
+                @"\[\[.*?\]\]"      // Template injection patterns
+            };
+
+            foreach (var pattern in suspiciousPatterns)
+            {
+                if (Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase))
+                    return true;
             }
-            return true;
+
+            return false;
         }
 
         public static byte[] StringToByte(string data)
@@ -754,10 +869,10 @@ namespace PT.Shared
         private static readonly string[] vietNamChar = new string[]
         {
  "aAeEoOuUiIdDyY",
- "áàṭảãâấầuậẩẫăắằặẳẵ",
+ "áàṭảãâấầuậẩmẫăắằặẳẵ",
  "ÁẠ̀ẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
  "éèẹẻẽêếềệểễ",
- "ÉÈẸẺẼÊẾỀệỂỄ",
+ "ÉÈẸẺẼÊẾỜệỂỄ",
  "óòọỏõôốồộổỗơớờợởỡ",
  "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỬ",
  "úùụủũưứừựửूस",

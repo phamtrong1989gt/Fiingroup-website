@@ -11,7 +11,6 @@
     var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
     var portalId = _baseSettings.Value.PortalId;
     var listServies = await _iContactRepository.ServiesNewsList(language, portalId);
-    var contactType = (int)Contact.ContactType.Contact;
 }
 
 <div class="modal" tabindex="-1" role="dialog" id="popsolutionmore">
@@ -48,7 +47,6 @@
                                 <select asp-items="listServies" class="form-select" id="dichVuQT2" multiple="multiple" style="width:100%;">
                                     @* <option value="">Chọn nhận tin tức liên quan đến lĩnh vực</option> *@
                                 </select>
-                                <input type="hidden" class="form-control" id="type" asp-for="Type" value="@contactType">
                                 <input type="hidden" class="form-control" id="products2" asp-for="Products">
                             </div>
                         </div>

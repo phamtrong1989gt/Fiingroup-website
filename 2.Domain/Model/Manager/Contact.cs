@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc;
@@ -73,7 +74,13 @@ namespace PT.Domain.Model
         public string ConpanyName { get; set; }
         public string Position { get; set; }
         public string Products { get; set; }
-        public int PortalId { get; set; }
+        public int? PortalId { get; set; }
+
+        [NotMapped]
+        public ContentPage Solution { get; set; }
+
+        [NotMapped]
+        public List<ContentPage> ProductsList { get; set; } = new List<ContentPage>();
     }
 
     public class ContactModel

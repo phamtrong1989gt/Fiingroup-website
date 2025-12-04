@@ -73,6 +73,9 @@
                             <a onclick="getDataGrid(1)" class="btn bg-indigo dropdown-toggle">
                                 <i class="material-icons">search</i><span>Tìm kiếm</span>
                             </a>
+                            <a onclick="exportExcel()" class="btn bg-green dropdown-toggle" title="Xuất Excel">
+                                <i class="material-icons">get_app</i><span>Xuất Excel</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -132,7 +135,7 @@
                     </div>
                     <div class="pl-20 pr-20 divpagination">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-2 m-b-0">
                                 <div class="input-group m-b-0">
                                     <span class="input-group-addon">
                                         Bản ghi/trang
@@ -148,7 +151,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-10 m-b-0">
                                 <nav grid-pagination class="pg-t">
                                 </nav>
                             </div>
@@ -187,6 +190,89 @@
         }
         function reGetDataGrid(e) {
             getDataGrid(_page, false);
+        }
+
+        function exportExcel() {
+            // Show loading
+            $("[grid-loading]").addClass("loading");
+
+            // Get all filter parameters from grid inputs
+            var key = $("[grid-input][name='key']").val();
+            var status = $("[grid-input][name='status']").val();
+            var startTime = $("[grid-input][name='startTime']").val();
+            var endTime = $("[grid-input][name='endTime']").val();
+            var serviceId = $("[grid-input][name='serviceId']").val();
+            var portalId = $("[grid-input][name='portalId']").val();
+            var ordertype = $("[grid-input][name='ordertype']").val();
+            var orderby = $("[grid-input][name='orderby']").val();
+
+            // Create form data
+            var formData = {
+                key: key,
+                status: status,
+                startTime: startTime,
+                endTime: endTime,
+                serviceId: serviceId,
+                portalId: portalId,
+                ordertype: ordertype,
+                orderby: orderby
+            };
+
+            // Send POST request to export
+            $.ajax({
+                url: '@Url.Action("ExportExcel", "ContactManager", new { area = "Manager" })',
+                type: 'POST',
+                data: formData,
+                xhrFields: {
+                    responseType: 'blob' // Important for file download
+                },
+                success: function (data, status, xhr) {
+                    // Hide loading
+                    $("[grid-loading]").removeClass("loading");
+
+                    // Create blob link to download
+                    var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    
+                    // Get filename from header or use default
+                    var filename = "DanhSachLienHe_" + new Date().toISOString().slice(0, 10) + ".xlsx";
+                    var disposition = xhr.getResponseHeader('Content-Disposition');
+                    if (disposition && disposition.indexOf('attachment') !== -1) {
+                        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                        var matches = filenameRegex.exec(disposition);
+                        if (matches != null && matches[1]) {
+                            filename = matches[1].replace(/['"]/g, '');
+                        }
+                    }
+                    
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    // Show success message
+                    swal({
+                        title: "Thành công!",
+                        text: "Xuất file Excel thành công",
+                        type: "success",
+                        confirmButtonText: "OK"
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Hide loading
+                    $("[grid-loading]").removeClass("loading");
+
+                    // Show error message
+                    swal({
+                        title: "Lỗi!",
+                        text: "Có lỗi xảy ra khi xuất file Excel. Vui lòng thử lại.",
+                        type: "error",
+                        confirmButtonText: "OK"
+                    });
+                    console.error("Export error:", error);
+                }
+            });
         }
     </script>
 }
