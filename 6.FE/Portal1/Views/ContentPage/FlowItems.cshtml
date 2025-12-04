@@ -1,0 +1,94 @@
+﻿@using Microsoft.Extensions.Options
+@using PT.Shared;
+@using PT.UI.Models
+
+@model PT.Domain.Model.ContentPage
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@using static PT.Domain.Model.Contact
+@inject IViewLocalizer Localizer
+@inject ICategoryRepository _iCategoryRepository;
+@inject IContentPageReferenceRepository _iContentPageReferenceRepository;
+@inject IOptions<BaseSettings> _baseSettings;
+
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+}
+
+<style>
+	#StockEconomy {
+		background: url('@(Model.Input12 ?? "/Data/Banner/about_banner.png")') no-repeat top;
+		background-size: cover;
+	}
+</style>
+
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SanPhamDongChay", language = language, portalId = portalId })
+
+<section id="StockEconomy" class="hero-section">
+	<div class="hero-overlay">
+		<div class="container">
+			<div class="hero-content">
+				@if (Model.IsShowHeaderContent != false)
+				{
+					<h1 class="hero-title pt-5">
+						@Model.Input2
+					</h1>
+					<span class="hero-subtitle">@Model.Input1</span>
+					<div class="hero-text">
+						@Html.Raw(Model.Input3)
+					</div>
+				}
+				@Html.Raw(Model.Input10)
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="FiinProX">
+	<div class="container">
+		@Html.Raw(Model.Input4)
+		@if (!string.IsNullOrEmpty(Model.Input9))
+		{
+			<img src="@Model.Input9" alt="@Model.Name" class="img-content" style="width:100%;" />
+		}
+	</div>
+</section>
+
+<!-- Find a rating-->
+<section id="FinnRatings">
+	<div class="whylastest mt-2">
+		<div class="container">
+			@Html.Raw(Model.Input5)
+			@if (!string.IsNullOrEmpty(Model.Input8))
+			{
+				<img src="@Model.Input8" alt="@Model.Name" class="img-content" style="width:100%;" />
+			}
+		</div>
+	</div>
+</section>
+
+<!-- Report -->
+<section id="FiinReport">
+	<div class="container">
+		@Html.Raw(Model.Input6)
+		@if (!string.IsNullOrEmpty(Model.Input13))
+		{
+			<img src="@Model.Input13" alt="@Model.Name" class="img-content" style="width:100%;" />
+		}
+	</div>
+</section>
+
+<!-- FiinCard -->
+<section id="FiinCard">
+	<div class="container">
+		@Html.Raw(Model.Input7)
+		@if (!string.IsNullOrEmpty(Model.Input14))
+		{
+			<img src="@Model.Input14" alt="@Model.Name" class="img-content" style="width:100%;" />
+		}
+	</div>
+</section>
+
+<partial name="~/Views/Home/_Register.cshtml" model="@(new ContactHomeModel {  })" />

@@ -1,0 +1,126 @@
+﻿@using Microsoft.Extensions.Options
+@inject PT.Infrastructure.Interfaces.IContactRepository _iContactRepository;
+@inject IOptions<BaseSettings> _baseSettings;
+
+@{
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var listLanguage = PT.Shared.ListData.ListLanguage;
+    @model PT.UI.Models.ContactSolotionModel;
+    @inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
+    @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+    var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
+    var portalId = _baseSettings.Value.PortalId;
+    var listServies = await _iContactRepository.ServiesNewsList(language, portalId);
+    var contactType = (int)Contact.ContactType.Contact;
+}
+
+<div class="modal" tabindex="-1" role="dialog" id="popsolutionmore">
+    <div class="modal-dialog" role="document" style="margin-top:10%;">
+        <div class="modal-content" style="background:#fff;">
+            <button type="button" id="btnClose" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-body">
+                <div class="col-lg-12 col-sm-12">
+                    <input type="hidden" id="languageId" value="@language" />
+                    <form id="formLienHe2" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-sm-6 mb-2">
+                                <label for="hoTen" class="form-label">Họ và tên <span class="error">*</span></label>
+                                <input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder="Nhập họ và tên">
+                                <span class="validate-style" asp-validation-for="FullName"></span>
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                <label for="soDienThoai" class="form-label">Số điện thoại <span class="error">*</span></label>
+                                <input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder="Nhập số điện thoại">
+                                <span class="validate-style" asp-validation-for="Phone"></span>
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label for="email" class="form-label">Email <span class="error">*</span></label>
+                                <input type="email" class="form-control" id="email" asp-for="Email" placeholder="Nhập email">
+                                <span class="validate-style" asp-validation-for="Email"></span>
+                            </div>
+
+                            <div class="col-sm-12 mb-3">
+                                <label for="dichVuQT2" class="form-label">Nhận tin tức liên quan đến lĩnh vực</label>
+                                <input class="Capcha" type="hidden" id="g-recaptcha-response" name="capcha" />
+                                <select asp-items="listServies" class="form-select" id="dichVuQT2" multiple="multiple" style="width:100%;">
+                                    @* <option value="">Chọn nhận tin tức liên quan đến lĩnh vực</option> *@
+                                </select>
+                                <input type="hidden" class="form-control" id="type" asp-for="Type" value="@contactType">
+                                <input type="hidden" class="form-control" id="products2" asp-for="Products">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH2>Nhận tin tức</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+}
+<script>
+    $(function () {
+            $('#dichVuQT2').select2({
+            placeholder: "Chọn nhận tin tức liên quan đến lĩnh vực",
+            closeOnSelect: false,
+            allowHtml: true,
+            allowClear: true,
+            tags: true
+            });
+      const $form = $('#formLienHe2');
+      $form.on('submit', function (e) {
+        e.preventDefault();
+        if (!$form.valid()) {
+          return;
+        }
+        const token = $form.find('input[name="__RequestVerificationToken"]').val();
+        $.ajax({
+          url: '@Url.Action("ContactSolution", "ContactHome")',
+          type: 'POST',
+          data: $form.serialize(),
+          headers: { 'RequestVerificationToken': token },
+          success: function (res) {
+
+            if(res.output == 1)
+            {
+                alertify.success(res.message);
+                $form[0].reset();
+                $('#popsolutionmore').modal('hide');
+                $("#products2").val("");
+                hideRecaptchaPopup();
+                if (recaptchaWidgetId !== null) {
+                    grecaptcha.reset(recaptchaWidgetId);
+                }
+            }
+            else if (res.output == 69) {
+                showRecaptchaPopup("[btnSendLH2]");
+                return;
+            }
+          },
+          error: function (xhr) {
+            alertify.warning('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
+          }
+        });
+      });
+    });
+
+ 
+
+    $("#btnClose").on("click", function () {
+        $('#popsolutionmore').modal('hide');
+    });
+        $(document).on("change", "#dichVuQT2", function () {
+            let selected = $(this).val();
+            let $popup = $(this).closest(".modal"); // lấy đúng popup đang mở
+            if (Array.isArray(selected) && selected.length > 0) {
+                $popup.find("#products2").val(selected.join("; "));
+            }
+            else {
+                $popup.find("#products2").val("");
+            }
+        });
+</script>

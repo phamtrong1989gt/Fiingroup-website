@@ -1,0 +1,42 @@
+﻿@using PT.Base.Services
+@using PT.Domain.Model;
+@addTagHelper *, PT.UI
+@inject Microsoft.Extensions.Options.IOptions<AuthorizeSettings> _authorizeSettings;
+@inject IViewLocalizer Localizer
+@inject ISettingService _settingService;
+@inject Microsoft.Extensions.Options.IOptions<BaseSettings> _baseSettings;
+
+@{
+    string domain = Context.Request.Host.ToString();
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var listLanguage = PT.Shared.ListData.ListLanguage;
+    var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
+    var portalId = _baseSettings.Value.PortalId;
+    var seoSettings = await _settingService.SeoSettingGet(language, portalId);
+    var homeModel = new HomeModel
+    {
+        Domain = domain,
+        SeoSetting = seoSettings ?? new SeoSetting()
+    };
+    var currentType = PT.Base.CookieExtensions.Get("CurrentPrice");
+
+    var linkData = new Link();
+    if (ViewData["linkData"] != null)
+    {
+        linkData = (Link)ViewData["linkData"];
+    }
+}
+
+<partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
+
+@RenderBody()
+
+@RenderSection("Scripts", required: false)
+<partial name="_SettingHome" />
+<div class="modal modal-form fade" id="modalBookingForm" style="">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<partial name="_AdvertisingHomepage" />

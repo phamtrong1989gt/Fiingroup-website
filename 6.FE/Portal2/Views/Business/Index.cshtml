@@ -19,3 +19,33 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessMajor", language = language, portalId = portalId }))
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessShareholderTable", language = language, portalId = portalId }))
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessReport", language = language, portalId = portalId }))
+
+
+<!-- SCRIPT TABS -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const tabs = document.querySelectorAll("#reportTabs .tab-item");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+
+                // remove active
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+
+                // tab name
+                const tabName = tab.getAttribute("data-tab");
+
+                // hide all
+                const sections = document.querySelectorAll(".report-content");
+                sections.forEach(sec => sec.style.display = "none");
+
+                // show current
+                const activeSection = document.getElementById(tabName);
+                if (activeSection) activeSection.style.display = "block";
+            });
+        });
+
+    });
+</script>

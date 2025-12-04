@@ -1,0 +1,11 @@
+﻿@model PT.Domain.Model.ContentPage
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer  Localizer
+@inject ICategoryRepository _iCategoryRepository;
+@inject IContentPageReferenceRepository _iContentPageReferenceRepository;
+@using PT.Shared;
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+}

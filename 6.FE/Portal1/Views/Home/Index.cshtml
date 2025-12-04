@@ -1,0 +1,304 @@
+﻿@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@using PT.Domain.Model;
+@using PT.Infrastructure.Interfaces;
+@using PT.Shared;
+@inject IViewLocalizer Localizer;
+@using System.Linq.Expressions;
+@using PT.UI.Models
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+@inject IOptions<BaseSettings> _baseSettings;
+
+@{
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var portalId = _baseSettings.Value.PortalId;
+    // var listFlow = await _iContentPageRepository.FlowGetsAsync(language, portalId);
+    // int flowi = 0;
+}
+<div style="display:none;">@ViewData["CacheTime"]</div>
+
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRHomeSliderBanner", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRHomeFind", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRHomeFiinRatings", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRHomeWhatWeDo", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRHomeSliderDauAn", language = language, portalId = portalId })
+
+<section id="Thinking" class="py-5">
+    <style>
+        .thinks-grid {
+            display: grid;
+            grid-template-columns: 0.8fr 1.1fr;
+            gap: 30px;
+        }
+
+        .thinks-featured {
+            border-radius: 12px;
+            overflow: hidden;
+            /* box-shadow: 0 4px 12px rgba(0, 76, 152, 0.08); */
+            transition: transform 0.3s ease;
+        }
+
+            .thinks-featured:hover {
+                transform: translateY(-3px);
+            }
+
+            .thinks-featured .thinks-img {
+                width: 100%;
+                /* height: 230px; */
+                object-fit: cover;
+            }
+
+        .thinks-info {
+            padding: 18px 0;
+        }
+
+        .thinks-tags {
+            display: flex;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+            .thinks-tags .tag {
+                background: #eaf4ff;
+                color: #0066cc;
+                padding: 10px;
+                border-radius: 4px;
+                font-weight: 600;
+                font-size: 15px;
+            }
+
+            .thinks-tags .date {
+                color: #777;
+                font-size: 15px;
+            }
+
+        .thinks-title {
+            color: #093461;
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+
+        .thinks-desc {
+            color: #093461;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        /* thinks nhỏ */
+        .thinks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .thinks-item {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+            .thinks-item:not(:first-child) {
+                border-top: 1px solid #ccc;
+                padding: 20px 0;
+            }
+
+            .thinks-item img {
+                width: 280px;
+                height: 140px;
+                border-radius: 6px;
+                object-fit: cover;
+            }
+
+        .thinks-content p {
+            color: #093461;
+            font-size: 18px;
+            margin: 0;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* Nút dưới cùng */
+        .think-now {
+            background-color: #0066cc;
+            color: #ffffff;
+            padding: 8px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            margin: 40px auto 0;
+            transition: all 0.3s ease;
+        }
+
+            .think-now:hover {
+                background-color: #004c9b;
+            }
+
+        .think-now-wrapper {
+            text-align: center;
+        }
+    </style>
+    <div class="container">
+        <h2 class="price-title mb-5">Lastest <span style="color: #0066CC;">Thinking</span></h2>
+        <div class="thinks-grid">
+            <div class="thinks-featured">
+                <img src="/Data/FR/think1.png" alt="Main thinks" class="thinks-img" />
+                <div class="thinks-info">
+                    <div class="thinks-tags">
+                        <span class="tag">Market News</span>
+                        <span class="date">September 17, 2025</span>
+                    </div>
+                    <h3 class="thinks-title">
+                        Nhận định thị trường: Luật hóa Nghị quyết 42 – Từ góc nhìn của Tổ chức xếp hạng tín
+                        nhiệm nội địa
+                    </h3>
+                    <p class="thinks-desc">
+                        Nghị quyết 42/2017/QH14 được ban hành trong bối cảnh nợ xấu tăng mạnh giai đoạn 2012 –
+                        2017, trao quyền cho các Tổ chức tín dụng (TCTD) chủ động xử lý tài sản bảo đảm.
+                    </p>
+                    <a href="#" class="show-more">
+                        Show more <i class="fa fa-long-arrow-right"
+                                     aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="thinks-list">
+                <div class="thinks-item">
+                    <img src="/Data/FR/think2.png" alt="thinks 1" />
+                    <div class="thinks-content">
+                        <div class="thinks-tags">
+                            <span class="tag">Market News</span>
+                            <span class="date">September 17, 2025</span>
+                        </div>
+                        <p>
+                            Chủ tịch FiinGroup và FiinRatings chia sẻ tại Diễn đàn Ngân hàng bán lẻ Việt Nam
+                            2025 về vai trò dữ liệu trong chuyển đổi số ngân hàng
+                        </p>
+                    </div>
+                </div>
+                <div class="thinks-item">
+                    <img src="/Data/FR/think3.png" alt="thinks 2" />
+                    <div class="thinks-content">
+                        <div class="thinks-tags">
+                            <span class="tag">Market News</span>
+                            <span class="date">September 17, 2025</span>
+                        </div>
+                        <p>
+                            Chủ tịch Điều hành FiinRatings và FiinGroup tham gia chia sẻ tại Hội nghị quốc tế về
+                            Tài chính Xanh do Nam Á Bank tổ chức
+                        </p>
+                    </div>
+                </div>
+                <div class="thinks-item">
+                    <img src="/Data/FR/think4.png" alt="thinks 3" />
+                    <div class="thinks-content">
+                        <div class="thinks-tags">
+                            <span class="tag">Market News</span>
+                            <span class="date">September 17, 2025</span>
+                        </div>
+                        <p>
+                            Diễn giả và khách mời tham gia Toạ đàm "Thị trường Vốn Nợ Việt Nam 2025: Nguồn vốn
+                            cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới”
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="think-now-wrapper">
+            <div class="think-now">
+                <span>Sign up to receive reports</span>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="Insights" class="py-5 mb-5">
+    <style>
+        .news-title a {
+            font-size: 30px;
+        }
+
+        .btn-center {
+            width: 100%;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .btn-view-all {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 100px;
+            border: 1.5px solid #0066CC;
+            border-radius: 40px;
+            color: #0066CC;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            background: #fff;
+            transition: .2s ease;
+        }
+
+            .btn-view-all:hover {
+                background: #E8F3FF;
+            }
+
+            .btn-view-all i {
+                font-size: 16px;
+            }
+    </style>
+    <div class="container">
+        <h2 class="price-title mb-5">S&P Global Ratings' Insights</h2>
+        <div class="row news-grid">
+            <div class="col-sm-4">
+                <img src="/Data/FR/news1.jpg" class="img-fluid w-100" />
+                <div class="pt-3 pb-3">
+                    <div class="news-title text-break">
+                        <a target="_blank" href="#">
+                            Vietnam Corporate Bond Market
+                            Report – June 2025
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <img src="/Data/FR/news2.jpg" class="img-fluid w-100" />
+                <div class="pt-3 pb-3">
+                    <div class="news-title text-break">
+                        <a target="_blank" href="#">
+                            Vietnam Corporate Bond Market
+                            Report – June 2025
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <img src="/Data/FR/news3.jpg" class="img-fluid w-100" />
+                <div class="pt-3 pb-3">
+                    <div class="news-title text-break">
+                        <a target="_blank" href="#">
+                            Vietnam Corporate Bond Market
+                            Report – June 2025
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="btn-center">
+            <a href="#" class="btn-view-all">
+                Xem tất cả <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRHomeSliderTestimonials", language = language, portalId = portalId })
+<partial name="_Register" />
