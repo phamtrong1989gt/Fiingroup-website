@@ -38,7 +38,8 @@ namespace PT.UI.Controllers
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ILinkReferenceRepository _iLinkReferenceRepository;
         private readonly ISettingService _iSettingService;
-        public HomeController(ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository, ISettingService iSettingService)
+        private readonly IOptions<BaseSettings> _baseSetting;
+        public HomeController(ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository, ISettingService iSettingService, IOptions<BaseSettings> baseSetting)
         {
             _iLinkRepository = iLinkRepository;
             _baseSettings = baseSettings;
@@ -46,6 +47,32 @@ namespace PT.UI.Controllers
             _iContentPageRepository = iContentPageRepository;
             _iLinkReferenceRepository = iLinkReferenceRepository;
             _iSettingService = iSettingService;
+            _baseSetting = baseSetting;
+        }
+
+
+        [HttpGet]
+        public async Task<object> Search(string key, string language)
+        {
+            key = key?.ToLower();
+            if(key == null || key.Length < 3)
+            {
+                return View(new List<object>());
+            }
+            var datas = await _iLinkRepository.SearchAsync(true, 0, 20, x => 
+            (x.Type == ESlugType.ContentPage || x.Type == ESlugType.Static || x.Type == ESlugType.Category) &&
+            (x.Name.ToLower().Contains(key) || x.Keywords.ToLower().Contains(key) || x.Description.ToLower().Contains(key)) && x.Status && !x.Delete && x.PortalId == _baseSetting.Value.PortalId && (x.Language == language || x.Language == "All"), x=>x.OrderBy(m=>m.Name));
+            var newList = datas.Select(x => new
+            {
+                x.Id,
+                x.Name,
+                x.Slug,
+                x.Description,
+                x.Language,
+                x.Keywords,
+                Href=  $"{( _baseSetting.Value.MultipleLanguage ? "/" + x.Language : "")}/{(string.IsNullOrEmpty(x.Slug) ? "" : x.Slug + ".html")}"
+            }).ToList();
+            return newList;
         }
 
         public IActionResult Error(int? statusCode = null)

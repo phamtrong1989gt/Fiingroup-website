@@ -12,17 +12,19 @@ namespace PT.UI.Controllers
         private readonly IContentPageTagRepository _iContentPageTagRepository;
         private readonly ICategoryRepository _iCategoryRepository;
         private readonly INewsAPIService _iNewsAPIService;
-
+        private readonly ILinkRepository _iLinkRepository;
         public ContentPageController(IContentPageRepository iContentPageRepository,
             IContentPageTagRepository iContentPageTagRepository,
             ICategoryRepository iCategoryRepository,
-            INewsAPIService iNewsAPIService
+            INewsAPIService iNewsAPIService,
+            ILinkRepository iLinkRepository
             )
         {
             _iContentPageRepository = iContentPageRepository;
             _iContentPageTagRepository = iContentPageTagRepository;
             _iCategoryRepository = iCategoryRepository;
             _iNewsAPIService = iNewsAPIService;
+            _iLinkRepository = iLinkRepository;
         }
 
         [HttpGet]

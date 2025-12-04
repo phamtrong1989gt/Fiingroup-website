@@ -226,48 +226,89 @@
 	<script src="/assets/lib/fancybox/dist/jquery.fancybox.min.js"></script>
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
+
+
 	<script>
 		$(document).ready(
 			function () {
-				let owl = $('#owlour');
-				owl.owlCarousel({
-					margin: 0,
-					autoplay: true,
-					autoplayTimeout: 5000,
-					nav: false,
-					loop: true,
-					dots: false,
-					dotsData: true,
-					pagination: false,
-					margin: 0,
-					responsive: {
-						0: { items: 1 },
-						600: { items: 2 },
-						1000: { items: 3 }
-					}
-				})
-				let owl2 = $('#manualsct');
-				owl2.owlCarousel({
-					margin: 0,
-					autoplay: true,
-					autoplayTimeout: 5000,
-					nav: false,
-					loop: true,
-					dots: false,
-					dotsData: true,
-					pagination: false,
-					responsive: {
-						0: { items: 1 },
-						600: { items: 3 },
-						1000: { items: 7 }
-					}
-				});
-				$('.counter').counterUp({
-					delay: 10,
-					time: 1200
-				});
-			}
-		);
+
+				$("#keySearch").on('change keyup paste', function () {
+				$("#search-content").show();
+				var key = $(this).val();
+					if (key.length >= 3 || key.length == 0) {
+							var url = '@Url.Action("Search", "Home")';
+							// Call API Search and bind results into #search-content
+							function bindSearchResults(data) {
+								var $container = $('#search-content');
+								$container.empty();
+								if (!data || !Array.isArray(data) || data.length === 0) {
+									$container.append('<ul class="list-unstyled"><li>Không có kết quả tìm kiếm</li></ul>');
+									return;
+								}
+								var $ul = $('<ul class="list-unstyled"></ul>');
+								data.forEach(function (item) {
+									var title = item.Title || item.title || item.Name || item.name || item.Text || item.text || 'Không có tiêu đề';
+									var href = item.href || item.Href || item.url || item.Link || item.link || '#';
+									var $li = $('<li></li>');
+									var $a = $('<a></a>').attr('href', href).text(title);
+									$li.append($a);
+									$ul.append($li);
+								});
+								$container.append($ul);
+							}
+
+							// perform GET
+							$.get(url, { key: key, language: '@language' })
+								.done(function (res) {
+									var data = res && res.data ? res.data : res;
+									bindSearchResults(data);
+								})
+								.fail(function () {
+									$('#search-content').empty().append('<ul class="list-unstyled"><li>Không có kết quả tìm kiếm</li></ul>');
+								});
+
+						}
+					});
+
+					let owl = $('#owlour');
+					owl.owlCarousel({
+						margin: 0,
+						autoplay: true,
+						autoplayTimeout: 5000,
+						nav: false,
+						loop: true,
+						dots: false,
+						dotsData: true,
+						pagination: false,
+						margin: 0,
+						responsive: {
+							0: { items: 1 },
+							600: { items: 2 },
+							1000: { items: 3 }
+						}
+					})
+					let owl2 = $('#manualsct');
+					owl2.owlCarousel({
+						margin: 0,
+						autoplay: true,
+						autoplayTimeout: 5000,
+						nav: false,
+						loop: true,
+						dots: false,
+						dotsData: true,
+						pagination: false,
+						responsive: {
+							0: { items: 1 },
+							600: { items: 3 },
+							1000: { items: 7 }
+						}
+					});
+					$('.counter').counterUp({
+						delay: 10,
+						time: 1200
+					});
+				}
+			);
 		 $(function () {
 			let star = '.star',
 				selected = '.selected';

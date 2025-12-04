@@ -56,7 +56,7 @@ namespace PT.Component
                     // Xác định URL quản lý và lấy nội dung tương ứng
                     if (type == ModuleType.Menu)
                     {
-                        var menu = await _iMenuRepository.SingleOrDefaultAsync(true, x => x.Code == code && x.Delete == false && x.Language == language && x.PortalId == portalId);
+                        var menu = await _iMenuRepository.SingleOrDefaultAsync(true, x => x.Code == code && x.Status && x.Delete == false && x.Language == language && x.PortalId == portalId);
                         if (menu != null)
                         {
                             data = menu.Content;
@@ -65,7 +65,7 @@ namespace PT.Component
                     }
                     else if (type == ModuleType.PhotoSlide)
                     {
-                        var banner = await _iBannerRepository.SingleOrDefaultAsync(true, x => x.Code == code && x.Delete == false && x.Language == language && x.PortalId == portalId && x.Type == BannerType.Slide);
+                        var banner = await _iBannerRepository.SingleOrDefaultAsync(true, x => x.Code == code && x.Status && x.Delete == false && x.Language == language && x.PortalId == portalId && x.Type == BannerType.Slide);
                         if (banner != null)
                         {
                             data = banner.Content;
@@ -74,7 +74,7 @@ namespace PT.Component
                     }
                     else if (type == ModuleType.AdvertisingBanner)
                     {
-                        var banner = await _iBannerRepository.SingleOrDefaultAsync(true, x => x.Code == code && x.Delete == false && x.Language == language && x.PortalId == portalId && x.Type == BannerType.Advertising);
+                        var banner = await _iBannerRepository.SingleOrDefaultAsync(true, x => x.Code == code && x.Status && x.Delete == false && x.Language == language && x.PortalId == portalId && x.Type == BannerType.Advertising);
                         if (banner != null)
                         {
                             data = banner.Content;
@@ -83,7 +83,7 @@ namespace PT.Component
                     }
                     else if (type == ModuleType.StaticInformation)
                     {
-                        var info = await _iStaticInformationRepository.SingleOrDefaultAsync(true, x => x.Code == code && x.Delete == false && x.Language == language && x.PortalId == portalId);
+                        var info = await _iStaticInformationRepository.SingleOrDefaultAsync(true, x => x.Code == code && x.Status && x.Delete == false && x.Language == language && x.PortalId == portalId);
                         if (info != null)
                         {
                             data = info.Content;
