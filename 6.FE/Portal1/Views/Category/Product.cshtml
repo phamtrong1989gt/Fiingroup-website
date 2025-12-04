@@ -1,0 +1,989 @@
+﻿@model PT.Domain.Model.Category
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using Microsoft.Extensions.Options
+@using PT.Domain.Model
+@using PT.Shared;
+@using PT.UI.Models
+@inject IOptions<BaseSettings> _baseSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+@inject PT.Infrastructure.Interfaces.ICategoryRepository _iCategoryRepository;
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+}
+
+<section id="Banner">
+    <div class="carouselExampleCaptions">
+        <div id="example" class="slide" data-bs-touch="true">
+            <div class="bg-banner" data-bs-interval="3000">
+                <img src="/Data/FR/banner-product.png" class="d-block w-100" alt="Banner">
+            </div>
+        </div>
+    </div>
+</section>
+<section id="FiinTrust" class="mb-5">
+            <style>
+                .narbartrust {
+                    padding: 50px 0;
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+                }
+
+                .narbartrust a {
+                    color: #093461;
+                    text-decoration: none;
+                    font-size: 18px;
+                    padding: 8px 10px;
+                    display: flex;
+                    justify-content: center;
+                    min-width: 20%;
+                    transition: color 0.3s, border-bottom 0.3s;
+                    cursor: pointer;
+                    border-bottom: 3px solid transparent;
+                }
+
+                .narbartrust a.active,
+                .narbartrust a:hover {
+                    color: #0066CC;
+                    border-bottom: 3px solid #093461;
+                }
+
+                .info-fiinrate p {
+                    color: #093461;
+                }
+
+                /* ===== Các box xếp hạng ===== */
+                .method-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                    gap: 50px;
+                    margin-top: 60px;
+                }
+
+                .bg-method1 {
+                    background: url('/Data/FR/method_detail1.jpg') no-repeat center center;
+                    background-size: cover;
+                    border-radius: 12px;
+                    position: relative;
+                }
+
+                .bg-method2 {
+                    background: url('/Data/FR/method_detail2.jpg') no-repeat center center;
+                    background-size: cover;
+                    border-radius: 12px;
+                    position: relative;
+                }
+
+                .method-box {
+                    position: relative;
+                    z-index: 2;
+                    height: 260px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    padding: 0px 20px;
+                    color: #fff;
+                    border: none;
+                    box-shadow: 0 4px 10px rgba(0, 76, 152, 0.05);
+                }
+
+                .bg-method1,
+                .bg-method2 {
+                    position: relative;
+                    background-size: cover;
+                    background-position: center;
+                    border-radius: 12px;
+                    overflow: hidden;
+                }
+
+                /* Overlay sáng hơn */
+                .bg-method1::before,
+                .bg-method2::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(0, 0, 0, 0.25);
+                    /* từ 0.55 → 0.25 */
+                    z-index: 1;
+                }
+
+                /* Nội dung nổi lên trên overlay */
+                .method-box {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .method-box h2 {
+                    color: #fff;
+                    font-size: 28px;
+                    font-weight: 700;
+                    z-index: 2;
+                }
+
+
+
+                .method-box:hover {
+                    transform: translateY(-5px);
+                }
+
+
+                .method-box .method-title {
+                    font-size: 24px;
+                    margin-top: 15%;
+                }
+
+
+               /*  media (max-width: 992px) {
+                    .narbartrust {
+                        padding: 30px 0;
+                        gap: 20px;
+                    }
+
+                    .narbartrust a {
+                        font-size: 16px;
+                        padding: 6px 8px;
+                    }
+                }
+
+                media (max-width: 576px) {
+                    .narbartrust {
+                        display: flex;
+                        flex-wrap: nowrap;
+                        overflow-x: auto;
+                        gap: 15px;
+                        padding: 15px 5px;
+                        scrollbar-width: none;
+                    }
+
+                    .narbartrust::-webkit-scrollbar {
+                        display: none;
+                    }
+
+                    .narbartrust a {
+                        flex: 0 0 auto;
+                        white-space: nowrap;
+                        font-size: 15px;
+                        padding: 8px 10px;
+                        border-bottom-width: 2px;
+                    }
+                } */
+            </style>
+            <div class="container">
+                <div class="narbartrust">
+                    <a href="#" class="active">Giới thiệu Dịch vụ</a>
+                    <a href="#">Thành tích qua con số</a>
+                    <a href="#">Lợi ích của XHTN</a>
+                    <a href="#">Công bố XHTN</a>
+                    <a href="#">Đội ngũ nhân sự</a>
+                </div>
+                <div class="why pb-4">
+                    <h2 class="price-title mb-4">Xếp hạng <span style="color: #0066CC;"> Tín nhiệm </span></h2>
+                    <div class="prod-wrap">
+                        <div class="info-fiinrate">
+                            <p>
+                                FiinRatings cung cấp dịch vụ Xếp hạng Tín nhiệm nhằm đánh giá mức độ rủi ro tín dụng của
+                                các tổ chức phát hành và công cụ nợ trên thị trường. Các đánh giá từ FiinRatings là cơ
+                                sở tham chiếu đáng tin cậy cho Nhà đầu tư, đồng thời hỗ trợ Doanh nghiệp nâng cao uy tín
+                                và khả năng huy động vốn hiệu quả hơn.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="row pt-5">
+                        <div class="col-sm-4 mb-5">
+                            <img src="/Data/Banner/why1.png" alt="why" />
+                            <div class="why-title">Mở rộng cơ sở nhà đầu tư </div>
+                            <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174"
+                                        y2="14.2709" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0.384615" stop-color="#034EA2" />
+                                        <stop offset="1" stop-color="#53DFFF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <p class="why-desc">Điểm Xếp hạng Tín nhiệm được công bố sẽ tiếp cận trực tiếp hơn 1.000
+                                tổ chức tài chính và 60.000+ nhà đầu tư chuyên nghiệp trong mạng lưới khách hàng của
+                                FiinRatings và FiinGroup​
+                            </p>
+                        </div>
+                        <div class="col-sm-4 mb-5 pr-2">
+                    <img src="/Data/Banner/why2.png" alt="why" />
+                            <div class="why-title">Chủ động cung cấp thông tin phân tích độc lập, chuyên sâu</div>
+                            <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174"
+                                        y2="14.2709" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0.384615" stop-color="#034EA2" />
+                                        <stop offset="1" stop-color="#53DFFF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <p class="why-desc">Hỗ trợ lãnh đạo doanh nghiệp định vị chiến lược, phân tích cạnh
+                                tranh và xây dựng chiến lược vốn tối ưu.
+                        </div>
+                        <div class="col-sm-4 mb-5">
+                    <img src="/Data/Banner/why3.png" alt="why" />
+                            <div class="why-title">Góp phần cải thiện hồ sơ năng lực tín dụng
+                            </div>
+                            <svg width="156" height="2" viewBox="0 0 156 2" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174"
+                                        y2="14.2709" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0.384615" stop-color="#034EA2" />
+                                        <stop offset="1" stop-color="#53DFFF" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <p class="why-desc">Thông qua điểm Xếp hạng Tín nhiệm, doanh nghiệp minh họa rõ được
+                                năng lực tín nhiệm trong các giao dịch huy động, tạo lợi thế trong đàm phán lãi
+                                suất, kỳ hạn.
+                            </p>
+                        </div>
+
+                        <div class="method-grid">
+                            <div class="method-box bg-method1">
+                                <h2 class="method-title">Xếp hạng Tổ chức phát hành
+                                </h2>
+                            </div>
+
+                            <div class="method-box bg-method2">
+                                <h2 class="method-title">Xếp hạng Công cụ nợ
+                                </h2>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const links = document.querySelectorAll('.narbartrust a');
+                    links.forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            links.forEach(l => l.classList.remove('active'));
+                            link.classList.add('active');
+                        });
+                    });
+                });
+            </script>
+        </section>
+        <section id="OutStand" class="py-5">
+            <style>
+                #OutStand {
+                    background: url('Data/FR/bg-outstandnew.jpg') no-repeat center;
+                    background-size: cover;
+                    background-position: center center;
+                }
+
+                #OutStand h2 {
+                    color: #093461;
+                }
+
+                #OutStand .number {
+                    color: #0066CC;
+                }
+
+                #OutStand .number .counter {
+                    font-size: 40px;
+                    font-weight: 700;
+                }
+
+                #OutStand .number {
+                    font-size: 24px;
+                }
+
+                #OutStand .desc {
+                    font-weight: 500;
+                    font-size: 16px;
+                    color: #093461;
+                }
+
+                #OutStand .gach {
+                    width: 155px;
+                    height: 3px;
+                    /* độ dày gạch */
+                    background: linear-gradient(to right, #0018A8, #166BF2, #3B7EEE);
+                    border: none;
+                    /* bỏ border cũ */
+                    margin: 10px 0;
+                }
+
+                /* ===== TABLET (≤ 768px) ===== */
+        /*  media (max-width: 768px) {
+                    #OutStand .number .counter {
+                        font-size: 32px !important;
+                    }
+
+                    #OutStand .number {
+                        font-size: 20px !important;
+                    }
+
+                    #OutStand .desc {
+                        font-size: 14px !important;
+                    }
+
+                    #OutStand .col-sm-3 {
+                        padding: 30px 10px !important;
+                    }
+
+                    #OutStand .gach {
+                        width: 120px !important;
+                    }
+                }
+
+               media (max-width: 576px) {
+
+                    #OutStand {
+                        background-position: center top;
+                    }
+
+                    #OutStand h2 {
+                        font-size: 22px !important;
+                        margin-bottom: 20px !important;
+                    }
+
+                    #OutStand .row {
+                        text-align: center !important;
+                    }
+
+                    #OutStand .col-sm-3 {
+                        flex: 0 0 100%;
+                        max-width: 100%;
+                        padding: 25px 5px !important;
+                    }
+
+                    #OutStand .number .counter {
+                        font-size: 28px !important;
+                    }
+
+                    #OutStand .number {
+                        font-size: 18px !important;
+                    }
+
+                    #OutStand .desc {
+                        font-size: 14px !important;
+                        padding: 0 10px;
+                        line-height: 1.5;
+                    }
+
+                    #OutStand .gach {
+                        width: 100px !important;
+                        margin: 8px auto !important;
+                    }
+                } */
+            </style>
+            <div class="container">
+                <div class="row">
+                    <h2 class="price-title mb-4 text-center">Các con số nổi bật</h2>
+                    <div class="col-sm-3 mb-4 py-5">
+                        <p class="number">
+                            <span class="counter">4.375</span><br>
+                            <span> Tỷ đồng </span>
+                        </p>
+                        <div class="gach"></div>
+                        <p class="desc">Tổng giá trị 3 lô trái phiếu đầu tiên tại Việt Nam được FiinRatings xếp hạng tín
+                            nhiệm năm 2024​</p>
+                    </div>
+                    <div class="col-sm-3 mb-4 py-5">
+                        <p class="number">
+                            <span class="counter">111.000</span> <br>
+                            <span> Tỷ đồng </span>
+                        </p>
+                        <div class="gach"></div>
+                        <p class="desc">Tổng giá trị trái phiếu phát hành trong năm 2024 bởi doanh nghiệp được
+                            FiinRatings XHTN lần đầu​</p>
+                    </div>
+                    <div class="col-sm-3 mb-4 py-5">
+                        <p class="number">
+                            <span class="counter">60 +</span> <br>
+                            <span> Doanh nghiệp </span>
+                        </p>
+                        <div class="gach"></div>
+                        <p class="desc">Số doanh nghiệp đã tham gia xếp hạng tín nhiệm với FiinRatings từ 2020 đến cuối
+                            2024​</p>
+                    </div>
+                    <div class="col-sm-3 mb-4 py-5">
+                        <p class="number">
+                            <span class="counter">20 + </span><br>
+                            <span> Chuyên gia phân tích </span>
+                        </p>
+                        <div class="gach"></div>
+                        <p class="desc">Đội ngũ giàu kinh nghiệm, mang đến phân tích chuyên sâu và tin cậy hàng đầu thị
+                            trường</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="WhyLastest" class="py-5">
+            <style>
+                #WhyLastest {
+                    width: 100%;
+                    position: relative;
+                    background: url("/Data/FR/about_bggiatri.jpg") no-repeat center/cover;
+                    /* Đổi tên file nếu khác */
+                    color: #ffffff;
+                    padding: 80px 0;
+                }
+
+                /* Lớp phủ mờ nhẹ giống ảnh */
+                #WhyLastest::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(0, 30, 100, 0.35);
+                }
+
+                /* Nội dung bên trái */
+                #WhyLastest .content {
+                    position: relative;
+                    width: 60%;
+                    z-index: 2;
+                }
+
+                /* Tiêu đề */
+                #WhyLastest h2 {
+                    font-size: 42px;
+                    font-weight: 700;
+                    margin: 25px 0px;
+                }
+
+                /* Đoạn mô tả */
+                #WhyLastest .content>p {
+                    font-size: 15px;
+                    line-height: 1.7;
+                    margin-bottom: 80px;
+                    text-align: justify;
+                }
+
+                /* Các mục */
+                #WhyLastest .value-item {
+                    margin-bottom: 40px;
+                }
+
+                /* Tiêu đề từng mục + gạch */
+                #WhyLastest .value-item h3 {
+                    font-size: 30px;
+                    font-weight: 600;
+                    margin-bottom: 6px;
+                    padding-bottom: 6px;
+                    position: relative;
+                }
+
+
+                /* Văn bản mô tả từng giá trị */
+                #WhyLastest .value-item p {
+                    font-size: 15px;
+                    line-height: 1.6;
+                    opacity: 0.95;
+                    text-align: justify;
+                    border-bottom: 2px solid;
+                    padding: 10px 0;
+                }
+            </style>
+            <div class="container">
+                <div class="content">
+                    <h2>Vì sao doanh nghiệp sử dụng dịch vụ xếp hạng tín nhiệm của FiinRatings</h2>
+
+                    <div class="value-item">
+                        <h3>Mở rộng cơ sở nhà đầu tư </h3>
+                        <p>Điểm Xếp hạng Tín nhiệm được công bố sẽ tiếp cận trực tiếp hơn 1.000 tổ chức tài chính và
+                            60.000+ nhà đầu tư chuyên nghiệp trong mạng lưới khách hàng của FiinRatings và FiinGroup​
+                        </p>
+                    </div>
+
+                    <div class="value-item">
+                        <h3>Chủ động cung cấp thông tin phân tích độc lập, chuyên sâu</h3>
+                        <p>Hỗ trợ lãnh đạo doanh nghiệp định vị chiến lược, phân tích cạnh tranh và xây dựng chiến lược
+                            vốn tối ưu.</p>
+                    </div>
+
+                    <div class="value-item">
+                        <h3>Góp phần cải thiện hồ sơ năng lực tín dụng</h3>
+                        <p>Thông qua điểm Xếp hạng Tín nhiệm, doanh nghiệp minh họa rõ được năng lực tín nhiệm trong các
+                            giao dịch huy động, tạo lợi thế trong đàm phán lãi suất, kỳ hạn.</p>
+                    </div>
+
+                    <div class="value-item">
+                        <h3>Tuân thủ các quy định pháp luật</h3>
+                        <p>Tuân thủ các quy định về việc phát hành trái phiếu riêng lẻ (Luật Chứng khoán, Nghị định
+                            65/2022/NĐ-CP) và ra công chúng (Nghị định 155/2020/NĐ-CP).</p>
+                    </div>
+
+                    <div class="value-item">
+                        <h3>Không bị giới hạn bởi trần Xếp hạng quốc gia (BB+/Ba2)</h3>
+                        <p>FiinRatings áp dụng thang xếp hạng nội địa độc lập, cho phép doanh nghiệp tại Việt Nam có thể
+                            đạt mức cao nhất là AAA, không bị ràng buộc bởi trần Xếp hạng Tín nhiệm quốc gia. Mức xếp
+                            hạng phản ánh năng lực tài chính và vị thế so với các doanh nghiệp hoạt động tại Việt Nam.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+<section id="Customer" class="py-5">
+    <div class="container">
+        <h2 class="text-center price-title">Khách hàng của chúng tôi </h2>
+    </div>
+</section>
+
+<section id="Partner" class="py-5 mb-5">
+    <style>
+        #Partner img {
+            background: transparent;
+        }
+
+        #Partner {
+            background: rgba(192, 230, 255, 0.2);
+            height: 152px;
+            display: flex;
+            align-items: center;
+        }
+
+            #Partner h2 {
+                background: transparent;
+            }
+
+            #Partner img {
+                height: 65px;
+            }
+    </style>
+    <div class="container">
+        <div class="owl-carousel owl-theme" id="manualsct">
+            <div class="item"><img src="/Data/Banner/partner1.png" height="44"></div>
+            <div class="item"><img src="/Data/Banner/partner2.png" height="44"></div>
+            <div class="item"><img src="/Data/Banner/partner3.png" height="44"></div>
+            <div class="item"><img src="/Data/Banner/partner4.png" height="44"></div>
+            <div class="item"><img src="/Data/Banner/partner5.png" height="44"></div>
+            <div class="item"><img src="/Data/Banner/partner6.png" height="44"></div>
+            <div class="item"><img src="/Data/Banner/partner7.png" height="44"></div>
+        </div>
+
+    </div>
+</section>
+<section id="DetailPartner" class="mb-5">
+    <style>
+        .view-now-wrapper {
+            text-align: center;
+        }
+        .btn-outline-blue {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 100px;
+            border-radius: 40px;
+            font-size: 24px;
+            font-weight: 500;
+            color: #0066CC;
+            text-decoration: none;
+            border: 1.5px solid #0066CC;
+            background: #fff;
+            transition: 0.25s ease;
+        }
+
+            /* Hover hiệu ứng */
+            .btn-outline-blue:hover {
+                background: #0066CC;
+                color: white;
+            }
+
+            .btn-outline-blue i {
+                margin-left: 10px;
+                font-size: 20px;
+            }
+    </style>
+    <div class="container">
+        <div class="view-now-wrapper">
+            <a href="#" class="btn-outline-blue">
+                Xem chi tiết <i class="fa fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+            <section id="UserTeam" class="py-5">
+            <style>
+                .price-title {
+                    margin-bottom: 20px;
+                }
+
+                .tab-container {
+                    display: inline-flex;
+                    justify-content: center;
+                    border: 1px solid #0078d4;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                }
+
+                .tab {
+                    padding: 8px 20px;
+                    border: none;
+                    background: white;
+                    color: #0078d4;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    min-width: 250px;
+                }
+
+                .tab.active {
+                    background: #0078d4;
+                    color: white;
+                }
+
+                .tab:not(.active):hover {
+                    background: #e6f0fb;
+                }
+
+                /* Team Grid */
+
+                .team-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 30px;
+                    justify-content: center;
+                    align-items: start;
+                }
+
+                .member-card {
+                    align-items: center;
+                    text-align: center;
+                    padding: 15px;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    width: 100%;
+                    height: 100%;
+                    /* border gradient bo góc mượt */
+                    border: 1px solid transparent;
+                    background-image: linear-gradient(#fff, #fff), linear-gradient(to bottom, #E6E6E600, #034EA2);
+                    background-origin: border-box;
+                    background-clip: padding-box, border-box;
+                }
+
+                .member-card:hover {
+                    transform: translateY(-8px);
+                    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+                }
+
+                .member-card img {
+                    max-width: 100%;
+                }
+
+                .member-info {
+                    padding: 26px 0;
+                    text-align: left;
+                }
+
+                .member-name {
+                    font-size: 19px;
+                    font-weight: 600;
+                    color: #0066CC;
+                    margin-bottom: 6px;
+                }
+
+                .member-title {
+                    font-size: 16px;
+                    font-weight: 500;
+                }
+
+                .nav-buttons {
+                    display: flex;
+                    gap: 20px;
+                    padding-top: 15px;
+                }
+
+                .circle-btn {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 50%;
+                    border: 1px solid #0066CC;
+                    background: transparent;
+                    color: #0066CC;
+                    font-size: 18px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: 0.2s ease;
+                }
+
+                .circle-btn:hover {
+                    background: #0066CC;
+                    color: #fff;
+                }
+
+                /* media (min-width: 768px) and (max-width: 1199px) {
+                    .team-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                }
+
+                media (max-width: 768px) {
+                    .team-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .tab-container {
+                        display: flex;
+                        width: 100%;
+                    }
+
+                    .tab {
+                        min-width: unset !important;
+                        flex: 1;
+                        padding: 10px 0;
+                        font-size: 14px;
+                    }
+                }
+
+                media (max-width: 576px) {
+                    .tab {
+                        flex: 0 0 50%;
+                        max-width: 50%;
+                        min-width: unset !important;
+                        padding: 12px 0;
+                        text-align: center;
+                        border-radius: 0;
+                        font-size: 14px;
+                    }
+                } */
+            </style>
+
+            <div class="container">
+                <h2 id="team-title" class="price-title mb-5">Đội ngũ chuyên môn</h2>
+                <div class="tab-container mb-5">
+                    <button class="tab active">Hội đồng xếp hạng</button>
+                    <button class="tab">Chuyên viên phân tích</button>
+                </div>
+                <!-- Hội đồng quản trị -->
+                <div id="hđqt" class="tab-content">
+                    <div class="team-grid">
+                        <div class="member-card">
+                            <img src="/Data/FR/about_us6.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Trương Minh Trang, MBA</div>
+                                <div class="member-title">Giám đốc điều hành cấp cao, Khối dịch vụ thông tin tài chính
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us9.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Bùi Thành Trung</div>
+                                <div class="member-title">Phó Giám đốc Công nghệ, Bộ phận Innovation</div>
+                            </div>
+                        </div>
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us10.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Nguyễn Hà Vy</div>
+                                <div class="member-title">Trưởng phòng Marketing Bộ phận Corporation Marketing</div>
+                            </div>
+                        </div>
+
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us11.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Nguyễn Thu Quyên</div>
+                                <div class="member-title">Trưởng phòng Nhân sự Bộ phận Nhân sự</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ban điều hành (có thể thêm sau) -->
+                <div id="ban-dieu-hanh" class="tab-content" style="display: none;">
+                    <div class="team-grid">
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us1.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Nguyễn Quang Thuận, MBA, FCCA</div>
+                                <div class="member-title">Chủ tịch HĐQT</div>
+                            </div>
+                        </div>
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us2.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Nguyễn Hữu Hiệu, MBA</div>
+                                <div class="member-title">Tổng Giám Đốc</div>
+                            </div>
+                        </div>
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us3.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Mạc Quang Huy, CPA, FCCA</div>
+                                <div class="member-title">Thành viên HĐQT</div>
+                            </div>
+                        </div>
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us4.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Hisatsugu Nagao</div>
+                                <div class="member-title">Thành viên HĐQT</div>
+                            </div>
+                        </div>
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us5.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Chiharu Kawai</div>
+                                <div class="member-title">Thành viên HĐQT</div>
+                            </div>
+                        </div>
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us7.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Nguyễn Khánh Hoàng</div>
+                                <div class="member-title">Giám đốc điều hành, Khối Nghiên cứu Thị trường và Tư vấn</div>
+                            </div>
+                        </div>
+
+
+                        <div class="member-card">
+                    <img src="/Data/FR/about_us8.png" alt="why" />
+                            <div class="member-info">
+                                <div class="member-name">Vũ Thị Hoàn</div>
+                                <div class="member-title">Giám đốc Tài chính, Bộ phận Operation</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="circle-btn">
+                        <i class="fa fa-arrow-left"></i>
+                    </button>
+
+                    <button class="circle-btn">
+                        <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
+                <script>
+                    const tabs = document.querySelectorAll('.tab');
+                    const contents = {
+                        'Hội đồng xếp hạng': document.getElementById('hđqt'),
+                        'Chuyên viên phân tích': document.getElementById('ban-dieu-hanh')
+                    };
+
+                    tabs.forEach(tab => {
+                        tab.addEventListener('click', () => {
+                            // Xóa trạng thái active và ẩn toàn bộ nội dung
+                            tabs.forEach(t => t.classList.remove('active'));
+                            Object.values(contents).forEach(content => content.style.display = 'none');
+
+                            // Kích hoạt tab hiện tại
+                            tab.classList.add('active');
+
+                            // Hiển thị nội dung tương ứng với text của tab
+                            const selected = tab.textContent.trim();
+                            contents[selected].style.display = 'block';
+                        });
+                    });
+                </script>
+            </div>
+        </section>
+
+        <section id="Deliver" class="py-5 mb-5">
+            <style>
+                #Deliver .container {
+                    background: url('/Data/FR/bg-deliver.png') no-repeat center top;
+                }
+
+
+                .contact-us {
+                    background: linear-gradient(to right, #0018A8, #166BF2, #3B7EEE);
+                    color: #ffffff;
+                    padding: 10px 85px;
+                    border-radius: 25px;
+                    cursor: pointer;
+                    display: inline-block;
+                    margin-top: 10px;
+                }
+
+                .deliver {
+                    padding: 85px;
+                    text-align: center;
+                }
+
+                .deliver .price-title {
+                    font-size: 30px !important;
+                }
+
+                /* media (max-width: 768px) {
+                    #Deliver .container {
+                        background-size: cover !important;
+                        background-position: center top !important;
+                    }
+
+                    .deliver {
+                        padding: 40px !important;
+                    }
+
+                    .deliver .price-title {
+                        font-size: 24px !important;
+                        line-height: 1.3;
+                    }
+
+                    .contact-us {
+                        padding: 10px 60px !important;
+                        font-size: 16px;
+                    }
+                }
+
+                media (max-width: 576px) {
+                    .deliver {
+                        padding: 80px 10px !important;
+                    }
+
+                    .deliver .price-title {
+                        font-size: 24px !important;
+                        line-height: 1.4;
+                    }
+
+                    .contact-us {
+                        padding: 8px 40px !important;
+                        font-size: 18px;
+                        border-radius: 20px;
+                    }
+                } */
+            </style>
+            <div class="container">
+                <div class="deliver">
+                    <h2 class="price-title">Liên hệ với chúng tôi để được tư vấn chi tiết về dịch vụ Xếp hạng tín nhiệm
+                        và nhận <span style="color: #0066CC;">giải pháp phù hợp</span> nhất cho nhu cầu của Doanh
+                        nghiệp.
+                    </h2>
+
+                    <div class="contact-us">
+                        Liên hệ ngay
+                    </div>
+                </div>
+
+            </div>
+
+        </section>

@@ -217,5 +217,21 @@ namespace PT.UI.Controllers
             //ViewData["linkData"] = objectLink;
             return View(viewName, dl);
         }
+
+        public IActionResult Rakings(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Rakings");
+        }
+        public IActionResult Product(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Product");
+        }
+        public IActionResult Methodology(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Methodology");
+        }
     }
 }

@@ -1,0 +1,870 @@
+﻿@model PT.Domain.Model.Category
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using Microsoft.Extensions.Options
+@using PT.Domain.Model
+@using PT.Shared;
+@using PT.UI.Models
+@inject IOptions<BaseSettings> _baseSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+@inject PT.Infrastructure.Interfaces.ICategoryRepository _iCategoryRepository;
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+}
+<style>
+	#Find {
+		background: url("/Data/FR/ranking_banner2.jpg") no-repeat center top;
+		background-size: cover;
+		position: relative;
+		/* để có không gian cho box-find-top */
+	}
+
+	.box-find-top {
+		text-align: center;
+		padding: 50px 0;
+	}
+
+	.time-options {
+		display: flex;
+		gap: 20px;
+	}
+
+		.time-options label {
+			margin: 0;
+			font-size: 14px;
+			color: #333;
+			font-weight: bold;
+		}
+
+		.time-options input[type="radio"] {
+			margin-right: 5px;
+		}
+
+
+	.find-top input {
+		width: 320px;
+	}
+
+	.find-top input {
+		width: 320px;
+		background-color: #fff;
+	}
+
+	.find-top {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
+		align-items: center;
+	}
+
+	.find-input {
+		padding: 8px;
+		border: 1px solid #ededed;
+		border-radius: 4px;
+		font-size: 14px;
+		flex: 1;
+		min-width: 150px;
+	}
+
+	.custom-dropdown {
+		position: relative;
+		min-width: 150px;
+	}
+
+	.dropdown-selected {
+		padding: 8px;
+		border: 1px solid #ededed;
+		border-radius: 4px;
+		font-size: 14px;
+		cursor: pointer;
+		background-color: #ffffff;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+		.dropdown-selected .fas.fa-chevron-down {
+			margin-left: 5px;
+			font-size: 12px;
+			color: #555;
+			transition: transform 0.3s ease;
+		}
+
+		.dropdown-selected.active .fas.fa-chevron-down {
+			transform: rotate(180deg);
+		}
+
+	.dropdown-options {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		z-index: 1000;
+		max-height: 150px;
+		overflow-y: auto;
+	}
+
+		.dropdown-options li {
+			padding: 8px;
+			cursor: pointer;
+			display: block;
+			font-size: 13px;
+			text-align: left;
+		}
+
+			.dropdown-options li:hover {
+				background-color: #f0f0f0;
+			}
+
+	.refresh {
+		cursor: pointer;
+		color: #ff0000;
+		font-size: 18px;
+		margin-left: 10px;
+		transform: rotate(35deg);
+		transition: transform 0.3s ease;
+	}
+
+		.refresh.spin i {
+			transform: rotate(-360deg);
+			transition: transform 0.6s ease;
+		}
+
+
+	.find-button {
+		background-color: #007bff;
+		color: white;
+		padding: 8px 16px;
+		border: none;
+		border-radius: 20px;
+		cursor: pointer;
+		font-size: 14px;
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		min-width: 120px;
+		justify-content: center;
+	}
+
+		.find-button .fas.fa-find-top {
+			font-size: 14px;
+			color: #ffffff !important;
+		}
+
+		.find-button:hover {
+			background-color: #0056b3;
+		}
+
+	.clear {
+		clear: both;
+	}
+
+	.btn-filter {
+		width: 40px;
+		height: 40px;
+		border: none;
+		border-radius: 10px;
+		background: #edf3ff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		display: none;
+	}
+
+	#TableRank {
+		background: url(../Data/ranking_bgtable.png);
+		background-size: contain;
+	}
+
+		#TableRank .head-table th,
+		#TableRank td {
+			padding: 12px;
+			border: 1px solid #ddd;
+			background: #fff;
+		}
+
+		#TableRank tbody,
+		td,
+		tfoot,
+		th,
+		thead,
+		tr {
+			border-top: 1px !important;
+			border-right: 0px !important;
+			border-left: 0px !important;
+		}
+
+		#TableRank th {
+			background-color: #ffffff;
+			color: #034ea2;
+			font-weight: 600;
+			text-align: left;
+		}
+
+		/* #TableRank tr:nth-child(even) {
+								background-color: #f8f9fa;
+							} */
+
+		#TableRank .head-table th {
+			background-color: #f7f8f9;
+			border-bottom: 1px solid #ccc;
+		}
+
+		#TableRank .download-btn {
+			background-color: #28a745;
+			color: white;
+			border: none;
+			padding: 5px 10px;
+			text-decoration: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+			#TableRank .download-btn:hover {
+				background-color: #218838;
+			}
+
+	.gmt-text {
+		color: #ccc;
+		font-size: 13px;
+	}
+
+	.phat-hanh-text {
+		text-transform: uppercase;
+		font-size: 16px;
+		color: #1359a7;
+		text-align: left;
+	}
+
+	.icon-info {
+		float: right;
+		color: #66b7f1;
+		cursor: pointer;
+	}
+
+		.icon-info i:hover {
+			color: #154a8c;
+			/* Màu đậm hơn khi hover */
+		}
+
+		/* Ẩn tooltip mặc định của title */
+		.icon-info i[title] {
+			pointer-events: none;
+			/* Vô hiệu hóa tương tác với title */
+		}
+
+		/* Tooltip tùy chỉnh */
+		.icon-info i[data-tooltip]:hover:after {
+			content: attr(data-tooltip);
+			position: absolute;
+			background-color: #6294c9;
+			color: #ffffff;
+			padding: 5px 12px;
+			border-radius: 3px;
+			font-size: 12px;
+			white-space: nowrap;
+			z-index: 1000;
+			top: 50px;
+			font-family: Arial, "Times New Roman", Roboto, Segoe UI, sans-serif !important;
+			/* Fallback font */
+		}
+
+	.type-text {
+		background-color: #eaf4ff;
+		padding: 5px 10px;
+		border-radius: 20px;
+		color: #1f63ad;
+	}
+
+	.icon-down {
+		font-size: 18px;
+		color: #489efb;
+		cursor: pointer;
+	}
+
+	.page-table {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 10px;
+		font-size: 16px;
+	}
+
+	.numberpage {
+		margin-right: 20px;
+	}
+
+	.pagination {
+		display: flex;
+		gap: 30px;
+		align-items: center;
+		cursor: pointer;
+	}
+
+		.pagination .active {
+			padding: 5px 14px;
+			border: 1px solid #4d94dc;
+			border-radius: 5px;
+			background: #fff;
+			cursor: pointer;
+			color: #1f78d3;
+		}
+
+	.btn-download {
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: #2E90FA;
+		border-left: 1px solid #E1F4FD;
+	}
+
+		.btn-download:hover {
+			background: #007bff00;
+			border-radius: 5px;
+			color: rgb(0, 0, 0);
+			box-shadow: 0 4px 10px #007bff33;
+		}
+
+	.language-switch {
+		display: flex;
+		align-items: center;
+		gap: 25px;
+		font-size: 16px;
+		color: #1a1a1a;
+	}
+
+	.lang-option {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		cursor: pointer;
+		user-select: none;
+	}
+
+		/* Ẩn radio mặc định */
+		.lang-option input[type="radio"] {
+			display: none;
+		}
+
+		/* Vòng ngoài có border gradient */
+		.lang-option .radio {
+			width: 16px;
+			height: 16px;
+			position: relative;
+			border-radius: 50%;
+			background: linear-gradient(135deg, #034ea2, #53dfff);
+			padding: 1px;
+			/* tạo khoảng cho border */
+			transition: all 0.3s ease;
+		}
+
+			/* Lớp trắng bên trong để nhìn rõ border gradient */
+			.lang-option .radio::before {
+				content: "";
+				position: absolute;
+				inset: 1px;
+				background: #fff;
+				border-radius: 50%;
+			}
+
+		/* Chấm giữa khi chọn */
+		.lang-option input[type="radio"]:checked + .radio::after {
+			content: "";
+			position: absolute;
+			top: 3px;
+			left: 3px;
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, #034ea2, #53dfff);
+			box-shadow: 0 0 5px rgba(83, 223, 255, 0.6);
+			transition: all 0.2s ease;
+		}
+
+		/* Hiệu ứng hover */
+		.lang-option:hover .radio {
+			box-shadow: 0 0 5px rgba(83, 223, 255, 0.5);
+		}
+</style>
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRRakingSliderBanner", language = language, portalId = portalId })
+
+<section id="Find">
+	<div class="container">
+		<div class="box-find-top">
+			<div class="find-top">
+				<input type="text" placeholder="Tên công ty" class="find-input">
+				<button class="btn-filter">
+					<i class="fa fa-sliders-h"></i>
+				</button>
+				<div class="custom-dropdown">
+					<div class="dropdown-selected">Ngành <i class="fa fa-chevron-down"></i></div>
+					<ul class="dropdown-options" style="display: none;">
+						<li data-value="">Ngành</li>
+						<li data-value="tech">Công nghệ</li>
+						<li data-value="finance">Tài chính</li>
+					</ul>
+				</div>
+				<div class="custom-dropdown">
+					<div class="dropdown-selected">Điểm xếp hạng <i class="fa fa-chevron-down"></i></div>
+					<ul class="dropdown-options" style="display: none;">
+						<li data-value="">Điểm xếp hạng</li>
+						<li data-value="high">Cao</li>
+						<li data-value="low">Thấp</li>
+					</ul>
+				</div>
+				<div class="custom-dropdown">
+					<div class="dropdown-selected">Ổn định <i class="fa fa-chevron-down"></i></div>
+					<ul class="dropdown-options" style="display: none;">
+						<li data-value="">Địa điểm</li>
+						<li data-value="hanoi">Hà Nội</li>
+						<li data-value="hcm">TP.HCM</li>
+					</ul>
+				</div>
+				<span class="refresh"><i class="fa fa-undo"></i></span>
+				<button class="find-button"><i class="fa fa-find-top"></i> Tìm kiếm</button>
+			</div>
+		</div>
+	</div>
+</section>
+<section id="TableRank" class="pt-5">
+	<div class="container">
+		<table class="TableRank">
+			<thead class="head-table">
+				<tr>
+					<th style="width: 135px;">Ngày công bố</th>
+					<th>Tổ chức phát hành</th>
+					<th style="width: 150px;">Ngành</th>
+					<th style="width: 230px;">Loại ý kiến</th>
+					<th style="width: 140px;">Điểm xếp hạng</th>
+					<th style="width: 120px;">Triển vọng</th>
+					<th style="width: 250px;">Báo cáo Xếp hạng Tín nhiệm</th>
+				</tr>
+			</thead>
+			<tbody class="body-table">
+				<tr>
+					<td data-label="Ngày công bố">
+						17/09/2025 <br /> <span class="gmt-text">17:00 GMT +7</span>
+					</td>
+					<td data-label="Tổ chức phát hành">
+						<span class="phat-hanh-text">
+							TẬP ĐOÀN VINAGROUP - CÔNG
+							TY CP
+						</span>
+					</td>
+					<td data-label="Ngành">Doanh nghiệp phi tài chính</td>
+					<td data-label="Loại ý kiến">XHTN Lần đầu - XHTN Tổ chức phát hành</td>
+					<td data-label="Điểm xếp hạng">
+						A- <span class="icon-info">
+							<i class="fa fa-info-circle"
+							   data-tooltip="Thông tin chi tiết về xếp hạng A-"></i>
+						</span>
+					</td>
+					<td data-label="Triển vọng"><span class="type-text"> Ổn định </span></td>
+					<td data-label="Báo cáo">
+						<div class="language-switch">
+							<label class="lang-option">
+								<input type="radio" name="language_1" value="vn" checked>
+								<span class="radio"></span>
+								VN
+							</label>
+							<label class="lang-option">
+								<input type="radio" name="language_1" value="en">
+								<span class="radio"></span>
+								EN
+							</label>
+							<button class="btn-download" data-bs-toggle="modal" data-bs-target="#downloadModal"
+									title="Tải báo cáo">
+								<i class="fa fa-download"></i> Tải về
+						</div>
+
+					</td>
+				</tr>
+				<!-- Nút mở modal (demo) -->
+				<tr>
+					<td data-label="Ngày công bố">
+						17/09/2025 <br /> <span class="gmt-text">17:00 GMT +7</span>
+					</td>
+					<td data-label="Tổ chức phát hành">
+						<span class="phat-hanh-text">
+							TỔNG CÔNG TY ĐƯỜNG BÓ TU
+						</span>
+					</td>
+					<td data-label="Ngành"> Dịch vụ tài chính</td>
+					<td data-label="Loại ý kiến">Cập nhật kết quả XHTN - XHTN Tổ chức phát hành</td>
+					<td data-label="Điểm xếp hạng">
+						B- <span class="icon-info">
+							<i class="fa fa-info-circle"
+							   data-tooltip="Thông tin chi tiết về xếp hạng A-"></i>
+						</span>
+					</td>
+					<td data-label="Triển vọng"><span class="type-text"> Ổn định </span></td>
+					<td data-label="Báo cáo">
+						<div class="language-switch">
+							<label class="lang-option">
+								<input type="radio" name="language_2" value="vn" checked>
+								<span class="radio"></span>
+								VN
+							</label>
+							<label class="lang-option">
+								<input type="radio" name="language_2" value="en">
+								<span class="radio"></span>
+								EN
+							</label>
+							<button class="btn-download" data-bs-toggle="modal" data-bs-target="#downloadModal"
+									title="Tải báo cáo">
+								<i class="fa fa-download"></i> Tải về
+							</button>
+						</div>
+
+					</td>
+				</tr>
+				<tr>
+					<td data-label="Ngày công bố">
+						17/09/2025 <br /> <span class="gmt-text">17:00 GMT +7</span>
+					</td>
+					<td data-label="Tổ chức phát hành">
+						<span class="phat-hanh-text">
+							CÔNG TY CP BẢO VỊ PHÁT
+						</span>
+					</td>
+					<td data-label="Ngành"> Doanh nghiệp phi tài chính</td>
+					<td data-label="Loại ý kiến">XHTN Lần đầu - XHTN Tổ chức phát hành</td>
+					<td data-label="Điểm xếp hạng">
+						A+ <span class="icon-info">
+							<i class="fa fa-info-circle"
+							   data-tooltip="Thông tin chi tiết về xếp hạng A-"></i>
+						</span>
+					</td>
+					<td data-label="Triển vọng"><span class="type-text"> Ổn định </span></td>
+					<td data-label="Báo cáo">
+						<div class="language-switch">
+							<label class="lang-option">
+								<input type="radio" name="language_3" value="vn" checked>
+								<span class="radio"></span>
+								VN
+							</label>
+							<label class="lang-option">
+								<input type="radio" name="language_3" value="en">
+								<span class="radio"></span>
+								EN
+							</label>
+							<button class="btn-download" data-bs-toggle="modal" data-bs-target="#downloadModal"
+									title="Tải báo cáo">
+								<i class="fa fa-download"></i> Tải về
+							</button>
+						</div>
+
+					</td>
+				</tr>
+				<tr>
+					<td data-label="Ngày công bố">
+						17/09/2025 <br /> <span class="gmt-text">17:00 GMT +7</span>
+					</td>
+					<td data-label="Tổ chức phát hành">
+						<span class="phat-hanh-text">
+							TRIẾN DU PHỤC QUỐC PHÁN
+						</span>
+					</td>
+					<td data-label="Ngành"> Dịch vụ tài chính</td>
+					<td data-label="Loại ý kiến">XHTN Lần đầu - XHTN Tổ chức phát hành</td>
+					<td data-label="Điểm xếp hạng">
+						D- <span class="icon-info">
+							<i class="fa fa-info-circle"
+							   data-tooltip="Thông tin chi tiết về xếp hạng A-"></i>
+						</span>
+					</td>
+					<td data-label="Triển vọng"><span class="type-text"> Ổn định </span></td>
+					<td data-label="Báo cáo">
+						<div class="language-switch">
+							<label class="lang-option">
+								<input type="radio" name="language_4" value="vn" checked>
+								<span class="radio"></span>
+								VN
+							</label>
+							<label class="lang-option">
+								<input type="radio" name="language_4" value="en">
+								<span class="radio"></span>
+								EN
+							</label>
+							<button class="btn-download" data-bs-toggle="modal" data-bs-target="#downloadModal"
+									title="Tải báo cáo">
+								<i class="fa fa-download"></i> Tải về
+							</button>
+						</div>
+
+					</td>
+				</tr>
+				<tr>
+					<td data-label="Ngày công bố">
+						17/09/2025 <br /> <span class="gmt-text">17:00 GMT +7</span>
+					</td>
+					<td data-label="Tổ chức phát hành">
+						<span class="phat-hanh-text"> HÀNG HÀI VẬN MẠO </span>
+					</td>
+					<td data-label="Ngành"> Doanh nghiệp phi tài chính</td>
+					<td data-label="Loại ý kiến">Cập nhật kết quả XHTN - XHTN Tổ chức phát hành</td>
+					<td data-label="Điểm xếp hạng">
+						C- <span class="icon-info">
+							<i class="fa fa-info-circle"
+							   data-tooltip="Thông tin chi tiết về xếp hạng A-"></i>
+						</span>
+					</td>
+					<td data-label="Triển vọng"><span class="type-text"> Ổn định </span></td>
+					<td data-label="Báo cáo">
+						<div class="language-switch">
+							<label class="lang-option">
+								<input type="radio" name="language_5" value="vn" checked>
+								<span class="radio"></span>
+								VN
+							</label>
+							<label class="lang-option">
+								<input type="radio" name="language_5" value="en">
+								<span class="radio"></span>
+								EN
+							</label>
+							<button class="btn-download" data-bs-toggle="modal" data-bs-target="#downloadModal"
+									title="Tải báo cáo">
+								<i class="fa fa-download"></i> Tải về
+							</button>
+						</div>
+
+					</td>
+				</tr>
+				<tr>
+					<td data-label="Ngày công bố">
+						17/09/2025 <br /> <span class="gmt-text">17:00 GMT +7</span>
+					</td>
+					<td data-label="Tổ chức phát hành">
+						<span class="phat-hanh-text">
+							CÔNG TY CP CHỤNG KHAN
+						</span>
+					</td>
+					<td data-label="Ngành"> Dịch vụ tài chính</td>
+					<td data-label="Loại ý kiến">XHTN Lần đầu - XHTN Tổ chức phát hành</td>
+					<td data-label="Điểm xếp hạng">
+						B- <span class="icon-info">
+							<i class="fa fa-info-circle"
+							   data-tooltip="Thông tin chi tiết về xếp hạng A-"></i>
+						</span>
+					</td>
+					<td data-label="Triển vọng"><span class="type-text"> Ổn định </span></td>
+					<td data-label="Báo cáo">
+						<div class="language-switch">
+							<label class="lang-option">
+								<input type="radio" name="language_6" value="vn" checked>
+								<span class="radio"></span>
+								VN
+							</label>
+							<label class="lang-option">
+								<input type="radio" name="language_6" value="en">
+								<span class="radio"></span>
+								EN
+							</label>
+							<button class="btn-download" data-bs-toggle="modal" data-bs-target="#downloadModal"
+									title="Tải báo cáo">
+								<i class="fa fa-download"></i> Tải về
+							</button>
+						</div>
+
+					</td>
+				</tr>
+				<tr>
+					<td data-label="Ngày công bố">
+						17/09/2025 <br /> <span class="gmt-text">17:00 GMT +7</span>
+					</td>
+					<td data-label="Tổ chức phát hành">
+						<span class="phat-hanh-text">
+							BINH - XUÂN MAI NƯỚC SẠCH
+						</span>
+					</td>
+					<td data-label="Ngành"> Doanh nghiệp phi tài chính</td>
+					<td data-label="Loại ý kiến">XHTN Lần đầu - XHTN Tổ chức phát hành</td>
+					<td data-label="Điểm xếp hạng">
+						B- <span class="icon-info">
+							<i class="fa fa-info-circle"
+							   data-tooltip="Thông tin chi tiết về xếp hạng A-"></i>
+						</span>
+					</td>
+					<td data-label="Triển vọng"><span class="type-text"> Ổn định </span></td>
+					<td data-label="Báo cáo">
+						<div class="language-switch">
+							<label class="lang-option">
+								<input type="radio" name="language_7" value="vn" checked>
+								<span class="radio"></span>
+								VN
+							</label>
+							<label class="lang-option">
+								<input type="radio" name="language_7" value="en">
+								<span class="radio"></span>
+								EN
+							</label>
+							<button class="btn-download" data-bs-toggle="modal" data-bs-target="#downloadModal"
+									title="Tải báo cáo">
+								<i class="fa fa-download"></i> Tải về
+							</button>
+						</div>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="page-table">
+			<div class="numberpage">
+				<div>Hiển thị <span> 1 </span> - <span>10</span> của <span> 16 </span> bản ghi</div>
+			</div>
+			<div class="pagination">
+				<span class="chevron-left"><i class="fa fa-chevron-left"></i></span>
+				<div>1</div>
+				<div class="active">2</div>
+				<div>3</div>
+				<div>4</div>
+				<span class="chevron-right"><i class="fa fa-chevron-right"></i></span>
+			</div>
+		</div>
+	</div>
+</section>
+<partial name="~/Views/Home/_Register.cshtml" model="@(new ContactHomeModel { })" />
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const filterBtn = document.querySelector(".btn-filter");
+		const dropdownSelecteds = document.querySelectorAll(".dropdown-selected");
+		const refhesh = document.querySelectorAll(".refresh");
+		let filterOpen = false; // trạng thái đóng/mở
+
+		// Function ẩn dropdown khi mobile
+		function applyMobileDropdownHide() {
+			if (window.innerWidth <= 768) {
+				dropdownSelecteds.forEach(el => el.style.display = "none");
+				refhesh.forEach(el => el.style.display = "none");
+
+				filterOpen = false;
+			} else {
+				dropdownSelecteds.forEach(el => el.style.display = "");
+				refhesh.forEach(el => el.style.display = "");
+			}
+		}
+
+		// Gọi khi load trang
+		applyMobileDropdownHide();
+
+		// Toggle khi bấm FILTER
+		filterBtn.addEventListener("click", () => {
+			filterOpen = !filterOpen; // toggle trạng thái
+
+			if (filterOpen) {
+				dropdownSelecteds.forEach(el => el.style.display = "");
+				refhesh.forEach(el => el.style.display = "");
+			} else {
+				dropdownSelecteds.forEach(el => el.style.display = "none");
+				refhesh.forEach(el => el.style.display = "none");
+			}
+		});
+
+		// Re-check khi resize (tránh bug khi xoay màn hình)
+		window.addEventListener("resize", applyMobileDropdownHide);
+	});
+
+	document.addEventListener("DOMContentLoaded", function () {
+		const refreshBtn = document.querySelector(".refresh");
+		const searchInput = document.querySelector(".find-input");
+		const dropdowns = document.querySelectorAll(".custom-dropdown");
+
+		refreshBtn.addEventListener("click", function () {
+			// Xóa nội dung input text
+			searchInput.value = "";
+
+			// Reset các dropdown về giá trị mặc định (item đầu tiên)
+			dropdowns.forEach(dropdown => {
+				const firstOption = dropdown.querySelector(".dropdown-options li:first-child");
+				const selected = dropdown.querySelector(".dropdown-selected");
+
+				if (firstOption && selected) {
+					selected.textContent = firstOption.textContent + " ";
+					selected.insertAdjacentHTML("beforeend", '<i class="fa fa-chevron-down"></i>');
+				}
+
+				// Nếu bạn đang dùng data-value để lưu giá trị đã chọn
+				dropdown.dataset.value = firstOption ? firstOption.dataset.value : "";
+			});
+
+			// Nếu muốn bỏ checked radio → thêm dòng này
+			// document.querySelectorAll('input[name="time"]').forEach(r => r.checked = false);
+
+			// Thêm hiệu ứng nhẹ khi refresh xong
+			refreshBtn.classList.add("spin");
+			setTimeout(() => refreshBtn.classList.remove("spin"), 600);
+		});
+	});
+
+	document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+		const selected = dropdown.querySelector('.dropdown-selected');
+		const options = dropdown.querySelector('.dropdown-options');
+		const items = options.querySelectorAll('li');
+
+		selected.addEventListener('click', () => {
+			const isOpen = options.style.display === 'none';
+			options.style.display = isOpen ? 'block' : 'none';
+			selected.classList.toggle('active', isOpen); // Thêm/Loại bỏ class 'active' để xoay icon
+		});
+
+		items.forEach(item => {
+			item.addEventListener('click', () => {
+				selected.innerHTML = `${item.textContent} <i class="fa fa-chevron-down"></i>`;
+				options.style.display = 'none';
+				selected.classList.remove('active'); // Loại bỏ class 'active' khi chọn
+				dropdown.dataset.value = item.dataset.value;
+			});
+		});
+
+		document.addEventListener('click', (e) => {
+			if (!dropdown.contains(e.target)) {
+				options.style.display = 'none';
+				selected.classList.remove('active'); // Loại bỏ class 'active' khi click ra ngoài
+			}
+		});
+	});
+
+	document.querySelectorAll('.pagination div').forEach(item => {
+					item.addEventListener('click', () => {
+						document.querySelectorAll('.pagination div').forEach(div => div.classList.remove('active'));
+						item.classList.add('active');
+					});
+				});
+
+				// Xử lý chevron
+				let currentPage = 2; // Bắt đầu với trang 2 (do có class active mặc định)
+
+				document.querySelector('.chevron-left').addEventListener('click', () => {
+					if (currentPage > 1) {
+						currentPage--;
+						updateActivePage();
+					}
+				});
+
+				document.querySelector('.chevron-right').addEventListener('click', () => {
+					if (currentPage < 4) { // Giả sử có 4 trang
+						currentPage++;
+						updateActivePage();
+					}
+				});
+
+				function updateActivePage() {
+					document.querySelectorAll('.pagination div').forEach((div, index) => {
+						div.classList.remove('active');
+						if (parseInt(div.textContent) === currentPage) {
+							div.classList.add('active');
+						}
+					});
+				});
+</script>
