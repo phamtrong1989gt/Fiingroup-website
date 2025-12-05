@@ -209,9 +209,9 @@
 	</style>
 	<div class="container">
 		<div class="narbarmodel">
-			<a href="#" class="active">Chi tiết mô hình</a>
-			<a href="#">Mô hình xếp hạng tổng thể</a>
-			<a href="#">Phương pháp luận xếp hạng tín nhiệm</a>
+			<a href="#FiinMethod" class="active">Chi tiết mô hình</a>
+			<a href="#Model">Mô hình xếp hạng tổng thể</a>
+			<a href="#MethodNews">Phương pháp luận xếp hạng tín nhiệm</a>
 		</div>
 		<div class="why pb-4">
 			<h2 class="price-title mb-4">Chi tiết <span style="color: #0066CC;"> Phương pháp </span></h2>
@@ -264,14 +264,28 @@
 	<script>
 		document.addEventListener('DOMContentLoaded', () => {
 			const links = document.querySelectorAll('.narbarmodel a');
-			links.forEach(link => {
-				link.addEventListener('click', (e) => {
-					e.preventDefault();
-					links.forEach(l => l.classList.remove('active'));
-					link.classList.add('active');
+					links.forEach(link => {
+						link.addEventListener('click', (e) => {
+							e.preventDefault();
+							// Xóa class active
+							links.forEach(l => l.classList.remove('active'));
+							link.classList.add('active');
+							// Lấy ID mục tiêu
+							const targetId = link.getAttribute('href')?.trim();
+							// Nếu href null hoặc không phải id hợp lệ thì thoát
+							if (!targetId || !targetId.startsWith("#")) {
+								return;
+							}
+							const targetEl = document.querySelector(targetId);
+							if (targetEl) {
+								targetEl.scrollIntoView({
+									behavior: "smooth",
+									block: "start"
+								});
+							}
+						});
+					});
 				});
-			});
-		});
 	</script>
 </section>
 <section id="Model">
@@ -398,7 +412,7 @@
 					Điều chỉnh cấu trúc vốn chủ sở hữu trong đánh giá rủi ro tài chính của doanh nghiệp phi tài
 					chính
 				</p>
-				<span class="detail-link">Xem chi tiết <i class="fas fa-arrow-right"></i></span>
+				<span class="detail-link">Xem chi tiết <i class="fa fa-arrow-right"></i></span>
 			</div>
 
 			<div class="method-card">
@@ -406,7 +420,7 @@
 				<p class="content">
 					Tiêu chí xếp hạng tín nhiệm nhóm ‘CCC+’, ‘CCC’, ‘CCC-’ và ‘CC’
 				</p>
-				<span class="detail-link">Xem chi tiết <i class="fas fa-arrow-right"></i></span>
+				<span class="detail-link">Xem chi tiết <i class="fa fa-arrow-right"></i></span>
 			</div>
 
 			<div class="method-card">
@@ -414,7 +428,7 @@
 				<p class="content">
 					Phương pháp luận doanh nghiệp dự án
 				</p>
-				<span class="detail-link">Xem chi tiết <i class="fas fa-arrow-right"></i></span>
+				<span class="detail-link">Xem chi tiết <i class="fa fa-arrow-right"></i></span>
 			</div>
 
 			<div class="method-card">
@@ -422,14 +436,14 @@
 				<p class="content">
 					Phương pháp luận Xếp hạng Tín nhiệm Công cụ nợ/ Trái phiếu doanh nghiệp
 				</p>
-				<span class="detail-link">Xem chi tiết <i class="fas fa-arrow-right"></i></span>
+				<span class="detail-link">Xem chi tiết <i class="fa fa-arrow-right"></i></span>
 			</div>
 
 		</div>
 
 		<div class="method-nav">
-			<button class="nav-btn"><i class="fas fa-arrow-left"></i></button>
-			<button class="nav-btn"><i class="fas fa-arrow-right"></i></button>
+			<button class="nav-btn"><i class="fa fa-arrow-left"></i></button>
+			<button class="nav-btn"><i class="fa fa-arrow-right"></i></button>
 		</div>
 	</div>
 </section>

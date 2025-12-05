@@ -174,11 +174,11 @@
             </style>
             <div class="container">
                 <div class="narbartrust">
-                    <a href="#" class="active">Giới thiệu Dịch vụ</a>
-                    <a href="#">Thành tích qua con số</a>
-                    <a href="#">Lợi ích của XHTN</a>
-                    <a href="#">Công bố XHTN</a>
-                    <a href="#">Đội ngũ nhân sự</a>
+            <a href="#FiinTrust" class="active">Giới thiệu Dịch vụ</a>
+            <a href="#OutStand">Thành tích qua con số</a>
+            <a href="#WhyLastest">Lợi ích của XHTN</a>
+            <a href="#WhyLastest">Công bố XHTN</a>
+            <a href="#UserTeam">Đội ngũ nhân sự</a>
                 </div>
                 <div class="why pb-4">
                     <h2 class="price-title mb-4">Xếp hạng <span style="color: #0066CC;"> Tín nhiệm </span></h2>
@@ -270,15 +270,29 @@
             </div>
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
-                    const links = document.querySelectorAll('.narbartrust a');
-                    links.forEach(link => {
-                        link.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            links.forEach(l => l.classList.remove('active'));
-                            link.classList.add('active');
-                        });
-                    });
-                });
+            const links = document.querySelectorAll('.narbartrust a');
+		            links.forEach(link => {
+			            link.addEventListener('click', (e) => {
+				            e.preventDefault();
+				            // Xóa class active
+				            links.forEach(l => l.classList.remove('active'));
+				            link.classList.add('active');
+				            // Lấy ID mục tiêu
+				            const targetId = link.getAttribute('href')?.trim();
+				            // Nếu href null hoặc không phải id hợp lệ thì thoát
+				            if (!targetId || !targetId.startsWith("#")) {
+					            return;
+				            }
+				            const targetEl = document.querySelector(targetId);
+				            if (targetEl) {
+					            targetEl.scrollIntoView({
+						            behavior: "smooth",
+						            block: "start"
+					            });
+				            }
+			            });
+		            });
+	            });
             </script>
         </section>
         <section id="OutStand" class="py-5">
