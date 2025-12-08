@@ -117,19 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Blogs" xml:space="preserve">
-    <value>Blogs</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="News" xml:space="preserve">
-    <value>News</value>
-  </data>
-  <data name="PostBy" xml:space="preserve">
-    <value>Post by</value>
-  </data>
-  <data name="RecentPosts" xml:space="preserve">
-    <value>Recent Posts</value>
+  <data name="Our Featured &amp; Insights" xml:space="preserve">
+    <value>Our Featured &amp; Insights</value>
   </data>
 </root>

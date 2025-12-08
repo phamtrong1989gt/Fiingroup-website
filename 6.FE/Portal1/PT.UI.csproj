@@ -122,4 +122,9 @@
     <ProjectReference Include="..\..\5.Base\PT.Base\PT.Base.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Resources\Views\ContentPageHome\" />
+  </ItemGroup>
+
 </Project>
