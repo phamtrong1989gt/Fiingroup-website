@@ -46,5 +46,10 @@ namespace PT.UI.Controllers
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();
         }
+        public IActionResult Policy(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Policy");
+        }
     }
 }
