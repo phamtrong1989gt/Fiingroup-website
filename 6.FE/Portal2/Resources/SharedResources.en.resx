@@ -246,4 +246,7 @@
   <data name="Head Clinic" xml:space="preserve">
     <value>Head Clinic</value>
   </data>
+  <data name="Solution_TitleNews" xml:space="preserve">
+    <value>Highlights</value>
+  </data>
 </root>

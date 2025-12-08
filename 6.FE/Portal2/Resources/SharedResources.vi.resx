@@ -246,4 +246,7 @@
   <data name="Head Clinic" xml:space="preserve">
     <value>Cơ sở chính</value>
   </data>
+  <data name="Solution_TitleNews" xml:space="preserve">
+    <value>Tiêu điểm</value>
+  </data>
 </root>
