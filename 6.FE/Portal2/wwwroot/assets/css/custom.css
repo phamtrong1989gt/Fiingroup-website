@@ -346,6 +346,8 @@
         color: #234;
         font-weight: 400;
         text-align: justify;
+        height:180px;
+        overflow:hidden
     }
 
 .testimonial-media {
@@ -375,7 +377,7 @@
         width: 56px !important;
         height: 63px;
         display: flow;
-        margin: -28% -56% 0 0;
+        margin: -45% -56% 0 0;
         z-index: 9;
         float: left;
     }
