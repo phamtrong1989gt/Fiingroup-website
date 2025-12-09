@@ -2,6 +2,7 @@
 using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace PT.UI.Controllers
@@ -25,6 +26,23 @@ namespace PT.UI.Controllers
             _iCategoryRepository = iCategoryRepository;
             _iNewsAPIService = iNewsAPIService;
             _iLinkRepository = iLinkRepository;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> TopNewsAjax([FromQuery] NewsQueryParameters prs)
+        {
+            var cmsCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == prs.CategoryId);
+            if (cmsCategory != null && !string.IsNullOrEmpty(cmsCategory.ExCategoryIds))
+            {
+                prs.ExCategoryIds = cmsCategory.ExCategoryIds;
+            }
+            prs.PageSize = 3;
+            prs.Page = prs.Page <= 0 ? 1 : prs.Page;
+            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
+            prs.Status = "Active";
+            prs.CategoryIds = prs.CategoryIds ?? "0";
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            return View("TopNewsAjax", listNew);
         }
 
         [HttpGet]

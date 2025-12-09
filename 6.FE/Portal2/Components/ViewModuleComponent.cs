@@ -42,7 +42,10 @@ namespace PT.Component
                 {
                     // Cache key duy nhất cho module (bao gồm type, code, language, portalId)
                     string cacheKey = $"ModuleHtml::{type}::{code}::{language}::{portalId}";
-
+                    if(code == "HomeSlider")
+                    {
+                        string a = "";
+                    }    
                     // Thử lấy từ cache trước
                     if (_iMemoryCache.TryGetValue(cacheKey, out string cachedHtml) && !string.IsNullOrEmpty(cachedHtml))
                     {
