@@ -1,0 +1,50 @@
+﻿@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@using PT.Domain.Model;
+@using PT.Infrastructure.Interfaces;
+@using PT.Shared;
+@inject IViewLocalizer Localizer;
+@using System.Linq.Expressions;
+@using PT.UI.Models
+@inject IOptions<BaseSettings> _baseSettings;
+
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+}
+
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleBanner", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleTongQuan", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleTNDai", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleTNNgan", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleEvent", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsLienHe", language = language, portalId = portalId })
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('.narbarmodel a');
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Xóa class active
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                // Lấy ID mục tiêu
+                const targetId = link.getAttribute('href')?.trim();
+                // Nếu href null hoặc không phải id hợp lệ thì thoát
+                if (!targetId || !targetId.startsWith("#")) {
+                    return;
+                }
+                const targetEl = document.querySelector(targetId);
+                if (targetEl) {
+                    targetEl.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                }
+            });
+        });
+    });
+</script>

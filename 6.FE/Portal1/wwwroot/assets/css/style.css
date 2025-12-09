@@ -464,6 +464,12 @@ a {
     padding-left: 10% !important;
 }
 
+.pr-30 {
+    padding-right: 30px !important;
+}
+.pr-40 {
+    padding-right: 40px !important;
+}
 .pr-5 {
     padding-right: 5% !important;
 }
@@ -642,7 +648,9 @@ a {
 }
 
 #SliderBanner .carousel-caption {
-    top: 30%;
+    top: 20%;
+    text-align:left!important;
+    max-height:450px;
 }
 
 #SliderBanner .btn-request {
@@ -966,7 +974,7 @@ a:hover {
 #carouselFiin h1 {
     font-size: 56px;
 }
-#carouselFiin p{font-size:32px;}
+#carouselFiin p{font-size:16px;}
 .btn-join {
     padding: 7px 20px;
     border-radius: 200px;
