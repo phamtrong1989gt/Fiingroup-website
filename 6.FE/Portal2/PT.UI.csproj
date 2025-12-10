@@ -15,6 +15,8 @@
   <ItemGroup>
     <Compile Remove="1223\**" />
     <Compile Remove="logs\**" />
+    <Compile Remove="Resources\Views\CategoryHome\**" />
+    <Compile Remove="Resources\Views\ContactHome\**" />
     <Compile Remove="wwwroot\Module\**" />
     <Compile Remove="wwwroot\wp-admin\**" />
     <Compile Remove="wwwroot\wp-content\**" />
@@ -22,6 +24,8 @@
     <Compile Remove="wwwroot\wp-json\**" />
     <Content Remove="1223\**" />
     <Content Remove="logs\**" />
+    <Content Remove="Resources\Views\CategoryHome\**" />
+    <Content Remove="Resources\Views\ContactHome\**" />
     <Content Remove="wwwroot\Module\**" />
     <Content Remove="wwwroot\wp-admin\**" />
     <Content Remove="wwwroot\wp-content\**" />
@@ -29,6 +33,8 @@
     <Content Remove="wwwroot\wp-json\**" />
     <EmbeddedResource Remove="1223\**" />
     <EmbeddedResource Remove="logs\**" />
+    <EmbeddedResource Remove="Resources\Views\CategoryHome\**" />
+    <EmbeddedResource Remove="Resources\Views\ContactHome\**" />
     <EmbeddedResource Remove="wwwroot\Module\**" />
     <EmbeddedResource Remove="wwwroot\wp-admin\**" />
     <EmbeddedResource Remove="wwwroot\wp-content\**" />
@@ -36,6 +42,8 @@
     <EmbeddedResource Remove="wwwroot\wp-json\**" />
     <None Remove="1223\**" />
     <None Remove="logs\**" />
+    <None Remove="Resources\Views\CategoryHome\**" />
+    <None Remove="Resources\Views\ContactHome\**" />
     <None Remove="wwwroot\Module\**" />
     <None Remove="wwwroot\wp-admin\**" />
     <None Remove="wwwroot\wp-content\**" />
@@ -120,12 +128,6 @@
     <ProjectReference Include="..\..\3.Infrastructure\PT.Infrastructure.csproj" />
     <ProjectReference Include="..\..\4.Shared\PT.Share.csproj" />
     <ProjectReference Include="..\..\5.Base\PT.Base\PT.Base.csproj" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Resources\Views\CategoryHome\" />
-    <Folder Include="Resources\Views\ContactHome\" />
   </ItemGroup>
 
 </Project>

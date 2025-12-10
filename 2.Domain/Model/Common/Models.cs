@@ -66,6 +66,8 @@ namespace PT.Domain.Model
         public string Tags { get; set; }
         public string Language { get; set; }
 
+        public int? CategoryId { get; set; }
+
         /// <summary>
         /// Convert to query string
         /// </summary>
