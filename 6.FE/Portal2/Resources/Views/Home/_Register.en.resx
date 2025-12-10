@@ -132,6 +132,9 @@
   <data name="FullName" xml:space="preserve">
     <value>Full name</value>
   </data>
+  <data name="NoProducts" xml:space="preserve">
+    <value>No products</value>
+  </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone number</value>
   </data>
@@ -140,6 +143,12 @@
   </data>
   <data name="Products" xml:space="preserve">
     <value>Product &amp; Service</value>
+  </data>
+  <data name="SelectProducts" xml:space="preserve">
+    <value>Select Product &amp; Service</value>
+  </data>
+  <data name="SelectServiceId" xml:space="preserve">
+    <value>Select Industry / Sector</value>
   </data>
   <data name="ServiceId" xml:space="preserve">
     <value>Industry / Sector</value>

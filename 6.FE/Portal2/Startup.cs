@@ -100,48 +100,48 @@ namespace PT.UI
             // Tự động bỏ qua POST requests, chỉ cache GET requests
             services.AddOutputCache(options =>
             {
-                // ===== POLICY 1: TRANG CHỦ - Cache 5 phút =====
-                // Vary theo: Language (URL path segment), Query strings
-                options.AddPolicy("HomePage", builder => builder
-                    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:HomePageDuration", 300))) // Mặc định 300s = 5 phút
-                    .Tag("home")
-                    .SetVaryByQuery("*") // Vary theo tất cả query params (nếu có)
-                    .SetVaryByRouteValue("language") // Vary theo language trong route (vi/en)
-                );
+                //// ===== POLICY 1: TRANG CHỦ - Cache 5 phút =====
+                //// Vary theo: Language (URL path segment), Query strings
+                //options.AddPolicy("HomePage", builder => builder
+                //    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:HomePageDuration", 300))) // Mặc định 300s = 5 phút
+                //    .Tag("home")
+                //    .SetVaryByQuery("*") // Vary theo tất cả query params (nếu có)
+                //    .SetVaryByRouteValue("language") // Vary theo language trong route (vi/en)
+                //);
 
-                // ===== POLICY 2: CATEGORY PAGES - Cache 3 phút =====
-                // Vary theo: Language, Category ID/Slug, Page number
-                options.AddPolicy("CategoryPage", builder => builder
-                    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:CategoryPageDuration", 180))) // Mặc định 180s = 3 phút
-                    .Tag("category")
-                    .SetVaryByQuery("page", "sort", "limit") // Vary theo pagination params
-                    .SetVaryByRouteValue("language", "slug", "id")
-                );
+                //// ===== POLICY 2: CATEGORY PAGES - Cache 3 phút =====
+                //// Vary theo: Language, Category ID/Slug, Page number
+                //options.AddPolicy("CategoryPage", builder => builder
+                //    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:CategoryPageDuration", 180))) // Mặc định 180s = 3 phút
+                //    .Tag("category")
+                //    .SetVaryByQuery("page", "sort", "limit") // Vary theo pagination params
+                //    .SetVaryByRouteValue("language", "slug", "id")
+                //);
 
-                // ===== POLICY 3: CONTENT/DETAIL PAGES - Cache 10 phút =====
-                // Nội dung tĩnh, ít thay đổi -> cache lâu hơn
-                options.AddPolicy("ContentPage", builder => builder
-                    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:ContentPageDuration", 600))) // Mặc định 600s = 10 phút
-                    .Tag("content")
-                    .SetVaryByRouteValue("language", "slug", "id")
-                );
+                //// ===== POLICY 3: CONTENT/DETAIL PAGES - Cache 10 phút =====
+                //// Nội dung tĩnh, ít thay đổi -> cache lâu hơn
+                //options.AddPolicy("ContentPage", builder => builder
+                //    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:ContentPageDuration", 600))) // Mặc định 600s = 10 phút
+                //    .Tag("content")
+                //    .SetVaryByRouteValue("language", "slug", "id")
+                //);
 
-                // ===== POLICY 4: SEARCH PAGES - Cache ngắn 30 giây =====
-                // Search results thay đổi thường xuyên -> cache ngắn
-                options.AddPolicy("SearchPage", builder => builder
-                    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:SearchPageDuration", 30))) // Mặc định 30s
-                    .Tag("search")
-                    .SetVaryByQuery("k", "page") // Vary theo keyword và page
-                    .SetVaryByRouteValue("language")
-                );
+                //// ===== POLICY 4: SEARCH PAGES - Cache ngắn 30 giây =====
+                //// Search results thay đổi thường xuyên -> cache ngắn
+                //options.AddPolicy("SearchPage", builder => builder
+                //    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:SearchPageDuration", 30))) // Mặc định 30s
+                //    .Tag("search")
+                //    .SetVaryByQuery("k", "page") // Vary theo keyword và page
+                //    .SetVaryByRouteValue("language")
+                //);
 
-                // ===== POLICY 5: STATIC PAGES - Cache 1 giờ =====
-                // About, Contact (nội dung tĩnh)
-                options.AddPolicy("StaticPage", builder => builder
-                    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:StaticPageDuration", 3600))) // Mặc định 3600s = 1 giờ
-                    .Tag("static")
-                    .SetVaryByRouteValue("language")
-                );
+                //// ===== POLICY 5: STATIC PAGES - Cache 1 giờ =====
+                //// About, Contact (nội dung tĩnh)
+                //options.AddPolicy("StaticPage", builder => builder
+                //    .Expire(TimeSpan.FromSeconds(Configuration.GetValue<int>("CacheSettings:StaticPageDuration", 3600))) // Mặc định 3600s = 1 giờ
+                //    .Tag("static")
+                //    .SetVaryByRouteValue("language")
+                //);
             });
 
             // ✅ RESPONSE CACHING - Cache HTTP responses ở server-side

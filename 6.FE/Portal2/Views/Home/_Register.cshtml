@@ -2,10 +2,10 @@
 @inject PT.Infrastructure.Interfaces.IContactRepository _iContactRepository;
 @inject IOptions<BaseSettings> _baseSettings;
 @inject IViewLocalizer Localizer;
+@model PT.UI.Models.ContactHomeModel;
 @{
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var listLanguage = PT.Shared.ListData.ListLanguage;
-    @model PT.UI.Models.ContactHomeModel;
     @inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
     @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
     var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
@@ -20,7 +20,6 @@
         <h2 class="price-title mb-5">@Localizer["Title"]</h2>
         <div class="row">
             <div class="col-lg-6 col-sm-12">
-                @* <form form-edit method="post" asp-action="Contact" asp-controller="ContactHome"> *@
                 <input type="hidden" id="languageId" value="@language" />
                 <form id="formLienHe" method="post">
                     @Html.AntiForgeryToken()
@@ -50,22 +49,24 @@
                             <input type="text" class="form-control" asp-for="Position" placeholder="">
                             <span class="validate-style" asp-validation-for="Position"></span>
                         </div>
+
                         <div class="col-sm-12 mb-2">
                             <label class="form-label" asp-for="ServiceId"></label> <strong class="error">*</strong>
                             <select asp-for="ServiceId" asp-items="listServies" class="form-select" id="dichVuQT">
-                                <option value="">Chọn nhóm ngành</option>
+                                <option value="">@Localizer["SelectServiceId"]</option>
                             </select>
                             <span asp-validation-for="ServiceId" class="validate-style"></span>
                         </div>
+
                         <div class="col-sm-12 mb-2">
                             <label class="form-label" asp-for="Products"></label>
                             <select class="form-select" id="sanPhamQT" multiple="multiple">
-                                <option value="">Chọn sản phẩm & dịch vụ quan tâm</option>
+                                <option value="">@Localizer["SelectProducts"]</option>
                             </select>
                         </div>
                         <div class="col-sm-12 mb-2">
                             <label class="form-label" asp-for="Content"></label>
-                            <textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="Nhập mô tả chi tiết"></textarea>
+                            <textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder=""></textarea>
                             <span class="validate-style" asp-validation-for="Content"></span>
                             <input type="hidden" class="form-control" id="products" asp-for="Products">
                         </div>
@@ -89,7 +90,7 @@
 
     $(function () {
             $('#sanPhamQT').select2({
-               placeholder: "Chọn sản phẩm & dịch vụ quan tâm",
+               placeholder: "@Localizer["SelectProducts"]",
                closeOnSelect: false,
                allowHtml: true,
                allowClear: true,
@@ -147,7 +148,7 @@
         $("#products").val("");
         if (!serviceId) {
             $("#sanPhamQT").empty()
-                .append('<option value="">Chọn sản phẩm & dịch vụ quan tâm</option>');
+                .append('<option value="">@Localizer["SelectProducts"]</option>');
             return;
         }
 
@@ -170,7 +171,7 @@
                             );
                         });
                     } else {
-                        $("#sanPhamQT").append('<option value="">Không có sản phẩm</option>');
+                        $("#sanPhamQT").append('<option value="">@Localizer["NoProducts"]</option>');
                     }
                 }
                 else {

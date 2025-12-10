@@ -231,12 +231,20 @@ namespace PT.Base.Services
                 throw new HttpRequestException("Unauthorized", null, HttpStatusCode.Unauthorized);
             }
 
-            response.EnsureSuccessStatusCode();
-
             var responseContent = await response.Content.ReadAsStringAsync();
-            var newsResponse = JsonConvert.DeserializeObject<NewsListResponse>(responseContent);
 
-            return newsResponse;
+            response.EnsureSuccessStatusCode();
+            try
+            {
+                var newsResponse = JsonConvert.DeserializeObject<NewsListResponse>(responseContent);
+                return newsResponse;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            return null;
         }
 
         /// <summary>

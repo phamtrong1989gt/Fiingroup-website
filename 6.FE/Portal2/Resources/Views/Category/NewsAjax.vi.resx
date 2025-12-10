@@ -117,19 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Content" xml:space="preserve">
-    <value>Lời nhắn của bạn</value>
+  <data name="Location" xml:space="preserve">
+    <value>Địa chỉ</value>
   </data>
-  <data name="Email" xml:space="preserve">
-    <value>Email</value>
+  <data name="EventTime" xml:space="preserve">
+    <value>Thời gian</value>
   </data>
-  <data name="FullName" xml:space="preserve">
-    <value>Họ và tên</value>
+  <data name="EventDate" xml:space="preserve">
+    <value>Ngày diễn ra</value>
   </data>
-  <data name="The Email field is not a valid e-mail address." xml:space="preserve">
-    <value>Trường Email không phải là địa chỉ email hợp lệ.</value>
+  <data name="Title" xml:space="preserve">
+    <value>Khám phá những tin tức, sự kiện và thông tin mới nhất từ FiinGroup</value>
   </data>
-  <data name="The {0} field is required" xml:space="preserve">
-    <value>Thông tin {0} là bắt buộc</value>
+  <data name="ViewDetails" xml:space="preserve">
+    <value>Khám phá ngay</value>
+  </data>
+  <data name="NoEvent" xml:space="preserve">
+    <value>Hiện không có sự kiện nào</value>
   </data>
 </root>

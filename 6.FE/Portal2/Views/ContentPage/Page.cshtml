@@ -1,11 +1,42 @@
 ﻿@model PT.Domain.Model.ContentPage
 @addTagHelper *, PT.UI
 @using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer  Localizer
+@inject IViewLocalizer Localizer
 @inject ICategoryRepository _iCategoryRepository;
 @inject IContentPageReferenceRepository _iContentPageReferenceRepository;
+@using Microsoft.Extensions.Options
 @using PT.Shared;
+@using PT.UI.Models
+@inject IOptions<BaseSettings> _baseSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
 @{
-    Layout = "~/Views/Shared/_Home.cshtml";
-    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	Layout = "~/Views/Shared/_Home.cshtml";
+	var portalId = _baseSettings.Value.PortalId;
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 }
+<style>
+	#newsDetail{background-color:#f8fbff;font-family:Inter,sans-serif;color:#093461}.news-meta{display:flex;gap:20px;color:#06c;font-size:14px;margin-bottom:25px}.news-meta p{margin:0;position:relative}.news-sers{color:#093461}.news-sers i{color:#06c;font-size:7px;vertical-align:middle}.news-banner img{width:100%;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:30px}.news-content p{line-height:1.7;margin-bottom:5px;font-size:16px;text-align:justify;color:#093461}.news-content h3{color:#093461;font-size:18px;margin:30px 0 10px}.news-content ul{padding-left:30px;margin-bottom:20px}.news-content ul li{list-style:disc;margin-bottom:10px;line-height:1.6}.news-footer{margin-top:30px;font-size:14px;line-height:1.7}.download-link,.news-footer a{color:#093461;font-weight:600;text-decoration:none}.download-link:hover,.news-footer a:hover{text-decoration:underline}.news-bottom{margin-top:40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #d6e4ff;padding-top:20px;flex-wrap:wrap;gap:10px}.social-icons{display:flex;align-items:center;gap:15px}.social-icons span{color:#555;font-size:14px}.social-icons a{color:#0078d4;font-size:18px;transition:color .3s}.social-icons a:hover{color:#034ea2}.pd5{padding:5px}.pdt25{padding-top:25px}.dashed-line{border:none;border-top:2px dashed #093461;margin:20px 0;width:330px;opacity:.9}.border-button{border-bottom:1px solid}.show-all{background-color:#fff;color:#06c;padding:8px 60px;border-radius:25px;cursor:pointer;margin-top:20px;display:inline-block;border:1px solid #06c}#NewsFeatured .news-title a{font-weight:600;font-size:30px!important}.title-h1{font-weight:700;font-size:40px;line-height:150%;color:#1d2939}
+
+</style>
+<section id="newsDetail" class="py-5">
+	<div class="container">
+		<h1 class="title-h1">
+			@Model.Name
+		</h1>
+		<div class="news-meta">
+		</div>
+		<div class="news-content">
+			<div>
+				@Html.Raw(Model.Content)
+			</div>
+			<div class="news-bottom">
+				<div class="social-icons">
+					<span>Share to:</span>
+					<a href="#"><img src="/Data/Banner/new-icon1.png" alt="decor" class="youtube"></a>
+					<a href="#"><img src="/Data/Banner/new-icon2.png" alt="decor" class="facebook"></a>
+					<a href="#"><img src="/Data/Banner/new-icon3.png" alt="decor" class="instagram"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

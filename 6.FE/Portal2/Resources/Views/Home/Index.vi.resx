@@ -117,52 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Back" xml:space="preserve">
-    <value>Quay lại</value>
+  <data name="ExploreMore" xml:space="preserve">
+    <value>Khám phá thêm</value>
   </data>
-  <data name="CopyrightInfo" xml:space="preserve">
-    <value>Bản quyền thuộc về Công ty Duramoto.</value>
-  </data>
-  <data name="divButton" xml:space="preserve">
-    <value>divButton</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Trang chủ</value>
-  </data>
-  <data name="SmallTiteNews" xml:space="preserve">
-    <value>Tự hào khi luôn luôn sẵn sàng cung cấp những tiện ích và dịch vụ cao cấp nhất</value>
-  </data>
-  <data name="BookNow" xml:space="preserve">
-    <value>Đặt phòng ngay</value>
-  </data>
-  <data name="CheckIn" xml:space="preserve">
-    <value>Ngày nhận phòng</value>
-  </data>
-  <data name="CheckOut" xml:space="preserve">
-    <value>Ngày trả phòng</value>
-  </data>
-  <data name="Quatity" xml:space="preserve">
-    <value>Số lượng</value>
-  </data>
-  <data name="WhyChooseUs" xml:space="preserve">
-    <value>Vì sao chọn chúng tôi</value>
-  </data>
-  <data name="GetLatest" xml:space="preserve">
-    <value>Đăng ký để nhận thông tin mới nhất</value>
-  </data>
-  <data name="SUBSCRIBE" xml:space="preserve">
-    <value>ĐỂ LẠI THÔNG TIN</value>
-  </data>
-  <data name="Contact" xml:space="preserve">
-    <value>Liên hệ</value>
-  </data>
-  <data name="Patient" xml:space="preserve">
-    <value>Bệnh nhân</value>
-  </data>
-  <data name="Testimonials" xml:space="preserve">
-    <value>Lời chứng thực</value>
-  </data>
-  <data name="What People Says" xml:space="preserve">
-    <value>Những gì khách hàng nói</value>
+  <data name="RegisterForConsultation" xml:space="preserve">
+    <value>Đăng ký để nhận tư vấn</value>
   </data>
 </root>

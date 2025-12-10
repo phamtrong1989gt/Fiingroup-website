@@ -130,7 +130,10 @@
     <value>Email</value>
   </data>
   <data name="FullName" xml:space="preserve">
-    <value>Họ và tên</value>
+    <value>Họ và tên 1</value>
+  </data>
+  <data name="NoProducts" xml:space="preserve">
+    <value>Không có sản phẩm nào</value>
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Số điện thoại</value>
@@ -140,6 +143,12 @@
   </data>
   <data name="Products" xml:space="preserve">
     <value>Sản phẩm &amp; dịch vụ quan tâm</value>
+  </data>
+  <data name="SelectProducts" xml:space="preserve">
+    <value> Chọn Sản phẩm &amp; dịch vụ quan tâm</value>
+  </data>
+  <data name="SelectServiceId" xml:space="preserve">
+    <value>Chọn nhóm ngành</value>
   </data>
   <data name="ServiceId" xml:space="preserve">
     <value>Nhóm ngành</value>

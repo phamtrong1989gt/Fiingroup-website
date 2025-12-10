@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <div class="pt-4">
-                            <a class="show-more" href="@path">Khám phá thêm <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                            <a class="show-more" href="@path">@Localizer["ExploreMore"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
                         </div>
                     </div>
 
@@ -114,7 +114,7 @@
                             </div>
                         </div>
                         <div class="pt-4">
-                            <a class="show-more" href="@path">Khám phá thêm <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                            <a class="show-more" href="@path">@Localizer["ExploreMore"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
                         </div>
                     </div>
                     <div class="col-sm-7 d-none d-md-block text-right animate-on-scroll fade-from-right">
@@ -128,7 +128,7 @@
             }
         </div>
         <div class="text-center p-dangky">
-            <a class="btn btn-primary btn-join" href="#DangKy" title="Đăng kí để nhận tư vấn">Đăng kí để nhận tư vấn</a>
+            <a class="btn btn-primary btn-join" href="#DangKy" title="@Localizer["RegisterForConsultation"]">@Localizer["RegisterForConsultation"]</a>
         </div>
     </div>
 </section>
@@ -136,7 +136,6 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderDauAn", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderOurClients", language = language, portalId = portalId })
 <partial name="_Register" />
-
 
 <style>
     .video-play-button {

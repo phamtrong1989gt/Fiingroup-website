@@ -117,49 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Back" xml:space="preserve">
-    <value>Back</value>
+  <data name="Required" xml:space="preserve">
+    <value>The {0} field is required</value>
   </data>
-  <data name="CopyrightInfo" xml:space="preserve">
-    <value>Copyright © 2012 Duramoto Inc. All rights reserved.</value>
-  </data>
-  <data name="divButton" xml:space="preserve">
-    <value>divButton_en</value>
-  </data>
-  <data name="SmallTiteNews" xml:space="preserve">
-    <value>Proud to be always ready to provide the highest level of utilities and services</value>
-  </data>
-  <data name="BookNow" xml:space="preserve">
-    <value>Book Now</value>
-  </data>
-  <data name="CheckIn" xml:space="preserve">
-    <value>Check In</value>
-  </data>
-  <data name="CheckOut" xml:space="preserve">
-    <value>Check Out</value>
-  </data>
-  <data name="Quatity" xml:space="preserve">
-    <value>Quatity</value>
-  </data>
-  <data name="WhyChooseUs" xml:space="preserve">
-    <value>Why Choose Us</value>
-  </data>
-  <data name="GetLatest" xml:space="preserve">
-    <value>Get latest news and updates</value>
-  </data>
-  <data name="SUBSCRIBE" xml:space="preserve">
-    <value>SUBSCRIBE</value>
-  </data>
-  <data name="Patient" xml:space="preserve">
-    <value>Patient</value>
-  </data>
-  <data name="Testimonials" xml:space="preserve">
-    <value>Testimonials</value>
-  </data>
-  <data name="What People Says" xml:space="preserve">
-    <value>What People Says</value>
-  </data>
-  <data name="About" xml:space="preserve">
-    <value>About</value>
+  <data name="StringLength" xml:space="preserve">
+    <value>{0} must have a length between {2} and {1} characters.</value>
   </data>
 </root>

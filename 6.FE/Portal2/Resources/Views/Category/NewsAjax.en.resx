@@ -117,34 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FAQ" xml:space="preserve">
-    <value>Câu hỏi thường gặp</value>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Trang chủ</value>
+  <data name="EventTime" xml:space="preserve">
+    <value>Event Time</value>
   </data>
-  <data name="Link" xml:space="preserve">
-    <value>/vi/cau-hoi-thuong-gap.html</value>
-  </data>
-  <data name="News" xml:space="preserve">
-    <value>Bài viết mới</value>
-  </data>
-  <data name="PostBy" xml:space="preserve">
-    <value>Đăng bởi</value>
-  </data>
-  <data name="Question category" xml:space="preserve">
-    <value>Danh mục câu hỏi</value>
-  </data>
-  <data name="Read more" xml:space="preserve">
-    <value>Chi tiết</value>
-  </data>
-  <data name="Related questions" xml:space="preserve">
-    <value>Câu hỏi liên quan</value>
-  </data>
-  <data name="See more" xml:space="preserve">
-    <value>Xem thêm</value>
+  <data name="EventDate" xml:space="preserve">
+    <value>Event Time</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Câu hỏi  &lt;span class='theme-color'&gt;thường gặp&lt;/span&gt;</value>
+    <value>Discover the Latest News, Events, and Updates from FiinGroup</value>
+  </data>
+  <data name="ViewDetails" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="NoEvent" xml:space="preserve">
+    <value>There are currently no new events</value>
   </data>
 </root>

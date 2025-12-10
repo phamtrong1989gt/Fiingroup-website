@@ -104,7 +104,22 @@ namespace PT.UI.Controllers
                         FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
                     }, language ?? "vi");
-                    dl.DataAPI = listNew;
+                    dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
+                    
+                    // lấy danh mục event 
+                    var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.CategoryType == ECategoryType.ContentPage_Event && x.Status && x.ParentId == 0 && x.Language == language && x.PortalId == dl.PortalId);
+                    if(eventCategory != null)
+                    {
+                        var listEvent = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
+                        {
+                            Page = page ?? 1,
+                            PageSize = 1,
+                            FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
+                            CategoryIds = eventCategory.ExCategoryIds,
+                        }, language ?? "vi");
+
+                        dl.EventTop = (listEvent ?? new NewsListResponse { Items = [] });
+                    }    
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }    
                 viewName = "News";
@@ -118,14 +133,14 @@ namespace PT.UI.Controllers
                 }
                 else
                 {
-                    var listNew = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
+                    var listEvent = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
                     {
                         Page = page ?? 1,
                         PageSize = 9,
                         FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
                     }, language ?? "vi");
-                    dl.DataAPI = listNew;
+                    dl.DataAPI = listEvent ?? new NewsListResponse { Items = [] };
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }
                 viewName = "Event";
@@ -146,7 +161,7 @@ namespace PT.UI.Controllers
                         FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
                     }, language ?? "vi");
-                    dl.DataAPI = listNew;
+                    dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }
                 viewName = "Publications";

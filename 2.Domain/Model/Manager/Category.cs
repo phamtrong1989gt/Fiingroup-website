@@ -57,6 +57,8 @@ namespace PT.Domain.Model
 
         [NotMapped]
         public NewsListResponse DataAPI { get; set; }
+        [NotMapped]
+        public NewsListResponse EventTop { get; set; }
     }
     public class CategoryModel:SeoModel
     {
