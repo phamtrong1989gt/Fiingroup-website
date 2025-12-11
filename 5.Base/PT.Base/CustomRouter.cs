@@ -106,7 +106,6 @@ namespace PT.Base
             }
 
             // Fast path: check static files using Span (zero-allocation)
-            // This handles cases like /en.svg, /vi.png, etc. (skip culture processing)
             var pathSpan = pathValue.AsSpan();
             if (pathSpan.Length > 4) // Minimum ".xxx"
             {
@@ -126,26 +125,11 @@ namespace PT.Base
                 return Task.FromResult((ProviderCultureResult)null);
             }
 
-            // SPECIAL CASE: Root path "/" always uses default culture (homepage rule)
-            if (path.Length == 0 || path == "/")
-            {
-                var currentThreadCulture = Thread.CurrentThread.CurrentCulture.Name;
-                var defaultCultureId2 = _cultureIdToId2Map.Value.GetValueOrDefault(_defaultCulture);
-                
-                // Skip if already in default culture
-                if (string.Equals(currentThreadCulture, defaultCultureId2, StringComparison.OrdinalIgnoreCase))
-                {
-                    return Task.FromResult((ProviderCultureResult)null);
-                }
-                
-                // Force default culture for homepage
-                return Task.FromResult(new ProviderCultureResult(_defaultCulture));
-            }
+            // Determine target language
+            string targetLanguage = _defaultCulture;
 
-            // Extract URL language if present
+            // Extract language from URL if present
             // Valid patterns: /vi/, /vi/news.html, /en/about.html
-            // Invalid patterns: /news.html (no language), /en.svg (static file - already handled above)
-            string urlLanguage = null;
             if (path.Length > 1) // Has content after /
             {
                 // Extract first segment efficiently
@@ -154,36 +138,14 @@ namespace PT.Base
                     ? path.Substring(1, firstSlashIndex - 1) 
                     : path.Substring(1);
 
-                // IMPORTANT: Only consider it a language if it's in our valid list
-                // This prevents false positives like /about, /contact being treated as languages
+                // Check if first segment is a valid language
                 if (_validLanguages.Value.Contains(firstSegment))
                 {
-                    urlLanguage = firstSegment;
+                    targetLanguage = firstSegment;
                 }
             }
 
-            // Get current thread culture
-            var currentCulture = Thread.CurrentThread.CurrentCulture.Name;
-            var currentLanguage = _cultureId2ToIdMap.Value.TryGetValue(currentCulture, out var langId) 
-                ? langId 
-                : _defaultCulture;
-
-            // Determine target language:
-            // - If URL has explicit language (/vi/, /en/) → use it (URL wins)
-            // - Otherwise → preserve current culture (user preference)
-            var targetLanguage = urlLanguage ?? currentLanguage;
-
-            // OPTIMIZATION: Skip if target matches current culture
-            // This handles cases where:
-            // - User on /vi/page-a.html navigates to /vi/page-b.html (already in vi)
-            // - User on /news.html (no explicit language) stays in same culture
-            var targetCultureId2 = _cultureIdToId2Map.Value.GetValueOrDefault(targetLanguage);
-            if (string.Equals(currentCulture, targetCultureId2, StringComparison.OrdinalIgnoreCase))
-            {
-                return Task.FromResult((ProviderCultureResult)null);
-            }
-
-            // Need to change culture
+            // Always set culture (no comparison with current culture)
             return Task.FromResult(new ProviderCultureResult(targetLanguage));
         }
 
