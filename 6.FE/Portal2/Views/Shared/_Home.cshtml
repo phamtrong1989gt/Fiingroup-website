@@ -181,6 +181,7 @@
 </head>
 
 <body id="Body">
+    <input type="hidden" id="linkId" value="@linkData?.Id" />
 	@* <h1>@language</h1> *@
 	<div class="body">
 		<!-- header area -->
@@ -226,8 +227,6 @@
 	<script src="/assets/js/jquery.counterup.min.js"></script>
 	<script src="/assets/lib/fancybox/dist/jquery.fancybox.min.js"></script>
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
-
 
 	<script>
 		$(document).ready(
@@ -420,6 +419,26 @@
 		$("#recaptcha-close-btn").on("click", function () {
 			hideRecaptchaPopup();
         });
+	</script>
+	<script>
+		// Update language dropdown links with current linkId
+		$(document).ready(function() {
+			var linkId = $('#linkId').val() || '0';
+			
+			$('.btn-lang .dropdown-menu a').each(function() {
+				var $link = $(this);
+				var currentHref = $link.attr('href');
+				
+				// Extract language from current href (e.g., "/vi" -> "vi", "/en" -> "en")
+				var language = currentHref.replace('/', '');
+				
+				// Build new URL with ChangeLanguage action
+				var newHref = '@Url.Action("ChangeLanguage", "Home")' + '?language=' + language + '&linkId=' + linkId;
+				
+				// Update href
+				$link.attr('href', newHref);
+			});
+		});
 	</script>
 	@Html.Raw(bindContentSetting.Body)
 </body>
