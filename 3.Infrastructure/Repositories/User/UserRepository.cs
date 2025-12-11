@@ -36,17 +36,24 @@ namespace PT.Infrastructure.Repositories
         }
         public async Task<CapchaResponse> VeryfyCapcha(string url, string secret, string response)
         {
-            using (var httpClient = new HttpClient())
+            try
             {
-                url = $"{url}?secret={secret}&response={response}";
-                var stringContent = new StringContent("", UnicodeEncoding.UTF8, "application/json");
-                var t = await httpClient.PostAsync(url, stringContent);
-                if (t.IsSuccessStatusCode)
+                using (var httpClient = new HttpClient())
                 {
-                    return JsonConvert.DeserializeObject<CapchaResponse>(await t.Content.ReadAsStringAsync());
+                    url = $"{url}?secret={secret}&response={response}";
+                    var stringContent = new StringContent("", UnicodeEncoding.UTF8, "application/json");
+                    var t = await httpClient.PostAsync(url, stringContent);
+                    if (t.IsSuccessStatusCode)
+                    {
+                        return JsonConvert.DeserializeObject<CapchaResponse>(await t.Content.ReadAsStringAsync());
+                    }
                 }
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                return null;
+            }
         }
         public async Task<List<DataRoleActionModel>> RoleActionsByUserAsync(int userId)
         {

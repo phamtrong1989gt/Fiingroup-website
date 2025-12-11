@@ -61,9 +61,19 @@ namespace PT.UI.Controllers
         {
             try
             {
+                _logger.LogError("ContactPost  Settings {0}", Newtonsoft.Json.JsonConvert.SerializeObject(_authorizeSettings.Value));
+                _logger.LogError("ContactPost  Data {0}", Newtonsoft.Json.JsonConvert.SerializeObject(use));
+
+                if (string.IsNullOrEmpty(use.Capcha))
+                {
+                    return new ResponseModel() { Output = 69, Message = "Tiến hành xác thực", Type = ResponseTypeMessage.Warning };
+                }
+
                 var output = await _iUserRepository.VeryfyCapcha(_authorizeSettings.Value.CapchaVerifyUrl, _authorizeSettings.Value.CapChaSecret, use.Capcha);
-                var capchaOke = output.Success;
-                if (!capchaOke)
+
+                _logger.LogError("ContactPost  OutData {0}", Newtonsoft.Json.JsonConvert.SerializeObject(output));
+
+                if (output != null && !output.Success)
                 {
                     return new ResponseModel() { Output = 69, Message = "Phiên làm việc đã hết hạn hoặc thao tác thực hiện quá nhanh, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
                 }
@@ -148,6 +158,10 @@ namespace PT.UI.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(use.Capcha))
+                {
+                    return new ResponseModel() { Output = 69, Message = "Tiến hành xác thực", Type = ResponseTypeMessage.Warning };
+                }
                 var output = await _iUserRepository.VeryfyCapcha(_authorizeSettings.Value.CapchaVerifyUrl, _authorizeSettings.Value.CapChaSecret, use.Capcha);
                 var capchaOke = output.Success;
                 if (!capchaOke)
