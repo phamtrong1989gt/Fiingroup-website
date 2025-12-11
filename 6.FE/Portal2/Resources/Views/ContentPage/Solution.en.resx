@@ -120,4 +120,16 @@
   <data name="Our Featured &amp; Insights" xml:space="preserve">
     <value>Highlights</value>
   </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="FeaturedCustomers" xml:space="preserve">
+    <value>&lt;span style="color: #0066CC;"&gt;Featured&lt;/span&gt; Customers</value>
+  </data>
+  <data name="SolutionsForEveryIndustryGroup" xml:space="preserve">
+    <value>Solutions for Every  &lt;br&gt; Industry Group</value>
+  </data>
+  <data name="SolutionsFromFiinGroup" xml:space="preserve">
+    <value>Solutions from &lt;span style='color:#0066CC;'&gt;FiinGroup&lt;/span&gt;</value>
+  </data>
 </root>

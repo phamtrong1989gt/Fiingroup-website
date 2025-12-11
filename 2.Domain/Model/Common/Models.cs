@@ -225,17 +225,21 @@ namespace PT.Domain.Model
         [JsonProperty("status")]
         public int Status { get; set; }
 
-        /// <summary>
-        /// Danh sách entities
-        /// </summary>
-        [JsonProperty("entities")]
-        public List<object> Entities { get; set; }
 
-        /// <summary>
-        /// Danh sách tags
-        /// </summary>
+        [JsonProperty("categories")]
+        public List<CategoryInfo> Categories { get; set; }
+
+        [JsonProperty("types")]
+        public List<TypeInfo> Types { get; set; }
+
+        [JsonProperty("sources")]
+        public List<SourceInfo> Sources { get; set; }
+
         [JsonProperty("tags")]
-        public List<string> Tags { get; set; }
+        public List<TagInfo> Tags { get; set; }
+
+        [JsonProperty("entities")]
+        public List<EntityInfo> Entities { get; set; }
 
         // Helper properties để tương thích
         [Newtonsoft.Json.JsonIgnore]
@@ -376,5 +380,49 @@ namespace PT.Domain.Model
         public string FileName { get; set; }
         public int Number { get; set; }
         public string Url { get; set; }
+    }
+
+    public class CategoryInfo
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("priorityOrder")]
+        public int PriorityOrder { get; set; }
+    }
+
+    public class TypeInfo
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+    }
+
+    public class SourceInfo
+    {
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+    }
+
+    public class TagInfo
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+    }
+
+    public class EntityInfo
+    {
+        [JsonProperty("organizationId")]
+        public int OrganizationId { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("priorityOrder")]
+        public int PriorityOrder { get; set; }
+        [JsonProperty("entityAssetTypeId")]
+        public int EntityAssetTypeId { get; set; }
     }
 }

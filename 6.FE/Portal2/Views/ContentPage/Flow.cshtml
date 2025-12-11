@@ -66,7 +66,7 @@
 			<img src="/Data/Banner/summary-decor1.png" alt="decor" class="decor decor-left">
 			<img src="/Data/Banner/summary-decor1.png" alt="decor" class="decor decor-topright">
 			<img src="/Data/Banner/summary-decor2.png" alt="decor" class="decor decor-bottomright">
-			<h2 class="price-title mb-5"><span style="color: #0066CC;"> Khách hàng </span> của chúng tôi</h2>
+			<h2 class="price-title mb-5">@Localizer["OurCustomers"]</h2>
 			@Html.Raw(Model.Input4)
 		</div>
 	</div>
@@ -74,7 +74,7 @@
 <section id="GiaiPhapHoTro" class="py-5">
 
 	<div class="container">
-		<h2 class="price-title mb-4">Sản phẩm <span style="color:#0066CC;">hỗ trợ</span></h2>
+		<h2 class="price-title mb-4">@Localizer["ProductTitle"]</h2>
 
 		<div class="row pdt20">
 			<div class="col-lg-7 col-sm-12 mb-4">
@@ -86,7 +86,7 @@
 						<div class="solution-item" data-img="@item.Input11">
 							<a href="@path" title="@item.Name"><h4>@item.Name</h4></a>
 							<p>@Html.Raw(item.RelatedNote)</p>
-							<a href="@path" class="solution-link">Xem chi tiết <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+							<a href="@path" class="solution-link">@Localizer["Details"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
 						</div>
 					}
 				</div>
@@ -104,16 +104,13 @@
 	</div>
 </section>
 
-
 <partial name="~/Views/Home/_Register.cshtml" model="@(new ContactHomeModel { })" />
-<section id="Insights" class="py-5 mb-5">
-</section>
 
 @if (lstTinLienQuan != null)
 {
 	<section id="Insights" class="py-5 mb-5">
 		<div class="container">
-			<h2 class="price-title mb-5"><span style="color: #0066CC;">Tiêu điểm</span></h2>
+			<h2 class="price-title mb-5"><span style="color: #0066CC;">@Localizer["Highlights"]</span></h2>
 			<div class="row news-grid">
 				@foreach (var item in lstTinLienQuan)
 				{
@@ -138,7 +135,7 @@
 						</div>
 						<div>@(item.Name.Length > 130 ? Html.Raw(item.Summary.Substring(0, 130)) + "..." : Html.Raw(item.Summary))</div>
 						<div class="pt-4">
-							<a class="show-more" href="@path" title="@item.Name">Show more <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+							<a class="show-more" href="@path" title="@item.Name">@Localizer["ShowMore"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
 						</div>
 					</div>
 				}

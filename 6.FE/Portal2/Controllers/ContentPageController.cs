@@ -102,6 +102,9 @@ namespace PT.UI.Controllers
                 case ECategoryType.ContentPage_Publications:
                     viewName = "Publications";
                     break;
+                case ECategoryType.ContentPage_Page:
+                    viewName = "Page";
+                    break;
             }
             return View(viewName, dl);
         }

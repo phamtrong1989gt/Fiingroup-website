@@ -117,10 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PostBy" xml:space="preserve">
-    <value>Post by</value>
+  <data name="Our Featured &amp; Insights" xml:space="preserve">
+    <value>Tiêu điểm</value>
   </data>
-  <data name="RecentPosts" xml:space="preserve">
-    <value>Recent Posts</value>
+  <data name="Details" xml:space="preserve">
+    <value>Xem chi tiết</value>
+  </data>
+  <data name="ProductTitle" xml:space="preserve">
+    <value>Sản phẩm &lt;span style="color:#0066CC;"&gt;hỗ trợ&lt;/span&gt;</value>
+  </data>
+  <data name="Highlights" xml:space="preserve">
+    <value>Tiêu điểm</value>
+  </data>
+  <data name="ShowMore" xml:space="preserve">
+    <value>Xem thêm</value>
+  </data>
+  <data name="OurCustomers" xml:space="preserve">
+    <value>&lt;span style="color: #0066CC;"&gt; Khách hàng &lt;/span&gt; của chúng tôi</value>
   </data>
 </root>

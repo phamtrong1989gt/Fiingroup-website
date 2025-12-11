@@ -120,4 +120,16 @@
   <data name="Our Featured &amp; Insights" xml:space="preserve">
     <value>Tiêu điểm</value>
   </data>
+  <data name="Details" xml:space="preserve">
+    <value>Xem chi tiết</value>
+  </data>
+  <data name="FeaturedCustomers" xml:space="preserve">
+    <value>Khách hàng &lt;span style="color: #0066CC;"&gt; nổi bật&lt;/span&gt;</value>
+  </data>
+  <data name="SolutionsForEveryIndustryGroup" xml:space="preserve">
+    <value>Giải pháp phù hợp cho từng &lt;br&gt;nhóm ngành</value>
+  </data>
+  <data name="SolutionsFromFiinGroup" xml:space="preserve">
+    <value>Giải pháp hỗ trợ &lt;span style="color:#0066CC;"&gt;từ FiinGroup&lt;/span&gt;</value>
+  </data>
 </root>

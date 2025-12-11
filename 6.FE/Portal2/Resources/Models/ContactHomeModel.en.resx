@@ -117,34 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Age" xml:space="preserve">
-    <value>Age</value>
+  <data name="BtnSend" xml:space="preserve">
+    <value>Submit a request</value>
   </data>
-  <data name="AppointmentDate" xml:space="preserve">
-    <value>Appointment Date</value>
-  </data>
-  <data name="AppointmentTime" xml:space="preserve">
-    <value>Appointment Time</value>
+  <data name="ConpanyName" xml:space="preserve">
+    <value>Company name</value>
   </data>
   <data name="Content" xml:space="preserve">
-    <value>Your Comment</value>
+    <value>More Details About Your Needs</value>
   </data>
   <data name="Email" xml:space="preserve">
-    <value>Email</value>
+    <value>Work email</value>
   </data>
   <data name="FullName" xml:space="preserve">
-    <value>Full Name</value>
+    <value>Full name</value>
+  </data>
+  <data name="NoProducts" xml:space="preserve">
+    <value>No products</value>
   </data>
   <data name="Phone" xml:space="preserve">
-    <value>Phone</value>
+    <value>Phone number</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Job Title</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Product &amp; Service</value>
+  </data>
+  <data name="SelectProducts" xml:space="preserve">
+    <value>Select Product &amp; Service</value>
+  </data>
+  <data name="SelectServiceId" xml:space="preserve">
+    <value>Select Industry / Sector</value>
   </data>
   <data name="ServiceId" xml:space="preserve">
-    <value>ServiceId</value>
+    <value>Industry / Sector</value>
   </data>
-  <data name="The Email field is not a valid e-mail address." xml:space="preserve">
-    <value>The Email field is not a valid e-mail address.</value>
+  <data name="Title" xml:space="preserve">
+    <value>Register now to &lt;span style="color: #0066CC;"&gt;receive a consultation!&lt;/span&gt;</value>
   </data>
-  <data name="The {0} field is required" xml:space="preserve">
+  <data name="ValidateRequired" xml:space="preserve">
     <value>The {0} field is required</value>
+  </data>
+  <data name="ValidateStringLength" xml:space="preserve">
+    <value>{0} must have a length between {2} and {1} characters.</value>
   </data>
 </root>

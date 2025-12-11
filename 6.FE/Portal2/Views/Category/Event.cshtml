@@ -12,333 +12,63 @@
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = _baseSettings.Value.PortalId;
-    var listCategory = new List<Category>();
-    if (Model.ParentId == 0)
-    {
-        listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Event || x.CategoryType == ECategoryType.ContentPage_Blog) && x.ParentId == 0 && x.Status);
-    }
-    else
-    {
-        listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Event || x.CategoryType == ECategoryType.ContentPage_Blog) && x.Status && x.ParentId == Model.ParentId);
-    }
+    // var listCategory = new List<Category>();
+    // if (Model.ParentId == 0)
+    // {
+    //     listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Event || x.CategoryType == ECategoryType.ContentPage_Blog) && x.ParentId == 0 && x.Status);
+    // }
+    // else
+    // {
+    //     listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Event || x.CategoryType == ECategoryType.ContentPage_Blog) && x.Status && x.ParentId == Model.ParentId);
+    // }
 }
 
 <style>
-    body {
-        background: #fff;
-    }
-
-    #Banner {
-        background: url(/Data/Banner/news-bg.jpg) no-repeat top;
-        background-size: cover;
-        height: 637px;
-    }
-
-        #Banner h1 {
-            font-style: normal;
-            font-weight: 700;
-            font-size: 36px;
-            line-height: 150%;
-        }
-
-        #Banner h2 {
-            font-weight: 700;
-            font-size: 24px;
-            line-height: 28px;
-        }
-
-        #Banner img {
-            border-radius: 16px;
-        }
-
-    .item-date {
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 150%;
-        display: flex;
-        align-items: center;
-        color: #fff;
-    }
-
-        .item-date i {
-            padding: 0 10px 0 0;
-            width: 30px;
-        }
-
-        .item-date .item-label {
-            padding: 0 10px 0 0;
-            width: 126px;
-        }
-
-    #NewButton {
-        align-items: center;
-        justify-content: center;
-        margin: -37px 0 0 0;
-    }
-
-    .btn-active {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        padding: 12px 40px;
-        gap: 40px;
-        width: 302px;
-        height: 72px;
-        background: #FFFFFF;
-        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
-        border-radius: 12px;
-        font-size: 24px;
-        font-weight: 500;
-        color: #093461;
-        margin: 0 10px;
-    }
-
-        .btn-active:hover {
-            background: #f6f6f6;
-        }
-
-    .btn-noactive {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        padding: 12px 40px;
-        gap: 40px;
-        width: 302px;
-        height: 72px;
-        background: #0066CC;
-        box-shadow: 0px 8px 20px rgba(0,102,204,0.12), 0px -8px 20px rgba(255,255,255,0.2);
-        border-radius: 12px;
-        font-size: 24px;
-        font-weight: 500;
-        color: #fff;
-    }
-
-        .btn-noactive:hover {
-            background: #0f65ba;
-            color: #fff;
-        }
-
-    .btn-reset {
-        color: #0066CC;
-    }
-
-    #search #search-input {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 12px;
-        gap: 10px;
-        width: 485px;
-        height: 38px;
-        background: #FFFFFF;
-        border: 1px solid #034EA2;
-        border-radius: 4px;
-    }
-
-    #search {
-        position: relative;
-        font-size: 18px;
-    }
-
-        #search label {
-            position: absolute;
-            right: 8px;
-            top: 6px;
-            color: #034EA2;
-        }
-
-    .date-input {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 6px;
-        gap: 10px;
-        /*width: 198.5px;*/
-        height: 38px;
-        background: #FFFFFF;
-        border: 1px solid #034EA2;
-        border-radius: 4px;
-        color: #838282;
-    }
-
-    .mr-2 {
-        margin: 0 1rem 0;
-    }
-
-    .btn-search {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        padding: 10px 50px;
-        height: 40px;
-        background: #0066CC;
-        border-radius: 200px;
-    }
-
-    /* loading spinner for button */
-    .loader {
-        width: 18px;
-        height: 18px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-top: 2px solid #fff;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        display: inline-block;
-        margin-left: 8px;
-        position: absolute;
-        left: 5px;
-    }
-
-    @@keyframes spin {
-        from {
-            transform: rotate(0deg);
-        }
-
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    .news-title {
-        font-weight: 700;
-        font-size: 28px;
-        line-height: 120%;
-        min-height: calc(28px * 1.2 * 3); /* 3 dòng */
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: #1D2939;
-    }
-
-    .no-data-messege {
-        font-style: normal;
-        font-weight: 700;
-        font-size: 28px;
-        text-align: center;
-        color: #093461;
-    }
-
-    .news-img {
-        width: 100%;
-        aspect-ratio: 16 / 8;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 12px;
-        border: 1px solid #eee;
-    }
-
-    #NewButton .btn {
-        margin-left: 5px;
-        margin-right: 5px;
-    }
-
-    .item-date {
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 150%;
-        display: flex;
-        align-items: center;
-        color: #fff;
-    }
-
-        .item-date i {
-            padding: 0 10px 0 0;
-            width: 30px;
-        }
-
-        .item-date .item-label {
-            padding: 0 10px 0 0;
-            width: 126px;
-        }
-
-    .news-title-sub {
-        font-weight: 700;
-        font-size: 20px;
-        line-height: 32px;
-        display: flex;
-        align-items: center;
-        color: #1D2939;
-        flex: none;
-        order: 0;
-        align-self: stretch;
-        flex-grow: 0;
-        overflow: hidden;
-    }
-
-    .item-date-sub {
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 150%;
-        display: flex;
-        align-items: center;
-        color: #1D2939;
-    }
-
-        .item-date-sub i {
-            padding: 0 10px 0 0;
-            width: 30px;
-            color: #0066CC;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .item-date-sub .item-label {
-            padding: 0 10px 0 0;
-            width: 126px;
-            font-size:16px;
-        }
-
-        .item-date-sub .item-label-sub {
-            padding: 0 10px 0 0;
-            font-weight: 600;
-            color: #1D2939;
-            font-size: 16px;
-        }
+    .btn-active,body{background:#fff}.btn-active,.btn-noactive{display:flex;padding:12px 40px;gap:40px;width:302px;height:72px;border-radius:12px;font-weight:500}.item-date .item-label,.item-date-sub .item-label{width:126px;padding:0 10px 0 0}#Banner{background:url(/Data/Banner/news-bg.jpg) top/cover no-repeat;height:637px}#Banner h1{font-style:normal;font-weight:700;font-size:36px;line-height:150%}#Banner h2{font-weight:700;font-size:24px;line-height:36px}#Banner img{border-radius:16px}#NewButton{align-items:center;justify-content:center;margin:-37px 0 0}.btn-active{flex-direction:row;justify-content:center;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.08);font-size:24px;color:#093461;margin:0 10px}.btn-active:hover{background:#f6f6f6}.btn-noactive{flex-direction:row;justify-content:center;align-items:center;background:#06c;box-shadow:0 8px 20px rgba(0,102,204,.12),0 -8px 20px rgba(255,255,255,.2);font-size:24px;color:#fff}#search #search-input,.date-input{gap:10px;height:38px;background:#fff;display:flex}.btn-noactive:hover{background:#0f65ba;color:#fff}.btn-reset{color:#06c}#search #search-input{flex-direction:column;align-items:flex-start;padding:12px;width:485px;border:1px solid #034ea2;border-radius:4px}#search{position:relative;font-size:18px}#search label{position:absolute;right:8px;top:6px;color:#034ea2}.date-input{flex-direction:column;align-items:flex-start;padding:6px;border:1px solid #034ea2;border-radius:4px;color:#838282}.mr-2{margin:0 1rem}.btn-search{display:flex;flex-direction:row;justify-content:center;align-items:center;padding:10px 50px;height:40px;background:#06c;border-radius:200px}.item-date,.news-title-sub{align-items:center;display:flex}.loader{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top:2px solid #fff;border-radius:50%;animation:1s linear infinite spin;display:inline-block;margin-left:8px;position:absolute;left:5px}to{transform:rotate(360deg)}.no-data-messege{font-style:normal;font-weight:700;font-size:28px;text-align:center;color:#093461}.news-img{width:100%;aspect-ratio:16/8;object-fit:cover;object-position:center;border-radius:12px;border:1px solid #eee}#NewButton .btn{margin-left:5px;margin-right:5px}.item-date{font-weight:400;font-size:18px;line-height:150%;color:#fff}.item-date i{padding:0 10px 0 0;width:30px}.news-title-sub{font-weight:700;font-size:20px;line-height:32px;color:#1d2939;flex:none;order:0;align-self:stretch;flex-grow:0;overflow:hidden}.item-date-sub{font-weight:400;font-size:18px;line-height:150%;display:flex;align-items:center;color:#1d2939}.item-date-sub i{padding:0 10px 0 0;width:30px;color:#06c;font-size:16px;font-weight:700}.item-date-sub .item-label{font-size:16px}.item-date-sub .item-label-sub{padding:0 10px 0 0;font-weight:600;color:#1d2939;font-size:16px}
 </style>
 
 <section id="Banner">
     <div class="container">
         <div class="row">
-            <h1 class="text-white mb-5 mt-5">Khám phá những tin tức, sự kiện và thông tin mới nhất từ FiinGroup </h1>
-            <p style="color: #fff; font-size:20px;">Hiện chưa có sự kiện mới nào</p>
-            @*   @foreach (var item in lstTinLienQuan)
+            <h1 class="text-white mb-6 mt-5">@Localizer["Title"] </h1>
+            @if (Model.DataAPI != null && Model.DataAPI.Items != null && Model.DataAPI.Items.Count > 0 && Model.DataAPI.Items[0] != null)
             {
-                string url = @PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
+                var item = Model.DataAPI.Items[0];
+                string url = $"/{language}/tin-tuc-fg/{item?.FriendlyTitle}-id{item?.Id}.html"?.ToLower();
                 <div class="col-lg-5 col-sm-6 mb-5">
-                    <h2 class="text-white mb-4">@item.Name</h2>
+                    <h2 class="text-white mb-4">@item.Title</h2>
                     <div class="item-date mb-2">
                         <i class="fa fa-calendar-o" aria-hidden="true"></i>
-                        <span class="item-label">Ngày tổ chức</span>
-                        <span>@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
+                        <span class="item-label">@Localizer["EventDate"]</span>
+                        <span>@(item.StartDate?.ToString("dd/MM/yyyy") ?? "---")</span>
                     </div>
                     <div class="item-date mb-2">
                         <i class="fa fa-clock-o" aria-hidden="true"></i>
-                        <span class="item-label">Thời gian</span>
-                        <span>@item.TimeFromTo</span>
+                        <span class="item-label">@Localizer["EventTime"]</span>
+                        <span>@(item.TimeFromTo ?? "---")</span>
                     </div>
                     <div class="item-date mb-5">
                         <i class="fa fa-map-marker" aria-hidden="true"></i>
-                        <span class="item-label">Địa điểm</span>
-                        <span>@item.Address</span>
+                        <span class="item-label">@Localizer["Location"]</span>
+                        <span>@(item.Address?? "---")</span>
                     </div>
-                    <a class="btn btn-light btn-about btn-khampha" href="@url" target="_blank">Khám phá ngay</a>
+                    <a class="btn btn-light btn-about btn-khampha" href="@url" target="_blank">@Localizer["ViewDetails"]</a>
                 </div>
                 <div class="col-lg-7 col-sm-6 mb-5">
-                    <a href="@url" title="@item.Name">
-                        <img src="@item.Banner" alt="@item.Name" title="@item.Name" />
+                    <a href="@url" title="@item.Title">
+                        <img loading="lazy" class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.ImageUrl ?? "/Data/Banner/no-img.jpg")" alt="@item.Title" />
                     </a>
                 </div>
-            } *@
+            }
+            else
+            {
+                <p style="color: #fff; font-size:20px;">@Localizer["NoEvent"]</p>
+            }
         </div>
     </div>
 </section>
 
-<section id="NewButton">
+@* <section id="NewButton">
     <div class="container">
         <div class="row d-flex justify-content-center">
             <div class="row d-flex justify-content-center">
@@ -357,7 +87,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> *@
 
 <section id="FiinGroup">
     <div class="container">

@@ -110,12 +110,13 @@ namespace PT.BE.Areas.Manager.Controllers
                     Address = x.Address,
                     FilePath = x.FilePath,
                     Pages = x.Pages,
-                    SlugType = x.SlugType
+                    SlugType = x.SlugType,
                 });
             var portals = await _iPortalRepository.SearchAsync(true);
             foreach (var item in data.Data)
             {
                 item.Portal = portals.FirstOrDefault(x => x.Id == item.PortalId);
+                item.FullPath = await _iPortalRepository.GetFullPathAsync(item.PortalId, item.Link?.Slug, portals, item.Language, _baseSettings.Value.MultipleLanguage);
             }
             return View("IndexAjax", data);
         }
@@ -183,7 +184,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
 
-                    await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details");
+                    await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details", data.PortalId);
 
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateFileData(data.Id, ESlugType.ContentPage, altId);

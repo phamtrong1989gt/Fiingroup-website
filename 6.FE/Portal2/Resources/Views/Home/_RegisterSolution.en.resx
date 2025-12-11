@@ -117,10 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PostBy" xml:space="preserve">
-    <value>Post by</value>
+  <data name="BtnSend" xml:space="preserve">
+    <value>Subscribe to News</value>
   </data>
-  <data name="RecentPosts" xml:space="preserve">
-    <value>Recent Posts</value>
+  <data name="ConpanyName" xml:space="preserve">
+    <value>Company name</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>More Details About Your Needs</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Work email</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="NoProducts" xml:space="preserve">
+    <value>No products</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Job Title</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Product &amp; Service</value>
+  </data>
+  <data name="SelectProducts" xml:space="preserve">
+    <value>Select Product &amp; Service</value>
+  </data>
+  <data name="SelectServiceId" xml:space="preserve">
+    <value>Select Industry / Sector</value>
+  </data>
+  <data name="ServiceId" xml:space="preserve">
+    <value>Industry / Sector</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Register now to &lt;span style="color: #0066CC;"&gt;receive a consultation!&lt;/span&gt;</value>
   </data>
 </root>
