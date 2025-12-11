@@ -89,11 +89,6 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            
-            // ✅ Timestamp để kiểm tra cache
-            ViewData["ServerTime"] = DateTime.Now.ToString("HH:mm:ss.fff");
-            ViewData["CacheTime"] = $"[{DateTime.Now:HH:mm:ss}] Page rendered";
-            
             return View();
         }
 

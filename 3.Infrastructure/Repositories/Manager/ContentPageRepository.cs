@@ -573,7 +573,8 @@ namespace PT.Infrastructure.Repositories
                         Input9 = x.data.Input9,
                         Input10 = x.data.Input10,
                         Input11 = x.data.Input11,
-                        Input12 = x.data.Input12
+                        Input12 = x.data.Input12,
+                        Order = x.data.Order
                     }).AsQueryable();
 
                 var listData = await query.AsNoTracking().ToListAsync();

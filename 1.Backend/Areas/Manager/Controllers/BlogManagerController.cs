@@ -17,6 +17,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.BE.Areas.Manager.Controllers
 {
@@ -221,21 +222,26 @@ namespace PT.BE.Areas.Manager.Controllers
                     await UpdateReference(data.Id, use.ContentPageReferenceIds);
                     await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
                     await _iContentPageRepository.CommitTransaction();
-                    //try
-                    //{
-                    //    // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
-                    //    var outData = await _iAsyncNewsService.CreateAsync(data);
-                    //    if (outData != null)
-                    //    {
-                    //        data.NewsId = outData.NewsId;
-                    //        _iContentPageRepository.Update(data);
-                    //        await _iContentPageRepository.CommitAsync();
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
-                    //}
+                    try
+                    {
+                        // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
+                        var outData = await _iAsyncNewsService.CreateAsync(data);
+                        if (outData != null && outData.Success)
+                        {
+                            data.NewsId = outData.Data.NewsId;
+                            _iContentPageRepository.Update(data);
+                            await _iContentPageRepository.CommitAsync();
+                            _logger.LogDebug("CreatePost {0}", $"Tạo tin mới {data.NewsId} của tin #{data.Id} thành công");
+                        }
+                        else
+                        {
+                            _logger.LogDebug("CreatePost {0}", $"Tạo tin mới của tin #{data.Id} thất bại: {outData.ErrorMessage}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+                    }
                     await AddLog(new LogModel
                     {
                         ObjectId = data.Id,
@@ -384,30 +390,34 @@ namespace PT.BE.Areas.Manager.Controllers
                         Type = LogType.Edit
                     });
                     await _iContentPageRepository.CommitTransaction();
-                    //try
-                    //{
-                    //    if (dl.NewsId == null || dl.NewsId <= 0)
-                    //    {
-                    //        // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
-                    //        var outData = await _iAsyncNewsService.CreateAsync(dl);
-                    //        if (outData != null)
-                    //        {
-                    //            dl.NewsId = outData.NewsId;
-                    //            _iContentPageRepository.Update(dl);
-                    //            await _iContentPageRepository.CommitAsync();
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
-                    //        var checkAPI = await _iAsyncNewsService.UpdateAsync(dl);
-                    //        var a = checkAPI;
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
-                    //}
+                    try
+                    {
+                        if (dl.NewsId == null || dl.NewsId <= 0)
+                        {
+                            var outData = await _iAsyncNewsService.CreateAsync(dl);
+                            if (outData != null && outData.Success)
+                            {
+                                dl.NewsId = outData.Data.NewsId;
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
+                                _logger.LogDebug("CreatePost {0}", $"Tạo tin mới {dl.NewsId} của tin #{dl.Id} thành công");
+                            }
+                            else
+                            {
+                                _logger.LogDebug("CreatePost {0}", $"Tạo tin mới của tin #{dl.Id} thất bại: {outData.ErrorMessage}");
+                            }
+                        }
+                        else
+                        {
+                            // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
+                            var checkAPI = await _iAsyncNewsService.UpdateAsync(dl);
+                            var a = checkAPI;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+                    }
                     return new ResponseModel() { Output = 1, Message = "Cập nhật tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
                 return new ResponseModel() { Output = -2, Message = "Bạn chưa nhập đầy đủ thông tin hoặc liên kết thân thiện/Permalink đã tồn tại, vui lòng thay thêm ký tự bất kỳ đằng sau.", Type = ResponseTypeMessage.Warning };
@@ -649,18 +659,11 @@ namespace PT.BE.Areas.Manager.Controllers
         #region [Upload file]
         [HttpPost, ActionName("UploadImage")]
         [AuthorizePermission("Index")]
-        public async Task<object> UploadImagePost(string altId, int id, int type =0)
+        public async Task<object> UploadImagePost(string altId, int id, int type =0, int portalId = 1)
         {
             try
             {
-                var contentPage = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == id);
-                if(contentPage == null)
-                {
-                    return new ResponseModel<FileDataModel> { Output = 0, Message = "Bài viết không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
-                }
-
                 var allowed = (_baseSettings.Value.ImagesType ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet(StringComparer.OrdinalIgnoreCase);
-                
                 var folderByDate = Functions.GenFolderByDate();
                 string configuredDataPath = _baseSettings.Value.DataPath;
 
@@ -716,7 +719,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 await AddFileData(id, publicUrl, ESlugType.ContentPage, altId);
 
                 // Chèn thêm domain vào publicUrl để chia sẻ cho các đơn vị khác
-                var portal = await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == contentPage.PortalId);
+                var portal = await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId);
                 if (portal != null)
                 {
                     var domain = portal.Domain.TrimEnd('/');

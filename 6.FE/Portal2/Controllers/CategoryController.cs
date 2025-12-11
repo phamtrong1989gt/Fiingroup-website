@@ -79,6 +79,7 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> Details(int id, string language, int? page, string key, string startDate, string endDate, string linkData)
         {
             var objectLink = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            ViewData["linkData"] = objectLink;
             objectLink.Title = string.IsNullOrEmpty(objectLink.Title) ? objectLink.Name : objectLink.Title;
 
             string viewName = "_404";
