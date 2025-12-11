@@ -44,7 +44,7 @@ namespace PT.UI.Controllers
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.Status = null;
+            prs.Status = "Active";
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("NewsAjax", listNew);
@@ -57,7 +57,7 @@ namespace PT.UI.Controllers
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.Status = null;
+            prs.Status = "Active";
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("NewsAjax", listNew);
@@ -69,7 +69,7 @@ namespace PT.UI.Controllers
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.Status = null;
+            prs.Status = "Active";
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("PublicationsAjax", listNew);
@@ -105,7 +105,6 @@ namespace PT.UI.Controllers
                         CategoryIds = dl.ExCategoryIds,
                     }, language ?? "vi");
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
-                    
                     // lấy danh mục event 
                     var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.CategoryType == ECategoryType.ContentPage_Event && x.Status && x.ParentId == 0 && x.Language == language && x.PortalId == dl.PortalId);
                     if(eventCategory != null)

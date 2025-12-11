@@ -79,13 +79,28 @@ namespace PT.Base.Services
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
+                
+                // ✅ Kiểm tra responseContent có rỗng không trước khi deserialize
+                if (string.IsNullOrWhiteSpace(responseContent))
+                {
+                    throw new Exception("Response content is null or empty");
+                }
+
                 var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
 
-                if (string.IsNullOrEmpty(tokenResponse?.AccessToken))
+                // ✅ Kiểm tra token có hợp lệ không
+                if (tokenResponse == null || string.IsNullOrWhiteSpace(tokenResponse.AccessToken))
                 {
                     throw new Exception("Access token is null or empty");
                 }
 
+                // ✅ Kiểm tra ExpiresIn có hợp lệ không (phải > 0)
+                if (tokenResponse.ExpiresIn <= 0)
+                {
+                    throw new Exception("Token ExpiresIn is invalid (must be > 0)");
+                }
+
+                // ✅ CHỈ set cache khi token hợp lệ
                 var cacheExpiration = TimeSpan.FromSeconds(tokenResponse.ExpiresIn > 60 ? tokenResponse.ExpiresIn - 60 : tokenResponse.ExpiresIn);
 
                 var cacheOptions = new MemoryCacheEntryOptions
@@ -101,10 +116,17 @@ namespace PT.Base.Services
             }
             catch (HttpRequestException ex)
             {
+                // ✅ Không cache khi có lỗi HTTP
                 throw new Exception($"Failed to get access token: {ex.Message}", ex);
+            }
+            catch (JsonException ex)
+            {
+                // ✅ Không cache khi JSON không hợp lệ
+                throw new Exception($"Invalid JSON response: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
+                // ✅ Không cache khi có lỗi khác
                 throw new Exception($"Error getting access token: {ex.Message}", ex);
             }
         }

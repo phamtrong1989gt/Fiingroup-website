@@ -221,7 +221,6 @@ namespace PT.BE.Areas.Manager.Controllers
                     await UpdateReference(data.Id, use.ContentPageReferenceIds);
                     await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
                     await _iContentPageRepository.CommitTransaction();
-                    // Xử lý thêm data vào Cổng CM thông qua API
                     //try
                     //{
                     //    // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
@@ -237,7 +236,6 @@ namespace PT.BE.Areas.Manager.Controllers
                     //{
                     //    _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
                     //}
-
                     await AddLog(new LogModel
                     {
                         ObjectId = data.Id,

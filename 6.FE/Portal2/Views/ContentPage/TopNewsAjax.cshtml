@@ -13,27 +13,25 @@
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 }
 
-<div class="container">
-	<h2 class="price-title mb-5"><span style="color: #0066CC;">@Localizer["Highlights"]</span></h2>
-	<div class="row news-grid">
-		@foreach (var item in Model.Items)
-		{
-			string url = $"/{language}/tin-tuc-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
+@if (Model != null)
+{
+	@foreach (var item in Model.Items)
+	{
+		string url = $"/{language}/tin-tuc-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
 
-			<div class="col-lg-4 col-sm-6 mb-4">
-				<img loading="lazy" class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.ImageUrl ?? "/Data/Banner/no-img.jpg")" alt="@item.Title">
-				<div class="pt-3 pb-3">
-					<div class="news-title text-break">
-                        <a href="@url" title="@item.Title">
-                            @(item.Title.Length > 58 ? item.Title.Substring(0, 58) + "..." : item.Title)
-						</a>
-					</div>
-				</div>
-                <div>@(item.ShortContent.Length > 130 ? Html.Raw(item.ShortContent.Substring(0, 130)) + "..." : Html.Raw(item.ShortContent))</div>
-				<div class="pt-4">
-					<a class="show-more" href="@url" title="@item.Title">@Localizer["Show more"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+		<div class="col-lg-4 col-sm-6 mb-4">
+			<img loading="lazy" class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.ImageUrl ?? "/Data/Banner/no-img.jpg")" alt="@item.Title">
+			<div class="pt-3 pb-3">
+				<div class="news-title text-break">
+					<a href="@url" title="@item.Title">
+						@item.Title
+					</a>
 				</div>
 			</div>
-		}
-	</div>
-</div>
+			<div>@item.ShortContent</div>
+			<div class="pt-4">
+				<a class="show-more" href="@url" title="@item.Title">@Localizer["Show more"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+			</div>
+		</div>
+	}
+}

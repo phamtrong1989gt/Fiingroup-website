@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using System;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.UI.Controllers
 {
@@ -14,11 +16,14 @@ namespace PT.UI.Controllers
         private readonly ICategoryRepository _iCategoryRepository;
         private readonly INewsAPIService _iNewsAPIService;
         private readonly ILinkRepository _iLinkRepository;
+        private readonly IOptions<BaseSettings> _baseSettings;
+
         public ContentPageController(IContentPageRepository iContentPageRepository,
             IContentPageTagRepository iContentPageTagRepository,
             ICategoryRepository iCategoryRepository,
             INewsAPIService iNewsAPIService,
-            ILinkRepository iLinkRepository
+            ILinkRepository iLinkRepository,
+            IOptions<BaseSettings> baseSettings
             )
         {
             _iContentPageRepository = iContentPageRepository;
@@ -26,21 +31,26 @@ namespace PT.UI.Controllers
             _iCategoryRepository = iCategoryRepository;
             _iNewsAPIService = iNewsAPIService;
             _iLinkRepository = iLinkRepository;
+            _baseSettings = baseSettings;
         }
 
         [HttpGet]
         public async Task<ActionResult> TopNewsAjax([FromQuery] NewsQueryParameters prs)
         {
-            var cmsCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == prs.CategoryId);
+            var cmsCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.PortalId == _baseSettings.Value.PortalId && x.CategoryType == ECategoryType.ContentPage_Blog && x.ParentId == 0 );
             if (cmsCategory != null && !string.IsNullOrEmpty(cmsCategory.ExCategoryIds))
             {
                 prs.ExCategoryIds = cmsCategory.ExCategoryIds;
             }
+            else
+            {
+                return View("TopNewsAjax", null);
+            }
             prs.PageSize = 3;
-            prs.Page = prs.Page <= 0 ? 1 : prs.Page;
+            prs.Page = 1;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.Status = "Active";
-            prs.CategoryIds = prs.CategoryIds ?? "0";
+            prs.CategoryIds = prs.ExCategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("TopNewsAjax", listNew);
         }
