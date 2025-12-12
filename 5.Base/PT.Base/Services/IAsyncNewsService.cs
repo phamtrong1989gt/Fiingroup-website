@@ -269,7 +269,7 @@ namespace PT.Base.Services
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
                     UpdateBy = "",
-                    RecordStatusId = contentPage.Status ? 1 : 4,
+                    RecordStatusId = contentPage.Status ? 1 : 3,
                     Categories = (categoryId != null && categoryId > 0) ? [new() { Id = categoryId ?? 0, PriorityOrder = 1 }] : [],
                     TypeIds = [],
                     SourceIds = [sourceId],
@@ -277,7 +277,8 @@ namespace PT.Base.Services
                     Tags = [],
                     ICBs = [],
                     VSICs = [],
-                    NewsId = contentPage.NewsId.HasValue ? contentPage.NewsId.Value : 0
+                    NewsId = contentPage.NewsId.HasValue ? contentPage.NewsId.Value : 0,
+                    StatusId = contentPage.Status ? 1 : 3,
                 };
 
                 async Task<HttpResponseMessage> PostWithTokenAsync(string bearerToken, string endpoint)
@@ -304,12 +305,12 @@ namespace PT.Base.Services
                     response = await PostWithTokenAsync(token, url);
                 }
 
+
                 if (!response.IsSuccessStatusCode)
                 {
                     response.Dispose();
                     return null;
                 }
-
                 var responseContent = await response.Content.ReadAsStringAsync();
                 response.Dispose();
                 return JsonConvert.DeserializeObject<NewsDTO>(responseContent);

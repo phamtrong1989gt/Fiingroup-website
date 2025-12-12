@@ -133,7 +133,8 @@ namespace PT.BE.Areas.Manager.Controllers
                     Address = x.Address,
                     FilePath = x.FilePath,
                     Pages = x.Pages,
-                    SlugType = x.SlugType
+                    SlugType = x.SlugType,
+                    NewsId = x.NewsId
                 });
             var portals = await _iPortalRepository.SearchAsync(true);
             foreach (var item in data.Data)
@@ -384,30 +385,30 @@ namespace PT.BE.Areas.Manager.Controllers
                         Type = LogType.Edit
                     });
                     await _iContentPageRepository.CommitTransaction();
-                    //try
-                    //{
-                    //    if (dl.NewsId == null || dl.NewsId <= 0)
-                    //    {
-                    //        // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
-                    //        var outData = await _iAsyncNewsService.CreateAsync(dl);
-                    //        if (outData != null)
-                    //        {
-                    //            dl.NewsId = outData.NewsId;
-                    //            _iContentPageRepository.Update(dl);
-                    //            await _iContentPageRepository.CommitAsync();
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
-                    //        var checkAPI = await _iAsyncNewsService.UpdateAsync(dl);
-                    //        var a = checkAPI;
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
-                    //}
+                    try
+                    {
+                        if (dl.NewsId == null || dl.NewsId <= 0)
+                        {
+                            // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
+                            var outData = await _iAsyncNewsService.CreateAsync(dl);
+                            if (outData != null)
+                            {
+                                dl.NewsId = outData.NewsId;
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
+                            }
+                        }
+                        else
+                        {
+                            // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
+                            var checkAPI = await _iAsyncNewsService.UpdateAsync(dl);
+                            var a = checkAPI;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+                    }
                     return new ResponseModel() { Output = 1, Message = "Cập nhật tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
                 return new ResponseModel() { Output = -2, Message = "Bạn chưa nhập đầy đủ thông tin hoặc liên kết thân thiện/Permalink đã tồn tại, vui lòng thay thêm ký tự bất kỳ đằng sau.", Type = ResponseTypeMessage.Warning };

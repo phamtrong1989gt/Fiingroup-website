@@ -45,6 +45,7 @@ namespace PT.Domain.Model
         public List<string> Tags { get; set; }
         public List<RefItem> ICBs { get; set; }
         public List<RefItem> VSICs { get; set; }
+        public int StatusId { get; set; }
     }
 
     /// <summary>
