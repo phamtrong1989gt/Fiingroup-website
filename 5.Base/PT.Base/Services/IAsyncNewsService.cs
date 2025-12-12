@@ -160,7 +160,7 @@ namespace PT.Base.Services
                     ImageUrl = $"{domain}{contentPage.Banner}",
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
-                    UpdateBy = "",
+                    UpdateBy = null,
                     // 1 = Active, 4 = draft
                     StatusId = contentPage.Status ? 1 : 4,
                     Categories = (categoryId != null && categoryId > 0) ? [new() { Id = categoryId ?? 0, PriorityOrder = 1 }] : [],
@@ -280,8 +280,7 @@ namespace PT.Base.Services
                     ImageUrl = $"{domain}/{contentPage.Banner}",
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
-                    UpdateBy = "",
-                    StatusId = contentPage.Status ? 1 : 4,
+                    UpdateBy = null,
                     Categories = (categoryId != null && categoryId > 0) ? [new() { Id = categoryId ?? 0, PriorityOrder = 1 }] : [],
                     TypeIds = [],
                     SourceIds = [sourceId],
@@ -290,7 +289,8 @@ namespace PT.Base.Services
                     ICBs = [],
                     VSICs = [],
                     NewsId = contentPage.NewsId.HasValue ? contentPage.NewsId.Value : 0,
-                    StatusId = contentPage.Status ? 1 : 3,
+                    // 1 = Active, 4 = draft
+                    StatusId = contentPage.Status ? 1 : 4,
                 };
 
                 async Task<HttpResponseMessage> PostWithTokenAsync(string bearerToken, string endpoint)
