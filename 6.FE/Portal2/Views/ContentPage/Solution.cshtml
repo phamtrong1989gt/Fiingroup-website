@@ -253,6 +253,15 @@
 		.menusu-item:last-child {
 			border-bottom: none;
 		}
+
+	.news-img {
+		width: 100%;
+		aspect-ratio: 16/10;
+		object-fit: cover;
+		object-position: center;
+		border-radius: 12px;
+		border: 1px solid #eee
+	}
 </style>
 <section id="StockEconomy" class="hero-section">
 	<div class="hero-overlay">
@@ -355,7 +364,16 @@
 	</div>
 </section>
 
-@if (lstTinLienQuan != null)
+<section id="Insights" class="py-5 mb-5">
+	<div class="container">
+		<h2 class="price-title mb-5"><span style="color: #0066CC;">@Localizer["Our Featured & Insights"]</span></h2>
+		<div class="row news-grid" id="topNewsContainer">
+			<div class="text-center py-5" style="background: #eee;"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>
+		</div>
+	</div>
+</section>
+
+@* @if (lstTinLienQuan != null)
 {
 	<section id="webinars" class="py-5 mb-5">
 		<div class="container">
@@ -392,7 +410,7 @@
 		</div>
 	</section>
 }
-
+ *@
 <script>
 	// Keep .bao-item height equal to .solution-img height.
 	(function ($) {
@@ -404,4 +422,35 @@
 			}
 		});
 	})(window.jQuery);
+
+	function loadTopNews(params, containerId = '#topNewsContainer') {
+
+		// Set default values
+		const queryParams = { Language: '@language' };
+
+		// Show loading indicator
+		$(containerId).html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+		// Build query string
+		const queryString = $.param(queryParams);
+		const url = '@Url.Action("TopNewsAjax", "ContentPage")' + '?' + queryString;
+
+		// Call AJAX
+		$.ajax({
+			url: url,
+			type: 'GET',
+			dataType: 'html',
+			success: function (response) {
+				// Render response to container
+				$(containerId).html(response);
+			},
+			error: function (xhr, status, error) {
+				console.error('Error loading top news:', error);
+				$(containerId).html('<div class="alert alert-danger">Không thể tải tin tức. Vui lòng thử lại sau.</div>');
+			}
+		});
+	}
+
+	// Example usage:
+	 loadTopNews({});
 </script>

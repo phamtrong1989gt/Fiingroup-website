@@ -16,9 +16,9 @@
                     <div class="form-group">
                         <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
                         <div class="controls">
-                            @if(Model.Id > 0)
+                            @if (Model.Id > 0)
                             {
-                                <input type="text" seo-page-name onkeyup="GenSlug()" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
+                                <input type="text" seo-page-name class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
                             }
                             else
                             {

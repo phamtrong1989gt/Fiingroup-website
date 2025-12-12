@@ -37,7 +37,8 @@ namespace PT.Domain.Model
         public string SourceUrl { get; set; }
         public string Author { get; set; }
         public string UpdateBy { get; set; }
-        public int RecordStatusId { get; set; }
+        //
+        public int StatusId { get; set; }
         public List<RefItem> Categories { get; set; }
         public List<int> TypeIds { get; set; }
         public List<int> SourceIds { get; set; }
@@ -46,6 +47,7 @@ namespace PT.Domain.Model
         public List<RefItem> ICBs { get; set; }
         public List<RefItem> VSICs { get; set; }
         public int StatusId { get; set; }
+        public string CreateBy { get; set; }
     }
 
     /// <summary>

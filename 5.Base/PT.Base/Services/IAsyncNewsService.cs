@@ -19,7 +19,7 @@ namespace PT.Base.Services
     public interface IAsyncNewsService
     {
         Task<string> GetAccessTokenAsync(bool clearCache = false);
-        Task<NewsDTO> CreateAsync(ContentPage contentPage);
+        Task<NewsCreateResult> CreateAsync(ContentPage contentPage);
         Task<NewsDTO> UpdateAsync(ContentPage contentPage);
     }
 
@@ -113,7 +113,7 @@ namespace PT.Base.Services
             }
         }
 
-        public async Task<NewsDTO> CreateAsync(ContentPage contentPage)
+        public async Task<NewsCreateResult> CreateAsync(ContentPage contentPage)
         {
             var url = $"{_settings.Value.CreatedEndPointVI}";
             if(contentPage.Language == "en")
@@ -121,11 +121,11 @@ namespace PT.Base.Services
                 url = $"{_settings.Value.CreatedEndPointEN}";
             }
             if (string.IsNullOrWhiteSpace(url) || contentPage == null)
-                return null;
+                return new NewsCreateResult { Success = false, ErrorMessage = "Invalid url or contentPage is null" };
 
             var portal = await _iPortalRepository.SingleOrDefaultAsync(true, x=> x.Id == contentPage.PortalId);
             if(portal == null)
-                return null;
+                return new NewsCreateResult { Success = false, ErrorMessage = "Portal not found" };
 
             string domain = portal.Domain;
             if(_env.IsDevelopment())
@@ -161,17 +161,18 @@ namespace PT.Base.Services
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
                     UpdateBy = "",
-                    RecordStatusId = contentPage.Status ? 1 : 4,
+                    // 1 = Active, 4 = draft
+                    StatusId = contentPage.Status ? 1 : 4,
                     Categories = (categoryId != null && categoryId > 0) ? [new() { Id = categoryId ?? 0, PriorityOrder = 1 }] : [],
                     TypeIds = [],
                     SourceIds = [sourceId],
                     Entities = [],
                     Tags = [],
                     ICBs = [],
-                    VSICs = []
+                    VSICs = [],
+                    CreateBy = "admin@fiingroup.vn"
                 };
 
-                // Helper to post JSON with a token; creates fresh HttpContent for each call.
                 async Task<HttpResponseMessage> PostWithTokenAsync(string bearerToken)
                 {
                     using var client = _httpClientFactory.CreateClient();
@@ -185,11 +186,9 @@ namespace PT.Base.Services
                     return await client.PostAsync(url, content);
                 }
 
-                // 1) initial attempt with cached token
                 var token = await GetAccessTokenAsync();
                 var response = await PostWithTokenAsync(token);
 
-                // 2) retry once when 401
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     response.Dispose();
@@ -197,20 +196,33 @@ namespace PT.Base.Services
                     response = await PostWithTokenAsync(token);
                 }
                 var responseContent = await response.Content.ReadAsStringAsync();
-                // 3) non-success -> return null
-                if (!response.IsSuccessStatusCode)
+                var statusCode = (int)response.StatusCode;
+                if (response.IsSuccessStatusCode)
                 {
                     response.Dispose();
-                    return null;
+                    var data = JsonConvert.DeserializeObject<NewsDTO>(responseContent);
+                    return new NewsCreateResult { Success = true, Data = data, StatusCode = statusCode };
                 }
-                // 4) deserialize and return
-                response.Dispose();
-                return JsonConvert.DeserializeObject<NewsDTO>(responseContent);
+                else
+                {
+                    response.Dispose();
+                    string errorMsg = responseContent;
+                    // Nếu là lỗi 400 hoặc 500, cố gắng parse lỗi dạng chuẩn
+                    try
+                    {
+                        var errorObj = JsonConvert.DeserializeObject<dynamic>(responseContent);
+                        if (errorObj != null && errorObj.title != null && errorObj.detail != null)
+                        {
+                            errorMsg = $"{errorObj.title}: {errorObj.detail}";
+                        }
+                    }
+                    catch { }
+                    return new NewsCreateResult { Success = false, ErrorMessage = errorMsg, StatusCode = statusCode };
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                // per request: swallow errors and return null
-                return null;
+                return new NewsCreateResult { Success = false, ErrorMessage = ex.Message };
             }
         }
 
@@ -269,7 +281,7 @@ namespace PT.Base.Services
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
                     UpdateBy = "",
-                    RecordStatusId = contentPage.Status ? 1 : 3,
+                    StatusId = contentPage.Status ? 1 : 4,
                     Categories = (categoryId != null && categoryId > 0) ? [new() { Id = categoryId ?? 0, PriorityOrder = 1 }] : [],
                     TypeIds = [],
                     SourceIds = [sourceId],

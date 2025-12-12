@@ -425,4 +425,12 @@ namespace PT.Domain.Model
         [JsonProperty("entityAssetTypeId")]
         public int EntityAssetTypeId { get; set; }
     }
+
+    public class NewsCreateResult
+    {
+        public NewsDTO Data { get; set; }
+        public bool Success { get; set; }
+        public string ErrorMessage { get; set; }
+        public int? StatusCode { get; set; }
+    }
 }
