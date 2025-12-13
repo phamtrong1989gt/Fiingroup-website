@@ -1071,6 +1071,10 @@ a:hover {
     opacity: 1;
     transform: translateX(0);
 }
+.member-card .member-desc{display:none;}
+.member-card:hover .member-desc {
+    display: block;
+}
 
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
