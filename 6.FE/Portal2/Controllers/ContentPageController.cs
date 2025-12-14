@@ -35,8 +35,10 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
+        [Route("{language}/ContentPage/TopNewsAjax")]
         public async Task<ActionResult> TopNewsAjax([FromQuery] NewsQueryParameters prs)
         {
+            ViewData["language"] = prs.Language;
             var cmsCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.PortalId == _baseSettings.Value.PortalId && x.CategoryType == ECategoryType.ContentPage_Blog && x.ParentId == 0 );
             if (cmsCategory != null && !string.IsNullOrEmpty(cmsCategory.ExCategoryIds))
             {

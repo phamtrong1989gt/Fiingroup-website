@@ -97,9 +97,12 @@
 	{
 		position:relative;
 	}
+
+	#FiinCard
+	{
+        margin-bottom: 0 !important;
+	}
 </style>
-
-
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SanPhamDongChay", language = language, portalId = portalId })
 

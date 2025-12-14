@@ -283,13 +283,13 @@ namespace PT.Base
                 }
 
                 // Dùng cache để lưu Link object Link theo key là slug và language, nếu null thì query từ database
-                var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
-                var cacheKey = $"Link_{baseSettings.Value.PortalId}_{slug}_{language}";
-                if (!cache.TryGetValue(cacheKey, out Link link))
-                {
-                    link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
-                }
-                //var link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
+                //var cache = (IMemoryCache)AppHttpContext.Current.RequestServices.GetService(typeof(IMemoryCache));
+                //var cacheKey = $"Link_{baseSettings.Value.PortalId}_{slug}_{language}";
+                //if (!cache.TryGetValue(cacheKey, out Link link))
+                //{
+                //    link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
+                //}
+               var link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Slug == slug && x.Language == language && x.PortalId == baseSettings.Value.PortalId);
                 if (link != null)
                 {
                     // ✅ SỬA LỖI: Thêm Size property khi set cache (vì MemoryCache có SizeLimit)
@@ -298,7 +298,7 @@ namespace PT.Base
                         .SetSlidingExpiration(TimeSpan.FromSeconds(30))
                         .SetSize(1); // 1 unit = 1KB (theo quy ước trong Startup.cs)
                     
-                    cache.Set(cacheKey, link, cacheOptions);
+                    //cache.Set(cacheKey, link, cacheOptions);
                     
                     if (link.Title == null || link.Title == "")
                     {

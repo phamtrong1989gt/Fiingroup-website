@@ -100,7 +100,7 @@
 @section Scripts {
     <script>
         (function ($) {
-            var newsAjaxUrl = '@Url.Action("EventAjax", "Category")';
+            var newsAjaxUrl = '@Url.Action("EventAjax", "Category", new { language = language })';
             var currentLanguage = '@language';
 
             function toYMD(date) {

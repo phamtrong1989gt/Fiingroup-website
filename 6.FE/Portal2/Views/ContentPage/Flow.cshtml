@@ -30,6 +30,20 @@
 		border: 1px solid #eee
 	}
 
+	.news-title {
+		display: block;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		color: #1d2939;
+		font-size: 20px;
+		line-height: 30px;
+		max-height: calc(30px * 3);
+		word-break: break-word;
+        font-weight: 600;
+	}
 </style>
 <section id="StockEconomy" class="hero-section">
 	<div class="hero-overlay">
@@ -130,8 +144,7 @@
 
 		// Build query string
 		const queryString = $.param(queryParams);
-		const url = '@Url.Action("TopNewsAjax", "ContentPage")' + '?' + queryString;
-
+		const url = '@Url.Action("TopNewsAjax", "ContentPage", new { language = language })' + '?' + queryString;
 		// Call AJAX
 		$.ajax({
 			url: url,

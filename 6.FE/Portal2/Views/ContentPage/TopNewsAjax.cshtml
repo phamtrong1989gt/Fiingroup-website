@@ -10,20 +10,20 @@
 
 @{
     Layout = null;
-    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	string language = ViewData["language"]?.ToString();
 }
 
 @if (Model != null)
 {
 	@foreach (var item in Model.Items)
 	{
-		string url = $"/{language}/tin-tuc-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
+		string url = $"/{language}/news-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
 
 		<div class="col-lg-4 col-sm-6 mb-4">
 			<img loading="lazy" class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/news.jpg';" src="@(item.ImageUrl ?? "/Data/Banner/news.jpg")" alt="@item.Title">
 			<div class="pt-3 pb-3">
-				<div class="news-title text-break">
-					<a href="@url" title="@item.Title">
+				<div class=" text-break">
+					<a href="@url" class='news-title' title="@item.Title">
 						@item.Title
 					</a>
 				</div>
