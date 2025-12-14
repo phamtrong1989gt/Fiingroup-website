@@ -22,7 +22,84 @@
 		background: url('@(Model.Input12 ?? "/Data/Banner/about_banner.png")') no-repeat top;
 		background-size: cover;
 	}
+
+	.box-center, .box-left, .box-right {
+		min-height: 510px;
+		position:relative;
+		cursor: -webkit-grab;
+	}
+
+	.box-center .dang-ky-card-center, .box-left .dang-ky-card, .box-right .dang-ky-card
+	{
+		position: absolute;
+		bottom: 40px;
+		max-width: 250px;
+		margin: 0 auto;
+		left: 0;
+		right: 0;
+	}
+
+		.box-center .corner-decor
+		{
+			display:none;
+		}
+
+	.tilte-card-center
+	{
+		font-size: 23px !important;
+		color: #0066CC !important;
+		margin-bottom: 10px !important;
+	}
+
+	.tilte-card
+	{
+		min-height:69px;
+	}
+
+	.box-left::before, .box-center::before,.box-right::before
+	{
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: 15px;
+		padding: 2px;
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		pointer-events: none;
+	}
+
+	.box-center::before
+	{
+		background:none !important;
+	}
+
+	.box-left:hover::before,
+	.box-center:hover::before,
+	.box-right:hover::before {
+		background: linear-gradient(to right, #034EA2, #53DFFF) !important;
+		-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		/* nếu cần giữ behavior cũ: */
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+	}
+
+	.box-left:hover, .box-center:hover, .box-right:hover
+	{
+		transform: translateY(-16px);
+	}
+
+	.fa.fa-check-circle
+	{
+		padding-top: 3px !important;
+	}
+
+	.money-card
+	{
+		position:relative;
+	}
 </style>
+
+
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "SanPhamDongChay", language = language, portalId = portalId })
 

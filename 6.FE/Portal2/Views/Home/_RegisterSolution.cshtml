@@ -3,6 +3,7 @@
 @inject IOptions<BaseSettings> _baseSettings;
 @inject IViewLocalizer Localizer;
 @model PT.UI.Models.ContactSolotionModel;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
 
 @{
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
@@ -11,7 +12,12 @@
     @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
     var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
     var portalId = _baseSettings.Value.PortalId;
-    var listServies = await _iContactRepository.ServiesNewsList(language, portalId);
+    var listFlow = await _iContentPageRepository.SearchAsync(true,0, 0 , x => x.Language == language && x.PortalId == portalId && x.CategoryType == ECategoryType.ContentPage_Flow && x.Status);
+    var listServies = listFlow.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+    {
+        Value = x.Name,
+        Text = x.Name
+    }).ToList();
 }
 
 <div class="modal" tabindex="-1" role="dialog" id="popsolutionmore">
@@ -40,6 +46,17 @@
                                 <label asp-for="Email" class="form-label"></label><span class="error">*</span>
                                 <input type="email" class="form-control" id="email" asp-for="Email" placeholder="">
                                 <span class="validate-style" asp-validation-for="Email"></span>
+                            </div>
+
+                            <div class="col-sm-6 mb-2">
+                                <label class="form-label" asp-for="ConpanyName"></label> <strong class="error">*</strong>
+                                <input type="text" class="form-control" asp-for="ConpanyName" placeholder="">
+                                <span class="validate-style" asp-validation-for="ConpanyName"></span>
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                <label class="form-label" asp-for="Position"></label> <strong class="error">*</strong>
+                                <input type="text" class="form-control" asp-for="Position" placeholder="">
+                                <span class="validate-style" asp-validation-for="Position"></span>
                             </div>
 
                             <div class="col-sm-12 mb-3">

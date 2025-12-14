@@ -23,57 +23,150 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "AboutUsWordEnvironment", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsDeliver", language = language, portalId = portalId }))
 
+<style>
+        .tab-container {
+            display: inline-flex;
+            justify-content: center;
+        border: 1px solid #0066cf !important;
+            border-radius: 26px;
+            overflow: hidden;
+            font-size: 16px;
+        }
+
+    .tab.active {
+        background: #0066cf !important;
+    }
+</style>
+
+<!-- Consolidated scripts: links, tabs, and hover popup (deduplicated) -->
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const links = document.querySelectorAll('.narbarstory a');
-		links.forEach(link => {
-			link.addEventListener('click', (e) => {
-				e.preventDefault();
-				// Xóa class active
-				links.forEach(l => l.classList.remove('active'));
-				link.classList.add('active');
-				// Lấy ID mục tiêu
-				const targetId = link.getAttribute('href')?.trim();
-				// Nếu href null hoặc không phải id hợp lệ thì thoát
-				if (!targetId || !targetId.startsWith("#")) {
-					return;
-				}
-				const targetEl = document.querySelector(targetId);
-				if (targetEl) {
-					targetEl.scrollIntoView({
-						behavior: "smooth",
-						block: "start"
-					});
-				}
-			});
-		});
-	});
-	 const tabs = document.querySelectorAll('.tab');
-		const contents = {
-			'Hội đồng quản trị': document.getElementById('hđqt'),
-			'Ban điều hành': document.getElementById('ban-dieu-hanh')
-		};
-		const title = document.getElementById('team-title');
+document.addEventListener('DOMContentLoaded', () => {
+    // smooth scroll for .narbarstory links
+    const links = document.querySelectorAll('.narbarstory a');
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            links.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            const targetId = link.getAttribute('href')?.trim();
+            if (!targetId || !targetId.startsWith("#")) return;
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+    });
 
-		tabs.forEach(tab => {
-			tab.addEventListener('click', () => {
-				// Xóa trạng thái active cũ
-				tabs.forEach(t => t.classList.remove('active'));
-				Object.values(contents).forEach(content => content.style.display = 'none');
+    // Tabs handling
+    const tabs = document.querySelectorAll('.tab');
+    var language = '@language';
+    const contents = {
+        'Hội đồng quản trị': document.getElementById('hdqt'),
+        'Ban điều hành': document.getElementById('ban-dieu-hanh')
+    };
 
-				// Kích hoạt tab hiện tại
-				tab.classList.add('active');
+    if(language !== 'vi') {
+        contents['Board of Directors'] = document.getElementById('hdqt');
+        contents['Board of Managers'] = document.getElementById('ban-dieu-hanh');
+    };
 
-				// Hiển thị nội dung tương ứng với nút được bấm
-				const selected = tab.textContent.trim();
-				if (contents[selected]) {
-					contents[selected].style.display = 'block';
-				}
-				if (selected === 'Hội đồng quản trị') {
-					title.innerHTML = 'Đội ngũ quản lý';
-				} else if (selected === 'Ban điều hành') {
-					title.innerHTML = 'Đội ngũ quản lý <span style="color:#0078d4;">giàu kinh nghiệm</span>';
-				}
-			});
-		});
+    const title = document.getElementById('team-title');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            Object.values(contents).forEach(content => { if (content) content.style.display = 'none'; });
+            tab.classList.add('active');
+            const selected = tab.textContent.trim();
+            if (contents[selected]) contents[selected].style.display = 'block';
+            if (selected === 'Hội đồng quản trị') {
+                title.innerHTML = 'Đội ngũ quản lý';
+            } else if (selected === 'Ban điều hành') {
+                title.innerHTML = 'Đội ngũ quản lý <span style="color:#0078d4;">giàu kinh nghiệm</span>';
+            }
+        });
+    });
+
+    // Popup element (created once) to show name/title/desc on hover
+    (function(){
+        const popup = document.createElement('div');
+        popup.id = 'member-popup';
+        popup.className = 'member-popup';
+        popup.setAttribute('aria-hidden', 'true');
+        popup.style.display = 'none';
+        popup.innerHTML = '<div class="popup-inner"><div class="popup-name"></div><div class="popup-title"></div><div class="popup-desc"></div></div>';
+        document.body.appendChild(popup);
+
+        let showTimeout = null;
+        let hideTimeout = null;
+
+        function showPopup(card){
+            clearTimeout(hideTimeout);
+            showTimeout = setTimeout(() => {
+                const nameEl = card.querySelector('.member-name');
+                const titleEl = card.querySelector('.member-title');
+                const descEl = card.querySelector('.member-desc');
+                const name = nameEl ? nameEl.textContent.trim() : '';
+                const title = titleEl ? titleEl.textContent.trim() : '';
+                const desc = descEl ? descEl.textContent.trim() : '';
+
+                popup.querySelector('.popup-name').textContent = name;
+                popup.querySelector('.popup-title').textContent = title;
+                popup.querySelector('.popup-desc').textContent = desc;
+
+                // set popup height and width to match card (100% of box)
+                const cardRect = card.getBoundingClientRect();
+                popup.style.width = (cardRect.width + 5) + 'px';
+                popup.style.height = cardRect.height + 'px';
+                popup.style.boxSizing = 'border-box';
+
+                popup.style.display = 'block';
+                popup.setAttribute('aria-hidden','false');
+
+                // get popup rect after applying size
+                const popupRect = popup.getBoundingClientRect();
+                let left = window.scrollX + cardRect.right + 12; // right side
+                let top = window.scrollY + cardRect.top;
+
+                // choose arrow side and position
+                popup.classList.remove('arrow-left','arrow-right');
+
+                // if overflowing right, position to left and set arrow-left
+                if (left + popupRect.width > window.scrollX + window.innerWidth) {
+                    left = window.scrollX + cardRect.left - popupRect.width - 12;
+                    popup.classList.add('arrow-left');
+                } else {
+                    popup.classList.add('arrow-right');
+                }
+
+                // adjust top if exceeds bottom
+                if (top + popupRect.height > window.scrollY + window.innerHeight) {
+                    top = window.scrollY + window.innerHeight - popupRect.height - 12;
+                }
+
+                if (top < window.scrollY + 8) top = window.scrollY + 8;
+
+                popup.style.left = left + 'px';
+                popup.style.top = top + 'px';
+            }, 120);
+        }
+
+        function hidePopup(){
+            clearTimeout(showTimeout);
+            hideTimeout = setTimeout(() => {
+                popup.style.display = 'none';
+                popup.setAttribute('aria-hidden','true');
+            }, 80);
+        }
+
+        document.querySelectorAll('.member-card').forEach(card => {
+            card.addEventListener('mouseenter', () => showPopup(card));
+            card.addEventListener('focus', () => showPopup(card));
+            card.addEventListener('mouseleave', hidePopup);
+            card.addEventListener('blur', hidePopup);
+        });
+
+        // hide on scroll/resize
+        window.addEventListener('scroll', hidePopup, true);
+        window.addEventListener('resize', hidePopup);
+    })();
+});
 </script>
