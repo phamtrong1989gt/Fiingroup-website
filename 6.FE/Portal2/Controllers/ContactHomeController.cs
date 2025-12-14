@@ -182,7 +182,9 @@ namespace PT.UI.Controllers
                         Products = use.Products,
                         CreatedDate = DateTime.Now,
                         PortalId = _baseSettings.Value.PortalId,
-                        Language = language
+                        Language = language,
+                        ConpanyName = use.ConpanyName,
+                        Position= use.Position,
                     });
                     await _iContactRepository.CommitAsync();
 

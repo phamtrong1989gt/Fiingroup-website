@@ -88,6 +88,16 @@ namespace PT.UI.Models
         [Display(Name = nameof(Products))]
         [StringLength(100, MinimumLength = 0, ErrorMessage = "ValidateStringLength")]
         public string Products { get; set; }
+
+        [Display(Name = nameof(ConpanyName))]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(100, MinimumLength = 1, ErrorMessage = "ValidateStringLength")]
+        public string ConpanyName { get; set; }
+
+        [Display(Name = nameof(Position))]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "ValidateStringLength")]
+        public string Position { get; set; }
     }
 
 }

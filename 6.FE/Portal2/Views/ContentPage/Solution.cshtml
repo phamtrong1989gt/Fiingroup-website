@@ -262,6 +262,7 @@
 		border-radius: 12px;
 		border: 1px solid #eee
 	}
+
 </style>
 <section id="StockEconomy" class="hero-section">
 	<div class="hero-overlay">
@@ -434,7 +435,6 @@
 		// Build query string
 		const queryString = $.param(queryParams);
 		const url = '@Url.Action("TopNewsAjax", "ContentPage")' + '?' + queryString;
-
 		// Call AJAX
 		$.ajax({
 			url: url,

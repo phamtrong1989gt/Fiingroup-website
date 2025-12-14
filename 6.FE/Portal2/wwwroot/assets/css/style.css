@@ -1072,92 +1072,45 @@ a:hover {
     transform: translateX(0);
 }
 
-@media (min-width: 1400px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-        max-width: 1230px;
-    }
+.member-card .member-desc{display:none;}
+
+/*.member-card:hover .member-desc {
+    display: block;
+}*/
+
+/* Popup styles for AboutUs member-card hover popup */
+.member-popup{
+  position:absolute;
+  z-index:1200;
+  max-width:360px;
+  background:#fff;
+  border-radius:8px;
+  padding:14px 16px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.15);
+  border:1px solid rgba(0,0,0,0.06);
+  font-family:Arial, sans-serif;
+  overflow:auto;
 }
-
-@media (max-width: 767px) {
-    .mbftyt2 {
-        display: none;
-    }
-
-    #Header .imglogo {
-        height: 55px;
-    }
-
-    .pay>h2 {
-        font-size: 30px;
-        padding: 35px 0;
-    }
-
-    .pttt .cover {
-        width: 100%;
-    }
-    #VideoFiin .videoitem iframe{
-        height:235px;
-    }
-    .img-hotro{
-        width:100%;
-    }
-    .hotro-list .col-sm-5{padding:0;}
-    .hotro-list .mb-3 {
-        margin: 0 !important;
-    }
-    #carouselFiin h1 {
-        font-size: 26px;
-    }
-    #carouselFiin p {
-        font-size: 14px;
-    }
-    #DangKy img{width:100%;}
-    #DangKy .btn-primary {
-        width: 100%;
-    }
-    .testimonial-media .imgtop {
-        margin: 0 0 -6% -34%!important;
-    }
-
-    .testimonial-media .imgbotton {
-        margin: -13% -25% 0 0 !important;
-    }
+.member-popup .popup-name{
+  font-weight:700;
+  color:#0066CC;
+  margin-bottom:6px;
 }
-@media (min-width: 767px) and (max-width: 1000px) {
-    #VideoFiin .videoitem iframe {
-        height: 335px;
-    }
-
-    .testimonial-media .imgtop {
-        margin: 0 0 -6% -39% !important;
-    }
-
-    .testimonial-media .imgbotton {
-        margin: -13% -28% 0 0 !important;
-    }
-    .stat-box{width:28% !important;}
-    #FiinGroup img, #ReportDetail img {
-        max-width: 100% !important;
-    }
-    #CoreValue .content {
-        width: 100% !important;
-    }
-    .menu-news, .menu-publications, .narbarstory {
-        display: none !important;
-    }
+.member-popup .popup-title{
+  font-weight:600;
+  color:#333;
+  margin-bottom:8px;
 }
-@media (min-width: 375px) and (max-width: 760px) {
-    .stat-box {
-        width: 46% !important;
-    }
-    #FiinGroup img, #ReportDetail img {
-        max-width: 100% !important;
-    }
-    #CoreValue .content {
-        width: 100% !important;
-    }
-    .tab-container .tab{min-width:auto !important;}
-    .menu-news, .menu-publications, .narbarstory {
-        display: none !important;
-    }
+.member-popup .popup-desc{
+  font-size:13px;
+  color:#444;
+  line-height:1.4;
 }
+/* Arrow styles */
+.member-popup::before{content:"";position:absolute;width:0;height:0;border-style:solid}
+.member-popup.arrow-right::before{left:-12px;top:20px;border-width:8px 12px 8px 0;border-color:transparent rgba(0,0,0,0.06) transparent transparent}
+.member-popup.arrow-right::after{content:"";position:absolute;left:-10px;top:21px;border-width:7px 10px 7px 0;border-style:solid;border-color:transparent #fff transparent transparent}
+.member-popup.arrow-left::before{right:-12px;top:20px;border-width:8px 0 8px 12px;border-color:transparent transparent transparent rgba(0,0,0,0.06)}
+.member-popup.arrow-left::after{content:"";position:absolute;right:-10px;top:21px;border-width:7px 0 7px 10px;border-style:solid;border-color:transparent transparent transparent #fff}
+.member-popup .popup-inner{display:flex;flex-direction:column;height:100%}
+.member-popup .popup-desc{flex:1;overflow:auto}

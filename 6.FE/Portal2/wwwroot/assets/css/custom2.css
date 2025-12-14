@@ -65,7 +65,6 @@
     }
     .hotro-list a span:hover {
         color: var(--Base-Brand-Blue) !important;
-        font-weight: 600 !important;
     }
 #formLienHe input{font-size:14px !important;border-radius:4px!important}
 #formLienHe .form-label {
