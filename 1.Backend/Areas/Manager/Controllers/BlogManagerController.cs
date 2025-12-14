@@ -134,8 +134,12 @@ namespace PT.BE.Areas.Manager.Controllers
                     Address = x.Address,
                     FilePath = x.FilePath,
                     Pages = x.Pages,
-                    SlugType = x.SlugType
-                });
+                    SlugType = x.SlugType,
+                    NewsId = x.NewsId,
+                    Input1 = x.Input1,
+                    Input2 = x.Input2
+             });
+
             var portals = await _iPortalRepository.SearchAsync(true);
             foreach (var item in data.Data)
             {
@@ -215,7 +219,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
 
-                    await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details");
+                    var linkId =  await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details", data.PortalId);
                     await UpdateCategory(data.Id, categoryIds, data.CategoryId);
                     await UpdateTag(data.Id, use.TagIds);
                     await UpdateRelated(data.Id, use.ContentPageRelatedIds);
@@ -224,18 +228,20 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.CommitTransaction();
                     try
                     {
-                        // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
+                        data.Link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Id == linkId);
                         var outData = await _iAsyncNewsService.CreateAsync(data);
                         if (outData != null && outData.Success)
                         {
                             data.NewsId = outData.Data.NewsId;
+                            data.Input1 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {data.NewsId} thành công";
                             _iContentPageRepository.Update(data);
                             await _iContentPageRepository.CommitAsync();
-                            _logger.LogDebug("CreatePost {0}", $"Tạo tin mới {data.NewsId} của tin #{data.Id} thành công");
                         }
                         else
                         {
-                            _logger.LogDebug("CreatePost {0}", $"Tạo tin mới của tin #{data.Id} thất bại: {outData.ErrorMessage}");
+                            data.Input1 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{data.Id} thất bại: {outData.ErrorMessage}";
+                            _iContentPageRepository.Update(data);
+                            await _iContentPageRepository.CommitAsync();
                         }
                     }
                     catch (Exception ex)
@@ -392,26 +398,41 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.CommitTransaction();
                     try
                     {
+                        dl.Link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == dl.Id && x.Type == ESlugType.ContentPage && x.Language == dl.Language && x.PortalId == dl.PortalId);
+
                         if (dl.NewsId == null || dl.NewsId <= 0)
                         {
                             var outData = await _iAsyncNewsService.CreateAsync(dl);
                             if (outData != null && outData.Success)
                             {
                                 dl.NewsId = outData.Data.NewsId;
+                                dl.Input1 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {dl.NewsId} thành công";
                                 _iContentPageRepository.Update(dl);
                                 await _iContentPageRepository.CommitAsync();
-                                _logger.LogDebug("CreatePost {0}", $"Tạo tin mới {dl.NewsId} của tin #{dl.Id} thành công");
                             }
                             else
                             {
-                                _logger.LogDebug("CreatePost {0}", $"Tạo tin mới của tin #{dl.Id} thất bại: {outData.ErrorMessage}");
+                                dl.Input1 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{dl.Id} thất bại: {outData.ErrorMessage}";
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
                             }
                         }
                         else
                         {
                             // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
-                            var checkAPI = await _iAsyncNewsService.UpdateAsync(dl);
-                            var a = checkAPI;
+                            var outData = await _iAsyncNewsService.UpdateAsync(dl);
+                            if (outData != null && outData.Success)
+                            {
+                                dl.Input2 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thành công";
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
+                            }
+                            else
+                            {
+                                dl.Input2 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thất bại: {outData.ErrorMessage}";
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
+                            }
                         }
                     }
                     catch (Exception ex)

@@ -37,9 +37,9 @@
 			<div class="hero-content">
 				@if(Model.IsShowHeaderContent != false)
 				{
-					<span class="hero-subtitle">@Model.Input1</span>
+					<span class="hero-subtitle">@Html.Raw(Model.Input1)</span>
 					<h1 class="hero-title">
-						@Model.Input2
+						@Html.Raw(Model.Input2)
 					</h1>
 					<p class="hero-text">
 						@Html.Raw(Model.Input3)

@@ -190,9 +190,7 @@ namespace PT.Base.Services
         public async Task<NewsDetailResponse> GetNewsByIdAsync(int id, string language = "vi")
         {
             var settings = _baseSettings.Value.NewAPI;
-            var endpoint = language.ToLower() == "vi"
-           ? settings.NewsEndpointVI.Replace("/Gets", "/Get")
-            : settings.NewsEndpointEN.Replace("/Gets", "/Get");
+            var endpoint = language.ToLower() == "vi" ? settings.NewsEndpointVI.Replace("/Gets", "/Get") : settings.NewsEndpointEN.Replace("/Gets", "/Get");
             var newsUrl = $"{endpoint}?id={id}";
 
             // Lấy token

@@ -20,7 +20,7 @@ namespace PT.Base.Services
     {
         Task<string> GetAccessTokenAsync(bool clearCache = false);
         Task<NewsCreateResult> CreateAsync(ContentPage contentPage);
-        Task<NewsDTO> UpdateAsync(ContentPage contentPage);
+        Task<NewsCreateResult> UpdateAsync(ContentPage contentPage);
     }
 
     public class AsyncNewsService : IAsyncNewsService
@@ -157,7 +157,7 @@ namespace PT.Base.Services
                     ShortContent = contentPage.Summary,
                     PublicDate = contentPage.DatePosted,
                     FriendlyTitle = contentPage.Link?.Slug,
-                    ImageUrl = $"{domain}{contentPage.Banner}",
+                    ImageUrl = $"{contentPage.Banner}",
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
                     UpdateBy = null,
@@ -170,7 +170,7 @@ namespace PT.Base.Services
                     Tags = [],
                     ICBs = [],
                     VSICs = [],
-                    CreateBy = "admin@fiingroup.vn"
+                  //  CreateBy = "admin@fiingroup.vn"
                 };
 
                 async Task<HttpResponseMessage> PostWithTokenAsync(string bearerToken)
@@ -226,10 +226,10 @@ namespace PT.Base.Services
             }
         }
 
-        public async Task<NewsDTO> UpdateAsync(ContentPage contentPage)
+        public async Task<NewsCreateResult> UpdateAsync(ContentPage contentPage)
         {
             if (contentPage == null)
-                return null;
+                return new NewsCreateResult { Success = false, ErrorMessage = "ContentPage is null" };
 
             var url = _settings.Value.EditEndPointVI;
             if (contentPage.Language == "en")
@@ -237,11 +237,11 @@ namespace PT.Base.Services
                 url = _settings.Value.EditEndPointEN;
             }
             if (string.IsNullOrWhiteSpace(url))
-                return null;
+                return new NewsCreateResult { Success = false, ErrorMessage = "Update endpoint URL is not configured" };
 
             var portal = await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == contentPage.PortalId);
             if (portal == null)
-                return null;
+                return new NewsCreateResult { Success = false, ErrorMessage = "Portal not found" };
 
             string domain = portal.Domain;
             if (_env.IsDevelopment())
@@ -261,7 +261,7 @@ namespace PT.Base.Services
                 var link = await _ilinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == contentPage.Id && x.Type == contentPage.SlugType);
                 if (link == null)
                 {
-                    return null;
+                    return new NewsCreateResult { Success = false, ErrorMessage = "Link not found for content page" };
                 }
                 // Ánh xạ danh mục
                 var category = await _iCategoryRepository.SingleOrDefaultAsync(true, x=>x.Id == contentPage.CategoryId);
@@ -277,7 +277,7 @@ namespace PT.Base.Services
                     ShortContent = contentPage.Summary,
                     PublicDate = contentPage.DatePosted,
                     FriendlyTitle = contentPage.Link?.Slug,
-                    ImageUrl = $"{domain}/{contentPage.Banner}",
+                    ImageUrl = $"{contentPage.Banner}",
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
                     UpdateBy = null,
@@ -293,7 +293,7 @@ namespace PT.Base.Services
                     StatusId = contentPage.Status ? 1 : 4,
                 };
 
-                async Task<HttpResponseMessage> PostWithTokenAsync(string bearerToken, string endpoint)
+                async Task<HttpResponseMessage> PutWithTokenAsync(string bearerToken, string endpoint)
                 {
                     using var client = _httpClientFactory.CreateClient();
                     if (!string.IsNullOrWhiteSpace(bearerToken))
@@ -303,33 +303,48 @@ namespace PT.Base.Services
 
                     var json = JsonConvert.SerializeObject(cmd);
                     using var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    // Use POST for update endpoint to match existing API shape (adjust to PutAsync if API expects PUT)
                     return await client.PutAsync(endpoint, content);
                 }
 
                 var token = await GetAccessTokenAsync();
-                var response = await PostWithTokenAsync(token, url);
+                var response = await PutWithTokenAsync(token, url);
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     response.Dispose();
                     token = await GetAccessTokenAsync(clearCache: true);
-                    response = await PostWithTokenAsync(token, url);
+                    response = await PutWithTokenAsync(token, url);
                 }
 
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var statusCode = (int)response.StatusCode;
 
-                if (!response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
                     response.Dispose();
-                    return null;
+                    var data = JsonConvert.DeserializeObject<NewsDTO>(responseContent);
+                    return new NewsCreateResult { Success = true, Data = data, StatusCode = statusCode };
                 }
-                var responseContent = await response.Content.ReadAsStringAsync();
-                response.Dispose();
-                return JsonConvert.DeserializeObject<NewsDTO>(responseContent);
+                else
+                {
+                    response.Dispose();
+                    string errorMsg = responseContent;
+                    // Nếu là lỗi 400 hoặc 500, cố gắng parse lỗi dạng chuẩn
+                    try
+                    {
+                        var errorObj = JsonConvert.DeserializeObject<dynamic>(responseContent);
+                        if (errorObj != null && errorObj.title != null && errorObj.detail != null)
+                        {
+                            errorMsg = $"{errorObj.title}: {errorObj.detail}";
+                        }
+                    }
+                    catch { }
+                    return new NewsCreateResult { Success = false, ErrorMessage = errorMsg, StatusCode = statusCode };
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                return new NewsCreateResult { Success = false, ErrorMessage = ex.Message };
             }
         }
 

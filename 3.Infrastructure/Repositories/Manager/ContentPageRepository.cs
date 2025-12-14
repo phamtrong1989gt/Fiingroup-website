@@ -351,7 +351,9 @@ namespace PT.Infrastructure.Repositories
                     CategoryType = x.data.CategoryType,
                     DeliveryTime = x.data.DeliveryTime,
                     SlugType = x.data.SlugType,
-                    NewsId = x.data.NewsId
+                    NewsId = x.data.NewsId,
+                    Input1 = x.data.Input1,
+                    Input2= x.data.Input2
                 }).AsQueryable();
 
             var list = await query.Skip((page - 1) * limit).Take(limit).AsNoTracking().ToListAsync();

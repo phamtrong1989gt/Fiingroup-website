@@ -53,6 +53,8 @@
         <partial name="_AdminTbodyTableModule" model="@(new Tuple<List<PT.Domain.Model.LinkReference>,string,string,bool>(item.LinkReferences,item.Language,Url.Action("Edit", new { id ="#Id#" }),false))" />
         <td>@item.Portal?.Name</td>
         <td>@item.NewsId</td>
+        <td>@item.Input1</td>
+        <td>@item.Input2</td>
         <td>
             <div class="btn-group">
                 <div class="btn-group btn- group-sm" role="group">

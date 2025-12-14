@@ -246,7 +246,9 @@ namespace PT.Base
                 var customRoutes = new Dictionary<string, string>
                 {
                     { "tin-tuc-fg", "FGNews" },
-                    { "su-kien-fg", "FGEvent" }
+                    { "news-fg", "FGNews" },
+                    { "su-kien-fg", "FGEvent" },
+                    { "event-fg", "FGEvent" }
                 };
 
                 // Check custom routes

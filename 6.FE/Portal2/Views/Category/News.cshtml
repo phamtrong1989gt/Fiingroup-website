@@ -259,7 +259,8 @@
             @if (Model.EventTop != null && Model.EventTop.Items != null && Model.EventTop.Items.Count > 0 && Model.EventTop.Items[0] != null)
             {
                 var item = Model.EventTop.Items[0];
-                string url = $"/{language}/tin-tuc-fg/{item?.FriendlyTitle}-id{item?.Id}.html"?.ToLower();
+                string url = $"/{language}/news-fg/{item?.FriendlyTitle}-id{item?.Id}.html"?.ToLower();
+               
                 <div class="col-lg-5 col-sm-6 mb-5">
                     <h2 class="text-white mb-4">@item.Title</h2>
                     <div class="item-date mb-2">

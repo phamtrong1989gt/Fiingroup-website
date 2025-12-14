@@ -194,7 +194,7 @@ namespace PT.BE.Areas.Base.Controllers
         /// <param name="controller">Controller</param>
         /// <param name="action">Action</param>
         /// <returns>Id liên kết SEO vừa thêm</returns>
-        public async Task<int> CreateLinkAsync(ESlugType slugType, string language, int id, SeoModel model, string name, string area, string controller, string action, int portalId = 1)
+        public async Task<int> CreateLinkAsync(ESlugType slugType, string language, int id, SeoModel model, string name, string area, string controller, string action, int portalId)
         {
             // Check cả slug đã delete, path delete sẽ tự động redrirect về trang chủ
             var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));

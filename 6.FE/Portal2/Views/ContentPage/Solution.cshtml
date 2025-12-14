@@ -269,10 +269,10 @@
 			<div class="hero-content py-5">
 				@if (!string.IsNullOrEmpty(Model.Input1))
 				{
-					<span class="hero-subtitle">@Model.Input1</span>
+					<span class="hero-subtitle">@Html.Raw(Model.Input1)</span>
 				}
 				<h1 class="hero-title mb-4">
-					@Model.Input2
+					@Html.Raw(Model.Input2)
 				</h1>
 				<div class="hero-text">
 					@Html.Raw(Model.Input3)

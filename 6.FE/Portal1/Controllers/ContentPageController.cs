@@ -29,7 +29,7 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> FGNews(int id, string language, string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            var dl = await _iNewsAPIService.GetNewsByIdAsync(id);
+            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language);
             if(dl.Success == false)
             {
                 return View("_Home404");
@@ -42,7 +42,7 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> FGEvent(int id, string language, string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            var dl = await _iNewsAPIService.GetNewsByIdAsync(id);
+            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language);
             if (dl.Success == false)
             {
                 return View("_Home404");
