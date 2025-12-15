@@ -8,13 +8,11 @@ using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
-using PT.Infrastructure.Repositories;
 using PT.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace PT.BE.Areas.Manager.Controllers

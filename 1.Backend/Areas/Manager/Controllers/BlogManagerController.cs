@@ -74,8 +74,6 @@ namespace PT.BE.Areas.Manager.Controllers
             _iAsyncNewsService = iAsyncNewsService;
         }
 
-   
-
         #region [Index]
         [AuthorizePermission]
         public async Task<IActionResult> Index()
