@@ -772,4 +772,5 @@
         -webkit-overflow-scrolling: touch;
     }
     #WhatWe .number{font-size:40px;}
+    .why-desc{padding-right:0 !important;}
 }
