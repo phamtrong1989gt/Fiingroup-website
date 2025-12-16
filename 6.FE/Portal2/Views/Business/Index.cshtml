@@ -15,10 +15,10 @@
     var portalId = _baseSettings.Value.PortalId;
 }
 
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessBanner", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessMajor", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessShareholderTable", language = language, portalId = portalId }))
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessReport", language = language, portalId = portalId }))
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessBanner", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessMajor", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessShareholderTable", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "BusinessReport", language = language, portalId = portalId })
 
 
 <!-- SCRIPT TABS -->
