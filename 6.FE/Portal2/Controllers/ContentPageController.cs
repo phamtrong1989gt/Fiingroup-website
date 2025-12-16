@@ -51,7 +51,8 @@ namespace PT.UI.Controllers
             prs.PageSize = 3;
             prs.Page = 1;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.Status = "Active";
+            prs.StatusIds = "1";
+            prs.SourceId = 4;
             prs.CategoryIds = prs.ExCategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("TopNewsAjax", listNew);

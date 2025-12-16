@@ -226,18 +226,25 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.CommitTransaction();
                     try
                     {
+                        var listCategorys = new List<int>();
+                        if (!string.IsNullOrWhiteSpace(use.CategoryIds))
+                        {
+                            listCategorys = use.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList();
+                        }
                         data.Link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Id == linkId);
-                        var outData = await _iAsyncNewsService.CreateAsync(data);
+                        var outData = await _iAsyncNewsService.CreateAsync(data, use.TagIds, listCategorys);
                         if (outData != null && outData.Success)
                         {
                             data.NewsId = outData.Data.NewsId;
-                            data.Input1 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {data.NewsId} thành công";
+                            string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {data.NewsId} thành công";
+                            data.Input1 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>";
                             _iContentPageRepository.Update(data);
                             await _iContentPageRepository.CommitAsync();
                         }
                         else
                         {
-                            data.Input1 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{data.Id} thất bại: {outData.ErrorMessage}";
+                            string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{data.Id} thất bại: {outData.ErrorMessage}";
+                            data.Input1 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
                             _iContentPageRepository.Update(data);
                             await _iContentPageRepository.CommitAsync();
                         }
@@ -396,21 +403,29 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iContentPageRepository.CommitTransaction();
                     try
                     {
+                        var listCategorys = new List<int>();
+                        if (!string.IsNullOrWhiteSpace(use.CategoryIds))
+                        {
+                            listCategorys = use.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList();
+                        }
+
                         dl.Link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == dl.Id && x.Type == ESlugType.ContentPage && x.Language == dl.Language && x.PortalId == dl.PortalId);
 
                         if (dl.NewsId == null || dl.NewsId <= 0)
                         {
-                            var outData = await _iAsyncNewsService.CreateAsync(dl);
+                            var outData = await _iAsyncNewsService.CreateAsync(dl, use.TagIds, listCategorys);
                             if (outData != null && outData.Success)
                             {
+                                string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {dl.NewsId} thành công";
                                 dl.NewsId = outData.Data.NewsId;
-                                dl.Input1 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {dl.NewsId} thành công";
+                                dl.Input1 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>" ;
                                 _iContentPageRepository.Update(dl);
                                 await _iContentPageRepository.CommitAsync();
                             }
                             else
                             {
-                                dl.Input1 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{dl.Id} thất bại: {outData.ErrorMessage}";
+                                string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{dl.Id} thất bại: {outData.ErrorMessage}";
+                                dl.Input1 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
                                 _iContentPageRepository.Update(dl);
                                 await _iContentPageRepository.CommitAsync();
                             }
@@ -418,16 +433,18 @@ namespace PT.BE.Areas.Manager.Controllers
                         else
                         {
                             // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
-                            var outData = await _iAsyncNewsService.UpdateAsync(dl);
+                            var outData = await _iAsyncNewsService.UpdateAsync(dl, use.TagIds, listCategorys);
                             if (outData != null && outData.Success)
                             {
-                                dl.Input2 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thành công";
+                                string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thành công";
+                                dl.Input2 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>";
                                 _iContentPageRepository.Update(dl);
                                 await _iContentPageRepository.CommitAsync();
                             }
                             else
                             {
-                                dl.Input2 = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thất bại: {outData.ErrorMessage}";
+                                string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thất bại: {outData.ErrorMessage}";
+                                dl.Input2 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
                                 _iContentPageRepository.Update(dl);
                                 await _iContentPageRepository.CommitAsync();
                             }
@@ -565,7 +582,7 @@ namespace PT.BE.Areas.Manager.Controllers
         {
             try
             {
-                await _iContentPageRepository.BeginTransaction();
+                await _iContentPageRepository.Database().BeginTransactionAsync();
                 var kt = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
                 if (kt == null)
                 {
@@ -590,8 +607,19 @@ namespace PT.BE.Areas.Manager.Controllers
                 await _iContentPageRepository.ContentPageSharedDelete(id);
                 await _iContentPageRepository.CommitAsync();
 
-                await _iContentPageRepository.CommitTransaction();
-                return new ResponseModel() { Output = 1, Message = "Xóa Tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
+                // Xóa đồng bộ 
+                var check = await _iAsyncNewsService.DeleteAsync(kt.NewsId ?? 0, null);
+                if(!check.Success)
+                {
+                    await _iContentPageRepository.Database().RollbackTransactionAsync();
+                    _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]Xóa đồng bộ tin tức thất bại: {0}", check.ErrorMessage);
+                    return new ResponseModel() { Output = 0, Message = "Xóa Tin tức thất bại, không thể xóa tin ở DC.", Type = ResponseTypeMessage.Danger, IsClosePopup = true };
+                }
+                else
+                {
+                    await _iContentPageRepository.Database().CommitTransactionAsync();
+                    return new ResponseModel() { Output = 1, Message = "Xóa Tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
+                }    
             }
             catch (Exception ex)
             {

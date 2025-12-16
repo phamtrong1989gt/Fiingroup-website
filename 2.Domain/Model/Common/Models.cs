@@ -58,7 +58,7 @@ namespace PT.Domain.Model
         /// <summary>
         /// Status (default: "Active")
         /// </summary>
-        public string Status { get; set; } = "Active";
+        public string StatusIds { get; set; }
 
         /// <summary>
         /// Tags (comma-separated)
@@ -96,8 +96,8 @@ namespace PT.Domain.Model
             if (!string.IsNullOrEmpty(ToDate))
                 queryParams.Add($"toDate={Uri.EscapeDataString(ToDate)}");
 
-            if (!string.IsNullOrEmpty(Status))
-                queryParams.Add($"status={Uri.EscapeDataString(Status)}");
+            if (!string.IsNullOrEmpty(StatusIds))
+                queryParams.Add($"statusIds={Uri.EscapeDataString(StatusIds)}");
 
             if (!string.IsNullOrEmpty(Tags))
                 queryParams.Add($"tags={Uri.EscapeDataString(Tags)}");

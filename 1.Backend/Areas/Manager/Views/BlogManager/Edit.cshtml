@@ -109,8 +109,8 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="TagIds"></label>
-                                            <select asp-items="@Model.TagSelectList" multiple data-action-add="@Url.Action("AddTag")" style="width:100%;" data-action="@Url.Action("SearchTag", new { language = Model.Language, portalId = Model.PortalId })" asp-for="TagIds" class="form-control ms form-tag"></select>
+                                            <label asp-for="TagIds"></label> @Model.PortalId
+                                            <select asp-items="@Model.TagSelectList" multiple data-action-add="@Url.Action("AddTag", new { language = Model.Language, portalId = Model.PortalId })" style="width:100%;" data-action="@Url.Action("SearchTag", new { language = Model.Language, portalId = Model.PortalId })" asp-for="TagIds" class="form-control ms form-tag"></select>
                                     </div>
                                 </div>
                             </div>

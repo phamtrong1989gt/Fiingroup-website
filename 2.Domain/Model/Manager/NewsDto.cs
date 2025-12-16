@@ -3,7 +3,10 @@ using System.Collections.Generic;
 
 namespace PT.Domain.Model
 {
-
+    public class NewsDTOTagDTO
+    {
+        public string Name { get; set; }
+    }
     public class NewsDTO
     {
         public int NewsId { get; set; }
@@ -21,7 +24,7 @@ namespace PT.Domain.Model
         public List<int> TypeIds { get; set; }
         public List<int> SourceIds { get; set; }
         public List<RefItem> Entities { get; set; }
-        public List<string> Tags { get; set; }
+        public List<NewsDTOTagDTO> Tags { get; set; }
         public List<RefItem> ICBs { get; set; }
         public List<RefItem> VSICs { get; set; }
     }

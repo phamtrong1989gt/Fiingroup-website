@@ -27,13 +27,11 @@ namespace PT.UI.Controllers
     {
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ICategoryRepository _iCategoryRepository;
-        private readonly ITourRepository _iTourRepository;
         private readonly INewsAPIService _iNewsAPIService;
-        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, ITourRepository iTourRepository, INewsAPIService iNewsAPIService)
+        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, INewsAPIService iNewsAPIService)
         {
             _iContentPageRepository = iContentPageRepository;
             _iCategoryRepository = iCategoryRepository;
-            _iTourRepository = iTourRepository;
             _iNewsAPIService = iNewsAPIService;
         }
 
@@ -41,11 +39,11 @@ namespace PT.UI.Controllers
         [Route("{language}/ContentPage/NewsAjax")]
         public async Task<ActionResult> NewsAjax([FromQuery] NewsQueryParameters prs)
         {
-            //await Task.Delay(1000);
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.Status = "Active";
+            prs.StatusIds = "Active";
+            prs.SourceId = 5;
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("NewsAjax", listNew);
@@ -59,7 +57,8 @@ namespace PT.UI.Controllers
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.Status = "Active";
+            prs.StatusIds = "1";
+            prs.SourceId = 5;
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("NewsAjax", listNew);
@@ -72,7 +71,8 @@ namespace PT.UI.Controllers
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.Status = "Active";
+            prs.StatusIds = "1";
+            prs.SourceId = 5;
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("PublicationsAjax", listNew);

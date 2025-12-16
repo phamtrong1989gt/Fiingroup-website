@@ -117,7 +117,9 @@ namespace PT.Infrastructure.Repositories
                     IsHome = x.data.IsHome,
                     PortalId = x.data.PortalId,
                     CategoryType = x.data.CategoryType,
-                    SlugType = x.data.SlugType
+                    SlugType = x.data.SlugType,
+                    ReferentCategoryId = x.data.ReferentCategoryId,
+                    ExCategoryIds = x.data.ExCategoryIds
                 }).AsQueryable();
             if (Take > 0)
             {

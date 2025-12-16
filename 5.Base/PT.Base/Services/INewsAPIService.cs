@@ -259,12 +259,10 @@ namespace PT.Base.Services
                 var newsResponse = JsonConvert.DeserializeObject<NewsListResponse>(responseContent);
                 return newsResponse;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 throw;
             }
-            return null;
         }
 
         /// <summary>

@@ -1316,12 +1316,18 @@ $.fn.toTagsInput = function (callBackData) {
 
             var thisInput = $(this).find('[value="' + e.params.data.id + '"]');
             var thisSelect = $(this);
-           // thisInput.replaceWith('<option selected value="' + e.params.data.id + '">' + e.params.data.text + '(Đang xử lý...)</option>');
-           // thisInput.replaceWith('<option selected value="' + e.params.data.id + '">' + e.params.data.text + '(Đang xử lý 1...)</option>');
+            // thisInput.replaceWith('<option selected value="' + e.params.data.id + '">' + e.params.data.text + '(Đang xử lý...)</option>');
+            // thisInput.replaceWith('<option selected value="' + e.params.data.id + '">' + e.params.data.text + '(Đang xử lý 1...)</option>');
 
             data.name = e.params.data.text;
-            var dataQuery = urlAdd + jsonToQueryString(data);
-            
+            // Kiểm tra xem urlAdd đã có query string chưa
+            var separator = urlAdd.indexOf('?') !== -1 ? '&' : '?';
+            var dataQuery = urlAdd + separator + Object.keys(data).map(function (key) {
+                return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+            }).join('&');
+
+            console.log(urlAdd);
+            console.log(dataQuery);
             $.ajax({
                 type: "POST",
                 dataType: "json",
