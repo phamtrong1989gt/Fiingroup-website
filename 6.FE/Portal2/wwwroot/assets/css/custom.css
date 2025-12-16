@@ -717,3 +717,59 @@
 {
     min-height:400px;
 }
+@media (max-width: 576px){
+    #owlour .item {
+        margin: 0;
+    }
+
+    .testimonial-card .quote {
+        height: 120px;
+    }
+    .testimonial-media .imgbotton{
+        display:none !important;
+    }
+    .testimonial-media {
+        margin: 10px 0 0 0;
+    }
+    .select2-container--default, .select2-selection--multiple {
+        width: 99% !important;
+    }
+    .stat-box{
+        width:100% !important;
+        text-align:center;
+        margin:30px 0 0;
+    }
+    .box-fingroup{
+        max-width:96% !important;
+        margin:10px !important;
+    }
+    .hero-content{max-width:100% !important;}
+    .hero-title{font-size:40px !important;}
+    .navbarfin {
+        padding: 30px 0 !important;
+    }
+    .navbarfin a {
+        display: block;
+        padding: 20px 40px !important;
+    }
+    .narbarstory {
+        display: block !important;
+        padding: 30px 0 !important;
+    }
+        .narbarstory a.active span, .narbarstory a:hover span{width:100%;}
+    #CoreValue .content {
+        width: 100% !important;
+    }
+    .tab{min-width:auto !important;}
+    .tags {
+        height: 62px !important;
+    }
+    .tags .tab-item {
+        padding: 7px 5px !important;
+    }
+    .financial-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    #WhatWe .number{font-size:40px;}
+}
