@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Section Template Engine</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Test Section Template Engine</h1>
+    
+    <div style="margin: 20px;">
+        <h3>Section 1</h3>
+        
+        <div>
+            <label>Template:</label>
+            <textarea id="templateInput1" rows="5" style="width: 100%;">[For]
+<div>[field1] - [field2]</div>
+[/For]</textarea>
+        </div>
+        
+        <div>
+            <label>Values JSON:</label>
+            <textarea id="valuesInput1" rows="5" style="width: 100%;">[
+  {"field1": "Test 1", "field2": "Value 1"}
+]</textarea>
+        </div>
+        
+        <div style="margin-top: 10px;">
+            <input type="text" id="quickFieldName1" placeholder="Tên field" />
+            <button id="btnAddField1">Thêm field</button>
+            <button id="btnAddItem1">Thêm item</button>
+        </div>
+    </div>
+    
+    <script src="/js/section-template-engine.js"></script>
+    <script>
+        $(document).ready(function() {
+            console.log('Document ready');
+            console.log('SectionTemplateEngine:', window.SectionTemplateEngine);
+            
+            // Register section
+            if (window.SectionTemplateEngine) {
+                window.SectionTemplateEngine.addSection('section1', {
+                    templateId: 'templateInput1',
+                    valuesId: 'valuesInput1',
+                    addFieldBtnId: 'btnAddField1',
+                    addItemBtnId: 'btnAddItem1',
+                    fieldNameInputId: 'quickFieldName1',
+                    templateSource: 'SectionTemplates1'
+                });
+                
+                console.log('Section registered!');
+            } else {
+                console.error('SectionTemplateEngine not found!');
+            }
+            
+            // Test button clicks
+            setTimeout(function() {
+                console.log('Button btnAddField1:', $('#btnAddField1').length);
+                console.log('Button btnAddItem1:', $('#btnAddItem1').length);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

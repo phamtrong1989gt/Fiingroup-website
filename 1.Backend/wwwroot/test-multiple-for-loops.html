@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Multiple For Loops</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { background: #f5f5f5; padding: 20px; margin-bottom: 20px; border-radius: 5px; }
+        h2 { color: #2e5ed7; }
+        pre { background: #fff; padding: 15px; border: 1px solid #ddd; overflow-x: auto; }
+        .result { background: #e8f5e9; padding: 15px; border-left: 4px solid #4caf50; }
+        .error { background: #ffebee; padding: 15px; border-left: 4px solid #f44336; }
+    </style>
+</head>
+<body>
+    <h1>?? Test Multiple For Loops - SectionTemplateHelper</h1>
+
+    <!-- Test Case 1: Simple For Loop -->
+    <div class="test-section">
+        <h2>Test 1: Simple [For] Loop</h2>
+        
+        <h3>Template:</h3>
+        <pre id="template1"></pre>
+        
+        <h3>JSON Data:</h3>
+        <pre id="data1"></pre>
+        
+        <h3>Expected Output:</h3>
+        <pre>&lt;div&gt;Item 1&lt;/div&gt;
+&lt;div&gt;Item 2&lt;/div&gt;
+&lt;div&gt;Item 3&lt;/div&gt;</pre>
+        
+        <h3>Actual Output:</h3>
+        <div class="result" id="result1"></div>
+    </div>
+
+    <!-- Test Case 2: Multiple Custom For Loops -->
+    <div class="test-section">
+        <h2>Test 2: Multiple Custom For Loops (ForDesktop, ForMobile)</h2>
+        
+        <h3>Template:</h3>
+        <pre id="template2"></pre>
+        
+        <h3>JSON Data:</h3>
+        <pre id="data2"></pre>
+        
+        <h3>Expected Output:</h3>
+        <pre>Desktop Carousel:
+- Slide 1: Image1
+- Slide 2: Image2
+
+Mobile Carousel:
+- Item 1: Mobile1
+- Item 2: Mobile2
+- Item 3: Mobile3</pre>
+        
+        <h3>Actual Output:</h3>
+        <div class="result" id="result2"></div>
+    </div>
+
+    <!-- Test Case 3: Nested For Loops with Indicators -->
+    <div class="test-section">
+        <h2>Test 3: Your Real Scenario (Desktop + Mobile + Indicators)</h2>
+        
+        <h3>Template:</h3>
+        <pre id="template3" style="max-height: 300px; overflow-y: auto;"></pre>
+        
+        <h3>JSON Data:</h3>
+        <pre id="data3" style="max-height: 300px; overflow-y: auto;"></pre>
+        
+        <h3>Actual Output:</h3>
+        <div class="result" id="result3" style="max-height: 400px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        // ===== Test Case 1: Simple For Loop =====
+        const template1 = `[For]<div>[name]</div>[/For]`;
+        const data1 = {
+            "For": [
+                {"name": "Item 1"},
+                {"name": "Item 2"},
+                {"name": "Item 3"}
+            ]
+        };
+
+        document.getElementById('template1').textContent = template1;
+        document.getElementById('data1').textContent = JSON.stringify(data1, null, 2);
+
+        // Simulate C# SectionTemplateHelper.RenderSection()
+        const result1 = renderTemplate(template1, data1);
+        document.getElementById('result1').innerHTML = escapeHtml(result1);
+
+        // ===== Test Case 2: Multiple Custom For Loops =====
+        const template2 = `Desktop Carousel:
+[ForDesktop]- Slide [index]: [image]
+[/ForDesktop]
+
+Mobile Carousel:
+[ForMobile]- Item [index]: [name]
+[/ForMobile]`;
+
+        const data2 = {
+            "ForDesktop": [
+                {"index": 1, "image": "Image1"},
+                {"index": 2, "image": "Image2"}
+            ],
+            "ForMobile": [
+                {"index": 1, "name": "Mobile1"},
+                {"index": 2, "name": "Mobile2"},
+                {"index": 3, "name": "Mobile3"}
+            ]
+        };
+
+        document.getElementById('template2').textContent = template2;
+        document.getElementById('data2').textContent = JSON.stringify(data2, null, 2);
+
+        const result2 = renderTemplate(template2, data2);
+        document.getElementById('result2').textContent = result2;
+
+        // ===== Test Case 3: Your Real Scenario =====
+        const template3 = `<div class="event-content section" id="about">
+    <div class="container px-24">
+        <div class="text-center">
+            <div class="section-name" style="background-color: [sectionBgColor]">[sectionTitle]</div>
+        </div>
+        
+        <p class="event-paragraph">[introText]</p>
+        
+        <!-- Desktop Carousel -->
+        <div class="carousel slide d-md-block d-none" id="[carouselIdDesktop]">
+            <div class="carousel-indicators">
+                [ForDesktopIndicator]
+                <button [ariaCurrent] aria-label="Slide [slideIndex]" class="[activeClass]" data-bs-slide-to="[slideIndexZero]" data-bs-target="#[carouselIdDesktop]" type="button"></button>
+                [/ForDesktopIndicator]
+            </div>
+            
+            <div class="carousel-inner px-32 pb-40" id="[carouselInnerIdDesktop]">
+                [ForDesktop]
+                <!-- Slide [slideIndex] -->
+                <div class="carousel-item [activeClass]">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="bgImg" style="background-image: url([leftImage]); height: 400px;">
+                                    <div class="keynote mt-auto d-flex flex-column">
+                                        <p class="keynote-content mt-24">[leftContent]</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="bgImg" style="background-image: url([rightImage]); height: 400px;">
+                                    <div class="keynote mt-auto d-flex flex-column">
+                                        <p class="keynote-content mt-24">[rightContent]</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                [/ForDesktop]
+            </div>
+        </div>
+        
+        <!-- Mobile Carousel -->
+        <div class="carousel slide d-md-none d-block" id="[carouselIdMobile]">
+            <div class="carousel-indicators">
+                [ForMobileIndicator]
+                <button [ariaCurrent] aria-label="Slide [slideIndex]" class="[activeClass]" data-bs-slide-to="[slideIndexZero]" data-bs-target="#[carouselIdMobile]" type="button"></button>
+                [/ForMobileIndicator]
+            </div>
+            
+            <div class="carousel-inner d-md-none d-block pb-40" id="[carouselInnerIdMobile]">
+                [ForMobile]
+                <div class="carousel-item [activeClass]">
+                    <div class="bgImg" style="background-image: url([imageUrl]); height: 400px;">
+                        <div class="keynote mt-auto d-flex flex-column">
+                            <p class="keynote-content mt-24">[content]</p>
+                        </div>
+                    </div>
+                </div>
+                [/ForMobile]
+            </div>
+        </div>
+    </div>
+</div>`;
+
+        const data3 = {
+            "sectionBgColor": "#194CCE",
+            "sectionTitle": "Why should you join",
+            "introText": "This is intro text...",
+            "carouselIdDesktop": "carousel-Event",
+            "carouselInnerIdDesktop": "carousel-inner-Event1",
+            "carouselIdMobile": "carousel-Event-mobile",
+            "carouselInnerIdMobile": "carousel-inner-Event2",
+            "ForDesktop": [
+                {
+                    "index": 1,
+                    "slideIndex": "1",
+                    "activeClass": "active",
+                    "leftImage": "https://example.com/left1.jpg",
+                    "leftContent": "Left content 1",
+                    "rightImage": "https://example.com/right1.jpg",
+                    "rightContent": "Right content 1"
+                },
+                {
+                    "index": 2,
+                    "slideIndex": "2",
+                    "activeClass": "",
+                    "leftImage": "https://example.com/left2.jpg",
+                    "leftContent": "Left content 2",
+                    "rightImage": "https://example.com/right2.jpg",
+                    "rightContent": "Right content 2"
+                }
+            ],
+            "ForDesktopIndicator": [
+                {
+                    "index": 1,
+                    "slideIndex": "1",
+                    "slideIndexZero": "0",
+                    "activeClass": "active",
+                    "ariaCurrent": "aria-current=\"true\""
+                },
+                {
+                    "index": 2,
+                    "slideIndex": "2",
+                    "slideIndexZero": "1",
+                    "activeClass": "",
+                    "ariaCurrent": ""
+                }
+            ],
+            "ForMobile": [
+                {
+                    "index": 1,
+                    "activeClass": "active",
+                    "imageUrl": "https://example.com/mobile1.jpg",
+                    "content": "Mobile content 1"
+                },
+                {
+                    "index": 2,
+                    "activeClass": "",
+                    "imageUrl": "https://example.com/mobile2.jpg",
+                    "content": "Mobile content 2"
+                }
+            ],
+            "ForMobileIndicator": [
+                {
+                    "index": 1,
+                    "slideIndex": "1",
+                    "slideIndexZero": "0",
+                    "activeClass": "active",
+                    "ariaCurrent": "aria-current=\"true\""
+                },
+                {
+                    "index": 2,
+                    "slideIndex": "2",
+                    "slideIndexZero": "1",
+                    "activeClass": "",
+                    "ariaCurrent": ""
+                }
+            ]
+        };
+
+        document.getElementById('template3').textContent = template3;
+        document.getElementById('data3').textContent = JSON.stringify(data3, null, 2);
+
+        const result3 = renderTemplate(template3, data3);
+        document.getElementById('result3').innerHTML = escapeHtml(result3);
+
+        // ===== Template Rendering Functions (Simulating C# Logic) =====
+        function renderTemplate(template, data) {
+            // Step 1: Process For loops
+            template = processForLoops(template, data);
+            
+            // Step 2: Replace simple placeholders
+            template = replacePlaceholders(template, data);
+            
+            return template;
+        }
+
+        function processForLoops(template, data) {
+            const forPattern = /\[(For[^\]]*)\](.*?)\[\/\1\]/gs;
+            
+            let maxIterations = 10;
+            let iteration = 0;
+            
+            while (forPattern.test(template) && iteration < maxIterations) {
+                forPattern.lastIndex = 0; // Reset regex
+                
+                template = template.replace(forPattern, (match, forName, loopTemplate) => {
+                    // Get array data
+                    let array = data[forName];
+                    
+                    if (!array || !Array.isArray(array) || array.length === 0) {
+                        return '';
+                    }
+                    
+                    // Process array items
+                    let result = '';
+                    array.forEach(item => {
+                        let rendered = replacePlaceholders(loopTemplate, item);
+                        result += rendered;
+                    });
+                    
+                    return result;
+                });
+                
+                iteration++;
+            }
+            
+            return template;
+        }
+
+        function replacePlaceholders(template, data) {
+            const placeholderPattern = /\[([^\[\]\/]+)\]/g;
+            
+            return template.replace(placeholderPattern, (match, fieldName) => {
+                fieldName = fieldName.trim();
+                
+                // Skip For loop markers
+                if (fieldName.startsWith('For')) {
+                    return match;
+                }
+                
+                // Get value from data
+                if (data.hasOwnProperty(fieldName)) {
+                    const value = data[fieldName];
+                    if (value === null || value === undefined) {
+                        return '';
+                    }
+                    return String(value);
+                }
+                
+                return ''; // Field not found
+            });
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        console.log('? Test completed');
+    </script>
+</body>
+</html>

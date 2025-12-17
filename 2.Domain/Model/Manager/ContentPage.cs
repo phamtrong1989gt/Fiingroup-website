@@ -169,6 +169,21 @@ namespace PT.Domain.Model
         // Thời gian giao hàng
         public string DeliveryTime { get; set; }
         public bool IsHome { get; set; }
+        public string Input1 { get; set; }
+        public string Input2 { get; set; }
+        public string Input3 { get; set; }
+        public string Input4 { get; set; }
+        public string Input5 { get; set; }
+        public string Input6 { get; set; }
+        public string Input7 { get; set; }
+        public string Input8 { get; set; }
+        public string Input9 { get; set; }
+        public string Input10 { get; set; }
+        public string Input11 { get; set; }
+        public string Input12 { get; set; }
+        public string Input13 { get; set; }
+        public string Input14 { get; set; }
+        public string Input15 { get; set; }
     }
     public class PortalSharedModel
     {
@@ -204,6 +219,8 @@ namespace PT.Domain.Model
         public string ReferenceString { get; set; }
         public string ContentPageReferenceIds { get; set; }
         public string RelatedString { get; set; }
+
+
     }
 
     public class PageModel:SeoModel

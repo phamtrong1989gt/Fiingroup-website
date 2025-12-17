@@ -42,8 +42,7 @@ namespace PT.UI.Controllers
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.StatusIds = "Active";
-            prs.SourceId = 5;
+            prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("NewsAjax", listNew);
@@ -58,7 +57,6 @@ namespace PT.UI.Controllers
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
-            prs.SourceId = 5;
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("NewsAjax", listNew);
@@ -72,7 +70,6 @@ namespace PT.UI.Controllers
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
-            prs.SourceId = 5;
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("PublicationsAjax", listNew);
@@ -107,6 +104,7 @@ namespace PT.UI.Controllers
                         PageSize = 9,
                         FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
+                        StatusIds = "1"
                     }, language ?? "vi");
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     // lấy danh mục event 
@@ -119,6 +117,7 @@ namespace PT.UI.Controllers
                             PageSize = 1,
                             FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                             CategoryIds = eventCategory.ExCategoryIds,
+                            StatusIds = "1"
                         }, language ?? "vi");
 
                         dl.EventTop = (listEvent ?? new NewsListResponse { Items = [] });
@@ -142,6 +141,7 @@ namespace PT.UI.Controllers
                         PageSize = 9,
                         FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
+                        StatusIds = "1"
                     }, language ?? "vi");
                     dl.DataAPI = listEvent ?? new NewsListResponse { Items = [] };
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
@@ -163,6 +163,7 @@ namespace PT.UI.Controllers
                         PageSize = 9,
                         FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
+                        StatusIds = "1"
                     }, language ?? "vi");
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;

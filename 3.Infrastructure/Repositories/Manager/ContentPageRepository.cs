@@ -326,7 +326,7 @@ namespace PT.Infrastructure.Repositories
                     Id = x.data.Id,
                     Author = x.data.Author,
                     Banner = x.data.Banner,
-                    Content = x.data.Content,
+                   Content = x.data.Content,
                     DatePosted = x.data.DatePosted,
                     Name = x.data.Name,
                     Language = x.data.Language,
@@ -353,7 +353,20 @@ namespace PT.Infrastructure.Repositories
                     SlugType = x.data.SlugType,
                     NewsId = x.data.NewsId,
                     Input1 = x.data.Input1,
-                    Input2= x.data.Input2
+                    Input2 = x.data.Input2,
+                    Input3 = x.data.Input3,
+                    Input4 = x.data.Input4,
+                    Input5 = x.data.Input5,
+                    Input6 = x.data.Input6,
+                    Input7 = x.data.Input7,
+                    Input8 = x.data.Input8,
+                    Input9 = x.data.Input9,
+                    Input10 = x.data.Input10,
+                    Input11 = x.data.Input11,
+                    Input12 = x.data.Input12,
+                    Input13 = x.data.Input13,
+                    Input14 = x.data.Input14,
+                    Input15 = x.data.Input15,
                 }).AsQueryable();
 
             var list = await query.Skip((page - 1) * limit).Take(limit).AsNoTracking().ToListAsync();
