@@ -9,7 +9,9 @@ using PT.Base;
 using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
+using PT.Infrastructure.Repositories;
 using PT.Shared;
+using PT.Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -134,9 +136,9 @@ namespace PT.BE.Areas.Manager.Controllers
                     Pages = x.Pages,
                     SlugType = x.SlugType,
                     NewsId = x.NewsId,
-                    Input1 = x.Input1,
-                    Input2 = x.Input2
-             });
+                    Input14 = x.Input14,
+                    Input15 = x.Input15
+                });
 
             var portals = await _iPortalRepository.SearchAsync(true);
             foreach (var item in data.Data)
@@ -237,14 +239,14 @@ namespace PT.BE.Areas.Manager.Controllers
                         {
                             data.NewsId = outData.Data.NewsId;
                             string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {data.NewsId} thành công";
-                            data.Input1 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>";
+                            data.Input14 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>";
                             _iContentPageRepository.Update(data);
                             await _iContentPageRepository.CommitAsync();
                         }
                         else
                         {
                             string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{data.Id} thất bại: {outData.ErrorMessage}";
-                            data.Input1 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
+                            data.Input14 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
                             _iContentPageRepository.Update(data);
                             await _iContentPageRepository.CommitAsync();
                         }
@@ -418,14 +420,14 @@ namespace PT.BE.Areas.Manager.Controllers
                             {
                                 string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {dl.NewsId} thành công";
                                 dl.NewsId = outData.Data.NewsId;
-                                dl.Input1 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>" ;
+                                dl.Input14 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>" ;
                                 _iContentPageRepository.Update(dl);
                                 await _iContentPageRepository.CommitAsync();
                             }
                             else
                             {
                                 string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{dl.Id} thất bại: {outData.ErrorMessage}";
-                                dl.Input1 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
+                                dl.Input14 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
                                 _iContentPageRepository.Update(dl);
                                 await _iContentPageRepository.CommitAsync();
                             }
@@ -437,14 +439,14 @@ namespace PT.BE.Areas.Manager.Controllers
                             if (outData != null && outData.Success)
                             {
                                 string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thành công";
-                                dl.Input2 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>";
+                                dl.Input15 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>";
                                 _iContentPageRepository.Update(dl);
                                 await _iContentPageRepository.CommitAsync();
                             }
                             else
                             {
                                 string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thất bại: {outData.ErrorMessage}";
-                                dl.Input2 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
+                                dl.Input15 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
                                 _iContentPageRepository.Update(dl);
                                 await _iContentPageRepository.CommitAsync();
                             }
@@ -463,6 +465,363 @@ namespace PT.BE.Areas.Manager.Controllers
                 _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
             }
             return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại.", Type = ResponseTypeMessage.Danger, Status = false };
+        }
+        #endregion
+
+        #region [EventEdit]
+        [HttpGet]
+        [AuthorizePermission("Index")]
+        public async Task<IActionResult> EventEdit(int id, string language = "vi", int portalId = 1)
+        {
+            if(id > 0)
+            {
+                var dl = await _iContentPageRepository.SingleOrDefaultAsync(true, m => m.Id == id);
+                if (dl == null)
+                {
+                    return View("404");
+                }
+
+                var model = MapModel<BlogModel>.Go(dl);
+                ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{dl.Language}" : "";
+                var ktLink = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == id && x.Type == ESlugType.ContentPage);
+                if (ktLink != null)
+                {
+                    model.Changefreq = ktLink.Changefreq;
+                    model.Lastmod = ktLink.Lastmod;
+                    model.Priority = ktLink.Priority.ConvertToString();
+                    model.Description = ktLink.Description;
+                    model.FacebookBanner = ktLink.FacebookBanner;
+                    model.FacebookDescription = ktLink.FacebookDescription;
+                    model.FocusKeywords = ktLink.FocusKeywords;
+                    model.GooglePlusDescription = ktLink.GooglePlusDescription;
+                    model.IncludeSitemap = ktLink.IncludeSitemap;
+                    model.Keywords = ktLink.Keywords;
+                    model.MetaRobotsAdvance = ktLink.MetaRobotsAdvance;
+                    model.MetaRobotsFollow = ktLink.MetaRobotsFollow;
+                    model.MetaRobotsIndex = ktLink.MetaRobotsIndex;
+                    model.Redirect301 = ktLink.Redirect301;
+                    model.Title = ktLink.Title;
+                    model.LinkId = ktLink.Id;
+                    model.Slug = ktLink.Slug;
+                }
+                var blogTagIds = (await _iContentPageTagRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x => x.TagId).ToList();
+                model.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 20, x => x.Status && x.Language == model.Language && x.PortalId == dl.PortalId, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
+                model.TagIds = blogTagIds;
+
+                var listRelated = (await _iContentPageRelatedRepository.GetContentPageAsync(id, 0, 0, null, x => x.OrderBy(m => m.DatePosted), x => new ContentPage { Id = x.Id, DatePosted = x.DatePosted, Status = x.Status, Name = x.Name })).Select(x => new { id = x.Id, text = x.Name });
+                model.ContentPageRelatedIds = string.Join(',', listRelated.Select(x => x.id));
+                model.RelatedString = Newtonsoft.Json.JsonConvert.SerializeObject(listRelated);
+
+                var listReference = (await _iContentPageReferenceRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x => new ContentPageReferenceModel { ContentPageId = x.ContentPageId, Href = x.Href, Id = x.Id, Name = x.Name, Rel = x.Rel, Stt = 0, Type = 2, Target = x.Target });
+                model.ReferenceString = Newtonsoft.Json.JsonConvert.SerializeObject(listReference);
+
+                model.CategoryIds = string.Join(",", (await _iContentPageCategoryRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id)).Select(x => x.CategoryId));
+
+                var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
+                // Đưa danh sách portal vào ViewData để view có thể bind vào SelectList
+                model.PortalSelectList = new SelectList(portals, "Id", "Name");
+                model.PortalId = dl.PortalId;
+                model.PortalName = portals.SingleOrDefault(x => x.Id == dl.PortalId)?.Name;
+                var currentShared = await _iContentPageRepository.ContentPageSharedGets(model.Id);
+                model.PortalShareds = portals.Where(x => x.Id != model.PortalId).Select(x => new PortalSharedModel { Id = x.Id, Name = x.Name, Selected = false }).ToList();
+                foreach (var item in model.PortalShareds)
+                {
+                    item.Selected = currentShared.Any(x => (x.ParentPortalId == item.Id) || (x.SharedPortalId == item.Id));
+                }
+                var categorys = await CategorysAsync(model.Language, model.PortalId ?? 1);
+                ViewData["CategoryJson"] = Newtonsoft.Json.JsonConvert.SerializeObject(categorys.Select(x => new { x.Id, x.CategoryType, x.SlugType }));
+                model.CategorySelectList = await GetPortalSelectList(categorys, model.Language, model.PortalId ?? 1, model.CategoryId);
+                model.FullPath = await _iPortalRepository.GetFullPathAsync(model.PortalId ?? 1, model.Slug ?? string.Empty, portals, model.Language, _baseSettings.Value.MultipleLanguage);
+                return View("EventEdit", model);
+            }
+            else
+            {
+                var dl = new BlogModel
+                {
+                    Language = language
+                };
+                ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
+                dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 20, x => x.Status && x.Language == language && x.PortalId == portalId, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
+                dl.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId))?.Name;
+                dl.PortalId = portalId;
+                var categorys = (await CategorysAsync(language, portalId)).Where(x=>x.CategoryType == ECategoryType.ContentPage_Event).ToList();
+                ViewData["CategoryJson"] = Newtonsoft.Json.JsonConvert.SerializeObject(categorys.Select(x => new { x.Id, x.CategoryType, x.SlugType }));
+                dl.CategorySelectList = await GetPortalSelectList(categorys, language, portalId);
+                dl.DatePosted = DateTime.Now;
+                dl.Author = "FiinGroup";
+                return View("EventEdit", dl);
+            }
+          
+        }
+
+        [HttpPost, ActionName("EventCreate")]
+        [AuthorizePermission("Index")]
+        public async Task<ResponseModel> EventCreatePost(BlogModel use, string categoryIds, string altId)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // Lấy ra danh mục chính
+                    await _iContentPageRepository.BeginTransaction();
+                    var categoryMain = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == use.CategoryId);
+                    if (categoryMain == null || categoryMain.CategoryType == null)
+                    {
+                        return new ResponseModel() { Output = 0, Message = "Danh mục chính không tồn tại hoặc dữ liệu chưa dc chuẩn hóa, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
+                    }
+
+                    var data = new ContentPage
+                    {
+                        Name = use.Name,
+                        Banner = use.Banner,
+                        Content = use.Content,
+                        Status = use.Status,
+                        Language = use.Language,
+                        Summary = use.Summary,
+                        DatePosted = use.DatePosted,
+                        Author = use.Author,
+                        PortalId = use.PortalId ?? 1,
+                        CategoryId = use.CategoryId,
+                        SlugType = ESlugType.ContentPage,
+                        CategoryType = categoryMain.CategoryType,
+                        DeliveryTime = use.DeliveryTime,
+                        Address = use.Address,
+                        Price = use.Price,
+                        FilePath = use.FilePath,
+                        Extentions = use.Extentions,
+                        Pages = use.Pages,
+                        StartDate = use.StartDate,
+                        Topic = use.Topic,
+                        TimeFromTo = use.TimeFromTo,
+                        IsHome = use.IsHome,
+                        Input1 = use.Input1,
+                        Input2 = use.Input2,
+                        Input3 = use.Input3,
+                        Input4 = use.Input4,
+                        Input5 = use.Input5,
+                        Input6 = use.Input6,
+                        Input7 = use.Input7,
+                        Input8 = use.Input8,
+                        Input9 = use.Input9,
+                        Input10 = use.Input10,
+                        Input11 = use.Input11,
+                        Input12 = use.Input12,
+                        Input13 = use.Input13,
+                        Input14 = use.Input14,
+                        Input15 = use.Input15
+
+                    };
+                    data.Content = CompieleContent(data);
+                    await _iContentPageRepository.AddAsync(data);
+                    await _iContentPageRepository.CommitAsync();
+
+                    var linkId = await CreateLinkAsync(ESlugType.ContentPage, data.Language, data.Id, MapModel<SeoModel>.Go(use), data.Name, "", "ContentPage", "Details", data.PortalId);
+                    await UpdateCategory(data.Id, categoryIds, data.CategoryId);
+                    await UpdateTag(data.Id, use.TagIds);
+                    await UpdateRelated(data.Id, use.ContentPageRelatedIds);
+                    await UpdateReference(data.Id, use.ContentPageReferenceIds);
+                    await UpdateFileData(data.Id, ESlugType.ContentPage, altId);
+                    await _iContentPageRepository.CommitTransaction();
+                    try
+                    {
+                        var listCategorys = new List<int>();
+                        if (!string.IsNullOrWhiteSpace(use.CategoryIds))
+                        {
+                            listCategorys = use.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList();
+                        }
+                        data.Link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Id == linkId);
+                        var outData = await _iAsyncNewsService.CreateAsync(data, use.TagIds, listCategorys);
+                        if (outData != null && outData.Success)
+                        {
+                            data.NewsId = outData.Data.NewsId;
+                            string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {data.NewsId} thành công";
+                            data.Input14 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>";
+                            _iContentPageRepository.Update(data);
+                            await _iContentPageRepository.CommitAsync();
+                        }
+                        else
+                        {
+                            string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{data.Id} thất bại: {outData.ErrorMessage}";
+                            data.Input14 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
+                            _iContentPageRepository.Update(data);
+                            await _iContentPageRepository.CommitAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+                    }
+                    await AddLog(new LogModel
+                    {
+                        ObjectId = data.Id,
+                        ActionTime = DateTime.Now,
+                        Name = $"Thêm mới tin tức \"{data.Name}\".",
+                        Type = LogType.Create
+                    });
+
+                    return new ResponseModel() { Output = 1, Message = "Thêm mới tin tức thành công ", Type = ResponseTypeMessage.Success, IsClosePopup = true };
+                }
+                return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin hoặc liên kết thân thiện/Permalink đã tồn tại, vui lòng thay thêm ký tự bất kỳ đằng sau", Type = ResponseTypeMessage.Warning };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+            }
+            return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
+        }
+
+        [HttpPost, ActionName("EventEdit")]
+        [AuthorizePermission("Index")]
+        public async Task<ResponseModel> EventEditPost(BlogModel use, int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _iContentPageRepository.BeginTransaction();
+                    var dl = await _iContentPageRepository.SingleOrDefaultAsync(false, m => m.Id == id);
+                    if (dl == null)
+                    {
+                        return new ResponseModel() { Output = 0, Message = "Dữ liệu không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
+                    }
+                    var categoryMain = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == use.CategoryId);
+                    if (categoryMain == null)
+                    {
+                        return new ResponseModel() { Output = 0, Message = "Danh mục chính không tồn tại, vui lòng thử lại.", Type = ResponseTypeMessage.Warning };
+                    }
+
+                    dl.Name = use.Name;
+                    dl.CategoryId = use.CategoryId;
+                    dl.Banner = use.Banner;
+                    dl.Status = use.Status;
+                    dl.Summary = use.Summary;
+                    dl.DatePosted = use.DatePosted;
+                    dl.Author = use.Author;
+                    dl.PortalId = use.PortalId ?? 1;
+                    dl.DeliveryTime = use.DeliveryTime;
+                    dl.Address = use.Address;
+                    dl.Price = use.Price;
+                    dl.FilePath = use.FilePath;
+                    dl.Extentions = use.Extentions;
+                    dl.Pages = use.Pages;
+                    dl.StartDate = use.StartDate;
+                    dl.Topic = use.Topic;
+                    dl.TimeFromTo = use.TimeFromTo;
+                    dl.IsHome = use.IsHome;
+                    dl.Input1 = use.Input1;
+                    dl.Input2 = use.Input2;
+                    dl.Input3 = use.Input3;
+                    dl.Input4 = use.Input4;
+                    dl.Input5 = use.Input5;
+                    dl.Input6 = use.Input6;
+                    dl.Input7 = use.Input7;
+                    dl.Input8 = use.Input8;
+                    dl.Input9 = use.Input9;
+                    dl.Input10 = use.Input10;
+                    dl.Input11 = use.Input11;
+                    dl.Input12 = use.Input12;
+                    dl.Input13 = use.Input13;
+                    dl.Input14 = use.Input14;
+                    dl.Input15 = use.Input15;
+                    dl.Content = CompieleContent(dl);
+                    await UpdateLinkAsync(use.ChangeSlug, ESlugType.ContentPage, dl.Id, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, "", "ContentPage", "Details");
+
+                    dl.CategoryType = categoryMain.CategoryType;
+
+                    _iContentPageRepository.Update(dl);
+                    await _iContentPageRepository.CommitAsync();
+
+
+                    await UpdateCategory(id, use.CategoryIds, use.CategoryId);
+                    await UpdateTag(id, use.TagIds);
+                    await UpdateRelated(id, use.ContentPageRelatedIds);
+                    await UpdateReference(id, use.ContentPageReferenceIds);
+
+                    await _iContentPageRepository.ContentPageSharedAdds(dl.Id, dl.PortalId, use.SharedPortalIds);
+                    await _iContentPageRepository.ContentPageSharedRefeshContent(dl.Id);
+                    await _iContentPageRepository.CommitTransaction();
+                    await AddLog(new LogModel
+                    {
+                        ObjectId = dl.Id,
+                        ActionTime = DateTime.Now,
+                        Name = $"Cập nhật sự kiện \"{dl.Name}\".",
+                        Type = LogType.Edit
+                    });
+           
+                    try
+                    {
+                        var listCategorys = new List<int>();
+                        if (!string.IsNullOrWhiteSpace(use.CategoryIds))
+                        {
+                            listCategorys = use.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList();
+                        }
+
+                        dl.Link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.ObjectId == dl.Id && x.Type == ESlugType.ContentPage && x.Language == dl.Language && x.PortalId == dl.PortalId);
+
+                        if (dl.NewsId == null || dl.NewsId <= 0)
+                        {
+                            var outData = await _iAsyncNewsService.CreateAsync(dl, use.TagIds, listCategorys);
+                            if (outData != null && outData.Success)
+                            {
+                                string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {dl.NewsId} thành công";
+                                dl.NewsId = outData.Data.NewsId;
+                                dl.Input14 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>";
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
+                            
+                            }
+                            else
+                            {
+                                string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới của tin #{dl.Id} thất bại: {outData.ErrorMessage}";
+                                dl.Input14 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
+                            }
+                        }
+                        else
+                        {
+                            // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
+                            var outData = await _iAsyncNewsService.UpdateAsync(dl, use.TagIds, listCategorys);
+                            if (outData != null && outData.Success)
+                            {
+                                string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thành công";
+                                dl.Input15 = $"<i title=\"{note}\" class=\"material-icons text-success icon-label-status-syns\">check</i>";
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
+                            }
+                            else
+                            {
+                                string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thất bại: {outData.ErrorMessage}";
+                                dl.Input15 = $"<i title=\"{note}\" class=\"material-icons text-danger icon-label-status-syns\">close</i>";
+                                _iContentPageRepository.Update(dl);
+                                await _iContentPageRepository.CommitAsync();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+                    }
+                    return new ResponseModel() { Output = 1, Message = "Cập nhật tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
+                }
+                return new ResponseModel() { Output = -2, Message = "Bạn chưa nhập đầy đủ thông tin hoặc liên kết thân thiện/Permalink đã tồn tại, vui lòng thay thêm ký tự bất kỳ đằng sau.", Type = ResponseTypeMessage.Warning };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+            }
+            return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại.", Type = ResponseTypeMessage.Danger, Status = false };
+        }
+
+        public string CompieleContent(ContentPage data)
+        {
+            string section1 = SectionTemplateHelper.RenderSection(data.Input1, data.Input2);
+            string section2 = SectionTemplateHelper.RenderSection(data.Input3, data.Input4);
+            string section3 = SectionTemplateHelper.RenderSection(data.Input5, data.Input6);
+            string section4 = SectionTemplateHelper.RenderSection(data.Input7, data.Input8);
+            string section5 = SectionTemplateHelper.RenderSection(data.Input9, data.Input10);
+            string outData = $"<main role=\"main\" class=\"new-layout\"><div class=\"event\"><div class=\"new-event\">{section1}{section2}{section3}{section4}{section5}</div></div></main>";
+            return outData;
         }
         #endregion
 
@@ -606,20 +965,21 @@ namespace PT.BE.Areas.Manager.Controllers
                 _iContentPageReferenceRepository.DeleteWhere(x => x.ContentPageId == id);
                 await _iContentPageRepository.ContentPageSharedDelete(id);
                 await _iContentPageRepository.CommitAsync();
-
+                await _iContentPageRepository.Database().CommitTransactionAsync();
+                return new ResponseModel() { Output = 1, Message = "Xóa Tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 // Xóa đồng bộ 
-                var check = await _iAsyncNewsService.DeleteAsync(kt.NewsId ?? 0, null);
-                if(!check.Success)
-                {
-                    await _iContentPageRepository.Database().RollbackTransactionAsync();
-                    _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]Xóa đồng bộ tin tức thất bại: {0}", check.ErrorMessage);
-                    return new ResponseModel() { Output = 0, Message = "Xóa Tin tức thất bại, không thể xóa tin ở DC.", Type = ResponseTypeMessage.Danger, IsClosePopup = true };
-                }
-                else
-                {
-                    await _iContentPageRepository.Database().CommitTransactionAsync();
-                    return new ResponseModel() { Output = 1, Message = "Xóa Tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
-                }    
+                //var check = await _iAsyncNewsService.DeleteAsync(kt.NewsId ?? 0, null);
+                //if(!check.Success)
+                //{
+                //    await _iContentPageRepository.Database().RollbackTransactionAsync();
+                //    _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]Xóa đồng bộ tin tức thất bại: {0}", check.ErrorMessage);
+                //    return new ResponseModel() { Output = 0, Message = "Xóa Tin tức thất bại, không thể xóa tin ở DC.", Type = ResponseTypeMessage.Danger, IsClosePopup = true };
+                //}
+                //else
+                //{
+                //    await _iContentPageRepository.Database().CommitTransactionAsync();
+                //    return new ResponseModel() { Output = 1, Message = "Xóa Tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
+                //}    
             }
             catch (Exception ex)
             {

@@ -81,11 +81,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="can-button-search">
                             <a onclick="getDataGrid(1)" class="btn bg-indigo dropdown-toggle">
                                 <i class="material-icons">search</i><span>Tìm kiếm</span>
                             </a>
+
                             @if (_baseSettings.Value.MultipleLanguage)
                             {
                                 <div class="btn-group">
@@ -110,6 +111,34 @@
                                 {
                                     <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
                                         <i class="material-icons">add</i><span> Thêm @portal.Text</span>
+                                    </a>
+                                }
+                            }
+
+                            @if (_baseSettings.Value.MultipleLanguage)
+                            {
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">add</i><span>Thêm mới sự kiện</span> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu drcontrol">
+                                        @foreach (var portal in portals.Where(x => x.Value == "2"))
+                                        {
+                                            <li><strong class="label-portal">@portal.Text</strong></li>
+                                            @foreach (var item in PT.Shared.ListData.ListLanguage)
+                                            {
+                                                <li> <a button-popup data-target="#myModalBig" asp-action="EventEdit" asp-route-portalId="@portal.Value" asp-route-language="@item.Id"><img src="@item.Icon" /> @item.Name</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var portal in portals)
+                                {
+                                    <a button-popup data-target="#myModalBig" asp-action="Create" asp-route-language="@_baseSettings.Value.DefaultLanguage" class="btn btn-primary dropdown-toggle">
+                                        <i class="material-icons">add</i><span> Thêm sự kiện @portal.Text</span>
                                     </a>
                                 }
                             }
@@ -210,7 +239,13 @@
     <script src="~/Content/Admin/plugins/jstree/jstree.min.js"></script>
     <link href="~/Content/Admin/plugins/jstree/themes/default/style.css" rel="stylesheet" />
     <link href="~/Content/Admin/plugins/jstree/themes/default-dark/style.css" rel="stylesheet" />
-
+    <script src="~/Content/Admin/plugins/codemirror/js/codemirror.js"></script>
+    <link href="~/Content/Admin/plugins/codemirror/css/codemirror.css" rel="stylesheet" />
+    <script src="~/Content/Admin/plugins/codemirror/js/xml.js"></script>
+    <script src="~/Content/Admin/plugins/codemirror/js/javascript.js"></script>
+    <script src="~/Content/Admin/plugins/codemirror/js/css.js"></script>
+    <script src="~/Content/Admin/plugins/codemirror/js/htmlmixed.js"></script>
+    <script src="~/Content/Admin/plugins/codemirror/js/matchbrackets.js"></script>
     <script>
          var contentPageRelated = [];
          var contentPageReference =[];
@@ -222,10 +257,16 @@
              $("[search-advance]").toSearch();
              $("[button-popup]").toPopup();
              $("[button-open-file-manager]").toButtonOpenFile();
-             $("[button-submit]").toSubmit();
+             $("[button-submit]").toSubmit(null, null, function () {
+                      pageEditors.syncAllToTextareas();
+                });
              $("[button-delete]").toDelete();
              $("[button-upload]").toUploadFile();
-             $("[button-post]").toPost();
+             $("[button-post]").toPost(null, null, function () {
+                      pageEditors.syncAllToTextareas();
+                });
+                    $("[button-submit2]").toSubmit();
+                    $("[button-post2]").toPost();
              getDataGrid(1, true);
          });
 
@@ -541,5 +582,107 @@
 			$(".category_type").hide();
             $(".category_type_"+type).show();
 		}
+
+         var pageEditors;
+        function createEditors(idsHtml = [], idsJson = [], globalOptions = {}) {
+          const instances = {};
+
+          const defaultOptions = {
+            lineNumbers: true,
+            matchBrackets: true,
+            lineWrapping: true,
+            autoRefresh: true,
+            theme: "default",
+            indentUnit: 2,
+            tabSize: 2,
+            indentWithTabs: false
+          };
+
+          // Helper function to create editor
+          function createEditor(id, mode) {
+            // Try to get element by ID first
+            let ta = document.getElementById(id);
+            
+            // If not found by ID, try to get by name attribute
+            if (!ta) {
+              ta = document.querySelector(`textarea[name="${id}"]`);
+            }
+            
+            if (!ta || ta.nodeName.toLowerCase() !== "textarea") return;
+            
+            try {
+              const opts = Object.assign({}, defaultOptions, globalOptions[id] || {}, { mode: mode });
+              instances[id] = CodeMirror.fromTextArea(ta, opts);
+              
+              // Auto format JSON on init
+              if (mode && mode.name === "application/json") {
+                try {
+                  const value = instances[id].getValue();
+                  if (value.trim()) {
+                    const formatted = JSON.stringify(JSON.parse(value), null, 2);
+                    instances[id].setValue(formatted);
+                  }
+                } catch (e) {
+                  console.log('JSON format skipped for ' + id + ': ' + e.message);
+                }
+              }
+            } catch (err) {
+              console.error(`createEditors: failed to init editor for ${id}`, err);
+            }
+          }
+
+          // Create HTML editors
+          idsHtml.forEach(id => createEditor(id, "text/html"));
+          
+          // Create JSON editors
+          idsJson.forEach(id => createEditor(id, { name: "application/json", jsonMode: true }));
+
+          return {
+            instances,
+            get(id) {
+              return instances[id];
+            },
+            // Refresh all editors
+            refreshAll() {
+              Object.values(instances).forEach(ed => ed && ed.refresh && ed.refresh());
+            },
+            // Sync all editors back to textareas
+            syncAllToTextareas() {
+              Object.entries(instances).forEach(([id, ed]) => {
+                try {
+                  let ta = document.getElementById(id);
+                  if (!ta) {
+                    ta = document.querySelector(`textarea[name="${id}"]`);
+                  }
+                  if (ta) ta.value = ed.getValue();
+                } catch (err) { /* ignore */ }
+              });
+            },
+            // Dispose all editors
+            disposeAll() {
+              Object.entries(instances).forEach(([id, ed]) => {
+                try {
+                  if (ed && ed.toTextArea) ed.toTextArea();
+                } catch (err) { /* ignore */ }
+              });
+              for (const k in instances) delete instances[k];
+            },
+            // Format JSON for a specific editor
+            formatJson(id) {
+              const ed = instances[id];
+              if (!ed) return false;
+              
+              try {
+                const value = ed.getValue();
+                const formatted = JSON.stringify(JSON.parse(value), null, 2);
+                ed.setValue(formatted);
+                return true;
+              } catch (e) {
+                console.error('Invalid JSON for editor ' + id + ': ' + e.message);
+                return false;
+              }
+            }
+          };
+        }
     </script>
 }

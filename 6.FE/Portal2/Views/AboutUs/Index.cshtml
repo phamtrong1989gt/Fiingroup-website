@@ -22,6 +22,42 @@
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsUserTeam", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "AboutUsWordEnvironment", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsDeliver", language = language, portalId = portalId })
+<style>
+    .member-card img
+    {
+        width:100%;
+    }
+</style>
+<style>
+    /* expand overlay and reveal description ONLY on hover */
+    .member-card:hover .member-info,
+    .team-grid > .team-grid:hover .member-info {
+        height: 100%;
+        background: #fffffff5;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        padding: 20px;
+    }
+
+        .member-card:hover .member-info .member-desc   {
+            display:block;
+        }
+
+    .member-card:hover .member-desc,
+    .team-grid > .team-grid:hover .member-desc {
+        opacity: 1;
+        max-height: 400px; /* adjust if needed */
+    }
+
+    /* keep cursor pointer for hover affordance */
+    .member-card,
+    .team-grid > .team-grid {
+        cursor: pointer;
+    }
+</style>
 
 <style>
         .tab-container {
@@ -85,88 +121,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Popup element (created once) to show name/title/desc on hover
-    (function(){
-        const popup = document.createElement('div');
-        popup.id = 'member-popup';
-        popup.className = 'member-popup';
-        popup.setAttribute('aria-hidden', 'true');
-        popup.style.display = 'none';
-        popup.innerHTML = '<div class="popup-inner"><div class="popup-name"></div><div class="popup-title"></div><div class="popup-desc"></div></div>';
-        document.body.appendChild(popup);
-
-        let showTimeout = null;
-        let hideTimeout = null;
-
-        function showPopup(card){
-            clearTimeout(hideTimeout);
-            showTimeout = setTimeout(() => {
-                const nameEl = card.querySelector('.member-name');
-                const titleEl = card.querySelector('.member-title');
-                const descEl = card.querySelector('.member-desc');
-                const name = nameEl ? nameEl.textContent.trim() : '';
-                const title = titleEl ? titleEl.textContent.trim() : '';
-                const desc = descEl ? descEl.textContent.trim() : '';
-
-                popup.querySelector('.popup-name').textContent = name;
-                popup.querySelector('.popup-title').textContent = title;
-                popup.querySelector('.popup-desc').textContent = desc;
-
-                // set popup height and width to match card (100% of box)
-                const cardRect = card.getBoundingClientRect();
-                popup.style.width = (cardRect.width + 5) + 'px';
-                popup.style.height = cardRect.height + 'px';
-                popup.style.boxSizing = 'border-box';
-
-                popup.style.display = 'block';
-                popup.setAttribute('aria-hidden','false');
-
-                // get popup rect after applying size
-                const popupRect = popup.getBoundingClientRect();
-                let left = window.scrollX + cardRect.right + 12; // right side
-                let top = window.scrollY + cardRect.top;
-
-                // choose arrow side and position
-                popup.classList.remove('arrow-left','arrow-right');
-
-                // if overflowing right, position to left and set arrow-left
-                if (left + popupRect.width > window.scrollX + window.innerWidth) {
-                    left = window.scrollX + cardRect.left - popupRect.width - 12;
-                    popup.classList.add('arrow-left');
-                } else {
-                    popup.classList.add('arrow-right');
-                }
-
-                // adjust top if exceeds bottom
-                if (top + popupRect.height > window.scrollY + window.innerHeight) {
-                    top = window.scrollY + window.innerHeight - popupRect.height - 12;
-                }
-
-                if (top < window.scrollY + 8) top = window.scrollY + 8;
-
-                popup.style.left = left + 'px';
-                popup.style.top = top + 'px';
-            }, 120);
-        }
-
-        function hidePopup(){
-            clearTimeout(showTimeout);
-            hideTimeout = setTimeout(() => {
-                popup.style.display = 'none';
-                popup.setAttribute('aria-hidden','true');
-            }, 80);
-        }
-
-        document.querySelectorAll('.member-card').forEach(card => {
-            card.addEventListener('mouseenter', () => showPopup(card));
-            card.addEventListener('focus', () => showPopup(card));
-            card.addEventListener('mouseleave', hidePopup);
-            card.addEventListener('blur', hidePopup);
-        });
-
-        // hide on scroll/resize
-        window.addEventListener('scroll', hidePopup, true);
-        window.addEventListener('resize', hidePopup);
-    })();
-});
 </script>

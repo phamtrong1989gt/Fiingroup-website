@@ -32,7 +32,7 @@
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="form-label">Thời gian đến (@("<"))</label>
                             <div class="controls">
-                                <input grid-input type="text" value="@DateTime.Now.AddDays(1).ToString("dd/MM/yyyy 00:00")" class="form-control input-sm form-control-t" name="startTime" />
+                                <input grid-input type="text" value="@DateTime.Now.AddDays(1).ToString("dd/MM/yyyy 00:00")" class="form-control input-sm form-control-t" name="endTime" />
                             </div>
                         </div>
                     </div>
@@ -192,11 +192,11 @@
             getDataGrid(_page, false);
         }
 
-        function exportExcel() {
+                function exportExcel() {
             // Show loading
             $("[grid-loading]").addClass("loading");
 
-            // Get all filter parameters from grid inputs
+            // Collect filter parameters
             var key = $("[grid-input][name='key']").val();
             var status = $("[grid-input][name='status']").val();
             var startTime = $("[grid-input][name='startTime']").val();
@@ -206,72 +206,92 @@
             var ordertype = $("[grid-input][name='ordertype']").val();
             var orderby = $("[grid-input][name='orderby']").val();
 
-            // Create form data
-            var formData = {
-                key: key,
-                status: status,
-                startTime: startTime,
-                endTime: endTime,
-                serviceId: serviceId,
-                portalId: portalId,
-                ordertype: ordertype,
-                orderby: orderby
-            };
+            // Build body as application/x-www-form-urlencoded
+            var params = new URLSearchParams();
+            params.append('key', key || '');
+            params.append('status', status || '');
+            params.append('startTime', startTime || '');
+            params.append('endTime', endTime || '');
+            params.append('serviceId', serviceId || '');
+            params.append('portalId', portalId || '');
+            params.append('ordertype', ordertype || '');
+            params.append('orderby', orderby || '');
 
-            // Send POST request to export
-            $.ajax({
-                url: '@Url.Action("ExportExcel", "ContactManager", new { area = "Manager" })',
-                type: 'POST',
-                data: formData,
-                xhrFields: {
-                    responseType: 'blob' // Important for file download
+            // If anti-forgery token exists in the page, include it
+            var antiForgeryInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (antiForgeryInput) {
+                params.append('__RequestVerificationToken', antiForgeryInput.value);
+            }
+
+            // Fetch - avoids jQuery trying to read xhr.responseText when responseType is blob
+            fetch('@Url.Action("ExportExcel", "ContactManager", new { area = "Manager" })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
-                success: function (data, status, xhr) {
-                    // Hide loading
-                    $("[grid-loading]").removeClass("loading");
-
-                    // Create blob link to download
-                    var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                    var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    
-                    // Get filename from header or use default
-                    var filename = "DanhSachLienHe_" + new Date().toISOString().slice(0, 10) + ".xlsx";
-                    var disposition = xhr.getResponseHeader('Content-Disposition');
-                    if (disposition && disposition.indexOf('attachment') !== -1) {
-                        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                        var matches = filenameRegex.exec(disposition);
-                        if (matches != null && matches[1]) {
-                            filename = matches[1].replace(/['"]/g, '');
-                        }
-                    }
-                    
-                    link.download = filename;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-
-                    // Show success message
-                    swal({
-                        title: "Thành công!",
-                        text: "Xuất file Excel thành công",
-                        type: "success",
-                        confirmButtonText: "OK"
+                body: params.toString(),
+                credentials: 'same-origin'
+            })
+            .then(function (response) {
+                if (!response.ok) {
+                    // Attempt to read text for server error diagnostics (response.text() is safe here)
+                    return response.text().then(function (text) {
+                        throw new Error(text || ('HTTP error ' + response.status));
                     });
-                },
-                error: function (xhr, status, error) {
-                    // Hide loading
-                    $("[grid-loading]").removeClass("loading");
-
-                    // Show error message
-                    swal({
-                        title: "Lỗi!",
-                        text: "Có lỗi xảy ra khi xuất file Excel. Vui lòng thử lại.",
-                        type: "error",
-                        confirmButtonText: "OK"
-                    });
-                    console.error("Export error:", error);
                 }
+                return Promise.all([response.blob(), Promise.resolve(response.headers)]);
+            })
+            .then(function (results) {
+                var blob = results[0];
+                var headers = results[1];
+
+                // Hide loading
+                $("[grid-loading]").removeClass("loading");
+
+                // Determine filename from Content-Disposition header
+                var filename = "DanhSachLienHe_" + new Date().toISOString().slice(0, 10) + ".xlsx";
+                var disposition = headers.get('Content-Disposition') || headers.get('content-disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) {
+                        filename = matches[1].replace(/['"]/g, '');
+                    }
+                }
+
+                // Create download link
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                // Cleanup
+                setTimeout(function () {
+                    window.URL.revokeObjectURL(link.href);
+                    document.body.removeChild(link);
+                }, 100);
+
+                // Success message
+                swal({
+                    title: "Thành công!",
+                    text: "Xuất file Excel thành công",
+                    type: "success",
+                    confirmButtonText: "OK"
+                });
+            })
+            .catch(function (err) {
+                // Hide loading
+                $("[grid-loading]").removeClass("loading");
+
+                // Log and show friendly message
+                console.error("Export error:", err);
+                swal({
+                    title: "Lỗi!",
+                    text: "Có lỗi xảy ra khi xuất file Excel. Vui lòng thử lại.",
+                    type: "error",
+                    confirmButtonText: "OK"
+                });
             });
         }
     </script>

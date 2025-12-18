@@ -1,0 +1,361 @@
+﻿@model PT.Domain.Model.BlogModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.BaseSettings> _baseSettings
+@{
+    Layout = null;
+    var fileUploadSingleBanner = new PT.Domain.Model.PluginFileUploadModel
+    {
+        Extention = _baseSettings.Value.ImagesType,
+        InputName = "Banner",
+        MaxSize = _baseSettings.Value.DocumentsMaxSize,
+        UrlUpload = Url.Action("UploadImage", new { id = Model.Id, oldPath = Model.Banner }),
+        UrlDelete = Url.Action("DeleteFile"),
+        ParentTagName = "file-parent-photos-1",
+        FileDataString = Model.Banner,
+        IsS = true,
+        IsSingle = true
+    };
+}
+
+<style>
+    .tt-menu {
+        z-index: 999999;
+    }
+    .template-editor, .value-editor {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    .value-editor {
+        background: #fff3e0;
+        border: 1px solid #ff9800;
+    }
+    .code-textarea {
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+    }
+    .helper-text {
+        background: #e3f2fd;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        border-left: 4px solid #2196f3;
+    }
+    .template-selector-card {
+        border: 2px solid #e0e0e0;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.3s;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .template-selector-card:hover {
+        border-color: #3f51b5;
+        background: #f5f5f5;
+    }
+    .template-selector-card.active {
+        border-color: #3f51b5;
+        background: #e8eaf6;
+    }
+    .action-buttons {
+        margin-top: 10px;
+    }
+    .action-buttons .btn {
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+</style>
+
+<form form-edit asp-action="@(Model.Id > 0 ? "EventEdit" : "EventCreate")">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Language" />
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="CategoryIds" />  
+    <input asp-for="Language" type="hidden" />
+    <input asp-for="PortalId" type="hidden" />
+    <div class="sumaryValidateForm" asp-validation-summary="All"></div>
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <i class="material-icons">@(Model.Id > 0 ? "edit" : "add")</i> 
+            @(Model.Id > 0 ? "CẬP NHẬT" : "THÊM MỚI") SỰ KIỆN - 
+            <span class="text-warning">@Model.PortalName</span> - 
+            <span class="text-danger">@PT.Shared.ListData.ListLanguage.FirstOrDefault(x => x.Id == Model.Language)?.Name</span>
+        </h4>
+    </div>
+    <button title="Đóng cửa sổ" type="button" class="close btnclose-t" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-body">
+        <div class="divmodal">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="panel-group panel-website full-body" id="accordion_19" role="tablist" aria-multiselectable="true">
+
+                        <!--Thông tin chung Start-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingOne_1">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" href="#collapseOne_1" aria-expanded="true" aria-controls="collapseOne_1">
+                                        <i class="material-icons">perm_contact_calendar</i> Thông tin chung
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="form-label" asp-for="Name"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Name"></span>
+                                                <div class="controls">
+                                                    <input type="text" seo-page-name onkeydown="GenSlug()" onkeyup="GenSlug()" class="form-control input-sm form-control-t" placeholder="" asp-for="Name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" asp-for="Summary"></label> <span asp-validation-for="Summary"></span>
+                                        <div class="controls">
+                                            <textarea id="ricktextSummary" class="form-control form-control-t" rows="2" placeholder="Tóm tắt" asp-for="Summary"></textarea>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" seo-page-content asp-for="Content" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Thông tin chung End-->
+
+                        @* =========================================
+                           SECTION 1 - Sử dụng SectionTemplates1 (Slider & Carousel)
+                           ========================================= *@
+                        <partial name="_SectionTemplateBuilder" model="@(new PT.Domain.Model.SectionTemplateBuilderModel 
+                        { 
+                            SectionNumber = 1,
+                            Title = "Section I: Hero Slider",
+                            Icon = "slideshow",
+                            IsExpanded = true,
+                            InputTemplate = nameof(Model.Input1),
+                            InputValue = nameof(Model.Input2),
+                            TemplateLabel = "Input 1 - Template HTML",
+                            ValueLabel = "Input 2 - Values (JSON)",
+                            TemplateValue = Model.Input1,
+                            ValueJson = Model.Input2,
+                            TemplateSource = "SectionTemplates1",
+                            ButtonAddField = "btnAddField1",
+                            ButtonAddItem = "btnAddItem1"
+                        })" />
+
+                        @* =========================================
+                           SECTION 2 - Sử dụng SectionTemplates2 (Cards & Grid)
+                           Uncomment để enable
+                           ========================================= *@
+                        
+                        <partial name="_SectionTemplateBuilder" model="@(new PT.Domain.Model.SectionTemplateBuilderModel 
+                        { 
+                            SectionNumber = 2,
+                            Title = "Section II:  Reasons to join / Carousel Reasons",
+                            Icon = "view_module",
+                            IsExpanded = false,
+                            InputTemplate = nameof(Model.Input3),
+                            InputValue = nameof(Model.Input4),
+                            TemplateLabel = "Input 3 - Template HTML",
+                            ValueLabel = "Input 4 - Values (JSON)",
+                            TemplateValue = Model.Input3,
+                            ValueJson = Model.Input4,
+                            TemplateSource = "SectionTemplates2",
+                            ButtonAddField = "btnAddField2",
+                            ButtonAddItem = "btnAddItem2"
+                        })" />
+                       
+
+                        @* =========================================
+                           SECTION 3 - Sử dụng SectionTemplates3 (List & Timeline)
+                           Uncomment để enable
+                           ========================================= *@
+                     
+                        <partial name="_SectionTemplateBuilder" model="@(new PT.Domain.Model.SectionTemplateBuilderModel 
+                        { 
+                            SectionNumber = 3,
+                            Title = "Section III: Event Agenda",
+                            Icon = "timeline",
+                            IsExpanded = false,
+                            InputTemplate = nameof(Model.Input5),
+                            InputValue = nameof(Model.Input6),
+                            TemplateLabel = "Input 5 - Template HTML",
+                            ValueLabel = "Input 6 - Values (JSON)",
+                            TemplateValue = Model.Input5,
+                            ValueJson = Model.Input6,
+                            TemplateSource = "SectionTemplates3",
+                            ButtonAddField = "btnAddField3",
+                            ButtonAddItem = "btnAddItem3"
+                        })" />
+
+                        @* =========================================
+                           SECTION 4 - Event Agenda (Desktop)
+                           ========================================= *@
+                        <partial name="_SectionTemplateBuilder" model="@(new PT.Domain.Model.SectionTemplateBuilderModel 
+                        { 
+                            SectionNumber = 4,
+                            Title = "Section IV: Speakers",
+                            Icon = "event_note",
+                            IsExpanded = false,
+                            InputTemplate = nameof(Model.Input7),
+                            InputValue = nameof(Model.Input8),
+                            TemplateLabel = "Input 7 - Template HTML",
+                            ValueLabel = "Input 8 - Values (JSON)",
+                            TemplateValue = Model.Input7,
+                            ValueJson = Model.Input8,
+                            TemplateSource = "SectionTemplates4",
+                            ButtonAddField = "btnAddField4",
+                            ButtonAddItem = "btnAddItem4"
+                        })" />
+
+                        @* =========================================
+                           SECTION 5 - FAQ (Frequently Asked Questions)
+                           ========================================= *@
+                        <partial name="_SectionTemplateBuilder" model="@(new PT.Domain.Model.SectionTemplateBuilderModel 
+                        { 
+                            SectionNumber = 5,
+                            Title = "Section V: FAQ (Frequently Asked Questions)",
+                            Icon = "help_outline",
+                            IsExpanded = false,
+                            InputTemplate = nameof(Model.Input9),
+                            InputValue = nameof(Model.Input10),
+                            TemplateLabel = "Input 9 - Template HTML",
+                            ValueLabel = "Input 10 - Values (JSON)",
+                            TemplateValue = Model.Input9,
+                            ValueJson = Model.Input10,
+                            TemplateSource = "SectionTemplates5",
+                            ButtonAddField = "btnAddField5",
+                            ButtonAddItem = "btnAddItem5"
+                        })" />
+
+                        <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = PT.Domain.Model.ESlugType.ContentPage, LinkId = Model.LinkId, PortalId = Model.PortalId })" />
+                        <partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="labelinfo-t bg-info mb-10">
+                        Ảnh đại diện
+                    </div>
+                    <div>
+                        <partial name="_FileUploadSingle" model="@fileUploadSingleBanner" />
+                    </div>
+                 
+                    <div class="labelinfo-t bg-info mb-10">
+                        DANH MỤC TIN
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CategoryId"></label>
+                        <select asp-for="CategoryId" asp-items="Model.CategorySelectList" class="input-sm form-control-t show-tick">
+                        </select>
+                        <input type="hidden" id="CategoryTypesJson" value="@ViewData["CategoryJson"]" />
+                    </div>
+          
+                    <div class="labelinfo-t bg-info mb-10">
+                        CẤU HÌNH HIỂN THỊ
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Author"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Author"></span>
+                        <div class="input-group input-group-t">
+                            <div class="input-group-addon br-none">
+                                &nbsp;
+                                <i class="material-icons">person_outline</i>
+                            </div>
+                            <input type="text" class="form-control input-sm form-control-t" asp-for="Author">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="DatePosted"></label> <strong class="text-danger">*</strong> <span asp-validation-for="DatePosted"></span>
+                        <div class="input-group input-group-t">
+                            <div class="input-group-addon br-none">
+                                &nbsp;
+                                <i class="material-icons">event_available</i>
+                            </div>
+                            <input type="text" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control input-sm form-control-t" asp-for="DatePosted">
+                        </div>
+                    </div>
+                    <div class="pt-5"></div>
+                    <div class="form-group">
+                        <input type="checkbox" asp-for="Status" class="filled-in chk-col-green" />
+                        <label for="Status" asp-for="Status"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="text-align:center;">
+        <a class="btn btn-icon btn-default waves-effect" data-dismiss="modal"><i class="material-icons">reply</i><span>Đóng</span></a>
+        @if (Model.Id > 0)
+        {
+            <button button-delete data-language="@Model.Language" data-action="@Url.Action("Delete",new { id=Model.Id})" data-retur-nurl="@PT.Shared.Functions.FormatReturnUrl(Context.Request.Query["returnurl"], Url.Action("Index"))" data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>Xóa</span>" type="button" class="btn btn-icon  btn-p-t  btn-danger waves-effect"><i class="material-icons">delete_forever</i> <span>Xóa</span></button>
+        }
+        <a button-submit data-language="@Model.Language" data-loading-text="<i class='material-icons icon-spin'>autorenew</i> <span>@(Model.Id > 0 ? "Lưu thay đổi" : "Tạo mới")</span>" class="btn btn-icon bg-indigo waves-effect"><i class="material-icons">save</i> <span>@(Model.Id > 0 ? "Lưu thay đổi" : "Tạo mới")</span></a>
+    </div>
+</form>
+
+@* ===== LOAD TEMPLATE FILES Ở CUỐI ===== *@
+<script asp-append-version="true" src="~/js/codemirror-editor-manager.js"></script>
+<script asp-append-version="true" src="~/js/template-auto-parser.js"></script>
+<script asp-append-version="true" src="~/js/templates/section-templates-1.js"></script>
+<script asp-append-version="true" src="~/js/templates/section-templates-2.js"></script>
+<script asp-append-version="true" src="~/js/templates/section-templates-3.js"></script>
+<script asp-append-version="true" src="~/js/templates/section-templates-4.js"></script>
+<script asp-append-version="true" src="~/js/templates/section-templates-5.js"></script>
+<script asp-append-version="true" src="~/js/section-template-engine.js"></script>
+
+<script>
+    $("[name='DatePosted']").toDateTimePicker();
+    $("[name='StartDate']").toDateTimePicker();
+    $("[name='Lastmod']").toDateTimePicker();
+
+    setTimeout(function () {
+        // Gọi createEditors với 2 arrays riêng:
+        // Array 1: HTML editors (Input1, Input3, Input5, Input7, Input9, ...)
+        // Array 2: JSON editors (Input2, Input4, Input6, Input8, Input10, ...)
+        pageEditors = createEditors(
+            ["Input1", "Input3", "Input5", "Input7", "Input9"],  // HTML templates
+            ["Input2", "Input4", "Input6", "Input8", "Input10"]   // JSON values
+        );
+        
+        // ===== SYNC EDITORS BEFORE SUBMIT =====
+        // Hook vào button submit để sync editors về textarea
+        $('form[form-edit]').on('submit', function(e) {
+            console.log('🔄 Form submitting - syncing CodeMirror editors...');
+            
+            if (pageEditors && pageEditors.syncAllToTextareas) {
+                pageEditors.syncAllToTextareas();
+                console.log('✅ All editors synced to textareas');
+                
+                // Debug: Log values
+                console.log('Input1:', $('[name="Input1"]').val().substring(0, 100) + '...');
+                console.log('Input2:', $('[name="Input2"]').val().substring(0, 100) + '...');
+            } else {
+                console.warn('⚠️ pageEditors.syncAllToTextareas not available');
+            }
+        });
+        
+        // Hook vào button-submit để sync trước khi AJAX submit
+        $(document).on('click', '[button-submit]', function(e) {
+            console.log('🔄 Button submit clicked - syncing CodeMirror editors...');
+            
+            if (pageEditors && pageEditors.syncAllToTextareas) {
+                pageEditors.syncAllToTextareas();
+                console.log('✅ All editors synced to textareas');
+                
+                // Debug: Log values  
+                console.log('Input1:', $('[name="Input1"]').val().substring(0, 100) + '...');
+                console.log('Input2:', $('[name="Input2"]').val().substring(0, 100) + '...');
+            } else {
+                console.warn('⚠️ pageEditors.syncAllToTextareas not available');
+            }
+        });
+        
+        console.log('✅ Submit hooks registered');
+        
+    }, 200);
+</script>

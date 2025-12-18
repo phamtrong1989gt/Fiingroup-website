@@ -34,7 +34,7 @@
             @if (Model.DataAPI != null && Model.DataAPI.Items != null && Model.DataAPI.Items.Count > 0 && Model.DataAPI.Items[0] != null)
             {
                 var item = Model.DataAPI.Items[0];
-                string url = $"/{language}/tin-tuc-fg/{item?.FriendlyTitle}-id{item?.Id}.html"?.ToLower();
+                string url = $"/{language}/event-fg/{item?.FriendlyTitle}-id{item?.Id}.html"?.ToLower();
                 <div class="col-lg-5 col-sm-6 mb-5">
                     <h2 class="text-white mb-4">@item.Title</h2>
                     <div class="item-date mb-2">

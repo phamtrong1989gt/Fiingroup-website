@@ -80,7 +80,8 @@ namespace PT.Infrastructure.Repositories
                     ConpanyName = x.data.ConpanyName,
                     Position = x.data.Position,
                     Products = x.data.Products,
-                    PortalId = x.data.PortalId
+                    PortalId = x.data.PortalId,
+                   
                 }).AsQueryable();
 
             var list = await query.Skip((page - 1) * limit).Take(limit).AsNoTracking().ToListAsync();

@@ -274,9 +274,6 @@ namespace PT.Domain.Model
         [JsonProperty("shortContent")]
         public string ShortContent { get; set; }
 
-        /// <summary>
-        /// Nội dung đầy đủ (chỉ có trong detail)
-        /// </summary>
         [JsonProperty("content")]
         public string Content { get; set; }
 
@@ -300,10 +297,7 @@ namespace PT.Domain.Model
 
         [JsonProperty("sourceIds")]
         public List<int> SourceIds { get; set; }
-
-        /// <summary>
-        /// Trạng thái (1: Active, 0: Inactive)
-        /// </summary>
+    
         [JsonProperty("status")]
         public int Status { get; set; }
 
@@ -311,16 +305,16 @@ namespace PT.Domain.Model
         public List<object> Entities { get; set; }
 
         [JsonProperty("tags")]
-        public List<string> Tags { get; set; }
+        public List<NewsDetailTagInfo> Tags { get; set; }
 
         [JsonProperty("viewCount")]
         public int? ViewCount { get; set; }
+    }
 
-        [Newtonsoft.Json.JsonIgnore]
-        public long Id => NewsId;
-
-        [Newtonsoft.Json.JsonIgnore]
-        public DateTime? PublishedDate => PublicDate;
+    public class NewsDetailTagInfo
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 
     /// <summary>

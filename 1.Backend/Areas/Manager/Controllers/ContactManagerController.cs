@@ -1,24 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
-using PT.Domain.Model;
-using PT.Infrastructure.Interfaces;
-using System.Linq;
-using PT.Shared;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
-using PT.Base;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using System.IO;
+using PT.Base;
+using PT.Domain.Model;
+using PT.Infrastructure.Interfaces;
+using PT.Shared;
+using PT.Shared.Helpers;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Linq.Expressions;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace PT.BE.Areas.Manager.Controllers
 {
@@ -62,17 +63,17 @@ namespace PT.BE.Areas.Manager.Controllers
         }
         [HttpPost, ActionName("Index")]
         [AuthorizePermission]
-        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, bool? status, string startTime, string endTime, string ordertype = "asc", string orderby = "name")
+        public async Task<IActionResult> IndexPost(int? page, int? limit, string key, bool? status,int? serviceId, string startTime, int? portalId, string endTime, string ordertype = "asc", string orderby = "name")
         {
             limit = (limit > 100 || limit < 10) ? 10 : limit;
 
             // Build shared predicate (no serviceId / portalId passed here)
-            var predicate = BuildContactPredicate(key, status, startTime, endTime, null, null, Contact.ContactType.Product);
+            var predicate = BuildContactPredicate(key, status, startTime, endTime, serviceId, portalId, Contact.ContactType.Product);
 
             var data = await _iContactRepository.SearchPagedListAsync(
                 page ?? 1,
                 limit ?? 10,
-                    predicate,
+                predicate,
                 OrderByExtention(ordertype, orderby));
 
             var listCates = await _iContentPageRepository.SearchAsync(true, 0, 0, x=>x.CategoryType == ECategoryType.ContentPage_Solution);
@@ -96,6 +97,8 @@ namespace PT.BE.Areas.Manager.Controllers
             return View("IndexAjax", data);
         }
 
+   
+
         /// <summary>
         /// Build a shared filter predicate for Contact queries used by Index and ExportExcel.
         /// Supports filters: key (search), status, startTime, endTime, serviceId, portalId, type
@@ -107,7 +110,7 @@ namespace PT.BE.Areas.Manager.Controllers
             DateTime? end = null;
             if (!string.IsNullOrWhiteSpace(startTime))
             {
-                if (DateTime.TryParseExact(startTime, new[] { "dd/MM/yyyy HH:mm", "dd/MM/yyyy", "yyyy-MM-dd HH:mm", "yyyy-MM-dd" }, CultureInfo.CurrentCulture, DateTimeStyles.None, out var s))
+                if (DateTime.TryParseExact(startTime, new[] { "dd/MM/yyyy HH:mm" }, CultureInfo.CurrentCulture, DateTimeStyles.None, out var s))
                 {
                     start = s;
                 }
@@ -118,7 +121,7 @@ namespace PT.BE.Areas.Manager.Controllers
             }
             if (!string.IsNullOrWhiteSpace(endTime))
             {
-                if (DateTime.TryParseExact(endTime, new[] { "dd/MM/yyyy HH:mm", "dd/MM/yyyy", "yyyy-MM-dd HH:mm", "yyyy-MM-dd" }, CultureInfo.CurrentCulture, DateTimeStyles.None, out var e))
+                if (DateTime.TryParseExact(endTime, new[] { "dd/MM/yyyy HH:mm"}, CultureInfo.CurrentCulture, DateTimeStyles.None, out var e))
                 {
                     end = e;
                 }
@@ -337,5 +340,7 @@ namespace PT.BE.Areas.Manager.Controllers
             }
         }
         #endregion
+
+
     }
 }

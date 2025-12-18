@@ -35,6 +35,29 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
+        [Route("{language}/ContentPage/PublicationsAjax")]
+        public async Task<ActionResult> PublicationsAjax([FromQuery] NewsQueryParameters prs)
+        {
+            ViewData["language"] = prs.Language;
+            var cmsCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.PortalId == _baseSettings.Value.PortalId && x.CategoryType == ECategoryType.ContentPage_Publications && x.ParentId == 0);
+            if (cmsCategory != null && !string.IsNullOrEmpty(cmsCategory.ExCategoryIds))
+            {
+                prs.ExCategoryIds = cmsCategory.ExCategoryIds;
+            }
+            else
+            {
+                return View("PublicationsAjax", null);
+            }
+            prs.PageSize = 3;
+            prs.Page = 1;
+            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
+            prs.StatusIds = "1";
+            prs.CategoryIds = prs.ExCategoryIds ?? "0";
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            return View("PublicationsAjax", listNew);
+        }
+
+        [HttpGet]
         [Route("{language}/ContentPage/TopNewsAjax")]
         public async Task<ActionResult> TopNewsAjax([FromQuery] NewsQueryParameters prs)
         {
@@ -52,7 +75,6 @@ namespace PT.UI.Controllers
             prs.Page = 1;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
-            prs.SourceId = 4;
             prs.CategoryIds = prs.ExCategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("TopNewsAjax", listNew);
@@ -94,7 +116,7 @@ namespace PT.UI.Controllers
             {
                 return View("_Home404");
             }
-            dl.Tags = await _iContentPageTagRepository.GetTag(0, 0, id, x => x.Status);
+            //dl.Tags = await _iContentPageTagRepository.GetTag(0, 0, id, x => x.Status);
             switch(dl.CategoryType)
             {
                 case ECategoryType.ContentPage_FlowItems:

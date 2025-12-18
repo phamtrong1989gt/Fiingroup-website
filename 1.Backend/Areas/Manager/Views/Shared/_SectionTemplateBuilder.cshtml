@@ -1,0 +1,478 @@
+﻿@model PT.Domain.Model.SectionTemplateBuilderModel
+
+<div class="panel panel-default mb-5">
+    <div class="panel-heading" role="tab" id="@Model.SectionId">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" href="#@Model.CollapseId" aria-expanded="@(Model.IsExpanded ? "true" : "false")" aria-controls="@Model.CollapseId">
+                <i class="material-icons">@Model.Icon</i> @Model.Title
+            </a>
+        </h4>
+    </div>
+    <div id="@Model.CollapseId" class="panel-collapse collapse @(Model.IsExpanded ? "in" : "")" role="tabpanel" aria-labelledby="@Model.SectionId">
+        <div class="panel-body">
+            
+            <!-- Hướng dẫn -->
+            <div class="helper-text">
+                <strong><i class="material-icons" style="vertical-align: middle;">info</i> Cách sử dụng:</strong>
+                <ul style="margin: 5px 0 0 20px; font-size: 13px;">
+                    <li><strong>Click template</strong> bên dưới để load cả HTML và JSON</li>
+                    <li>Hoặc tự viết template với <code>[For]...[/For]</code> và <code>[fieldName]</code></li>
+                    <li><span class="badge badge-warning">⚠️ Cảnh báo: Load template sẽ ghi đè dữ liệu hiện tại!</span></li>
+                    <li><span class="badge badge-info">Template Source: @Model.TemplateSource</span></li>
+                </ul>
+            </div>
+
+            <!-- Quick Template Buttons - GỘP HTML + JSON -->
+            <div id="quickTemplatesContainer_@Model.SectionNumber" style="margin-bottom: 15px;">
+                <div style="text-align: center; padding: 10px;">
+                    <small class="text-muted">Đang load templates...</small>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Template Editor -->
+                <div class="col-md-12">
+                    <div class="template-editor">
+                        <label><strong>@Model.TemplateLabel</strong></label>
+                        <textarea name="@Model.InputTemplate" 
+                                  id="@Model.TemplateInputId" 
+                                  class="form-control code-textarea" 
+                                  rows="15"
+                                  placeholder="[For]&#10;<div>&#10;  <h3>[field1]</h3>&#10;  <p>[field2]</p>&#10;</div>&#10;[/For]">@Model.TemplateValue</textarea>
+                        <small class="text-muted">Dùng <code>[For]...[/For]</code> và <code>[fieldName]</code></small>
+                    </div>
+                </div>
+
+                <!-- Value Editor -->
+                <div class="col-md-12">
+                    <div class="value-editor">
+                        <label><strong>@Model.ValueLabel</strong></label>
+                        <textarea name="@Model.InputValue" 
+                                  id="@Model.ValueInputId" 
+                                  class="form-control code-textarea" 
+                                  rows="15"
+                                  placeholder='{"For":[{"index":1,"field1":"value1"}]}'>@Model.ValueJson</textarea>
+                        <small class="text-muted">JSON object with For loops</small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Dialog -->
+<div id="confirmDialog_@Model.SectionNumber" class="confirm-dialog-overlay" style="display: none;">
+    <div class="confirm-dialog-box">
+        <div class="confirm-dialog-header">
+            <i class="material-icons" style="color: #ff9800; font-size: 48px;">warning</i>
+            <h3>⚠️ Xác nhận load template</h3>
+        </div>
+        <div class="confirm-dialog-body">
+            <p><strong>Bạn có chắc chắn muốn load template này?</strong></p>
+            <p class="text-muted">Hành động này sẽ <span class="text-danger">ghi đè toàn bộ</span> nội dung HTML và JSON hiện tại.</p>
+            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                <p style="margin: 0;"><strong>Template:</strong> <span id="confirmTemplateName_@Model.SectionNumber" style="color: #856404;"></span></p>
+            </div>
+        </div>
+        <div class="confirm-dialog-footer">
+            <button type="button" class="btn btn-secondary" id="confirmCancel_@Model.SectionNumber">
+                <i class="material-icons">close</i> Hủy
+            </button>
+            <button type="button" class="btn btn-warning" id="confirmOk_@Model.SectionNumber">
+                <i class="material-icons">check_circle</i> Đồng ý, load template
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Style -->
+<style>
+    /* Template button gộp HTML + JSON */
+    .template-btn-unified {
+        display: inline-block;
+        padding: 8px 15px;
+        margin: 5px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 13px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .template-btn-unified:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .template-btn-unified.active {
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+    }
+    .template-btn-unified i {
+        font-size: 16px;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+    
+    /* Confirmation Dialog */
+    .confirm-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.2s ease-out;
+    }
+    .confirm-dialog-box {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        max-width: 500px;
+        width: 90%;
+        animation: slideDown 0.3s ease-out;
+    }
+    .confirm-dialog-header {
+        text-align: center;
+        padding: 20px 20px 10px 20px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .confirm-dialog-header h3 {
+        margin: 10px 0 0 0;
+        color: #333;
+    }
+    .confirm-dialog-body {
+        padding: 20px;
+    }
+    .confirm-dialog-body p {
+        margin: 10px 0;
+        line-height: 1.6;
+    }
+    .confirm-dialog-footer {
+        padding: 15px 20px;
+        border-top: 1px solid #e0e0e0;
+        text-align: right;
+    }
+    .confirm-dialog-footer .btn {
+        margin-left: 10px;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+    .confirm-dialog-footer .btn i {
+        vertical-align: middle;
+        margin-right: 5px;
+        font-size: 18px;
+    }
+    .confirm-dialog-footer .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+    .confirm-dialog-footer .btn-secondary:hover {
+        background: #5a6268;
+    }
+    .confirm-dialog-footer .btn-warning {
+        background: #ff9800;
+        color: white;
+        font-weight: bold;
+    }
+    .confirm-dialog-footer .btn-warning:hover {
+        background: #f57c00;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+    }
+    
+    @@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @@keyframes slideDown {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+
+<script>
+    (function() {
+        var sectionNumber = @Model.SectionNumber;
+        var templateSource = '@Model.TemplateSource';
+        var containerId = 'quickTemplatesContainer_' + sectionNumber;
+        var retryCount = 0;
+        var maxRetries = 10;
+        var currentTemplateKey = null;
+        var pendingTemplateKey = null;
+        
+        console.log('🚀 Section ' + sectionNumber + ' initializing...');
+        
+        // =============================================
+        // HELPER: Get/Set CodeMirror value
+        // =============================================
+        function getEditorValue(inputName) {
+            if (window.pageEditors && window.pageEditors.get) {
+                var editor = window.pageEditors.get(inputName);
+                if (editor) return editor.getValue();
+            }
+            var $textarea = $('textarea[name="' + inputName + '"]');
+            return $textarea.length ? $textarea.val() : '';
+        }
+        
+        function setEditorValue(inputName, value) {
+            if (window.pageEditors && window.pageEditors.get) {
+                var editor = window.pageEditors.get(inputName);
+                if (editor) {
+                    editor.setValue(value);
+                    return true;
+                }
+            }
+            var $textarea = $('textarea[name="' + inputName + '"]');
+            if ($textarea.length) {
+                $textarea.val(value);
+                return true;
+            }
+            return false;
+        }
+        
+        // Check if editor has content (not empty)
+        function hasEditorContent() {
+            var templateValue = getEditorValue('@Model.InputTemplate').trim();
+            var jsonValue = getEditorValue('@Model.InputValue').trim();
+            return templateValue.length > 0 || jsonValue.length > 0;
+        }
+        
+        // Icon mapping
+        var iconMapping = {
+            'hero': { icon: 'panorama', color: '#667eea' },
+            'slider': { icon: 'slideshow', color: '#764ba2' },
+            'carousel': { icon: 'view_carousel', color: '#f093fb' },
+            'reasons': { icon: 'stars', color: '#4facfe' },
+            'agenda': { icon: 'event_note', color: '#43e97b' },
+            'speakers': { icon: 'record_voice_over', color: '#fa709a' },
+            'timeline': { icon: 'timeline', color: '#30cfd0' },
+            'cards': { icon: 'view_module', color: '#ff9a9e' },
+            'grid': { icon: 'grid_on', color: '#ffecd2' },
+            'list': { icon: 'list', color: '#a1c4fd' },
+            'testimonials': { icon: 'chat_bubble', color: '#fbc2eb' },
+            'team': { icon: 'people', color: '#fa709a' },
+            'pricing': { icon: 'attach_money', color: '#fee140' },
+            'faq': { icon: 'help_outline', color: '#89f7fe' },
+            'contact': { icon: 'contact_mail', color: '#66a6ff' },
+            'custom': { icon: 'extension', color: '#9e9e9e' }
+        };
+        
+        // =============================================
+        // Generate Quick Templates - GỘP HTML + JSON
+        // =============================================
+        function generateQuickTemplates() {
+            var templates = window[templateSource];
+            
+            if (!templates) {
+                if (retryCount < maxRetries) {
+                    retryCount++;
+                    setTimeout(generateQuickTemplates, 100);
+                    return;
+                }
+                $('#' + containerId).html(
+                    '<div style="text-align: center; padding: 10px; background: #ffebee; border-radius: 5px;">' +
+                    '<small class="text-danger"><i class="material-icons" style="font-size: 16px; vertical-align: middle;">error_outline</i> Template source "' + templateSource + '" không tồn tại!</small>' +
+                    '</div>'
+                );
+                return;
+            }
+            
+            var templateKeys = Object.keys(templates);
+            
+            if (templateKeys.length === 0) {
+                $('#' + containerId).html('<div style="text-align: center;"><small class="text-muted">Không có template</small></div>');
+                return;
+            }
+            
+            var html = '<div style="text-align: center; background: #f8f9fa; padding: 10px; border-radius: 5px;">';
+            templateKeys.forEach(function(key) {
+                var template = templates[key];
+                var iconData = getIconForTemplate(key);
+                
+                html += '<button class="template-btn-unified load-template-' + sectionNumber + '" ';
+                html += '        data-template="' + key + '" ';
+                html += '        data-section="' + sectionNumber + '"';
+                html += '        type="button">';
+                html += '  <i class="material-icons">' + iconData.icon + '</i>';
+                html += '  <span>' + template.name + '</span>';
+                html += '</button>';
+            });
+            html += '</div>';
+            
+            $('#' + containerId).html(html);
+            console.log('✓ Templates loaded for section ' + sectionNumber);
+        }
+        
+        // Helper: Get icon for template
+        function getIconForTemplate(templateKey) {
+            for (var key in iconMapping) {
+                if (templateKey.indexOf(key) >= 0) {
+                    return iconMapping[key];
+                }
+            }
+            return iconMapping['custom'];
+        }
+        
+        // =============================================
+        // Confirmation Dialog
+        // =============================================
+        function showConfirmDialog(templateKey, templateName) {
+            pendingTemplateKey = templateKey;
+            $('#confirmTemplateName_' + sectionNumber).text(templateName);
+            $('#confirmDialog_' + sectionNumber).fadeIn(200);
+        }
+        
+        function hideConfirmDialog() {
+            $('#confirmDialog_' + sectionNumber).fadeOut(200);
+            pendingTemplateKey = null;
+        }
+        
+        // =============================================
+        // Load Template - GỘP HTML + JSON
+        // =============================================
+        function loadTemplate(templateKey, skipConfirm) {
+            var templates = window[templateSource];
+            if (!templates || !templates[templateKey]) return;
+            
+            var template = templates[templateKey];
+            
+            // Nếu có nội dung và không skip confirm → Show confirm dialog
+            if (!skipConfirm && hasEditorContent()) {
+                showConfirmDialog(templateKey, template.name);
+                return;
+            }
+            
+            // Remove active class from all buttons
+            $('.load-template-' + sectionNumber).removeClass('active');
+            // Add active class to clicked button
+            $('.load-template-' + sectionNumber + '[data-template="' + templateKey + '"]').addClass('active');
+            
+            // Load cả HTML và JSON
+            setEditorValue('@Model.InputTemplate', template.template);
+            setEditorValue('@Model.InputValue', JSON.stringify(template.values, null, 2));
+            
+            currentTemplateKey = templateKey;
+            showNotification('success', '✅ Đã load template: "' + template.name + '"');
+        }
+        
+        // =============================================
+        // Notification
+        // =============================================
+        function showNotification(type, message) {
+            var colors = { 
+                success: 'linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)', 
+                error: 'linear-gradient(135deg, #f44336 0%, #c62828 100%)', 
+                warning: 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)', 
+                info: 'linear-gradient(135deg, #2196f3 0%, #1565c0 100%)' 
+            };
+            var color = colors[type] || colors['info'];
+            
+            var notification = $('<div style="position: fixed; top: 20px; right: 20px; background: ' + color + '; color: white; padding: 15px 20px; border-radius: 8px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.3); max-width: 400px; font-size: 14px; animation: slideInRight 0.3s ease-out;">' + message + '</div>');
+            
+            $('body').append(notification);
+            setTimeout(function() {
+                notification.fadeOut(300, function() { $(this).remove(); });
+            }, 3000);
+        }
+        
+        // =============================================
+        // EVENT BINDINGS
+        // =============================================
+        
+        // Click template button - Load cả HTML và JSON (with confirmation)
+        $(document).on('click', '.load-template-' + sectionNumber, function(e) {
+            var templateKey = $(this).data('template');
+            loadTemplate(templateKey, false); // false = cần confirm
+        });
+        
+        // Confirm Dialog - OK button
+        $('#confirmOk_' + sectionNumber).on('click', function() {
+            if (pendingTemplateKey) {
+                hideConfirmDialog();
+                loadTemplate(pendingTemplateKey, true); // true = skip confirm
+            }
+        });
+        
+        // Confirm Dialog - Cancel button
+        $('#confirmCancel_' + sectionNumber).on('click', function() {
+            hideConfirmDialog();
+            showNotification('info', 'ℹ️ Đã hủy load template');
+        });
+        
+        // Confirm Dialog - Click overlay to close
+        $('#confirmDialog_' + sectionNumber).on('click', function(e) {
+            if ($(e.target).hasClass('confirm-dialog-overlay')) {
+                hideConfirmDialog();
+                showNotification('info', 'ℹ️ Đã hủy load template');
+            }
+        });
+        
+        // ESC key to close dialog
+        $(document).on('keydown', function(e) {
+            if (e.keyCode === 27 && $('#confirmDialog_' + sectionNumber).is(':visible')) {
+                hideConfirmDialog();
+                showNotification('info', 'ℹ️ Đã hủy load template');
+            }
+        });
+        
+        // =============================================
+        // INITIALIZE
+        // =============================================
+        $(document).ready(function() {
+            generateQuickTemplates();
+            
+            // ===== FIX: REFRESH CODEMIRROR WHEN PANEL OPENS =====
+            // Listen to Bootstrap collapse events
+            $('#@Model.CollapseId').on('shown.bs.collapse', function () {
+                console.log('🔄 Panel opened - Refreshing CodeMirror editors for section ' + sectionNumber);
+                
+                // Refresh editors after panel is fully shown
+                setTimeout(function() {
+                    if (window.pageEditors && window.pageEditors.get) {
+                        var htmlEditor = window.pageEditors.get('@Model.InputTemplate');
+                        var jsonEditor = window.pageEditors.get('@Model.InputValue');
+                        
+                        if (htmlEditor) {
+                            htmlEditor.refresh();
+                            console.log('  ✓ Refreshed HTML editor: @Model.InputTemplate');
+                        }
+                        
+                        if (jsonEditor) {
+                            jsonEditor.refresh();
+                            console.log('  ✓ Refreshed JSON editor: @Model.InputValue');
+                        }
+                        
+                        console.log('✅ CodeMirror editors refreshed for section ' + sectionNumber);
+                    }
+                }, 100); // Small delay to ensure DOM is ready
+            });
+            
+            console.log('✅ Section ' + sectionNumber + ' initialized with confirmation dialog and auto-refresh');
+        });
+        
+        // Animation CSS
+        if (!document.getElementById('slideInRightAnimation')) {
+            var style = document.createElement('style');
+            style.id = 'slideInRightAnimation';
+            style.innerHTML = '@@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }';
+            document.head.appendChild(style);
+        }
+    })();
+</script>
