@@ -14,7 +14,9 @@
     var portalId = _baseSettings.Value.PortalId;
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 }
-
+<link href="~/assets/css/fontstyle.min.css" rel="stylesheet" />
+<link href="~/assets/css/distance.min.css" rel="stylesheet" />
+<link href="~/assets/css/newevent.min.css" rel="stylesheet" />
 <style>
     #newsDetail {
         background-color: #f8fbff;
@@ -222,7 +224,7 @@
             <div>
                 @Html.Raw(System.Net.WebUtility.HtmlDecode(Model.Content))
             </div>
-
+@* 
             @if (@Model.Tags != null)
             {
                 <p class="tag mt-5">
@@ -232,7 +234,7 @@
                         <span>@item.Name</span>
                     }
                 </p>
-            }
+            } *@
 
             <div class="news-bottom">
                 <div class="social-icons">

@@ -58,11 +58,11 @@
             </div>
             
             <button class="carousel-control-prev justify-content-start" data-bs-slide="prev" data-bs-target="#[carouselId]" type="button">
-                <span class="fa fa-2x fa-angle-left" style="background: #2e5ed7; color: #fff; border-radius: 50%; width: 2rem; height: 2rem;"><br></span>
+                <i class="fa fa-2x fa-angle-left" style="background: #2e5ed7; color: #fff; border-radius: 50%; width: 2rem; height: 2rem;"><br></i>
                 <span class="visually-hidden">Previous</span>
             </button>
             <button class="carousel-control-next justify-content-end" data-bs-slide="next" data-bs-target="#[carouselId]" type="button">
-                <span class="fa fa-2x fa-angle-right" style="background: #2e5ed7; color: #fff; border-radius: 50%; width: 2rem; height: 2rem;"><br></span>
+                <i class="fa fa-2x fa-angle-right" style="background: #2e5ed7; color: #fff; border-radius: 50%; width: 2rem; height: 2rem;"><br></i>
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
