@@ -167,7 +167,8 @@
                     <div>
                         <partial name="_FileUploadSingle" model="@fileUploadSingleBanner" />
                     </div>
-                    <div class="labelinfo-t bg-info mb-10">
+                    <input type="hidden" asp-for="PortalId" />
+            @*         <div class="labelinfo-t bg-info mb-10">
                         CẤU HÌNH CỔNG
                     </div>
                     <div>
@@ -185,7 +186,7 @@
                                 <label for="PortalId_@item.Id">Chia sẻ cho <strong class="text-name">@item.Name</strong></label>
                             </div>
                         }
-                    </div>
+                    </div> *@
                     <div class="labelinfo-t bg-info mb-10">
                         DANH MỤC TIN
                     </div>

@@ -170,7 +170,7 @@ namespace PT.BE.Areas.Manager.Controllers
             dl.TagSelectList = new MultiSelectList(await _iTagRepository.SearchAsync(true, 0, 20, x => x.Status && x.Language == language && x.PortalId == portalId, x => x.OrderBy(m => m.Name), x => new Tag { Id = x.Id, Name = x.Name, Language = x.Language, Status = x.Status }), "Id", "Name");
             dl.PortalName = (await _iPortalRepository.SingleOrDefaultAsync(true, x => x.Id == portalId))?.Name;
             dl.PortalId = portalId;
-            var categorys = await CategorysAsync(language, portalId);
+            var categorys = (await CategorysAsync(language, portalId)).Where(x=> x.CategoryType == ECategoryType.ContentPage_Blog || x.CategoryType == ECategoryType.ContentPage_Publications).ToList();
             ViewData["CategoryJson"] = Newtonsoft.Json.JsonConvert.SerializeObject(categorys.Select(x=> new { x.Id, x.CategoryType, x.SlugType }));
             dl.CategorySelectList = await GetPortalSelectList(categorys, language, portalId);
             return View(dl);
@@ -332,7 +332,7 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 item.Selected = currentShared.Any(x => (x.ParentPortalId == item.Id) || ( x.SharedPortalId == item.Id));
             }
-            var categorys = await CategorysAsync(model.Language, model.PortalId ?? 1);
+            var categorys = (await CategorysAsync(model.Language, model.PortalId ?? 1)).Where(x=> x.CategoryType == ECategoryType.ContentPage_Blog || x.CategoryType == ECategoryType.ContentPage_Publications).ToList();
             ViewData["CategoryJson"] = Newtonsoft.Json.JsonConvert.SerializeObject(categorys.Select(x => new { x.Id, x.CategoryType, x.SlugType }));
             model.CategorySelectList = await GetPortalSelectList(categorys, model.Language, model.PortalId ?? 1, model.CategoryId);
             model.FullPath = await _iPortalRepository.GetFullPathAsync(model.PortalId ?? 1, model.Slug ?? string.Empty, portals, model.Language, _baseSettings.Value.MultipleLanguage);
@@ -965,21 +965,19 @@ namespace PT.BE.Areas.Manager.Controllers
                 _iContentPageReferenceRepository.DeleteWhere(x => x.ContentPageId == id);
                 await _iContentPageRepository.ContentPageSharedDelete(id);
                 await _iContentPageRepository.CommitAsync();
-                await _iContentPageRepository.Database().CommitTransactionAsync();
-                return new ResponseModel() { Output = 1, Message = "Xóa Tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 // Xóa đồng bộ 
-                //var check = await _iAsyncNewsService.DeleteAsync(kt.NewsId ?? 0, null);
-                //if(!check.Success)
-                //{
-                //    await _iContentPageRepository.Database().RollbackTransactionAsync();
-                //    _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]Xóa đồng bộ tin tức thất bại: {0}", check.ErrorMessage);
-                //    return new ResponseModel() { Output = 0, Message = "Xóa Tin tức thất bại, không thể xóa tin ở DC.", Type = ResponseTypeMessage.Danger, IsClosePopup = true };
-                //}
-                //else
-                //{
-                //    await _iContentPageRepository.Database().CommitTransactionAsync();
-                //    return new ResponseModel() { Output = 1, Message = "Xóa Tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
-                //}    
+                var check = await _iAsyncNewsService.DeleteAsync(kt.NewsId ?? 0, null, kt.Language);
+                if (!check.Success)
+                {
+                    await _iContentPageRepository.Database().RollbackTransactionAsync();
+                    _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]Xóa đồng bộ tin tức thất bại: {0}", check.ErrorMessage);
+                    return new ResponseModel() { Output = 0, Message = "Xóa Tin tức thất bại, không thể xóa tin ở DC.", Type = ResponseTypeMessage.Danger, IsClosePopup = true };
+                }
+                else
+                {
+                    await _iContentPageRepository.Database().CommitTransactionAsync();
+                    return new ResponseModel() { Output = 1, Message = "Xóa Tin tức thành công.", Type = ResponseTypeMessage.Success, IsClosePopup = true };
+                }
             }
             catch (Exception ex)
             {
@@ -993,7 +991,7 @@ namespace PT.BE.Areas.Manager.Controllers
 
         public async Task<List<TreeRoleModel>> TreeCategory(int id, string language = "vi", int portalId = 1)
         {
-            var allowCategorys =  new List<ECategoryType>() { ECategoryType.ContentPage_Blog, ECategoryType.ContentPage_Event, ECategoryType.ContentPage_Service, ECategoryType.ContentPage_Product, ECategoryType.ContentPage_Publications, ECategoryType.ContentPage_Report };
+            var allowCategorys =  new List<ECategoryType>() { ECategoryType.ContentPage_Blog,  ECategoryType.ContentPage_Publications };
             var listCurent = await _iContentPageCategoryRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == id);
             var listCategory = await _iCategoryRepository.SearchAsync(true, 0, 0, x =>  x.Status && allowCategorys.Contains(x.CategoryType ?? ECategoryType.ContentPage_Blog) && x.Language == language && x.PortalId ==portalId);
             var abc = listCategory.Select(x =>
