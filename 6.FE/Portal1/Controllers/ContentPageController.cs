@@ -85,5 +85,11 @@ namespace PT.UI.Controllers
             }
             return View(viewName, dl);
         }
+
+        public IActionResult RatingDetails(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("RatingDetails");
+        }
     }
 }
