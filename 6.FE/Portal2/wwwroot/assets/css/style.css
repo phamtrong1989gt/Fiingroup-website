@@ -955,6 +955,7 @@ a:hover {
 #Deliver .container {
     background: url('/Data/Banner/solution_bg3.png') no-repeat center top;
     background-size: 100% auto;
+    padding:0 0 10px 0;
 }
 
 
