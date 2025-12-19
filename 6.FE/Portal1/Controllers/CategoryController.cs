@@ -234,5 +234,10 @@ namespace PT.UI.Controllers
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View("Methodology");
         }
+        public IActionResult Services(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Services");
+        }
     }
 }
