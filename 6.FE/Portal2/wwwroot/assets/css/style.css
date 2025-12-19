@@ -512,7 +512,7 @@ a {
     position: absolute;
     top: 52px;
     background-color: #f9f9f9;
-    min-width: 195px;
+    min-width: 210px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
@@ -955,6 +955,7 @@ a:hover {
 #Deliver .container {
     background: url('/Data/Banner/solution_bg3.png') no-repeat center top;
     background-size: 100% auto;
+    padding:0 0 10px 0;
 }
 
 
