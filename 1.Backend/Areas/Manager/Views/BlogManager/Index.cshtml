@@ -30,7 +30,7 @@
         <div class="col-md-12">
             <div class="new-form-search">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="form-label">Từ khóa</label>
                             <div class="controls">
@@ -38,17 +38,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-1">
-                        <div class="form-group" style="margin-bottom:0px;">
-                            <label class="form-label">Cổng</label>
-                            <div class="controls">
-                                <select grid-input name="portalId" asp-items="@portals" class="input-sm form-control-t show-tick">
-                                    <option value="">Tất cả</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
+        
+      @*               <div class="col-md-2">
                         <div class="form-group clearfix">
                             <label class="form-label">Tag</label>
                             <div class="controls">
@@ -57,9 +48,9 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> *@
 
-                    <div class="col-md-2">
+            @*         <div class="col-md-2">
                         <div class="form-group clearfix">
                             <label class="form-label">Danh mục</label>
                             <div class="controls">
@@ -68,8 +59,8 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-1">
+                    </div> *@
+                    <div class="col-md-2">
                         <div class="form-group" style="margin-bottom:0px;">
                             <label class="form-label">Trạng thái</label>
                             <div class="controls">
@@ -77,6 +68,16 @@
                                     <option value="">Tất cả</option>
                                     <option value="true">Sử dụng</option>
                                     <option value="false">Không sử dụng</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group" style="margin-bottom:0px;">
+                            <label class="form-label">Cổng</label>
+                            <div class="controls">
+                                <select grid-input name="portalId" asp-items="@portals" class="input-sm form-control-t show-tick">
+                                    <option value="">Tất cả</option>
                                 </select>
                             </div>
                         </div>

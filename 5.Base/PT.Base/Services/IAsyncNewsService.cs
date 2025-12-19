@@ -580,7 +580,7 @@ namespace PT.Base.Services
             }
         }
 
-        public async Task<NewsCreateResult> DeleteAsync(int newsId, string deleteBy, string language = "en")
+        public async Task<NewsCreateResult> DeleteAsync(int newsId, string deleteBy, string language = "")
         {
             var stopwatch = Stopwatch.StartNew();
             _logger.LogDebug("[DeleteAsync] Start - NewsId: {NewsId}, DeleteBy: {DeleteBy}, Language: {Language}", 
@@ -613,11 +613,12 @@ namespace PT.Base.Services
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
                     }
                     
-                    var deleteUrl = $"{url}?newsId={newsId}&deleteBy={WebUtility.UrlEncode(deleteBy)}";
+                    var deleteUrl = $"{url}";
                     _logger.LogDebug("[DeleteAsync] Delete URL: {DeleteUrl}", deleteUrl);
                     
                     var apiStopwatch = Stopwatch.StartNew();
-                    var result = await client.DeleteAsync(deleteUrl);
+                    using var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                    var result = await client.PostAsync(deleteUrl, content);
                     apiStopwatch.Stop();
                     
                     _logger.LogDebug("[DeleteAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
