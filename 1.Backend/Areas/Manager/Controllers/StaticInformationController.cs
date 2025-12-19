@@ -8,10 +8,12 @@ using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
+using PT.Infrastructure.Repositories;
 using PT.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -177,7 +179,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 if (ModelState.IsValid)
                 {
                     // Kiểm tra mã đã tồn tại chưa
-                    var checkCode = await _iStaticInformationRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && !m.Delete && m.PortalId != use.PortalId && m.Language != use.Language);
+                    var checkCode = await _iStaticInformationRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && !m.Delete && m.PortalId == use.PortalId && m.Language == use.Language);
                     if (checkCode != null)
                     {
                         return CreateResponse(0, "Mã đã tồn tại, vui lòng kiểm tra lại.", ResponseTypeMessage.Warning);
@@ -263,7 +265,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 if (ModelState.IsValid)
                 {
                     // Kiểm tra mã đã tồn tại chưa (trừ chính bản ghi đang sửa)
-                    var checkCode = await _iStaticInformationRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && m.Id != id && !m.Delete && m.PortalId != use.PortalId && m.Language != use.Language);
+                    var checkCode = await _iStaticInformationRepository.SingleOrDefaultAsync(false, m => m.Code == use.Code && m.Id != id && !m.Delete && m.PortalId == use.PortalId && m.Language == use.Language);
                     if (checkCode != null)
                     {
                         return CreateResponse(0, "Mã đã tồn tại, vui lòng kiểm tra lại.", ResponseTypeMessage.Warning);
@@ -286,6 +288,34 @@ namespace PT.BE.Areas.Manager.Controllers
                     await _iStaticInformationRepository.CommitAsync();
 
                     await _iPortalRepository.TriggerRemoteCacheRefreshAsync(dl.PortalId, ModuleType.StaticInformation, dl.Code, dl.Language);
+
+                    if (use.IsCopy)
+                    {
+                        // Xử lý tự động tạo bản ghi giống hệt khác mỗi ngôn ngữ mục đích để đỡ phải tạo thủ công
+                        var listLanguage = Shared.ListData.ListLanguage.Where(x => x.Id != use.Language).ToList();
+                        foreach (var language in listLanguage)
+                        {
+                            // Kiểm tra mã banner đã tồn tại chưa
+                            var checkCodeCopy = await _iStaticInformationRepository.SingleOrDefaultAsync(false, m => m.Code == dl.Code  && m.Language == language.Id && m.PortalId == dl.PortalId);
+                            if (checkCodeCopy == null)
+                            {
+                                // Tạo mới đối tượng banner
+                                var newData = new StaticInformation
+                                {
+                                    Name = dl.Name,
+                                    Code = dl.Code,
+                                    Language = language.Id,
+                                    PortalId = dl.PortalId,
+                                    Content = dl.Content,
+                                    Status = dl.Status,
+                                    Delete = false
+                                };
+                                // Thêm banner vào database
+                                await _iStaticInformationRepository.AddAsync(newData);
+                                await _iStaticInformationRepository.CommitAsync();
+                            }
+                        }
+                    }
 
                     await AddLog(new LogModel
                     {

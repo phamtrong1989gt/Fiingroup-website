@@ -27,20 +27,18 @@ namespace PT.UI.Controllers
     {
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ICategoryRepository _iCategoryRepository;
-        private readonly ITourRepository _iTourRepository;
         private readonly INewsAPIService _iNewsAPIService;
-        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, ITourRepository iTourRepository, INewsAPIService iNewsAPIService)
+        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, INewsAPIService iNewsAPIService)
         {
             _iContentPageRepository = iContentPageRepository;
             _iCategoryRepository = iCategoryRepository;
-            _iTourRepository = iTourRepository;
             _iNewsAPIService = iNewsAPIService;
         }
 
         [HttpGet]
+        [Route("{language}/ContentPage/NewsAjax")]
         public async Task<ActionResult> NewsAjax([FromQuery] NewsQueryParameters prs)
         {
-            //await Task.Delay(1000);
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
@@ -51,6 +49,7 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
+        [Route("{language}/ContentPage/EventAjax")]
         public async Task<ActionResult> EventAjax([FromQuery] NewsQueryParameters prs)
         {
             //await Task.Delay(1000);
@@ -63,6 +62,7 @@ namespace PT.UI.Controllers
             return View("NewsAjax", listNew);
         }
         [HttpGet]
+        [Route("{language}/ContentPage/PublicationsAjax")]
         public async Task<ActionResult> PublicationsAjax([FromQuery] NewsQueryParameters prs)
         {
             //await Task.Delay(1000);
@@ -70,7 +70,6 @@ namespace PT.UI.Controllers
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
-            prs.SourceId = 5;
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
             return View("PublicationsAjax", listNew);
@@ -80,6 +79,7 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> Details(int id, string language, int? page, string key, string startDate, string endDate, string linkData)
         {
             var objectLink = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            ViewData["linkData"] = objectLink;
             objectLink.Title = string.IsNullOrEmpty(objectLink.Title) ? objectLink.Name : objectLink.Title;
 
             string viewName = "_404";
@@ -104,8 +104,24 @@ namespace PT.UI.Controllers
                         PageSize = 9,
                         FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
+                        StatusIds = "1"
                     }, language ?? "vi");
-                    dl.DataAPI = listNew;
+                    dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
+                    // lấy danh mục event 
+                    var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.CategoryType == ECategoryType.ContentPage_Event && x.Status && x.ParentId == 0 && x.Language == language && x.PortalId == dl.PortalId);
+                    if(eventCategory != null)
+                    {
+                        var listEvent = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
+                        {
+                            Page = page ?? 1,
+                            PageSize = 1,
+                            FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
+                            CategoryIds = eventCategory.ExCategoryIds,
+                            StatusIds = "1"
+                        }, language ?? "vi");
+
+                        dl.EventTop = (listEvent ?? new NewsListResponse { Items = [] });
+                    }    
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }    
                 viewName = "News";
@@ -119,14 +135,15 @@ namespace PT.UI.Controllers
                 }
                 else
                 {
-                    var listNew = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
+                    var listEvent = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
                     {
                         Page = page ?? 1,
                         PageSize = 9,
                         FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
+                        StatusIds = "1"
                     }, language ?? "vi");
-                    dl.DataAPI = listNew;
+                    dl.DataAPI = listEvent ?? new NewsListResponse { Items = [] };
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }
                 viewName = "Event";
@@ -146,8 +163,9 @@ namespace PT.UI.Controllers
                         PageSize = 9,
                         FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
+                        StatusIds = "1"
                     }, language ?? "vi");
-                    dl.DataAPI = listNew;
+                    dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }
                 viewName = "Publications";
@@ -217,22 +235,6 @@ namespace PT.UI.Controllers
             objectLink.Title = $"{objectLink.Title}{((page == null) ? "" : (language == "vi" ? $" - trang {page}" : $" - page {page}"))}";
             //ViewData["linkData"] = objectLink;
             return View(viewName, dl);
-        }
-
-        public IActionResult Rakings(string linkData, int portalId)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View("Rakings");
-        }
-        public IActionResult Product(string linkData, int portalId)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View("Product");
-        }
-        public IActionResult Methodology(string linkData, int portalId)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View("Methodology");
         }
     }
 }
