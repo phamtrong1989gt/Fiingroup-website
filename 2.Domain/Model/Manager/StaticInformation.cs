@@ -102,5 +102,8 @@ namespace PT.Domain.Model
 
         public SelectList PortalSelectList { get; set; }
         public string PortalName { get; set; }
+
+        [Display(Name = "Copy mẫu này qua các ngôn ngữ khác (Nếu chưa tạo)")]
+        public bool IsCopy { get; set; } = false;
     }
 }
