@@ -16,6 +16,11 @@
 	var listCategory = new List<Category>();
 	listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Publications) && x.Status && x.Language == language && x.PortalId == portalId);
 	listCategory = listCategory.OrderBy(x => x.ParentId).ThenBy(m => m.Order).ToList();
+	string allTab = "Tất cả";
+	if(language == "en")
+	{
+		allTab = "All";
+    }
 }
 
 <style>
@@ -86,6 +91,8 @@
 					text-align: center;
 				}
 
+
+
 </style>
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "PublicationsBanner", language = language, portalId = portalId })
@@ -123,11 +130,11 @@
 				string url = PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
 				if (item.Id == Model.Id)
 				{
-					<a class="active" href="@url"><span>@item.Name</span></a>
+					<a class="active" href="@url"><span>@(item.ParentId == 0 ? allTab: item.Name)</span></a>
 				}
 				else
 				{
-					<a href="@url"><span>@item.Name</span></a>
+					<a href="@url"><span>@(item.ParentId == 0 ? allTab : item.Name)/span></span></a>
 				}
             }
 		</div>
