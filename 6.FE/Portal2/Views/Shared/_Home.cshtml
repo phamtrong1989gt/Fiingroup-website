@@ -177,6 +177,10 @@
 			#recaptcha-close-btn:hover {
 				background: #d32f2f;
 			}
+			.field-validation-error
+			{
+				display:block;
+			}
 	</style>
 </head>
 
@@ -441,6 +445,8 @@
 			});
 		});
 	</script>
+
+
 	@Html.Raw(bindContentSetting.Body)
 </body>
 </html>

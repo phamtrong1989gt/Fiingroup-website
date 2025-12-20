@@ -7,6 +7,14 @@
     window.SectionTemplates2 = {
         'reasons-to-join': {
             name: 'Reasons to Join (Desktop + Mobile Carousel)',
+            description: '🎪 Hiển thị các lý do tham gia sự kiện - Desktop dạng lưới, Mobile dạng carousel',
+            usage: [
+                'Dùng cho: Phần nội dung giới thiệu với nhiều mục',
+                'Desktop: ForDesktop - 2 slides, mỗi slide 2 ảnh (trái/phải)',
+                'Mobile: ForMobile - 4 slides, mỗi slide 1 ảnh',
+                '⚠️ Lưu ý: Indicators và slides đã gộp chung trong 1 loop',
+                'Các trường: index, activeClass, ariaCurrent, slideNumber, imageUrl, content'
+            ],
             template: `<div class="event-content section" id="about">
     <div class="container px-24">
         <div class="text-center">
@@ -20,14 +28,14 @@
         <!-- Desktop Carousel -->
         <div class="carousel slide d-md-block d-none" id="[carouselIdDesktop]">
             <div class="carousel-indicators">
-                [ForDesktopIndicator]
-                <button [ariaCurrent] aria-label="Slide [slideIndex]" class="[activeClass]" data-bs-slide-to="[slideIndexZero]" data-bs-target="#[carouselIdDesktop]" type="button"></button>
-                [/ForDesktopIndicator]
+                [ForDesktop]
+                <button [ariaCurrent] aria-label="Slide [slideNumber]" class="[activeClass]" data-bs-slide-to="[index]" data-bs-target="#[carouselIdDesktop]" type="button"></button>
+                [/ForDesktop]
             </div>
             
             <div class="carousel-inner px-32 pb-40" id="[carouselInnerIdDesktop]">
                 [ForDesktop]
-                <!-- Slide [slideIndex] -->
+                <!-- Slide [index] -->
                 <div class="carousel-item [activeClass]">
                     <div class="container-fluid">
                         <div class="row">
@@ -48,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- / Slide [slideIndex] -->
+                <!-- / Slide [index] -->
                 [/ForDesktop]
             </div>
             
@@ -65,9 +73,9 @@
         <!-- Mobile Carousel -->
         <div class="carousel slide d-md-none d-block" id="[carouselIdMobile]">
             <div class="carousel-indicators">
-                [ForMobileIndicator]
-                <button [ariaCurrent] aria-label="Slide [slideIndex]" class="[activeClass]" data-bs-slide-to="[slideIndexZero]" data-bs-target="#[carouselIdMobile]" type="button"></button>
-                [/ForMobileIndicator]
+                [ForMobile]
+                <button [ariaCurrent] aria-label="Slide [slideNumber]" class="[activeClass]" data-bs-slide-to="[index]" data-bs-target="#[carouselIdMobile]" type="button"></button>
+                [/ForMobile]
             </div>
             
             <div class="carousel-inner d-md-none d-block pb-40" id="[carouselInnerIdMobile]">
@@ -103,21 +111,23 @@
                 "carouselIdMobile": "carousel-Event-mobile",
                 "carouselInnerIdMobile": "carousel-inner-Event2",
                 
-                // Desktop Carousel Slides (2 images per slide)
+                // Desktop Carousel - Gộp indicators + slides
                 "ForDesktop": [
                     {
-                        "index": 1,
-                        "slideIndex": "1",
+                        "index": 0,
                         "activeClass": "active",
+                        "ariaCurrent": 'aria-current="true"',
+                        "slideNumber": 1,
                         "leftImage": "https://cdn.fiingroup.vn/medialib/245453/I/2025/03/19/16371792387140700_Anh-tham-luan-1-1.png",
                         "leftContent": "Leveraging trade credit insurance to reduce risk and optimize cash flow for businesses.",
                         "rightImage": "https://cdn.fiingroup.vn/medialib/245453/I/2025/03/19/16374328870820700_Anh-tham-luan-2-1.png",
                         "rightContent": "Digitalization and data analytics trends in trade insurance and supply chain finance."
                     },
                     {
-                        "index": 2,
-                        "slideIndex": "2",
+                        "index": 1,
                         "activeClass": "",
+                        "ariaCurrent": "",
+                        "slideNumber": 2,
                         "leftImage": "https://cdn.fiingroup.vn/medialib/245453/I/2025/03/19/16380137651880700_Anh-tham-luan-3-1.png",
                         "leftContent": "Challenges and solutions in implementing trade credit insurance in Vietnam.",
                         "rightImage": "https://cdn.fiingroup.vn/medialib/245453/I/2025/03/19/16381736836180700_Anh-tham-luan-4-1.png",
@@ -125,81 +135,39 @@
                     }
                 ],
                 
-                // Desktop Carousel Indicators
-                "ForDesktopIndicator": [
-                    {
-                        "index": 1,
-                        "slideIndex": "1",
-                        "slideIndexZero": "0",
-                        "activeClass": "active",
-                        "ariaCurrent": 'aria-current="true"'
-                    },
-                    {
-                        "index": 2,
-                        "slideIndex": "2",
-                        "slideIndexZero": "1",
-                        "activeClass": "",
-                        "ariaCurrent": ""
-                    }
-                ],
-                
-                // Mobile Carousel Slides (1 image per slide)
+                // Mobile Carousel - Gộp indicators + slides
                 "ForMobile": [
                     {
-                        "index": 1,
+                        "index": 0,
                         "activeClass": "active",
+                        "ariaCurrent": 'aria-current="true"',
+                        "slideNumber": 1,
                         "imageUrl": "https://cdn.fiingroup.vn/medialib/245453/I/2025/03/04/17330748989960700_Anh-tham-luan-1.png",
                         "content": "Leveraging trade credit insurance to reduce risk and optimize cash flow for businesses"
                     },
                     {
-                        "index": 2,
+                        "index": 1,
                         "activeClass": "",
+                        "ariaCurrent": "",
+                        "slideNumber": 2,
                         "imageUrl": "https://cdn.fiingroup.vn/medialib/245453/I/2025/03/04/17340166111330700_Anh-tham-luan-2.png",
                         "content": "Digitalization and data analytics trends in trade insurance and supply chain finance."
                     },
                     {
-                        "index": 3,
+                        "index": 2,
                         "activeClass": "",
+                        "ariaCurrent": "",
+                        "slideNumber": 3,
                         "imageUrl": "https://cdn.fiingroup.vn/medialib/245453/I/2025/03/04/17344172058040700_Anh-tham-luan-3.png",
                         "content": "Challenges and solutions in implementing trade credit insurance in Vietnam."
                     },
                     {
-                        "index": 4,
+                        "index": 3,
                         "activeClass": "",
+                        "ariaCurrent": "",
+                        "slideNumber": 4,
                         "imageUrl": "https://cdn.fiingroup.vn/medialib/245453/I/2024/11/27/15270639204760700_Anhthamluan41_9723.jpg",
                         "content": "Enhancing the efficiency of supply chain management through data analysis and business information."
-                    }
-                ],
-                
-                // Mobile Carousel Indicators
-                "ForMobileIndicator": [
-                    {
-                        "index": 1,
-                        "slideIndex": "1",
-                        "slideIndexZero": "0",
-                        "activeClass": "active",
-                        "ariaCurrent": 'aria-current="true"'
-                    },
-                    {
-                        "index": 2,
-                        "slideIndex": "2",
-                        "slideIndexZero": "1",
-                        "activeClass": "",
-                        "ariaCurrent": ""
-                    },
-                    {
-                        "index": 3,
-                        "slideIndex": "3",
-                        "slideIndexZero": "2",
-                        "activeClass": "",
-                        "ariaCurrent": ""
-                    },
-                    {
-                        "index": 4,
-                        "slideIndex": "4",
-                        "slideIndexZero": "3",
-                        "activeClass": "",
-                        "ariaCurrent": ""
                     }
                 ]
             }

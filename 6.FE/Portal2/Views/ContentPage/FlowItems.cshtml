@@ -81,11 +81,14 @@
 		/* nếu cần giữ behavior cũ: */
 		-webkit-mask-composite: xor;
 		mask-composite: exclude;
+	
 	}
 
 	.box-left:hover, .box-center:hover, .box-right:hover
 	{
 		transform: translateY(-16px);
+		transform: scale(1.2) !important;
+		z-index: 1; /* nổi lên trên nếu cần */
 	}
 
 	.fa.fa-check-circle
@@ -101,6 +104,18 @@
 	#FiinCard
 	{
         margin-bottom: 0 !important;
+	}
+
+	.old-money
+	{
+		font-size: 17px;
+		display: block;
+		position: absolute;
+		top: -16px;
+		left: 0;
+		right: 0;
+		color: #333;
+		text-decoration: line-through;
 	}
 </style>
 

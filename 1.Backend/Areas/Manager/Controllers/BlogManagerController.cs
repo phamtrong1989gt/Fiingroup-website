@@ -820,7 +820,8 @@ namespace PT.BE.Areas.Manager.Controllers
             string section3 = SectionTemplateHelper.RenderSection(data.Input5, data.Input6);
             string section4 = SectionTemplateHelper.RenderSection(data.Input7, data.Input8);
             string section5 = SectionTemplateHelper.RenderSection(data.Input9, data.Input10);
-            string outData = $"<main role=\"main\" class=\"new-layout\"><div class=\"event\"><div class=\"new-event\">{section1}{section2}{section3}{section4}{section5}</div></div></main>";
+            string section6 = SectionTemplateHelper.RenderSection(data.Input11, data.Input12);
+            string outData = $"<main role=\"main\" class=\"new-layout\"><div class=\"event\"><div class=\"new-event\">{section1}{section2}{section3}{section4}{section5}{section6}</div></div></main>";
             return outData;
         }
         #endregion
