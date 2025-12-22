@@ -1,0 +1,128 @@
+@using System
+@{
+    Layout = null; // partial view
+    var metricsUrl = Url.Action("Metrics", "Dashboard", new { area = "Base" });
+}
+<div id="server-metrics" class="card p-3" style="padding:10px  10px 10px 10px;">
+    <h4>Server Metrics</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-unstyled" id="metrics-left"></ul>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-unstyled" id="metrics-right"></ul>
+        </div>
+    </div>
+    <div id="metrics-drives" style="margin-top:12px;"></div>
+    <div id="metrics-error" style="color:#c00;display:none;margin-top:10px;"></div>
+</div>
+
+<script>
+    function formatBytes(bytes) {
+        if (bytes === 0) return '0 B';
+        if (!bytes && bytes !== 0) return 'N/A';
+        const num = Number(bytes);
+        if (Number.isNaN(num)) return 'N/A';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(num) / Math.log(k));
+        return parseFloat((num / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function getProp(obj, ...keys) {
+        if (!obj) return undefined;
+        for (let k of keys) {
+            if (Object.prototype.hasOwnProperty.call(obj, k) && obj[k] !== undefined && obj[k] !== null) return obj[k];
+        }
+        return undefined;
+    }
+
+    function renderMetrics(data) {
+        if (!data) return;
+        document.getElementById('metrics-error').style.display = 'none';
+        const left = document.getElementById('metrics-left');
+        const right = document.getElementById('metrics-right');
+        const drivesEl = document.getElementById('metrics-drives');
+        left.innerHTML = '';
+        right.innerHTML = '';
+        drivesEl.innerHTML = '';
+
+        const machine = getProp(data, 'MachineName', 'machineName');
+        const os = getProp(data, 'OS', 'os');
+        const runtime = getProp(data, 'Runtime', 'runtime', 'frameworkDescription');
+        const cores = getProp(data, 'ProcessorCount', 'processorCount');
+        const processName = getProp(data, 'ProcessName', 'processName');
+        const processId = getProp(data, 'ProcessId', 'processId');
+        const uptime = Number(getProp(data, 'UptimeSeconds', 'uptimeSeconds')) || 0;
+
+        const workingSet = Number(getProp(data, 'ProcessWorkingSet', 'processWorkingSet'));
+        const gcAlloc = Number(getProp(data, 'GCAllocatedMemory', 'gcAllocatedMemory'));
+        const cpuTotal = Number(getProp(data, 'ProcessTotalCpuMs', 'processTotalCpuMs'));
+        const procCpuPct = getProp(data, 'ProcessCpuPercent', 'processCpuPercent');
+        const memTotal = getProp(data, 'MemoryTotalBytes', 'memoryTotalBytes');
+        const memPct = getProp(data, 'MemoryUsedPercent', 'memoryUsedPercent');
+        const serverIps = getProp(data, 'ServerIps', 'serverIps') || [];
+        const localIp = getProp(data, 'LocalIp', 'localIp');
+        const localPort = getProp(data, 'LocalPort', 'localPort');
+        const remoteIp = getProp(data, 'RemoteIp', 'remoteIp');
+        const drives = getProp(data, 'Drives', 'drives') || [];
+
+        left.innerHTML += `<li><strong>Machine:</strong> ${machine || 'N/A'}</li>`;
+        left.innerHTML += `<li><strong>OS:</strong> ${os || 'N/A'}</li>`;
+        left.innerHTML += `<li><strong>.NET:</strong> ${runtime || 'N/A'}</li>`;
+        left.innerHTML += `<li><strong>CPU cores:</strong> ${cores || 'N/A'}</li>`;
+        left.innerHTML += `<li><strong>Process:</strong> ${processName || 'N/A'} (PID ${processId || 'N/A'})</li>`;
+        left.innerHTML += `<li><strong>Uptime:</strong> ${Math.floor(uptime)} s</li>`;
+
+        right.innerHTML += `<li><strong>Working Set:</strong> ${formatBytes(workingSet)}</li>`;
+        right.innerHTML += `<li><strong>GC Allocated:</strong> ${formatBytes(gcAlloc)}</li>`;
+        right.innerHTML += `<li><strong>CPU Total (ms):</strong> ${Number.isNaN(cpuTotal) ? 'N/A' : Math.round(cpuTotal)}</li>`;
+        right.innerHTML += `<li><strong>Process CPU %:</strong> ${typeof procCpuPct !== 'undefined' ? procCpuPct + '%' : 'N/A'}</li>`;
+        right.innerHTML += `<li><strong>Memory Total:</strong> ${formatBytes(memTotal)}</li>`;
+        right.innerHTML += `<li><strong>Memory Used %:</strong> ${typeof memPct !== 'undefined' ? memPct + '%' : 'N/A'}</li>`;
+        right.innerHTML += `<li><strong>Server IPs:</strong> ${Array.isArray(serverIps) ? serverIps.join(', ') : (serverIps || '')}</li>`;
+        right.innerHTML += `<li><strong>Local IP:</strong> ${localIp || 'N/A'}${localPort ? ':' + localPort : ''}</li>`;
+        right.innerHTML += `<li><strong>Remote IP:</strong> ${remoteIp || 'N/A'}</li>`;
+
+        if (drives && drives.length) {
+            let table = '<table class="table table-sm" style="margin-top:8px;max-width:100%;"><thead><tr><th>Drive</th><th>Type</th><th>Total</th><th>Free</th><th>Used %</th></tr></thead><tbody>';
+            drives.forEach(d => {
+                const name = getProp(d, 'Name', 'name') || 'N/A';
+                const dtype = getProp(d, 'DriveType', 'driveType') || 'N/A';
+                const total = getProp(d, 'TotalBytes', 'totalBytes') || getProp(d, 'Total', 'total') || null;
+                const free = getProp(d, 'FreeBytes', 'freeBytes') || getProp(d, 'Free', 'free') || null;
+                const usedPct = (getProp(d, 'UsedPercent', 'usedPercent') !== undefined) ? getProp(d, 'UsedPercent', 'usedPercent') : (getProp(d, 'Used', 'used') !== undefined ? getProp(d, 'Used','used') : null);
+                table += `<tr><td>${name}</td><td>${dtype}</td><td>${formatBytes(total)}</td><td>${formatBytes(free)}</td><td>${usedPct !== null ? usedPct + '%' : 'N/A'}</td></tr>`;
+            });
+            table += '</tbody></table>';
+            drivesEl.innerHTML = table;
+        }
+    }
+
+    (function loadMetrics(){
+        const url = '@metricsUrl';
+        fetch(url, { credentials: 'same-origin' })
+            .then(r => {
+                // if server returned HTML (e.g. redirect to login), try to detect
+                const ct = r.headers.get('content-type') || '';
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                if (ct.indexOf('application/json') === -1) {
+                    return r.text().then(t => { throw new Error('Expected JSON, got: ' + (t.slice(0,200))); });
+                }
+                return r.json();
+            })
+            .then(res => {
+                if(res && res.output === 1) renderMetrics(res.data);
+                else {
+                    console.warn('Metrics returned error', res);
+                    document.getElementById('metrics-error').textContent = (res && res.message) ? res.message : 'Metrics returned no data';
+                    document.getElementById('metrics-error').style.display = 'block';
+                }
+            })
+            .catch(e => {
+                console.warn('Metrics load failed', e);
+                document.getElementById('metrics-error').textContent = 'Metrics load failed: ' + e.message;
+                document.getElementById('metrics-error').style.display = 'block';
+            });
+    })();
+</script>

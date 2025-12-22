@@ -10,7 +10,7 @@
     <div class="row head-v2">
         <div class="col-md-12">
             <div class="block-header">
-                <h2><i class="material-icons">markunread</i> QUẢN LÝ LIÊN HỆ NHẬN TƯ VẤN <span class="label label-danger label-t">Danh sách</span></h2>
+                <h2><i class="material-icons">markunread</i>QUẢN LÝ LIÊN HỆ NHẬN TIN <span class="label label-danger label-t">Danh sách</span></h2>
             </div>
         </div>
     </div>
@@ -42,17 +42,6 @@
                             <label class="form-label">Tên công ty</label>
                             <div class="controls">
                                 <input class="form-control input-sm form-control-t" grid-input type="text" name="conpanyName">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group" style="margin-bottom:0px;">
-                            <label class="form-label">Nhóm ngành</label>
-                            <div class="controls">
-                                <select grid-input data-live-search="true" name="serviceId" asp-items="@listSolution" class="input-sm form-control-t show-tick">
-                                    <option value="">Chọn nhóm ngành</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -124,8 +113,7 @@
                                     <th>Email</th>
                                     <th>Tên Công Ty</th>
                                     <th>Chức Danh Công Việc</th>
-                                    <th>Nhóm Ngành</th>
-                                    <th>Sản Phẩm & Dịch Vụ Quan Tâm</th>
+                                    <th>Lĩnh vực quan tâm</th>
                                     <th>Mô Tả Chi Tiết</th>
                                     <th style="width:160px;">Ngày Gửi</th>
                                 </tr>
@@ -224,7 +212,7 @@
             }
 
             // Fetch - avoids jQuery trying to read xhr.responseText when responseType is blob
-            fetch('@Url.Action("ExportExcel", "ContactManager", new { area = "Manager" })', {
+            fetch('@Url.Action("ExportExcel", "Contact2Manager", new { area = "Manager" })', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
