@@ -37,19 +37,41 @@
             </div>
         </div>
 
-        <div class="flex-fill d-flex flex-column justify-content-end">
+        <div class="flex-fill d-flex flex-column justify-content-end mt-3">
             <div class="mb-16">
                 <a class="white-button d-inline-block text-uppercase" href="[ctaUrl]">[ctaText]</a>
             </div>
         </div>
+
+        <div id="countdown" class="row white-box mx-0 [countdownClass] mt-3">
+              <div class="col-3">
+                <div class="days text-center"></div>
+
+                <div class="text-uppercase text-center">Days</div>
+              </div>
+              <div class="col-3">
+                <div class="hours text-center"></div>
+                <div class="text-uppercase text-center">Hours</div>
+              </div>
+              <div class="col-3">
+                <div class="minutes text-center"></div>
+                <div class="text-uppercase text-center">Minutes</div>
+              </div>
+              <div class="col-3">
+                <div class="seconds text-center"></div>
+                <div class="text-uppercase text-center">Seconds</div>
+              </div>
+         </div>
+
     </div>
 </div>
+
+
 
 <script>
 
         $(document).ready(function () {
-            //let countDownDate = new Date(2024, 10, 20, 8, 50).getTime();
-            let countDownDate = new Date('2024-11-18T10:00:00').getTime();
+            let countDownDate = new Date('[startTime]').getTime();
             console.log(countDownDate);
             let $now = new Date().getTime();
             if ($now > countDownDate) {
@@ -111,7 +133,9 @@
                 "paragraph3": "Vietnam Capital Market Forum 2025 is a high-level platform gathering policymakers, investors, issuers, and both domestic and international experts to exchange insights and co-develop solutions for advancing Vietnam's debt capital market in a more sound, efficient, and sustainable manner. The event also aims to strengthen the financial capacity and resilience of Vietnamese enterprises, contributing to the realization of Vietnam's economic growth objectives in this new era of growth.",
                 "eventDetails": "Time: 8:00 AM – 12:00 PM ICT, Friday, August 22, 2025<br>Venue: Sofitel Saigon Plaza Hotel, Ho Chi Minh City, Vietnam<br>",
                 "ctaUrl": "https://forms.office.com/r/hC7HbFxEVe",
-                "ctaText": "Register now"
+                "ctaText": "Register now",
+                "startTime": "2025-08-23 08:00:00",
+                "countdownClass": "countdown"
             }
         },
     };

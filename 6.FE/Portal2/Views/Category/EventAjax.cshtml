@@ -16,41 +16,48 @@
     var pageIndex = 1;
     if (stPage != null)
     {
-        pageIndex = int.TryParse(stPage, out var result) ? result : 1;  
+        pageIndex = int.TryParse(stPage, out var result) ? result : 1;
     }
 }
 
-    @if (Model != null && Model.Items.Any())
+@if (Model != null && Model.Items.Any())
+{
+    @foreach (var item in Model.Items)
     {
-        @foreach (var item in Model.Items)
-        {
-            string url = $"/{language}/event-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
-            <div class="row mb-4">
-                <div class="col-lg-5 col-sm-6">
+        string url = $"/{language}/event-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
+        <div class="row mb-4">
+            <div class="col-lg-5 col-sm-6">
                 <a href="@url" title="@item.Title"><img loading="lazy" class="news-img" onerror="this.onerror=null;this.src='/Data/Banner/no-img.jpg';" src="@(item.ImageUrl ?? "/Data/Banner/no-img.jpg")" alt="@item.Title" /></a>
-                </div>
-                <div class="col-lg-7 col-sm-6">
+            </div>
+            <div class="col-lg-7 col-sm-6">
                 <h3 class="mt-1"><a href="@url" class="news-title-sub" title="@item.Title">@item.Title</a></h3>
-                    <div class="mt-5">
-                        <div class="item-date-sub mb-2">
-                            <i class="fa fa-calendar-o" aria-hidden="true"></i>
+
+                <div class="mt-4">
+                    <div class="item-date-sub mb-2">
+                        <i class="fa fa-calendar-o" aria-hidden="true"></i>
                         <span class="item-label">@Localizer["EventDate"]</span>
                         <span class="item-label-sub">@(item.StartDate?.ToString("dd/MM/yyyy") ?? "---")</span>
-                        </div>
-                        <div class="item-date-sub mb-2">
-                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="item-date-sub mb-2">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
                         <span class="item-label">@Localizer["EventTime"]</span>
                         <span class="item-label-sub">@(item.TimeFromTo ?? "---")</span>
-                        </div>
-                        <div class="item-date-sub mb-5">
-                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    </div>
+                    <div class="item-date-sub mb-4">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
                         <span class="item-label">@Localizer["Location"]</span>
                         <span class="item-label-sub">@(item.Address ?? "---")</span>
-                        </div>
                     </div>
+                    @if (!string.IsNullOrEmpty(item.FilePath))
+                    {
+                        <div class="mb-2">
+                            <a style="font-weight:500;color:#2196F3;" target="_blank" href="@item.FilePath"><i class="fa fa-download"></i> @Localizer["DownloadDocument"]</a>
+                        </div>
+                    }
                 </div>
             </div>
-        }
+        </div>
+    }
     <div class="pagination-area mt-2 mb-3">
         <div aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
@@ -58,12 +65,12 @@
             </ul>
         </div>
     </div>
-    }
-    else
-    {
-        <div class="col-lg-12 col-sm-12 text-center my-5">
-            <img src="/Data/Banner/no-data.jpg" alt="No data" />
+}
+else
+{
+    <div class="col-lg-12 col-sm-12 text-center my-5">
+        <img src="/Data/Banner/no-data.jpg" alt="No data" />
         <p class="no-data-messege my-5">@Localizer["NoEvent"]</p>
-        </div>
-    }
+    </div>
+}
 

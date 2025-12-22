@@ -78,7 +78,11 @@ namespace PT.Shared.Helpers
 
             try
             {
-                var data = JsonConvert.DeserializeObject<JObject>(dataJson);
+                var settings = new JsonSerializerSettings
+                {
+                    DateParseHandling = DateParseHandling.None
+                };
+                var data = JsonConvert.DeserializeObject<JObject>(dataJson, settings);
                 return RenderTemplate(templateHtml, data);
             }
             catch (JsonException ex)

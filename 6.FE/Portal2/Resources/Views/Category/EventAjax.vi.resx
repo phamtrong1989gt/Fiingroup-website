@@ -135,4 +135,7 @@
   <data name="NoEvent" xml:space="preserve">
     <value>Hiện không có sự kiện nào</value>
   </data>
+  <data name="DownloadDocument" xml:space="preserve">
+    <value>Tài liệu sự kiện</value>
+  </data>
 </root>

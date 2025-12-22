@@ -251,7 +251,7 @@ namespace PT.Domain.Model
 
         public string TimeFromTo { get; set; }
         public string Address { get; set; }
-
+        public string FilePath { get; set; }
     }
 
     /// <summary>
