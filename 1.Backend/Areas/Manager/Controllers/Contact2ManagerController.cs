@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 namespace PT.BE.Areas.Manager.Controllers
 {
     [Area("Manager")]
-    public class ContactManagerController : Base.Controllers.BaseController
+    public class Contact2ManagerController : Base.Controllers.BaseController
     {
 
         private readonly ILogger _logger;
@@ -33,15 +33,15 @@ namespace PT.BE.Areas.Manager.Controllers
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ContactManagerController(
-            ILogger<ContactManagerController> logger,
+        public Contact2ManagerController(
+            ILogger<Contact2ManagerController> logger,
             IContactRepository iContactRepository,
             IPortalRepository iPortalRepository,
             IContentPageRepository iContentPageRepository,
             IWebHostEnvironment webHostEnvironment
         )
         {
-            controllerName = "ContactManager";
+            controllerName = "Contact2Manager";
             tableName = "Contact";
             _logger = logger;
             _iContactRepository = iContactRepository;
@@ -56,8 +56,6 @@ namespace PT.BE.Areas.Manager.Controllers
         {
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
             ViewData["PortalSelectList"] = new SelectList(portals, "Id", "Name");
-            var listService = await _iContentPageRepository.SearchAsync(true, 0, 0, x=>x.Status && (x.CategoryType == ECategoryType.ContentPage_Solution), x=>x.OrderBy(z=>z.Order));
-            ViewData["SolutionSelectList"] = new SelectList(listService.Select(x=> new { Id = x.Id, Name = x.Name}), "Id", "Name");
             return View();
         }
         [HttpPost, ActionName("Index")]
@@ -67,7 +65,7 @@ namespace PT.BE.Areas.Manager.Controllers
             limit = (limit > 100 || limit < 10) ? 10 : limit;
 
             // Build shared predicate (no serviceId / portalId passed here)
-            var predicate = BuildContactPredicate(key, status, startTime, endTime, serviceId, portalId, Contact.ContactType.Product);
+            var predicate = BuildContactPredicate(key, status, startTime, endTime, serviceId, portalId, Contact.ContactType.Contact);
 
             var data = await _iContactRepository.SearchPagedListAsync(
                 page ?? 1,
@@ -75,12 +73,11 @@ namespace PT.BE.Areas.Manager.Controllers
                 predicate,
                 OrderByExtention(ordertype, orderby));
 
-            var listCates = await _iContentPageRepository.SearchAsync(true, 0, 0, x=>x.CategoryType == ECategoryType.ContentPage_Solution);
-            var producs = await _iContentPageRepository.SearchAsync(true, 0, 0, x=>x.CategoryType == ECategoryType.ContentPage_FlowItems);
+            var producs = await _iContentPageRepository.SearchAsync(true, 0, 0, x=>x.CategoryType == ECategoryType.ContentPage_Flow);
+
             foreach (var item in data.Data)
             {
                 // Do something with each item
-                item.Solution = listCates.FirstOrDefault(x=>x.Id == item.ServiceId);
                 if(string.IsNullOrEmpty(item.Products))
                     continue;
                 try
@@ -186,7 +183,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 // Set EPPlus License Context
             
                 // Use shared predicate that matches Index filters
-                var predicate = BuildContactPredicate(key, status, startTime, endTime, serviceId, portalId, Contact.ContactType.Product);
+                var predicate = BuildContactPredicate(key, status, startTime, endTime, serviceId, portalId, Contact.ContactType.Contact);
 
                 // Get data with same filter as IndexPost but without pagination
                 var data = await _iContactRepository.SearchAsync(
@@ -197,12 +194,10 @@ namespace PT.BE.Areas.Manager.Controllers
                     OrderByExtention(ordertype, orderby));
 
                 // Load related data
-                var listCates = await _iContentPageRepository.SearchAsync(true, 0, 0, x => x.CategoryType == ECategoryType.ContentPage_Solution);
-                var products = await _iContentPageRepository.SearchAsync(true, 0, 0, x => x.CategoryType == ECategoryType.ContentPage_FlowItems);
+                var products = await _iContentPageRepository.SearchAsync(true, 0, 0, x => x.CategoryType == ECategoryType.ContentPage_Flow);
 
                 foreach (var item in data)
                 {
-                    item.Solution = listCates.FirstOrDefault(x => x.Id == item.ServiceId);
                     if (!string.IsNullOrEmpty(item.Products))
                     {
                         try
@@ -221,7 +216,7 @@ namespace PT.BE.Areas.Manager.Controllers
 
                     // Set up template header
                     worksheet.Cells["A1:J1"].Merge = true;
-                    worksheet.Cells["A1"].Value = "DANH SÁCH LIÊN HỆ NHẬN TƯ VẤN";
+                    worksheet.Cells["A1"].Value = "DANH SÁCH LIÊN HỆ NHẬN TIN";
                     worksheet.Cells["A1"].Style.Font.Size = 16;
                     worksheet.Cells["A1"].Style.Font.Bold = true;
                     worksheet.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -241,8 +236,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     worksheet.Cells[headerRow, 4].Value = "Email";
                     worksheet.Cells[headerRow, 5].Value = "Tên công ty";
                     worksheet.Cells[headerRow, 6].Value = "Chức danh công việc";
-                    worksheet.Cells[headerRow, 7].Value = "Nhóm ngành";
-                    worksheet.Cells[headerRow, 8].Value = "Sản phẩm quan tâm";
+                    worksheet.Cells[headerRow, 8].Value = "Lĩnh vực";
                     worksheet.Cells[headerRow, 9].Value = "Mô tả chi tiết";
                     worksheet.Cells[headerRow, 10].Value = "Ngày gửi";
 
@@ -272,7 +266,6 @@ namespace PT.BE.Areas.Manager.Controllers
                         worksheet.Cells[row, 4].Value = Functions.SContent(item.Email ?? "");
                         worksheet.Cells[row, 5].Value = Functions.SContent(item.ConpanyName ?? "");
                         worksheet.Cells[row, 6].Value = Functions.SContent(item.Position ?? "");
-                        worksheet.Cells[row, 7].Value = item.Solution != null ? Functions.SContent(item.Solution.Name ?? "") : "";
                         worksheet.Cells[row, 8].Value = item.ProductsList != null && item.ProductsList.Any()
                             ? string.Join(", ", item.ProductsList.Select(p => Functions.SContent(p.Name ?? "")))
                             : "";
@@ -313,7 +306,6 @@ namespace PT.BE.Areas.Manager.Controllers
                     worksheet.Column(4).Width = 30;  // Email
                     worksheet.Column(5).Width = 30;  // Tên công ty
                     worksheet.Column(6).Width = 25;  // Chức danh
-                    worksheet.Column(7).Width = 25;  // Nhóm ngành
                     worksheet.Column(8).Width = 40;  // Sản phẩm
                     worksheet.Column(9).Width = 50;  // Mô tả
                     worksheet.Column(10).Width = 18; // Ngày gửi
@@ -337,7 +329,5 @@ namespace PT.BE.Areas.Manager.Controllers
             }
         }
         #endregion
-
-
     }
 }

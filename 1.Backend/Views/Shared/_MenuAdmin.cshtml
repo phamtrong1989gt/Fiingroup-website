@@ -31,27 +31,40 @@
                     </a>
                 </li>
 
-                <li class="cap2" data-checked data-role-1038>
+         @*        <li class="cap2" data-checked data-role-1038>
                     <a asp-action="Index" asp-controller="ImageGalleryManager" asp-area="Manager">
                         Thư viện hình ảnh
                     </a>
-                </li>
+                </li> *@
             </ul>
         </li>
 
-        <li class="cap1" data-checked data-role-1029 data-role-1030 data-role-1031>
-            <a href="javascript:void(0);" class="menu-toggle">
-                <i class="material-icons">folder_special</i>
-                <span>Quản lý danh mục</span>
+        <li class="cap1" data-checked data-role-12>
+            <a asp-action="Index" asp-controller="ContactManager" asp-area="Manager">
+                <i class="material-icons">assignment</i>
+                <span>QL Đăng ký nhận tư vấn</span>
             </a>
-            <ul class="ml-menu">
-                <li class="cap2" data-checked data-role-1029>
-                    <a asp-action="Index" asp-controller="CategoryManager" asp-area="Manager">Danh mục</a>
-                </li>
-                <li class="cap2" data-checked data-role-1031>
-                    <a asp-action="Index" asp-controller="TagManager" asp-area="Manager">Tag</a>
-                </li>
-            </ul>
+        </li>
+
+        <li class="cap1" data-checked data-role-12>
+            <a asp-action="Index" asp-controller="Contact2Manager" asp-area="Manager">
+                <i class="material-icons">article</i>
+                <span>QL Đăng ký nhận tin</span>
+            </a>
+        </li>
+
+        <li class="cap1" data-checked data-role-12>
+            <a asp-action="Index" asp-controller="PageSettings" asp-area="Base">
+                <i class="material-icons">web</i>
+                <span>Quản lý trang</span>
+            </a>
+        </li>
+
+        <li data-checked data-role-1040 class="cap1">
+            <a asp-action="ManagerView" asp-controller="FileManager" asp-area="Base">
+                <i class="material-icons">folder</i>
+                <span>Quản lý file</span>
+            </a>
         </li>
 
         <li class="cap1" data-checked data-role-1028 data-role-1025 data-role-1026 data-role-1027>
@@ -72,52 +85,24 @@
                 <li class="cap2" data-checked data-role-1028>
                     <a asp-action="Index" asp-controller="AdvertisingBannerManager" asp-area="Manager">Banner quảng cáo</a>
                 </li>
-        @*         <li class="cap2" data-checked data-role-1028>
-                    <a asp-action="Index" asp-controller="AdvertisingHomepageManager" asp-area="Manager">Popup quảng cáo trang chủ</a>
-                </li> *@
             </ul>
         </li>
- 
-        <li class="cap1" data-checked data-role-1035 data-role-1034 data-role-1024>
+
+        <li class="cap1" data-checked data-role-1029 data-role-1030 data-role-1031>
             <a href="javascript:void(0);" class="menu-toggle">
-                <i class="material-icons">folder_shared</i>
-                <span>Khách hàng</span>
+                <i class="material-icons">folder_special</i>
+                <span>Quản lý danh mục</span>
             </a>
             <ul class="ml-menu">
-             @*    <li class="cap2" data-checked data-role-1035>
-                    <a asp-action="Index" asp-controller="CustomerManager" asp-area="Manager">
-                        Danh sách khách hàng
-                    </a>
-                </li> *@
-                <li class="cap2" data-checked data-role-1034>
-                    <a asp-action="Index" asp-controller="ContactManager" asp-area="Manager">
-                        Đăng ký nhận tư vấn
-                    </a>
+                <li class="cap2" data-checked data-role-1029>
+                    <a asp-action="Index" asp-controller="CategoryManager" asp-area="Manager">Danh mục</a>
                 </li>
-                <li class="cap2" data-checked data-role-1034>
-                    <a asp-action="Index" asp-controller="ContactManager" asp-area="Manager">
-                        Đăng ký nhận tin
-                    </a>
+                <li class="cap2" data-checked data-role-1031>
+                    <a asp-action="Index" asp-controller="TagManager" asp-area="Manager">Tag</a>
                 </li>
-              @*   <li class="cap2" data-checked data-role-1024>
-                    <a asp-action="Index" asp-controller="TestimonialMannager" asp-area="Manager">
-                        Khách hàng đánh giá
-                    </a>
-                </li>
-                <li class="cap2" data-checked data-role-1024>
-                    <a asp-action="Index" asp-controller="TestimonialFamousPeopleMannager" asp-area="Manager">
-                        Người nổi tiếng đánh giá
-                    </a>
-                </li> *@
             </ul>
-        </li> 
-
-        <li class="cap1" data-checked data-role-12>
-            <a asp-action="Index" asp-controller="PageSettings" asp-area="Base">
-                <i class="material-icons">assignment</i>
-                <span>Quản lý trang</span>
-            </a>
         </li>
+
         <li class="header" data-checked data-role-5 data-role-1 data-role-12 data-role-1039>HỆ THỐNG</li>
         <li class="cap1" data-checked data-role-5 data-role-1>
             <a href="javascript:void(0);" class="menu-toggle">
@@ -129,23 +114,13 @@
                     <a asp-action="Index" asp-controller="UserManager" asp-area="User">Danh sách tài khoản</a>
                 </li>
                 <li class="cap2" data-checked data-role-1>
+                    <a asp-action="Index" asp-controller="LogManager" asp-area="User">Log người dùng</a>
+                </li>
+                <li class="cap2" data-checked data-role-1>
                     <a asp-action="Index" asp-controller="RoleManager" asp-area="User">Quyền tài khoản</a>
                 </li>
             </ul>
         </li>
-        <li data-checked data-role-1040 class="cap1">
-            <a asp-action="ManagerView" asp-controller="FileManager" asp-area="Base">
-                <i class="material-icons">folder</i>
-                <span>Quản lý file</span>
-            </a>
-        </li>
-        <li data-checked data-role-27 class="cap1">
-            <a asp-action="Index" asp-controller="LogManager" asp-area="User">
-                <i class="material-icons">update</i>
-                <span>Log người dùng</span>
-            </a>
-        </li>
-
 
         <li class="cap1" data-checked data-role-1029 data-role-1030 data-role-1031>
             <a href="javascript:void(0);" class="menu-toggle">

@@ -15,7 +15,7 @@
     var listFlow = await _iContentPageRepository.SearchAsync(true,0, 0 , x => x.Language == language && x.PortalId == portalId && x.CategoryType == ECategoryType.ContentPage_Flow && x.Status);
     var listServies = listFlow.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
     {
-        Value = x.Name,
+        Value = x.Id.ToString(),
         Text = x.Name
     }).ToList();
 }
