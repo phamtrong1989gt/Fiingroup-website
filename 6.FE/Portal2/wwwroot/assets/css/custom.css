@@ -773,4 +773,17 @@
     }
     #WhatWe .number{font-size:40px;}
     .why-desc{padding-right:0 !important;}
+    .menu-news{display:none !important}
+    #Banner{height: auto !important;}
+    #NewButton{margin:10px !important;}
+    #NewButton .btn {
+            margin: 10px !important;
+        }
+    #content-bind {
+        margin:20px 0 0;
+    }
+    .news-content iframe{width:100%;}
+    #Banner h1 {
+        padding: 6% 3% !important;
+    }
 }
