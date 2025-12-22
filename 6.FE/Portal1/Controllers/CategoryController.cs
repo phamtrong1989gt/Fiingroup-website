@@ -109,7 +109,7 @@ namespace PT.UI.Controllers
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     // lấy danh mục event 
                     var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.CategoryType == ECategoryType.ContentPage_Event && x.Status && x.ParentId == 0 && x.Language == language && x.PortalId == dl.PortalId);
-                    if(eventCategory != null)
+                    if (eventCategory != null)
                     {
                         var listEvent = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
                         {
@@ -121,9 +121,9 @@ namespace PT.UI.Controllers
                         }, language ?? "vi");
 
                         dl.EventTop = (listEvent ?? new NewsListResponse { Items = [] });
-                    }    
+                    }
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
-                }    
+                }
                 viewName = "News";
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Event)
@@ -235,6 +235,31 @@ namespace PT.UI.Controllers
             objectLink.Title = $"{objectLink.Title}{((page == null) ? "" : (language == "vi" ? $" - trang {page}" : $" - page {page}"))}";
             //ViewData["linkData"] = objectLink;
             return View(viewName, dl);
+        }
+        public IActionResult Rakings(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Rakings");
+        }
+        public IActionResult Product(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Product");
+        }
+        public IActionResult Methodology(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Methodology");
+        }
+        public IActionResult Services(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Services");
+        }
+        public IActionResult Finance(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Finance");
         }
     }
 }

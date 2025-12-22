@@ -15,9 +15,8 @@
             <div class="helper-text">
                 <strong><i class="material-icons" style="vertical-align: middle;">info</i> Cách sử dụng:</strong>
                 <ul style="margin: 5px 0 0 20px; font-size: 13px;">
-                    <li><strong>Click template</strong> bên dưới để load cả HTML và JSON</li>
-                    <li>Hoặc tự viết template với <code>[For]...[/For]</code> và <code>[fieldName]</code></li>
-                    <li><span class="badge badge-warning">⚠️ Cảnh báo: Load template sẽ ghi đè dữ liệu hiện tại!</span></li>
+                    <li><strong>Hover vào template</strong> để xem hướng dẫn chi tiết trước khi sử dụng</li>
+                    <li><strong>Click template</strong> để load cả HTML và JSON (sẽ ghi đè nội dung hiện tại)</li>
                     <li><span class="badge badge-info">Template Source: @Model.TemplateSource</span></li>
                 </ul>
             </div>
@@ -65,7 +64,7 @@
 <div id="confirmDialog_@Model.SectionNumber" class="confirm-dialog-overlay" style="display: none;">
     <div class="confirm-dialog-box">
         <div class="confirm-dialog-header">
-            <i class="material-icons" style="color: #ff9800; font-size: 48px;">warning</i>
+            @* <i class="material-icons" style="color: #ff9800; font-size: 48px;">warning</i> *@
             <h3>⚠️ Xác nhận load template</h3>
         </div>
         <div class="confirm-dialog-body">
@@ -76,11 +75,11 @@
             </div>
         </div>
         <div class="confirm-dialog-footer">
-            <button type="button" class="btn btn-secondary" id="confirmCancel_@Model.SectionNumber">
-                <i class="material-icons">close</i> Hủy
+            <button type="button" class="btn btn-icon  btn-p-t waves-effect btn-secondary" id="confirmCancel_@Model.SectionNumber">
+                <i class="material-icons">close</i> <span>Hủy</span>
             </button>
-            <button type="button" class="btn btn-warning" id="confirmOk_@Model.SectionNumber">
-                <i class="material-icons">check_circle</i> Đồng ý, load template
+            <button type="button" class="btn btn-icon  btn-p-t waves-effect btn-warning" id="confirmOk_@Model.SectionNumber">
+                <i class="material-icons">check_circle</i> <span>Đồng ý, load template</span>
             </button>
         </div>
     </div>
@@ -101,6 +100,7 @@
         transition: all 0.3s;
         font-size: 13px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        position: relative;
     }
     .template-btn-unified:hover {
         transform: translateY(-2px);
@@ -110,10 +110,82 @@
         background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
         box-shadow: 0 4px 12px rgba(76,175,80,0.4);
     }
+    .template-btn-unified.active::after {
+        content: '✓';
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #4caf50;
+        color: white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
     .template-btn-unified i {
         font-size: 16px;
         vertical-align: middle;
         margin-right: 5px;
+    }
+    
+    /* Tooltip */
+    .template-tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-10px);
+        background: #333;
+        color: white;
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-size: 12px;
+        white-space: pre-line;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s;
+        min-width: 300px;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        line-height: 1.6;
+    }
+    .template-tooltip::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 8px solid transparent;
+        border-top-color: #333;
+    }
+    .template-btn-unified:hover .template-tooltip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-5px);
+    }
+    .template-tooltip strong {
+        color: #4fc3f7;
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+    }
+    .template-tooltip ul {
+        margin: 8px 0 0 0;
+        padding-left: 20px;
+        list-style: disc;
+    }
+    .template-tooltip li {
+        margin: 4px 0;
+    }
+    .template-tooltip code {
+        background: #444;
+        padding: 2px 6px;
+        border-radius: 3px;
+        color: #ffa726;
     }
     
     /* Confirmation Dialog */
@@ -154,42 +226,6 @@
         margin: 10px 0;
         line-height: 1.6;
     }
-    .confirm-dialog-footer {
-        padding: 15px 20px;
-        border-top: 1px solid #e0e0e0;
-        text-align: right;
-    }
-    .confirm-dialog-footer .btn {
-        margin-left: 10px;
-        padding: 8px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s;
-    }
-    .confirm-dialog-footer .btn i {
-        vertical-align: middle;
-        margin-right: 5px;
-        font-size: 18px;
-    }
-    .confirm-dialog-footer .btn-secondary {
-        background: #6c757d;
-        color: white;
-    }
-    .confirm-dialog-footer .btn-secondary:hover {
-        background: #5a6268;
-    }
-    .confirm-dialog-footer .btn-warning {
-        background: #ff9800;
-        color: white;
-        font-weight: bold;
-    }
-    .confirm-dialog-footer .btn-warning:hover {
-        background: #f57c00;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
-    }
     
     @@keyframes fadeIn {
         from { opacity: 0; }
@@ -204,6 +240,12 @@
             transform: translateY(0);
             opacity: 1;
         }
+    }
+    .confirm-dialog-footer
+    {
+        text-align:center;
+        padding: 10px 20px 20px 10px;
+        background:#eee;
     }
 </style>
 
@@ -254,6 +296,58 @@
             return templateValue.length > 0 || jsonValue.length > 0;
         }
         
+        // =============================================
+        // AUTO-DETECT: Extract template name from HTML comment
+        // =============================================
+        function detectCurrentTemplate() {
+            var htmlContent = getEditorValue('@Model.InputTemplate').trim();
+            if (!htmlContent) return null;
+            
+            // Match <!--TemplateName--> in first line
+            var match = htmlContent.match(/^<!--\s*(.+?)\s*-->/);
+            if (match && match[1]) {
+                var detectedName = match[1].trim();
+                console.log('🔍 Detected template name from comment: "' + detectedName + '"');
+                return detectedName;
+            }
+            
+            console.log('ℹ️ No template name comment found in HTML');
+            return null;
+        }
+        
+        // =============================================
+        // AUTO-ACTIVATE: Active template button based on detected name
+        // =============================================
+        function autoActivateTemplate() {
+            var detectedName = detectCurrentTemplate();
+            if (!detectedName) return;
+            
+            var templates = window[templateSource];
+            if (!templates) return;
+            
+            // Find matching template by name
+            var matchingKey = null;
+            for (var key in templates) {
+                if (templates[key].name === detectedName) {
+                    matchingKey = key;
+                    break;
+                }
+            }
+            
+            if (matchingKey) {
+                console.log('✅ Auto-activating template: ' + matchingKey);
+                currentTemplateKey = matchingKey;
+                
+                // Activate button
+                setTimeout(function() {
+                    $('.load-template-' + sectionNumber).removeClass('active');
+                    $('.load-template-' + sectionNumber + '[data-template="' + matchingKey + '"]').addClass('active');
+                }, 300);
+            } else {
+                console.log('⚠️ No template found matching name: "' + detectedName + '"');
+            }
+        }
+        
         // Icon mapping
         var iconMapping = {
             'hero': { icon: 'panorama', color: '#667eea' },
@@ -271,11 +365,12 @@
             'pricing': { icon: 'attach_money', color: '#fee140' },
             'faq': { icon: 'help_outline', color: '#89f7fe' },
             'contact': { icon: 'contact_mail', color: '#66a6ff' },
+            'gallery': { icon: 'photo_library', color: '#fc5c7d' },
             'custom': { icon: 'extension', color: '#9e9e9e' }
         };
         
         // =============================================
-        // Generate Quick Templates - GỘP HTML + JSON
+        // Generate Quick Templates - GỘP HTML + JSON với TOOLTIP
         // =============================================
         function generateQuickTemplates() {
             var templates = window[templateSource];
@@ -305,6 +400,12 @@
             templateKeys.forEach(function(key) {
                 var template = templates[key];
                 var iconData = getIconForTemplate(key);
+                var description = template.description || 'Template ' + template.name;
+                
+                // Xử lý usage: nếu là array hoặc string, format thành HTML
+                var usageHtml = template.usage 
+                    ? formatUsage(template.usage) 
+                    : formatUsage(generateUsageFromValues(template.values));
                 
                 html += '<button class="template-btn-unified load-template-' + sectionNumber + '" ';
                 html += '        data-template="' + key + '" ';
@@ -312,12 +413,24 @@
                 html += '        type="button">';
                 html += '  <i class="material-icons">' + iconData.icon + '</i>';
                 html += '  <span>' + template.name + '</span>';
+                
+                // TOOLTIP
+                html += '  <div class="template-tooltip">';
+                html += '    <strong>📋 ' + template.name + '</strong>';
+                html += '    <div>' + description + '</div>';
+                html += '    <ul>' + usageHtml + '</ul>';
+                html += '    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #555; font-size: 11px; color: #aaa;">💡 Hover để xem chi tiết • Click để load</div>';
+                html += '  </div>';
+                
                 html += '</button>';
             });
             html += '</div>';
             
             $('#' + containerId).html(html);
             console.log('✓ Templates loaded for section ' + sectionNumber);
+            
+            // Auto-activate template sau khi load xong
+            setTimeout(autoActivateTemplate, 100);
         }
         
         // Helper: Get icon for template
@@ -330,42 +443,122 @@
             return iconMapping['custom'];
         }
         
+        // Helper: Generate usage from values structure
+        function generateUsageFromValues(values) {
+            var usage = [];
+            
+            for (var key in values) {
+                if (Array.isArray(values[key])) {
+                    var arrayLength = values[key].length;
+                    var firstItem = values[key][0] || {};
+                    var fields = Object.keys(firstItem).filter(function(k) { return k !== 'index'; }).slice(0, 3);
+                    
+                    if (key.startsWith('ForPage')) {
+                        usage.push(key + ': ' + arrayLength + ' items/page (fields: ' + fields.join(', ') + ')');
+                    } else if (key.startsWith('For')) {
+                        usage.push(key + ': ' + arrayLength + ' items (fields: ' + fields.join(', ') + ')');
+                    } else {
+                        usage.push(key + ': Array gồm ' + arrayLength + ' items');
+                    }
+                } else if (typeof values[key] === 'object') {
+                    usage.push(key + ': Object');
+                } else {
+                    var valueStr = String(values[key]).substring(0, 30);
+                    usage.push(key + ': ' + (valueStr.length > 30 ? valueStr + '...' : valueStr));
+                }
+            }
+            
+            return usage.length > 0 ? usage : ['Không có thông tin cấu trúc'];
+        }
+        
+        // Helper: Format usage (array hoặc string) thành HTML list
+        function formatUsage(usage) {
+            if (Array.isArray(usage)) {
+                // Nếu là array, render từng item thành <li>
+                return usage.map(function(item) {
+                    return '<li>' + item + '</li>';
+                }).join('');
+            } else if (typeof usage === 'string') {
+                // Nếu là string HTML có <li>, return trực tiếp
+                return usage;
+            } else {
+                return '<li>Không có hướng dẫn</li>';
+            }
+        }
+        
         // =============================================
         // Confirmation Dialog
         // =============================================
         function showConfirmDialog(templateKey, templateName) {
+            console.log('🔔 showConfirmDialog called:', {
+                section: sectionNumber,
+                templateKey: templateKey,
+                templateName: templateName
+            });
+            
             pendingTemplateKey = templateKey;
             $('#confirmTemplateName_' + sectionNumber).text(templateName);
-            $('#confirmDialog_' + sectionNumber).fadeIn(200);
+            
+            var $dialog = $('#confirmDialog_' + sectionNumber);
+            console.log('  Dialog element found:', $dialog.length > 0);
+            console.log('  Dialog ID:', 'confirmDialog_' + sectionNumber);
+            console.log('  Pending template key stored:', pendingTemplateKey);
+            
+            // Force show with display block
+            $dialog.css('display', 'flex').hide().fadeIn(200);
+            
+            console.log('  ✅ Dialog should be visible now');
         }
         
         function hideConfirmDialog() {
+            console.log('🔕 hideConfirmDialog called for section:', sectionNumber);
+            console.log('  Clearing pending template key:', pendingTemplateKey);
             $('#confirmDialog_' + sectionNumber).fadeOut(200);
             pendingTemplateKey = null;
         }
         
         // =============================================
-        // Load Template - GỘP HTML + JSON
+        // Load Template - GỘP HTML + JSON với comment header
         // =============================================
         function loadTemplate(templateKey, skipConfirm) {
+            console.log('📥 loadTemplate called:', {
+                section: sectionNumber,
+                templateKey: templateKey,
+                skipConfirm: skipConfirm
+            });
+            
             var templates = window[templateSource];
-            if (!templates || !templates[templateKey]) return;
+            if (!templates || !templates[templateKey]) {
+                console.error('❌ Template not found:', templateKey);
+                return;
+            }
             
             var template = templates[templateKey];
+            console.log('  Template found:', template.name);
+            
+            // Check if has content
+            var hasContent = hasEditorContent();
+            console.log('  Has editor content:', hasContent);
             
             // Nếu có nội dung và không skip confirm → Show confirm dialog
-            if (!skipConfirm && hasEditorContent()) {
+            if (!skipConfirm && hasContent) {
+                console.log('  ⚠️ Has content & need confirm → Showing dialog...');
                 showConfirmDialog(templateKey, template.name);
                 return;
             }
+            
+            console.log('  ✅ Proceeding to load template (skipConfirm or empty)...');
             
             // Remove active class from all buttons
             $('.load-template-' + sectionNumber).removeClass('active');
             // Add active class to clicked button
             $('.load-template-' + sectionNumber + '[data-template="' + templateKey + '"]').addClass('active');
             
+            // Add comment header with template name for auto-detection
+            var htmlWithComment = '<!--' + template.name + '-->\n' + template.template;
+            
             // Load cả HTML và JSON
-            setEditorValue('@Model.InputTemplate', template.template);
+            setEditorValue('@Model.InputTemplate', htmlWithComment);
             setEditorValue('@Model.InputValue', JSON.stringify(template.values, null, 2));
             
             currentTemplateKey = templateKey;
@@ -398,35 +591,59 @@
         
         // Click template button - Load cả HTML và JSON (with confirmation)
         $(document).on('click', '.load-template-' + sectionNumber, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             var templateKey = $(this).data('template');
+            console.log('🖱️ Template button clicked:', templateKey, 'Section:', sectionNumber);
             loadTemplate(templateKey, false); // false = cần confirm
         });
         
-        // Confirm Dialog - OK button
-        $('#confirmOk_' + sectionNumber).on('click', function() {
+        // Confirm Dialog - OK button (với selector cụ thể hơn)
+        $(document).on('click', '#confirmOk_' + sectionNumber, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('✅ Confirm OK clicked for section:', sectionNumber);
+            console.log('  Current pendingTemplateKey:', pendingTemplateKey);
+            console.log('  Button ID:', this.id);
+            
             if (pendingTemplateKey) {
+                // LƯU VÀO BIẾN TẠM TRƯỚC KHI HIDE (vì hideConfirmDialog sẽ set = null)
+                var templateToLoad = pendingTemplateKey;
+                console.log('  ➡️ Stored templateToLoad:', templateToLoad);
+                
+                console.log('  ➡️ Calling hideConfirmDialog()...');
                 hideConfirmDialog();
-                loadTemplate(pendingTemplateKey, true); // true = skip confirm
+                
+                console.log('  ➡️ Calling loadTemplate with skipConfirm=true...');
+                loadTemplate(templateToLoad, true); // true = skip confirm
+            } else {
+                console.error('  ❌ ERROR: pendingTemplateKey is null or undefined!');
+                alert('Lỗi: Không tìm thấy template cần load. Vui lòng thử lại.');
             }
         });
         
         // Confirm Dialog - Cancel button
-        $('#confirmCancel_' + sectionNumber).on('click', function() {
+        $(document).on('click', '#confirmCancel_' + sectionNumber, function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('❌ Confirm Cancel clicked for section:', sectionNumber);
             hideConfirmDialog();
             showNotification('info', 'ℹ️ Đã hủy load template');
         });
         
         // Confirm Dialog - Click overlay to close
-        $('#confirmDialog_' + sectionNumber).on('click', function(e) {
-            if ($(e.target).hasClass('confirm-dialog-overlay')) {
+        $(document).on('click', '#confirmDialog_' + sectionNumber, function(e) {
+            if ($(e.target).is('#confirmDialog_' + sectionNumber)) {
+                console.log('🖱️ Overlay clicked for section:', sectionNumber);
                 hideConfirmDialog();
                 showNotification('info', 'ℹ️ Đã hủy load template');
             }
         });
         
-        // ESC key to close dialog
-        $(document).on('keydown', function(e) {
+        // ESC key to close dialog (với namespace để tránh conflict)
+        $(document).on('keydown.confirmDialog' + sectionNumber, function(e) {
             if (e.keyCode === 27 && $('#confirmDialog_' + sectionNumber).is(':visible')) {
+                console.log('⌨️ ESC pressed for section:', sectionNumber);
                 hideConfirmDialog();
                 showNotification('info', 'ℹ️ Đã hủy load template');
             }
@@ -439,11 +656,9 @@
             generateQuickTemplates();
             
             // ===== FIX: REFRESH CODEMIRROR WHEN PANEL OPENS =====
-            // Listen to Bootstrap collapse events
             $('#@Model.CollapseId').on('shown.bs.collapse', function () {
                 console.log('🔄 Panel opened - Refreshing CodeMirror editors for section ' + sectionNumber);
                 
-                // Refresh editors after panel is fully shown
                 setTimeout(function() {
                     if (window.pageEditors && window.pageEditors.get) {
                         var htmlEditor = window.pageEditors.get('@Model.InputTemplate');
@@ -461,10 +676,13 @@
                         
                         console.log('✅ CodeMirror editors refreshed for section ' + sectionNumber);
                     }
-                }, 100); // Small delay to ensure DOM is ready
+                    
+                    // Auto-detect template after refresh
+                    autoActivateTemplate();
+                }, 100);
             });
             
-            console.log('✅ Section ' + sectionNumber + ' initialized with confirmation dialog and auto-refresh');
+            console.log('✅ Section ' + sectionNumber + ' initialized with tooltip, auto-detect & confirmation');
         });
         
         // Animation CSS

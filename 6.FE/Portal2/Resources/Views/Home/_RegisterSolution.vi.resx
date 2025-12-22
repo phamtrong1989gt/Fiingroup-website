@@ -132,6 +132,10 @@
   <data name="FullName" xml:space="preserve">
     <value>Họ và tên 1</value>
   </data>
+  <data name="MsgNotUse" xml:space="preserve">
+    <value>Vui lòng chọn ít nhất 1 mục.</value>
+    <comment>Vui lòng chọn ít nhất 1 mục.</comment>
+  </data>
   <data name="NoProducts" xml:space="preserve">
     <value>Không có sản phẩm nào</value>
   </data>

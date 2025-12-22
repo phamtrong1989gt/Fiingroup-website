@@ -59,10 +59,11 @@
                         </div>
 
                         <div class="col-sm-12 mb-2">
-                            <label class="form-label" asp-for="Products"></label>
+                            <label class="form-label" asp-for="Products"></label> <strong class="error">*</strong>
                             <select class="form-select" id="sanPhamQT" multiple="multiple">
                                 <option value="">@Localizer["SelectProducts"]</option>
                             </select>
+                            <span class="validate-style" asp-validation-for="Products"></span>
                         </div>
                         <div class="col-sm-12 mb-2">
                             <label class="form-label" asp-for="Content"></label>
@@ -99,6 +100,33 @@
       const $form = $('#formLienHe');
       $form.on('submit', function (e) {
         e.preventDefault();
+
+        // Validate ServiceId
+        var serviceVal = $('#dichVuQT').val();
+        var $serviceMsg = $('[data-valmsg-for="ServiceId"]');
+        if (!serviceVal || serviceVal.toString().trim() === '') {
+          $serviceMsg.text('Vui lòng chọn dịch vụ.');
+          $serviceMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+          $('#dichVuQT').focus();
+          return;
+        } else {
+          $serviceMsg.text('');
+          $serviceMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
+        // Validate products (select2 -> hidden input #products)
+        var productsVal = $('#products').val();
+        var $prodMsg = $('[data-valmsg-for="Products"]');
+        if (!productsVal || productsVal.toString().trim() === '') {
+          $prodMsg.text('@Localizer["MsgNotUse"]');
+          $prodMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+          $('#sanPhamQT').select2('open');
+          return;
+        } else {
+          $prodMsg.text('');
+          $prodMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
         if (!$form.valid()) {
           return;
         }
@@ -135,6 +163,7 @@
         let selected = $(this).val();
         if (selected && selected.length > 0) {
             $("#products").val(selected.join("; "));
+            $('[data-valmsg-for="Products"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
         } else {
             $("#products").val("");
         }
@@ -146,6 +175,10 @@
         let portId = '@portalId';
         let parentId = serviceId;
         $("#products").val("");
+        // clear service validation on change
+        if (serviceId && serviceId.toString().trim() !== '') {
+            $('[data-valmsg-for="ServiceId"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
+        }
         if (!serviceId) {
             $("#sanPhamQT").empty()
                 .append('<option value="">@Localizer["SelectProducts"]</option>');

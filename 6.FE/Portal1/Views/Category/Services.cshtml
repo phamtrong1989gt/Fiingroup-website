@@ -1,0 +1,24 @@
+﻿@model PT.Domain.Model.Category
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using Microsoft.Extensions.Options
+@using PT.Domain.Model
+@using PT.Shared;
+@using PT.UI.Models
+@inject IOptions<BaseSettings> _baseSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+@inject PT.Infrastructure.Interfaces.ICategoryRepository _iCategoryRepository;
+@{
+	Layout = "~/Views/Shared/_Home.cshtml";
+	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+	var portalId = _baseSettings.Value.PortalId;
+}
+
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRServicesBanner", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRServicesTongQuan", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRServicesCacConSo", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRServicesFiinRatings", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "PRProductKhachHang", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRServicesTeams", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsLienHe", language = language, portalId = portalId })

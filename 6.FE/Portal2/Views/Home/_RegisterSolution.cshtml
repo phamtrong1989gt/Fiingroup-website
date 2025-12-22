@@ -90,9 +90,27 @@
       const $form = $('#formLienHe2');
       $form.on('submit', function (e) {
         e.preventDefault();
+              
+        // Validate products (select2 -> hidden input #products2)
+        var productsVal = $('#products2').val();
+        var $prodMsg = $('[data-valmsg-for="Products"]');
+
+        if (!productsVal || productsVal.toString().trim() === '') {
+          // show validation message and prevent submit
+          $prodMsg.text('@Localizer["MsgNotUse"]');
+          $prodMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+          $('#dichVuQT2').select2('open');
+          return;
+        } else {
+          // clear previous message
+          $prodMsg.text('');
+          $prodMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
         if (!$form.valid()) {
           return;
         }
+
         const token = $form.find('input[name="__RequestVerificationToken"]').val();
         $.ajax({
           url: '@Url.Action("ContactSolution", "ContactHome")',
@@ -134,6 +152,8 @@
             let $popup = $(this).closest(".modal"); // lấy đúng popup đang mở
             if (Array.isArray(selected) && selected.length > 0) {
                 $popup.find("#products2").val(selected.join("; "));
+                // clear validation message when user selects
+                $popup.find('[data-valmsg-for="Products"]').text("").addClass('field-validation-valid').removeClass('field-validation-error');
             }
             else {
                 $popup.find("#products2").val("");

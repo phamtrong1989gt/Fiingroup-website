@@ -122,6 +122,35 @@
                                             <textarea id="ricktextSummary" class="form-control form-control-t" rows="2" placeholder="Tóm tắt" asp-for="Summary"></textarea>
                                         </div>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-label" for="StartDate">Thời gian bắt đầu sự kiện</label>
+                                                <div class="input-group input-group-t">
+                                                    <div class="input-group-addon br-none">&nbsp;<i class="material-icons">event_available</i></div>
+                                                    <input type="text" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm")" class="form-control input-sm form-control-t" asp-for="StartDate" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-label" for="TimeFromTo">Thời gian sự kiện</label>
+                                                <div class="controls">
+                                                    <input type="text" class="form-control input-sm form-control-t" placeholder="Ví dụ: 10:00 - 11:30" asp-for="TimeFromTo" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-label" for="TimeFromTo">Địa chỉ sự kiện</label>
+                                                <div class="controls">
+                                                    <input type="text" class="form-control input-sm form-control-t" placeholder="Ví dụ: Kiến Hưng, Hà Nội" asp-for="Address" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <input type="hidden" seo-page-content asp-for="Content" />
                                 </div>
                             </div>
@@ -233,6 +262,26 @@
                             ButtonAddItem = "btnAddItem5"
                         })" />
 
+                        @* =========================================
+                           SECTION 6 - Sponsors
+                           ========================================= *@
+                        <partial name="_SectionTemplateBuilder" model="@(new PT.Domain.Model.SectionTemplateBuilderModel
+                        { 
+                            SectionNumber = 6,
+                            Title = "Section VI: Gallery",
+                            Icon = "business_center",   
+                            IsExpanded = false,
+                            InputTemplate = nameof(Model.Input11),
+                            InputValue = nameof(Model.Input12),
+                            TemplateLabel = "Input 11 - Template HTML",
+                            ValueLabel = "Input 12 - Values (JSON)",
+                            TemplateValue = Model.Input11,
+                            ValueJson = Model.Input12,
+                            TemplateSource = "SectionTemplates6",
+                            ButtonAddField = "btnAddField6",
+                            ButtonAddItem = "btnAddItem6"
+                         })" />
+
                         <partial name="_ReferenceModule" model="@(new PT.Domain.Model.LinkReferenceBaseModel() { Language =Model.Language , Type = PT.Domain.Model.ESlugType.ContentPage, LinkId = Model.LinkId, PortalId = Model.PortalId })" />
                         <partial name="_SeoModule" model="@(PT.Shared.MapModel<PT.Domain.Model.SeoModel>.Go(Model))" />
                     </div>
@@ -306,6 +355,7 @@
 <script asp-append-version="true" src="~/js/templates/section-templates-3.js"></script>
 <script asp-append-version="true" src="~/js/templates/section-templates-4.js"></script>
 <script asp-append-version="true" src="~/js/templates/section-templates-5.js"></script>
+<script asp-append-version="true" src="~/js/templates/section-templates-6.js"></script>
 <script asp-append-version="true" src="~/js/section-template-engine.js"></script>
 
 <script>
@@ -318,8 +368,8 @@
         // Array 1: HTML editors (Input1, Input3, Input5, Input7, Input9, ...)
         // Array 2: JSON editors (Input2, Input4, Input6, Input8, Input10, ...)
         pageEditors = createEditors(
-            ["Input1", "Input3", "Input5", "Input7", "Input9"],  // HTML templates
-            ["Input2", "Input4", "Input6", "Input8", "Input10"]   // JSON values
+            ["Input1", "Input3", "Input5", "Input7", "Input9","Input11"],  // HTML templates
+            ["Input2", "Input4", "Input6", "Input8", "Input10", "Input12"]   // JSON values
         );
         
         // ===== SYNC EDITORS BEFORE SUBMIT =====
