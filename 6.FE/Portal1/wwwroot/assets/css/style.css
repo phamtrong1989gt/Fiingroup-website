@@ -638,17 +638,17 @@ a {
 
 #SliderBanner {
     position: inherit;
-    max-height: 688px;
+    max-height: 370px;
     width: 100%;
     display: inline-block;
 }
 
 #SliderBanner img {
-    max-height: 688px;
+    max-height: 370px;
 }
 
 #SliderBanner .carousel-caption {
-    top: 20%;
+    top: 12%;
     text-align:left!important;
     max-height:450px;
 }
@@ -658,7 +658,7 @@ a {
     color: var(--primary-color);
     width: 284px;
     height: 50px;
-    font-size: 24px;
+    font-size: 20px;
 }
 
 #SliderBanner .btn-request:hover {
@@ -973,8 +973,25 @@ a:hover {
 }
 #carouselFiin h1 {
     font-size: 56px;
+    margin:2% 0 0 0;
 }
-#carouselFiin p{font-size:16px;}
+#carouselFiin .hero-text {
+    position: relative;
+    margin: 2% 0 0 0;
+    padding: 0 0 0 10px;
+}
+    #carouselFiin .hero-text::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 10%;
+        width: 3px;
+        height: 80%;
+        background: #C3E4F6;
+    }
+#carouselFiin p {
+    font-size: 16px;
+}
 .btn-join {
     padding: 7px 20px;
     border-radius: 200px;
@@ -1081,11 +1098,11 @@ a:hover {
     transform: translateX(0);
 }
 
-@media (min-width: 1400px) {
+/*@media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
         max-width: 1230px;
     }
-}
+}*/
 
 @media (max-width: 767px) {
     .mbftyt2 {
