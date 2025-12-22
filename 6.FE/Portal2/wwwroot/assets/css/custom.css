@@ -783,4 +783,7 @@
         margin:20px 0 0;
     }
     .news-content iframe{width:100%;}
+    #Banner h1 {
+        padding: 6% 3% !important;
+    }
 }
