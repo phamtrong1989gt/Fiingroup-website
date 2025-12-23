@@ -58,7 +58,7 @@ namespace PT.BE.Areas.Manager.Controllers
         }
 
         #region [Index]
-        [AuthorizePermission]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> Index()
         {
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
@@ -66,7 +66,7 @@ namespace PT.BE.Areas.Manager.Controllers
             return View();
         }
         [HttpPost, ActionName("Index")]
-        [AuthorizePermission]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language ="vi", string ordertype = "asc", string orderby = "name", ECategoryType? categoryType = null)
         {
             page = page < 0 ? 1 : page;
@@ -136,7 +136,6 @@ namespace PT.BE.Areas.Manager.Controllers
             return functionOrder;
         }
         #endregion
-
         
         #region [Create Flow item]
         [HttpGet]

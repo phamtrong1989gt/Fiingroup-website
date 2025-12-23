@@ -1,13 +1,13 @@
 ﻿<div class="menu">
     <ul class="list" id="menuleftadmin">
         <li class="header">NỘI DUNG</li>
-        <li class="cap1 isDasb">
+        <li class="cap1 isDasb" data-role-1043>
             <a href="/Admin">
                 <i class="material-icons">home</i>
                 <span>Trang điều khiển</span>
             </a>
         </li>
-        <li class="cap1" data-checked data-role-1020 data-role-1021 data-role-1022 data-role-1023 data-role-1038>
+        <li class="cap1" data-checked data-role-1022 data-role-1044 data-role-1020>
             <a href="javascript:void(0);" class="menu-toggle">
                 <i class="material-icons">create_new_folder</i>
                 <span>Quản lý nội dung</span>
@@ -19,7 +19,7 @@
                     </a>
                 </li>
 
-                <li class="cap2" data-checked data-role-1020>
+                <li class="cap2" data-checked data-role-1044>
                     <a asp-action="Index" asp-controller="PageFlowManager" asp-area="Manager">
                         Dòng chảy & giải pháp
                     </a>
@@ -30,30 +30,24 @@
                         Trang nội dung
                     </a>
                 </li>
-
-         @*        <li class="cap2" data-checked data-role-1038>
-                    <a asp-action="Index" asp-controller="ImageGalleryManager" asp-area="Manager">
-                        Thư viện hình ảnh
-                    </a>
-                </li> *@
             </ul>
         </li>
 
-        <li class="cap1" data-checked data-role-12>
+        <li class="cap1" data-checked data-role-1034>
             <a asp-action="Index" asp-controller="ContactManager" asp-area="Manager">
                 <i class="material-icons">assignment</i>
                 <span>QL Đăng ký nhận tư vấn</span>
             </a>
         </li>
 
-        <li class="cap1" data-checked data-role-12>
+        <li class="cap1" data-checked data-role-1045>
             <a asp-action="Index" asp-controller="Contact2Manager" asp-area="Manager">
                 <i class="material-icons">article</i>
                 <span>QL Đăng ký nhận tin</span>
             </a>
         </li>
 
-        <li class="cap1" data-checked data-role-12>
+        <li class="cap1" data-checked data-role-1046>
             <a asp-action="Index" asp-controller="PageSettings" asp-area="Base">
                 <i class="material-icons">web</i>
                 <span>Quản lý trang</span>
@@ -88,13 +82,13 @@
             </ul>
         </li>
 
-        <li class="cap1" data-checked data-role-1029 data-role-1030 data-role-1031>
+        <li class="cap1" data-checked data-role-1047 data-role-1031>
             <a href="javascript:void(0);" class="menu-toggle">
                 <i class="material-icons">folder_special</i>
                 <span>Quản lý danh mục</span>
             </a>
             <ul class="ml-menu">
-                <li class="cap2" data-checked data-role-1029>
+                <li class="cap2" data-checked data-role-1047>
                     <a asp-action="Index" asp-controller="CategoryManager" asp-area="Manager">Danh mục</a>
                 </li>
                 <li class="cap2" data-checked data-role-1031>
@@ -103,8 +97,8 @@
             </ul>
         </li>
 
-        <li class="header" data-checked data-role-5 data-role-1 data-role-12 data-role-1039>HỆ THỐNG</li>
-        <li class="cap1" data-checked data-role-5 data-role-1>
+        <li class="header" data-checked data-role-5 data-role-1 data-role-10>HỆ THỐNG</li>
+        <li class="cap1" data-checked data-role-5 data-role-1 data-role-10>
             <a href="javascript:void(0);" class="menu-toggle">
                 <i class="material-icons">person_outline</i>
                 <span>Tài khoản</span>
@@ -113,7 +107,7 @@
                 <li class="cap2" data-checked data-role-5>
                     <a asp-action="Index" asp-controller="UserManager" asp-area="User">Danh sách tài khoản</a>
                 </li>
-                <li class="cap2" data-checked data-role-1>
+                <li class="cap2" data-checked data-role-10>
                     <a asp-action="Index" asp-controller="LogManager" asp-area="User">Log người dùng</a>
                 </li>
                 <li class="cap2" data-checked data-role-1>
@@ -147,12 +141,12 @@
                 <span>Cấu hình quyền</span>
             </a>
             <ul class="ml-menu">
-                <li class="cap2">
+ @*                <li class="cap2">
                     <a asp-action="Index" asp-controller="RoleGroupManager" asp-area="User">Quản lý nhóm</a>
                 </li>
                 <li class="cap2">
                     <a asp-action="Index" asp-controller="RoleAreaManager" asp-area="User">Quản lý Area</a>
-                </li>
+                </li> *@
                 <li class="cap2">
                     <a asp-action="Index" asp-controller="RoleControllerManager" asp-area="User">Quản lý controller</a>
                 </li>

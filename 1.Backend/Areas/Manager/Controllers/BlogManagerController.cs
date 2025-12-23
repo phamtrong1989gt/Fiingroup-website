@@ -77,7 +77,7 @@ namespace PT.BE.Areas.Manager.Controllers
         }
 
         #region [Index]
-        [AuthorizePermission]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> Index()
         {
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
@@ -86,7 +86,7 @@ namespace PT.BE.Areas.Manager.Controllers
         }
 
         [HttpPost, ActionName("Index")]
-        [AuthorizePermission]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? categoryId, int? tagId, bool? status, int? portalId, string language = "vi", string ordertype = "asc", string orderby = "name", ECategoryType? categoryType = null)
         {
             var allows = _iCategoryRepository.GetCategoryPrefixedTypes().Where(x=> x != ECategoryType.ContentPage_Page && x != ECategoryType.ContentPage_Solution && x != ECategoryType.ContentPage_Flow && x != ECategoryType.ContentPage_FlowItems);

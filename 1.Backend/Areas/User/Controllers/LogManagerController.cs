@@ -16,7 +16,7 @@ using PT.Base;
 namespace PT.BE.Areas.Log.Controllers
 {
     [Area("User")]
-    [AuthorizePermission]
+ 
     public class LogManagerController : BaseController
     {
         private readonly ILogRepository _ILogRepository;
@@ -33,6 +33,7 @@ namespace PT.BE.Areas.Log.Controllers
         }
         #region [Index]
         [HttpGet]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> Index()
         {
             ViewData["PageSelectListItem"] = new SelectList(await _IAspNetRoleControllerRepository.SearchAsync(true, 0, 0, m => m.Status == true), "Id", "Name");
@@ -46,6 +47,7 @@ namespace PT.BE.Areas.Log.Controllers
             return View();
         }
         [HttpPost, ActionName("Index")]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> IndexPost(int? page, int? limit, string key, int? type, string pageManager, string startTime, string endTime, string ordertype, string orderby)
         {
             ViewData["ListController"] = await _IAspNetRoleControllerRepository.SearchAsync(true, 0, 0, null);

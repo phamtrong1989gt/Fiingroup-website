@@ -38,11 +38,13 @@ namespace PT.BE.Areas.Base.Controllers
         [AuthorizePermission]
         [Route("Admin")]
         [Route("")]
+        [AuthorizePermission("Index")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [Route("Admin/AccessDenied")]
         public IActionResult AccessDenied()
         {
@@ -52,6 +54,7 @@ namespace PT.BE.Areas.Base.Controllers
         // Returns basic server and process metrics for display in admin dashboard
         [HttpGet]
         [Route("Admin/Metrics")]
+        [AuthorizePermission("Index")]
         public IActionResult Metrics()
         {
             try

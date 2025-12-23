@@ -51,7 +51,7 @@ namespace PT.BE.Areas.Manager.Controllers
         }
 
         #region [Index]
-        [AuthorizePermission]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> Index(string language = null, int? portalId = 1)
         {
             var portals = await _iPortalRepository.SearchAsync(true, 0, 0);
@@ -61,7 +61,7 @@ namespace PT.BE.Areas.Manager.Controllers
             return View();
         }
         [HttpPost, ActionName("Index")]
-        [AuthorizePermission]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> IndexPost(int? page, int? limit, string key, bool? status,int? serviceId, string startTime, int? portalId, string endTime, string ordertype = "asc", string orderby = "name")
         {
             limit = (limit > 100 || limit < 10) ? 10 : limit;
