@@ -34,28 +34,28 @@ namespace PT.UI.Controllers
             _baseSettings = baseSettings;
         }
 
-        [HttpGet]
-        [Route("{language}/ContentPage/PublicationsAjax")]
-        public async Task<ActionResult> PublicationsAjax([FromQuery] NewsQueryParameters prs)
-        {
-            ViewData["language"] = prs.Language;
-            var cmsCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.PortalId == _baseSettings.Value.PortalId && x.CategoryType == ECategoryType.ContentPage_Publications && x.ParentId == 0);
-            if (cmsCategory != null && !string.IsNullOrEmpty(cmsCategory.ExCategoryIds))
-            {
-                prs.ExCategoryIds = cmsCategory.ExCategoryIds;
-            }
-            else
-            {
-                return View("PublicationsAjax", null);
-            }
-            prs.PageSize = 3;
-            prs.Page = 1;
-            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.StatusIds = "1";
-            prs.CategoryIds = prs.ExCategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
-            return View("PublicationsAjax", listNew);
-        }
+        //[HttpGet]
+        //[Route("{language}/ContentPage/PublicationsAjax")]
+        //public async Task<ActionResult> PublicationsAjax([FromQuery] NewsQueryParameters prs)
+        //{
+        //    ViewData["language"] = prs.Language;
+        //    var cmsCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.PortalId == _baseSettings.Value.PortalId && x.CategoryType == ECategoryType.ContentPage_Publications && x.ParentId == 0);
+        //    if (cmsCategory != null && !string.IsNullOrEmpty(cmsCategory.ExCategoryIds))
+        //    {
+        //        prs.ExCategoryIds = cmsCategory.ExCategoryIds;
+        //    }
+        //    else
+        //    {
+        //        return View("PublicationsAjax", null);
+        //    }
+        //    prs.PageSize = 3;
+        //    prs.Page = 1;
+        //    prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
+        //    prs.StatusIds = "1";
+        //    prs.CategoryIds = prs.ExCategoryIds ?? "0";
+        //    var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+        //    return View("PublicationsAjax", listNew);
+        //}
 
         [HttpGet]
         [Route("{language}/ContentPage/TopNewsAjax")]

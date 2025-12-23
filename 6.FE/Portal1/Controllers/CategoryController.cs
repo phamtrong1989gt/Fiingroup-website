@@ -36,7 +36,7 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
-        [Route("{language}/ContentPage/NewsAjax")]
+        [Route("{language}/Category/NewsAjax")]
         public async Task<ActionResult> NewsAjax([FromQuery] NewsQueryParameters prs)
         {
             prs.PageSize = 9;
@@ -49,7 +49,7 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
-        [Route("{language}/ContentPage/EventAjax")]
+        [Route("{language}/Category/EventAjax")]
         public async Task<ActionResult> EventAjax([FromQuery] NewsQueryParameters prs)
         {
             //await Task.Delay(1000);
@@ -59,10 +59,33 @@ namespace PT.UI.Controllers
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
-            return View("NewsAjax", listNew);
+            var ids = listNew.Items.Select(x => x.Id).ToList();
+            // Cau id t ừ bảng CMS lưu
+            var pages = await _iContentPageRepository.SearchAsync(true, 0, 100, x => ids.Contains(x.NewsId ?? 0), null, x => new ContentPage
+            {
+                Id = x.Id,
+                NewsId = x.NewsId,
+                Status = x.Status,
+                FilePath = x.FilePath,
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                TimeFromTo = x.TimeFromTo,
+                Address = x.Address,
+            });
+
+            foreach (var item in listNew.Items)
+            {
+                var dl = pages.FirstOrDefault(x => x.NewsId == item.Id);
+                item.Address = dl?.Address;
+                item.TimeFromTo = dl?.TimeFromTo;
+                item.StartDate = dl?.StartDate;
+                item.FilePath = dl?.FilePath;
+            }
+            return View("EventAjax", listNew);
         }
+
         [HttpGet]
-        [Route("{language}/ContentPage/PublicationsAjax")]
+        [Route("{language}/Category/PublicationsAjax")]
         public async Task<ActionResult> PublicationsAjax([FromQuery] NewsQueryParameters prs)
         {
             //await Task.Delay(1000);
@@ -121,6 +144,28 @@ namespace PT.UI.Controllers
                         }, language ?? "vi");
 
                         dl.EventTop = (listEvent ?? new NewsListResponse { Items = [] });
+
+                        var ids = dl.EventTop.Items.Select(x => x.Id).ToList();
+                        // Cau id t ừ bảng CMS lưu
+                        var pages = await _iContentPageRepository.SearchAsync(true, 0, 100, x => ids.Contains(x.NewsId ?? 0), null, x => new ContentPage
+                        {
+                            Id = x.Id,
+                            NewsId = x.NewsId,
+                            Status = x.Status,
+                            FilePath = x.FilePath,
+                            StartDate = x.StartDate,
+                            EndDate = x.EndDate,
+                            TimeFromTo = x.TimeFromTo,
+                            Address = x.Address,
+                        });
+                        foreach (var item in dl.EventTop.Items)
+                        {
+                            var dlX = pages.FirstOrDefault(x => x.NewsId == item.Id);
+                            item.Address = dlX?.Address;
+                            item.TimeFromTo = dlX?.TimeFromTo;
+                            item.StartDate = dlX?.StartDate;
+                            item.FilePath = dlX?.FilePath;
+                        }
                     }
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }
@@ -144,6 +189,28 @@ namespace PT.UI.Controllers
                         StatusIds = "1"
                     }, language ?? "vi");
                     dl.DataAPI = listEvent ?? new NewsListResponse { Items = [] };
+
+                    var ids = dl.DataAPI.Items.Select(x => x.Id).ToList();
+                    // Cau id t ừ bảng CMS lưu
+                    var pages = await _iContentPageRepository.SearchAsync(true, 0, 100, x => ids.Contains(x.NewsId ?? 0), null, x => new ContentPage
+                    {
+                        Id = x.Id,
+                        NewsId = x.NewsId,
+                        Status = x.Status,
+                        FilePath = x.FilePath,
+                        StartDate = x.StartDate,
+                        EndDate = x.EndDate,
+                        TimeFromTo = x.TimeFromTo,
+                        Address = x.Address,
+                    });
+                    foreach (var item in dl.DataAPI.Items)
+                    {
+                        var dlX = pages.FirstOrDefault(x => x.NewsId == item.Id);
+                        item.Address = dlX?.Address;
+                        item.TimeFromTo = dlX?.TimeFromTo;
+                        item.StartDate = dlX?.StartDate;
+                        item.FilePath = dlX?.FilePath;
+                    }
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }
                 viewName = "Event";
@@ -235,6 +302,37 @@ namespace PT.UI.Controllers
             objectLink.Title = $"{objectLink.Title}{((page == null) ? "" : (language == "vi" ? $" - trang {page}" : $" - page {page}"))}";
             //ViewData["linkData"] = objectLink;
             return View(viewName, dl);
+        }
+
+        public IActionResult Rakings(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Rakings");
+        }
+        public IActionResult Rakings2(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Rakings2");
+        }
+        public IActionResult Product(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Product");
+        }
+        public IActionResult Methodology(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Methodology");
+        }
+        public IActionResult Services(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Services");
+        }
+        public IActionResult Finance(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("Finance");
         }
     }
 }
