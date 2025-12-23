@@ -46,8 +46,8 @@ namespace PT.Domain.Model
         public string Username { get; set; }
 
         [Display(Name = "Email")]
-        [Required(ErrorMessage = "{0} không được để trống!")]
-        [StringLength(100, ErrorMessage = "{0} ít nhất phải là {2} và tối đa {1} ký tự.", MinimumLength = 6)]
+        //[Required(ErrorMessage = "{0} không được để trống!")]
+        //[StringLength(100, ErrorMessage = "{0} ít nhất phải là {2} và tối đa {1} ký tự.", MinimumLength = 6)]
         [EmailAddress(ErrorMessage ="Không đúng định dạng email.")]
         public string Email { get; set; }
 
@@ -70,8 +70,11 @@ namespace PT.Domain.Model
         //public IEnumerable<SelectListItem> RoleSelectListItem { get; set; }
         public SelectList RoleSelectListItem { get; set; }
 
-
+        [Display(Name = "Mật khẩu")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$", ErrorMessage = "Mật khẩu phải từ 8 đến 15 ký tự, chữ cái đàu là viết hoa, và phải có ký tự đặc biệt và số.")]
+        public string Password { get; set; }
     }
+
     public class UserProfileModel
     {
         public int Id { get; set; }

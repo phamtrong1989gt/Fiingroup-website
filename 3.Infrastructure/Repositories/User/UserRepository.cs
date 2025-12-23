@@ -57,16 +57,16 @@ namespace PT.Infrastructure.Repositories
         }
         public async Task<List<DataRoleActionModel>> RoleActionsByUserAsync(int userId)
         {
-          
-              var listCa = await _db.RoleActions.Where(m =>
-                 _db.UserRoles.Any(x => x.UserId == userId && _db.RoleDetails.Any(r => r.RoleId == x.RoleId && r.ActionId == m.Id))
-                ).GroupBy(m=>m.Id).Select(m=>m.FirstOrDefault()).Select(x => new DataRoleActionModel
-                {
-                    ControllerName = x.ControllerId,
-                    AreaName = x.RoleController.AreaId,
-                    ActionName = x.Name,
-                    Id = x.Id
-                }).ToListAsync();
+            var listCa = await (from ra in _db.RoleActions
+                                join rc in _db.RoleControllers on ra.ControllerId equals rc.Id
+                                where _db.UserRoles.Any(x => x.UserId == userId && _db.RoleDetails.Any(r => r.RoleId == x.RoleId && r.ActionId == ra.Id))
+                                select new DataRoleActionModel
+                                {
+                                    ControllerName = rc.Id,
+                                    AreaName = "",
+                                    ActionName = ra.Name,
+                                    Id = ra.Id,
+                                }).Distinct().ToListAsync();
 
             return listCa;
         }

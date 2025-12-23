@@ -150,15 +150,19 @@ namespace PT.BE.Areas.User.Controllers
                     {
                         return new ResponseModel() { Output = 2, Message = "Tài khoản này đã có người sử dụng, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
                     }
-                    var ktEmail = await _userManager.FindByEmailAsync(use.Email);
-                    if (ktEmail != null)
+                    // Chỉ kiểm tra email trùng nếu có nhập email
+                    if (!string.IsNullOrWhiteSpace(use.Email))
                     {
-                        return new ResponseModel() { Output = 3, Message = "Email này đã có người sử dụng, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
+                        var ktEmail = await _userManager.FindByEmailAsync(use.Email);
+                        if (ktEmail != null)
+                        {
+                            return new ResponseModel() { Output = 3, Message = "Email này đã có người sử dụng, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
+                        }
                     }
                     var user = new ApplicationUser
                     {
                         UserName = use.Username,
-                        Email = use.Email,
+                        Email = string.IsNullOrWhiteSpace(use.Email) ? null : use.Email, // Cho phép null hoặc rỗng
                         EmailConfirmed = true,
                         DisplayName = use.DisplayName,
                         PhoneNumber = use.PhoneNumber,
@@ -169,14 +173,16 @@ namespace PT.BE.Areas.User.Controllers
                         CreatedDate = DateTime.Now,
                         CreatedUserId = UserId
                     };
-                    var result = await _userManager.CreateAsync(user, "Matkhau@168168");
+                    var result = await _userManager.CreateAsync(user, use.Password);
                     if (result.Succeeded)
                     {
-                        // Gửi email đến để đổi tài khoản
-                        var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, Request.Scheme);
-                        await Task.Run(() => SendEmail(user.Email, callbackUrl)).ConfigureAwait(false);
-
+                        // Gửi email xác nhận nếu có email
+                        if (!string.IsNullOrWhiteSpace(user.Email))
+                        {
+                            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                            var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, Request.Scheme);
+                            await Task.Run(() => SendEmail(user.Email, callbackUrl)).ConfigureAwait(false);
+                        }
                         var listRole = new List<int>();
                         // Cập nhật quyền tài khoản
                         if (use.RoleId != null)
@@ -240,11 +246,15 @@ namespace PT.BE.Areas.User.Controllers
                     {
                         return new ResponseModel() { Output = 0, Message = "Dữ liệu không tồn tại, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
                     }
-                    // Kiểm tra email đã có người sử dụng chưa
-                    var ktEmail = await _aspNetUsers.AnyAsync(x => x.Email == use.Email && x.Id != id);
-                    if (ktEmail)
+
+                    if (!string.IsNullOrEmpty(use.Email))
                     {
-                        return new ResponseModel() { Output = 3, Message = "Email này đã có người sử dụng, vui lòng chọn email khác và thử lại", Type = ResponseTypeMessage.Warning };
+                        // Kiểm tra email đã có người sử dụng chưa
+                        var ktEmail = await _aspNetUsers.AnyAsync(x => x.Email == use.Email && x.Id != id);
+                        if (ktEmail)
+                        {
+                            return new ResponseModel() { Output = 3, Message = "Email này đã có người sử dụng, vui lòng chọn email khác và thử lại", Type = ResponseTypeMessage.Warning };
+                        }
                     }
 
                     dl.DisplayName = use.DisplayName;
@@ -274,6 +284,24 @@ namespace PT.BE.Areas.User.Controllers
                     var kt = await _userManager.UpdateAsync(dl);
                     if (kt.Succeeded)
                     {
+                        // Nếu có nhập mật khẩu mới, cập nhật mật khẩu
+                        if (!string.IsNullOrWhiteSpace(use.Password))
+                        {
+                            var removePasswordResult = await _userManager.RemovePasswordAsync(dl);
+                            if (removePasswordResult.Succeeded)
+                            {
+                                var addPasswordResult = await _userManager.AddPasswordAsync(dl, use.Password);
+                                if (!addPasswordResult.Succeeded)
+                                {
+                                    return new ResponseModel() { Output = -1, Message = "Lỗi khi cập nhật mật khẩu", Type = ResponseTypeMessage.Danger };
+                                }
+                            }
+                            else
+                            {
+                                return new ResponseModel() { Output = -1, Message = "Lỗi khi xóa mật khẩu cũ", Type = ResponseTypeMessage.Danger };
+                            }
+                        }
+
                         // Update quyền cho tài khoản
                         if (isChange)
                         {

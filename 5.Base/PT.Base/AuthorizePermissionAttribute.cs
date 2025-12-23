@@ -54,23 +54,12 @@ namespace  PT.Base
             //}
 
             List<string> listAction = new List<string>();
-            string controller, action, area = "Null", returnUrl;
+            string controller, action, returnUrl;
             int userId;
             ApplicationUser user;
             List<DataRoleActionModel> listRoleUser;
             controller = _roleType.Controller ?? context.RouteData.Values["controller"].ToString();
             action = _roleType.Action ?? context.RouteData.Values["action"].ToString();
-            if (_roleType.Area != null)
-            {
-                area = _roleType.Area;
-            }
-            else
-            {
-                if (context.RouteData.Values.TryGetValue("area", out object areaObj))
-                {
-                    area = _roleType.Area ?? areaObj.ToString();
-                }
-            }
             listAction = action.Split("|").ToList();
             userId = Convert.ToInt32(context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             user = await _userManager.FindByIdAsync(userId.ToString());
@@ -101,7 +90,7 @@ namespace  PT.Base
             {
                 //Check quyền
                 listRoleUser = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DataRoleActionModel>>(context.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "RoleActions")?.Value);
-                if (listRoleUser.Any(m => listAction.Contains(m.ActionName) && m.AreaName == area && m.ControllerName == controller))
+                if (listRoleUser.Any(m => listAction.Contains(m.ActionName) && m.ControllerName == controller))
                 {
                     return;
                 }

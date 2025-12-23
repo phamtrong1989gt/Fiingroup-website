@@ -36,9 +36,9 @@ namespace PT.Domain.Model
         public string Username { get; set; }
 
         [Display(Name = "Email")]
-        [EmailAddress(ErrorMessage ="Không đúng định dạng email.")]
-        [StringLength(200, ErrorMessage = "{0} ít nhất phải là {2} và tối đa {1} ký tự.", MinimumLength = 10)]
-        [Required(ErrorMessage = "{0} không được để trống.")]
+        //[EmailAddress(ErrorMessage ="Không đúng định dạng email.")]
+        //[StringLength(200, ErrorMessage = "{0} ít nhất phải là {2} và tối đa {1} ký tự.", MinimumLength = 10)]
+        //[Required(ErrorMessage = "{0} không được để trống.")]
         public string Email { get; set; }
 
         [Display(Name = "Số điện thoại")]
@@ -67,5 +67,10 @@ namespace PT.Domain.Model
         public List<int> SchoolIds { get; set; }
         public string StudentCode { get; set; }
         public string Avatar { get; set; }
+
+        [Display(Name = "Mật khẩu")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$", ErrorMessage = "Mật khẩu phải từ 8 đến 15 ký tự, chữ cái đàu là viết hoa, và phải có ký tự đặc biệt và số.")]
+        [Required(ErrorMessage = "{0} không được để trống.")]
+        public string Password { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace PT.Base
         {
             get
             {
-                return Current.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                return Current.User.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
             }
         }
         public static string UserName

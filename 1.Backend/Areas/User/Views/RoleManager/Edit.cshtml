@@ -20,6 +20,7 @@
             </li>
         </ol>
     </div>
+    <div style="height:20px;"></div>
     <div class="row clearfix">
         <div class="col-md-12">
             <div class="card card-t card-loading">
@@ -91,6 +92,7 @@
             text-transform:uppercase;
         }
 </style>
+
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script src="~/Content/Admin/plugins/jstree/jstree.min.js"></script>
@@ -98,7 +100,7 @@
     <link href="~/Content/Admin/plugins/jstree/themes/default-dark/style.css" rel="stylesheet" />
     <script>
         var num = 0;
-        var data = @Html.Raw(Model.TreeData);
+        var data = @Html.Raw(Model.TreeData)
         $("[button-delete]").toDelete();
         $("[button-submit]").toSubmit(function () { });
         var $treeview =  $('#using_json_2').jstree({

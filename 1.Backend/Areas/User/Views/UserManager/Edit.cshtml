@@ -42,12 +42,14 @@
                                     <input type="text" disabled="disabled" class="form-control input-sm form-control-t" placeholder="Tên tài khoản" asp-for="Username">
                                 </div>
                             </div>
+
                             <div class="form-group">
-                                <label class="form-label" asp-for="DisplayName"></label> <span asp-validation-for="DisplayName"></span>
+                                <label class="form-label" asp-for="Password"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Password"></span>
                                 <div class="controls">
-                                    <input type="text" class="form-control input-sm form-control-t" placeholder="Tên hiển thị" asp-for="DisplayName">
+                                    <input type="text" class="form-control input-sm form-control-t" placeholder="Mật khẩu" asp-for="Password">
                                 </div>
                             </div>
+                          
                             <div class="form-group mt-10">
                                 <div class="controls">
                                     <input type="checkbox" asp-for="IsLock" class="filled-in chk-col-red" />
@@ -57,7 +59,13 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label" asp-for="Email"></label> <strong class="text-danger">*</strong> <span asp-validation-for="Email"></span>
+                                <label class="form-label" asp-for="DisplayName"></label> <span asp-validation-for="DisplayName"></span>
+                                <div class="controls">
+                                    <input type="text" class="form-control input-sm form-control-t" placeholder="Tên hiển thị" asp-for="DisplayName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" asp-for="Email"></label> <span asp-validation-for="Email"></span>
                                 <div class="controls">
                                     <input type="text" class="form-control input-sm form-control-t" placeholder="Email" asp-for="Email">
                                 </div>

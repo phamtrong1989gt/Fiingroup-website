@@ -234,7 +234,7 @@ namespace PT.BE.Areas.Manager.Controllers
                             listCategorys = use.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList();
                         }
                         data.Link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Id == linkId);
-                        var outData = await _iAsyncNewsService.CreateAsync(data, use.TagIds, listCategorys);
+                        var outData = await _iAsyncNewsService.CreateAsync(data, use.TagIds, listCategorys, DataUserInfo.Email);
                         if (outData != null && outData.Success)
                         {
                             data.NewsId = outData.Data.NewsId;
@@ -415,7 +415,7 @@ namespace PT.BE.Areas.Manager.Controllers
 
                         if (dl.NewsId == null || dl.NewsId <= 0)
                         {
-                            var outData = await _iAsyncNewsService.CreateAsync(dl, use.TagIds, listCategorys);
+                            var outData = await _iAsyncNewsService.CreateAsync(dl, use.TagIds, listCategorys, DataUserInfo.Email);
                             if (outData != null && outData.Success)
                             {
                                 string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {dl.NewsId} thành công";
@@ -435,7 +435,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         else
                         {
                             // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
-                            var outData = await _iAsyncNewsService.UpdateAsync(dl, use.TagIds, listCategorys);
+                            var outData = await _iAsyncNewsService.UpdateAsync(dl, use.TagIds, listCategorys, DataUserInfo.Email);
                             if (outData != null && outData.Success)
                             {
                                 string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thành công";
@@ -630,7 +630,7 @@ namespace PT.BE.Areas.Manager.Controllers
                             listCategorys = use.CategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList();
                         }
                         data.Link = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Id == linkId);
-                        var outData = await _iAsyncNewsService.CreateAsync(data, use.TagIds, listCategorys);
+                        var outData = await _iAsyncNewsService.CreateAsync(data, use.TagIds, listCategorys, DataUserInfo.Email);
                         if (outData != null && outData.Success)
                         {
                             data.NewsId = outData.Data.NewsId;
@@ -760,7 +760,7 @@ namespace PT.BE.Areas.Manager.Controllers
 
                         if (dl.NewsId == null || dl.NewsId <= 0)
                         {
-                            var outData = await _iAsyncNewsService.CreateAsync(dl, use.TagIds, listCategorys);
+                            var outData = await _iAsyncNewsService.CreateAsync(dl, use.TagIds, listCategorys, DataUserInfo.Email);
                             if (outData != null && outData.Success)
                             {
                                 string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Tạo tin mới {dl.NewsId} thành công";
@@ -781,7 +781,7 @@ namespace PT.BE.Areas.Manager.Controllers
                         else
                         {
                             // Xử lý bên FE oke mới tiến hành đồng bộ tin lên CM
-                            var outData = await _iAsyncNewsService.UpdateAsync(dl, use.TagIds, listCategorys);
+                            var outData = await _iAsyncNewsService.UpdateAsync(dl, use.TagIds, listCategorys, DataUserInfo.Email);
                             if (outData != null && outData.Success)
                             {
                                 string note = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")} - Cập nhật {dl.NewsId} thành công";
@@ -967,7 +967,7 @@ namespace PT.BE.Areas.Manager.Controllers
                 await _iContentPageRepository.ContentPageSharedDelete(id);
                 await _iContentPageRepository.CommitAsync();
                 // Xóa đồng bộ 
-                var check = await _iAsyncNewsService.DeleteAsync(kt.NewsId ?? 0, null, kt.Language);
+                var check = await _iAsyncNewsService.DeleteAsync(kt.NewsId ?? 0,DataUserInfo.Email, kt.Language);
                 if (!check.Success)
                 {
                     await _iContentPageRepository.Database().RollbackTransactionAsync();

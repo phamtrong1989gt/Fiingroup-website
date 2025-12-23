@@ -37,6 +37,7 @@ namespace PT.Base
             ((ClaimsIdentity)principal.Identity).AddClaims(new[] { new Claim("IsSuperAdmin", user.IsSuperAdmin.ToString()) });
             ((ClaimsIdentity)principal.Identity).AddClaims(new[] { new Claim("PhoneNumber", user.PhoneNumber ?? "") });
             ((ClaimsIdentity)principal.Identity).AddClaims(new[] { new Claim("Avatar", user.Avatar ?? "") });
+            ((ClaimsIdentity)principal.Identity).AddClaims(new[] { new Claim("Email", user.Email ?? "") });
             ((ClaimsIdentity)principal.Identity).AddClaims(new[] { new Claim("RoleActions", listRoleAction.Count()==0? "[]": Newtonsoft.Json.JsonConvert.SerializeObject(listRoleAction))});
             ((ClaimsIdentity)principal.Identity).AddClaims(new[] { new Claim("RoleIds", listRoleAction.Count() == 0 ? "[]" : Newtonsoft.Json.JsonConvert.SerializeObject(listRoleAction.Select(m => m.Id)))});
 

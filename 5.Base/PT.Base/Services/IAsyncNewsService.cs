@@ -21,8 +21,8 @@ namespace PT.Base.Services
     public interface IAsyncNewsService
     {
         Task<string> GetAccessTokenAsync(bool clearCache = false);
-        Task<NewsCreateResult> CreateAsync(ContentPage contentPage, List<int> tags, List<int> categories);
-        Task<NewsCreateResult> UpdateAsync(ContentPage contentPage, List<int> tags, List<int> categories);
+        Task<NewsCreateResult> CreateAsync(ContentPage contentPage, List<int> tags, List<int> categories, string updateBy);
+        Task<NewsCreateResult> UpdateAsync(ContentPage contentPage, List<int> tags, List<int> categories, string updateBy);
         Task<NewsCreateResult> DeleteAsync(int newsId, string deleteBy, string language = "en");
     }
 
@@ -143,7 +143,7 @@ namespace PT.Base.Services
             }
         }
 
-        public async Task<NewsCreateResult> CreateAsync(ContentPage contentPage, List<int> tags, List<int> categories)
+        public async Task<NewsCreateResult> CreateAsync(ContentPage contentPage, List<int> tags, List<int> categories, string createBy)
         {
             var stopwatch = Stopwatch.StartNew();
             _logger.LogDebug("[CreateAsync] Start - ContentPageId: {ContentPageId}, Language: {Language}, PortalId: {PortalId}", 
@@ -215,7 +215,7 @@ namespace PT.Base.Services
                     ImageUrl = $"{contentPage.Banner}",
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
-                    UpdateBy = null,
+                    CreateBy = createBy,
                     StatusId = contentPage.Status ? 1 : 4,
                     Categories = categoryIds,
                     TypeIds = [],
@@ -224,6 +224,7 @@ namespace PT.Base.Services
                     Tags = convertTags,
                     ICBs = [],
                     VSICs = [],
+
                 };
 
                 _logger.LogDebug("[CreateAsync] Request payload prepared - Title: {Title}, StatusId: {StatusId}, SourceId: {SourceId}", 
@@ -401,7 +402,7 @@ namespace PT.Base.Services
             return categoryObjects;
         }
 
-        public async Task<NewsCreateResult> UpdateAsync(ContentPage contentPage, List<int> tags, List<int> categories)
+        public async Task<NewsCreateResult> UpdateAsync(ContentPage contentPage, List<int> tags, List<int> categories, string updateBy)
         {
             var stopwatch = Stopwatch.StartNew();
             _logger.LogDebug("[UpdateAsync] Start - ContentPageId: {ContentPageId}, NewsId: {NewsId}, Language: {Language}", 

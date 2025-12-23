@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -527,14 +528,14 @@ namespace PT.Shared
 
         public static string ToJson(object data)
         {
-            return null;
-            //var serializerSettings = new JsonSerializerSettings
-            //{
-            //    ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
-            //};
-            //var json = JsonConvert.SerializeObject(data, serializerSettings);
-            //return json;
+            var serializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+            };
+            var json = JsonConvert.SerializeObject(data, serializerSettings);
+            return json;
         }
+
         public static long ConvertToUnixTime(DateTime datetime)
         {
             DateTime sTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

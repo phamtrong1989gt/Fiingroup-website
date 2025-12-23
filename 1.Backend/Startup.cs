@@ -105,7 +105,7 @@ namespace PT.UI
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(120);
                 options.Lockout.MaxFailedAccessAttempts = 10;
                 options.Lockout.AllowedForNewUsers = true;
-                options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = false;
             });
 
             // Cấu hình cookie dùng cho Authentication
