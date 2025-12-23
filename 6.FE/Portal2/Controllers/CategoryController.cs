@@ -36,7 +36,7 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
-        [Route("{language}/ContentPage/NewsAjax")]
+        [Route("{language}/Category/NewsAjax")]
         public async Task<ActionResult> NewsAjax([FromQuery] NewsQueryParameters prs)
         {
             prs.PageSize = 9;
@@ -49,7 +49,7 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
-        [Route("{language}/ContentPage/EventAjax")]
+        [Route("{language}/Category/EventAjax")]
         public async Task<ActionResult> EventAjax([FromQuery] NewsQueryParameters prs)
         {
             //await Task.Delay(1000);
@@ -83,8 +83,9 @@ namespace PT.UI.Controllers
             }
             return View("EventAjax", listNew);
         }
+
         [HttpGet]
-        [Route("{language}/ContentPage/PublicationsAjax")]
+        [Route("{language}/Category/PublicationsAjax")]
         public async Task<ActionResult> PublicationsAjax([FromQuery] NewsQueryParameters prs)
         {
             //await Task.Delay(1000);
