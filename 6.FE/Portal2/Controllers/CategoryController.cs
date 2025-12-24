@@ -55,7 +55,7 @@ namespace PT.UI.Controllers
             //await Task.Delay(1000);
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
-            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
+            //prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
@@ -130,8 +130,8 @@ namespace PT.UI.Controllers
                         StatusIds = "1"
                     }, language ?? "vi");
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
-                    // lấy danh mục event 
-                    var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.CategoryType == ECategoryType.ContentPage_Event && x.Status && x.ParentId == 0 && x.Language == language && x.PortalId == dl.PortalId);
+                    // lấy danh mục  
+                    var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.CategoryType == ECategoryType.ContentPage_Blog && x.Status && x.ParentId == 0 && x.Language == language && x.PortalId == dl.PortalId);
                     if(eventCategory != null)
                     {
                         var listEvent = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters
@@ -158,6 +158,7 @@ namespace PT.UI.Controllers
                             TimeFromTo = x.TimeFromTo,
                             Address = x.Address,
                         });
+
                         foreach (var item in dl.EventTop.Items)
                         {
                             var dlX = pages.FirstOrDefault(x => x.NewsId == item.Id);

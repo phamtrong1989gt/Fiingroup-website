@@ -15,7 +15,7 @@ namespace PT.UI.Controllers
 {
     public class ContactHomeController : Controller
     {
-        
+
         private readonly IContactRepository _iContactRepository;
         private readonly ICustomerRepository _iCustomerRepository;
         private readonly IContentPageRepository _iContentPageRepository;
@@ -29,11 +29,11 @@ namespace PT.UI.Controllers
         private readonly ILogger<ContactHomeController> _logger;
 
         public ContactHomeController(
-            IContactRepository iContactRepository, 
+            IContactRepository iContactRepository,
             ICustomerRepository iCustomerRepository,
             IContentPageRepository iContentPageRepositor,
             IEmailSenderRepository iEmailSenderRepository,
-            IOptions<BaseSettings> baseSettings ,
+            IOptions<BaseSettings> baseSettings,
             IOptions<EmailSettings> emailSettings,
             ICategoryRepository iCategoryRepository,
             ICountryRepository iCountryRepository,
@@ -55,27 +55,44 @@ namespace PT.UI.Controllers
             _logger = logger;
         }
 
+        // Localization helper: key-based messages for vi (default) and en
+        private string Localize(string key, string language)
+        {
+            var isEn = !string.IsNullOrEmpty(language) && language.StartsWith("en", StringComparison.OrdinalIgnoreCase);
+
+            return key switch
+            {
+                "CaptchaRequired" => isEn ? "Please complete captcha verification" : "Tiến hành xác thực",
+                "CaptchaExpired" => isEn ? "Session expired or actions performed too fast, please try again" : "Phiên làm việc đã hết hạn hoặc thao tác thực hiện quá nhanh, vui lòng thử lại",
+                "SuccessRegister" => isEn ? "Registration successful" : "Đăng ký thành công",
+                "MissingFields" => isEn ? "Please fill in all required information" : "Bạn chưa nhập đầy đủ thông tin",
+                "SuccessSubscribe" => isEn ? "Subscription successful" : "Đăng ký nhận tin thành công",
+                "GenericError" => isEn ? "An error occurred, please refresh the page and try again" : "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại",
+                _ => isEn ? "Operation completed" : "Thành công"
+            };
+        }
+
         [HttpPost, ActionName("Contact")]
         [AutoValidateAntiforgeryToken]
         public async Task<ResponseModel> ContactPost(ContactHomeModel use, string language)
         {
             try
             {
-                _logger.LogError("ContactPost  Settings {0}", Newtonsoft.Json.JsonConvert.SerializeObject(_authorizeSettings.Value));
-                _logger.LogError("ContactPost  Data {0}", Newtonsoft.Json.JsonConvert.SerializeObject(use));
+                _logger.LogDebug("ContactPost  Settings {0}", Newtonsoft.Json.JsonConvert.SerializeObject(_authorizeSettings.Value));
+                _logger.LogDebug("ContactPost  Data {0}", Newtonsoft.Json.JsonConvert.SerializeObject(use));
 
                 if (string.IsNullOrEmpty(use.Capcha))
                 {
-                    return new ResponseModel() { Output = 69, Message = "Tiến hành xác thực", Type = ResponseTypeMessage.Warning };
+                    return new ResponseModel() { Output = 69, Message = Localize("CaptchaRequired", language), Type = ResponseTypeMessage.Warning };
                 }
 
                 var output = await _iUserRepository.VeryfyCapcha(_authorizeSettings.Value.CapchaVerifyUrl, _authorizeSettings.Value.CapChaSecret, use.Capcha);
 
-                _logger.LogError("ContactPost  OutData {0}", Newtonsoft.Json.JsonConvert.SerializeObject(output));
+                _logger.LogDebug("ContactPost  OutData {0}", Newtonsoft.Json.JsonConvert.SerializeObject(output));
 
                 if (output != null && !output.Success)
                 {
-                    return new ResponseModel() { Output = 69, Message = "Phiên làm việc đã hết hạn hoặc thao tác thực hiện quá nhanh, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
+                    return new ResponseModel() { Output = 69, Message = Localize("CaptchaExpired", language), Type = ResponseTypeMessage.Warning };
                 }
 
                 if (ModelState.IsValid)
@@ -98,29 +115,20 @@ namespace PT.UI.Controllers
                         Language = language
                     });
                     await _iContactRepository.CommitAsync();
-                
-                    if(!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
+
+                    if (!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
                     {
-                        //var strB = new StringBuilder();
-                        //strB.Append($"Họ và tên: {Functions.SContent(use.FullName)}<br>");
-                        //strB.Append($"Email: {use.Email}<br>");
-                        //strB.Append($"Phone: {use.Phone}<br>");
-                        //strB.Append($"Tên công ty: {use.ConpanyName}<br>");
-                        //strB.Append($"Chức danh công việc: {use.Position}<br>");
-                        //strB.Append($"Nhóm ngành : {use.ServiceId}<br>");
-                        //strB.Append($"Sản phẩm & dịch vụ quan tâm: {use.Products}<br>");
-                        //strB.Append($"Nội dung: {Functions.SContent(use.Content)}<br>");
-                        //await Task.Run(() => SendEmail(_emailSettings.Value, _baseSettings.Value.ToEmail,  $"Có đăng ký mới từ {use.FullName} địa chỉ email là {use.Email}", strB.ToString())).ConfigureAwait(false);
+                        // optional email logic...
                     }
-                    return new ResponseModel() { Output = 1, Message = "Đăng ký thành công", Type = ResponseTypeMessage.Success, IsClosePopup = true };
+                    return new ResponseModel() { Output = 1, Message = Localize("SuccessRegister", language), Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
-                return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
+                return new ResponseModel() { Output = 0, Message = Localize("MissingFields", language), Type = ResponseTypeMessage.Warning };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger?.LogError(ex, "Error in ContactPost: {Message}", ex.Message);
             }
-            return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
+            return new ResponseModel() { Output = -1, Message = Localize("GenericError", language), Type = ResponseTypeMessage.Danger, Status = false };
         }
 
         [HttpPost, ActionName("FlowSelectList")]
@@ -139,7 +147,7 @@ namespace PT.UI.Controllers
                     IsClosePopup = false
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger?.LogError(ex, "Error in FlowSelectList: {Message} | language={language} | portId={portId} | parrentId={parrentId}", ex.Message, language, portId, parrentId);
                 return new ResponseModel<List<ContentPage>>
@@ -158,15 +166,17 @@ namespace PT.UI.Controllers
         {
             try
             {
+                _logger.LogDebug("ContactSolutionPost  Settings {0}", Newtonsoft.Json.JsonConvert.SerializeObject(_authorizeSettings.Value));
+                _logger.LogDebug("ContactSolutionPost  Data {0}", Newtonsoft.Json.JsonConvert.SerializeObject(use));
                 if (string.IsNullOrEmpty(use.Capcha))
                 {
-                    return new ResponseModel() { Output = 69, Message = "Tiến hành xác thực", Type = ResponseTypeMessage.Warning };
+                    return new ResponseModel() { Output = 69, Message = Localize("CaptchaRequired", language), Type = ResponseTypeMessage.Warning };
                 }
                 var output = await _iUserRepository.VeryfyCapcha(_authorizeSettings.Value.CapchaVerifyUrl, _authorizeSettings.Value.CapChaSecret, use.Capcha);
                 var capchaOke = output.Success;
                 if (!capchaOke)
                 {
-                    return new ResponseModel() { Output = 69, Message = "Phiên làm việc đã hết hạn hoặc thao tác thực hiện quá nhanh, vui lòng thử lại", Type = ResponseTypeMessage.Warning };
+                    return new ResponseModel() { Output = 69, Message = Localize("CaptchaExpired", language), Type = ResponseTypeMessage.Warning };
                 }
 
                 if (ModelState.IsValid)
@@ -184,38 +194,29 @@ namespace PT.UI.Controllers
                         PortalId = _baseSettings.Value.PortalId,
                         Language = language,
                         ConpanyName = use.ConpanyName,
-                        Position= use.Position,
+                        Position = use.Position,
                     });
                     await _iContactRepository.CommitAsync();
 
                     if (!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
                     {
-                        //var strB = new StringBuilder();
-                        //strB.Append($"Họ và tên: {Functions.SContent(use.FullName)}<br>");
-                        //strB.Append($"Email: {use.Email}<br>");
-                        //strB.Append($"Phone: {use.Phone}<br>");
-                        //strB.Append($"Tên công ty: {use.ConpanyName}<br>");
-                        //strB.Append($"Chức vụ công việc: {use.Position}<br>");
-                        //strB.Append($"Dịch vụ quan tâm: {use.ServiceId}<br>");
-                        //strB.Append($"Nội dung: {Functions.SContent(use.Content)}<br>");
-
-                        //await Task.Run(() => SendEmail(_emailSettings.Value, _baseSettings.Value.ToEmail,  $"Có đăng ký mới từ {use.FullName} địa chỉ email là {use.Email}", strB.ToString())).ConfigureAwait(false);
+                        // optional email logic...
                     }
-                    return new ResponseModel() { Output = 1, Message = "Đăng ký nhận tin thành công", Type = ResponseTypeMessage.Success, IsClosePopup = true };
+                    return new ResponseModel() { Output = 1, Message = Localize("SuccessSubscribe", language), Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
-                return new ResponseModel() { Output = 0, Message = "Bạn chưa nhập đầy đủ thông tin", Type = ResponseTypeMessage.Warning };
+                return new ResponseModel() { Output = 0, Message = Localize("MissingFields", language), Type = ResponseTypeMessage.Warning };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger?.LogError(ex, "Error in ContactSolutionPost: {Message}", ex.Message);
             }
-            return new ResponseModel() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại", Type = ResponseTypeMessage.Danger, Status = false };
+            return new ResponseModel() { Output = -1, Message = Localize("GenericError", language), Type = ResponseTypeMessage.Danger, Status = false };
         }
 
 
-        private async void SendEmail(EmailSettings emailSettings,string toEmail,string title, string content)
+        private async void SendEmail(EmailSettings emailSettings, string toEmail, string title, string content)
         {
-           await _iEmailSenderRepository.SendEmailAsync(emailSettings, null, title, content, toEmail);
+            await _iEmailSenderRepository.SendEmailAsync(emailSettings, null, title, content, toEmail);
         }
 
         private void SetRequest(string type)
@@ -225,12 +226,12 @@ namespace PT.UI.Controllers
         private bool IsCheckRequest(string type)
         {
             var getData = HttpContext.Session.GetString(type);
-            if(getData==null)
+            if (getData == null)
             {
                 return true;
             }
             var dt = Convert.ToDateTime(getData);
-            if(dt.AddSeconds(_baseSettings.Value.TimeOutSendRequest) >=DateTime.Now)
+            if (dt.AddSeconds(_baseSettings.Value.TimeOutSendRequest) >= DateTime.Now)
             {
                 return false;
             }
@@ -238,4 +239,3 @@ namespace PT.UI.Controllers
         }
     }
 }
-

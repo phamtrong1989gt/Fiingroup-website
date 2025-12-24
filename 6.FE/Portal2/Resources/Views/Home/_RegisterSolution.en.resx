@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BtnSend" xml:space="preserve">
-    <value>Subscribe to News</value>
+    <value>Subscribe</value>
   </data>
   <data name="ConpanyName" xml:space="preserve">
     <value>Company name</value>

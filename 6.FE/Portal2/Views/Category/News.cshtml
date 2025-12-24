@@ -51,7 +51,7 @@
                
                 <div class="col-lg-5 col-sm-6 mb-5">
                     <h2 class="text-white mb-4">@item.Title</h2>
-                    <div class="item-date mb-2">
+                @*     <div class="item-date mb-2">
                         <i class="fa fa-calendar-o" aria-hidden="true"></i>
                         <span class="item-label">@Localizer["EventDate"]</span>
                         <span>@(item.StartDate?.ToString("dd/MM/yyyy") ?? "---")</span>
@@ -72,7 +72,7 @@
                         <div>
                             <a style="font-weight:500;color:#fff;" target="_blank" href="@item.FilePath"><i class="fa fa-download"></i> @Localizer["DownloadDocument"]</a>
                         </div>
-                    }
+                    } *@
                     <div class="mt-5">
                         <a class="btn btn-light btn-about btn-khampha" href="@url" target="_blank">@Localizer["ViewDetails"]</a>
                     </div>
