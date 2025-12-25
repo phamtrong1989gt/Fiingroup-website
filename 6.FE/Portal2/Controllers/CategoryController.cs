@@ -185,7 +185,7 @@ namespace PT.UI.Controllers
                     {
                         Page = page ?? 1,
                         PageSize = 9,
-                        FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
+                        //FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
                     }, language ?? "vi");

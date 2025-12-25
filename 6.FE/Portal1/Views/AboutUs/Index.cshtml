@@ -14,116 +14,21 @@
 	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 	var portalId = _baseSettings.Value.PortalId;
 }
+<style>
+	.member-card .member-desc {
+		display: none;
+	}
+	 .member-card,.narbarstory a,.team-grid>.team-grid{cursor:pointer}.about-main-box,.about-wrap{position:relative;z-index:1}.about-box p,.about-main-box p{line-height:1.6;text-align:justify}.narbarstory{padding:50px 0;display:flex;justify-content:space-around;align-items:center}.narbarstory a{color:#093461;text-decoration:none;font-size:18px;padding:8px 0;display:flex;justify-content:center;min-width:25%;transition:color .3s,border-bottom .3s;border-bottom:3px solid transparent}.narbarstory a.active,.narbarstory a:hover{color:#06c}.narbarstory a.active span,.narbarstory a:hover span{border-bottom:3px solid #06c;min-width:170px;text-align:center}.about-main-box{padding:15px 0;border-radius:12px;margin-bottom:20px}.about-main-box::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1}.about-main-box p{margin-bottom:12px;color:#093461;font-size:15px;padding-top:20px}.corner-decor{position:absolute;top:-65px;right:17%;width:110px;z-index:3;pointer-events:none}.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}.about-box{background:border-box padding-box,border-box #fff;padding:25px;border-radius:12px;border:1px solid transparent;box-shadow:0 4px 12px rgba(0,76,152,.08);text-align:left;transition:transform .3s;background-image:linear-gradient(#f5f9ff,#f2f7ff),linear-gradient(to right,#034ea2,#53dfff)}.about-box:hover{transform:translateY(-5px)}.about-box .why-title{font-size:30px!important;height:42px!important}.about-box h3{font-size:20px;color:#064a9d;margin:15px 0}.about-box p{color:#093461}.abt-icon{width:40px;height:auto}.member-card img{width:100%}.member-card:hover .member-info,.team-grid>.team-grid:hover .member-info{height:100%;background:#fffffff5;position:absolute;left:0;right:0;bottom:0;top:0;padding:20px}.member-card:hover .member-info .member-desc{display:block}.member-card:hover .member-desc,.team-grid>.team-grid:hover .member-desc{opacity:1;max-height:400px}.tab-container{display:inline-flex;justify-content:center;border:1px solid #0066cf!important;border-radius:26px;overflow:hidden;font-size:16px}.tab.active{background:#0066cf!important}.testimonial-media .img{width:100%!important;height:420px}.testimonial-card{padding:0!important}.testimonial-card .align-items-stretch{background:#034ea2}.testimonial-card .testimonial-copy{padding:43px}.testimonial-card .testimonial-copy .quote{font-size:20px;color:#fff!important;height:auto}.testimonial-card .testimonial-copy .name{color:#fff!important}.owl-prev{margin-left:4px!important}.owl-theme .owl-nav [class*=owl-]{font-size:22px}.owl-next,.owl-prev{border:none!important}
+    #Partner
+    {
+        height: 200px!important;
+    }
+</style>
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsBanner", language = language, portalId = portalId })
 
 <section id="StoryFinn">
 	<style>
-		.narbarstory {
-			padding: 50px 0;
-			display: flex;
-			justify-content: space-around;
-			align-items: center;
-		}
-
-			.narbarstory a {
-				color: #093461;
-				text-decoration: none;
-				font-size: 18px;
-				padding: 8px 0;
-				display: flex;
-				justify-content: center;
-				min-width: 20%;
-				transition: color 0.3s, border-bottom 0.3s;
-				cursor: pointer;
-				border-bottom: 3px solid transparent;
-			}
-
-				.narbarstory a.active,
-				.narbarstory a:hover {
-					color: #0066CC;
-					border-bottom: 3px solid #093461;
-				}
-
-		.about-main-box {
-			padding: 15px 0;
-			border-radius: 12px;
-			margin-bottom: 40px;
-		}
-
-
-			.about-main-box::before {
-				content: "";
-				position: absolute;
-				inset: 0;
-				border-radius: inherit;
-				z-index: -1;
-			}
-
-		.about-main-box {
-			position: relative;
-			z-index: 1;
-		}
-
-			.about-main-box p {
-				margin-bottom: 0;
-				line-height: 1.6;
-				color: #093461;
-				font-size: 15px;
-				padding-top: 20px;
-				text-align: justify;
-			}
-
-		.about-wrap {
-			position: relative;
-			z-index: 1;
-		}
-
-
-		.about-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-			gap: 25px;
-		}
-
-		.about-box {
-			background: #ffffff;
-			padding: 25px;
-			border-radius: 12px;
-			border: 1px solid #d5e4ff;
-			box-shadow: 0 4px 12px rgba(0, 76, 152, 0.08);
-			text-align: left;
-			transition: transform 0.3s ease;
-			border: 1px solid transparent;
-			background-image: linear-gradient(#f5f9ff, #f2f7ff), linear-gradient(to right, #034EA2, #53DFFF);
-			background-origin: border-box;
-			background-clip: padding-box, border-box;
-		}
-
-			.about-box:hover {
-				transform: translateY(-5px);
-			}
-
-			.about-box .why-title {
-				font-size: 30px !important;
-				height: 42px !important;
-			}
-
-			.about-box h3 {
-				font-size: 20px;
-				color: #064A9D;
-				margin: 15px 0;
-			}
-
-			.about-box p {
-				color: #093461;
-				line-height: 1.6;
-				text-align: justify;
-			}
-
-		.link {
-			border-bottom: 1px solid;
-			color: #2E90FA;
-		}
+		.about-main-box,.about-wrap{position:relative;z-index:1}.about-box p,.about-main-box p{line-height:1.6;text-align:justify}.narbarstory{padding:50px 0;display:flex;justify-content:space-around;align-items:center}.narbarstory a{color:#093461;text-decoration:none;font-size:18px;padding:8px 0;display:flex;justify-content:center;min-width:20%;transition:color .3s,border-bottom .3s;cursor:pointer;border-bottom:3px solid transparent}.narbarstory a.active,.narbarstory a:hover{color:#06c;border-bottom:3px solid #093461}.about-main-box{padding:15px 0;border-radius:12px;margin-bottom:40px}.about-main-box::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1}.about-main-box p{margin-bottom:0;color:#093461;font-size:15px;padding-top:20px}.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}.about-box{background:border-box padding-box,border-box #fff;padding:25px;border-radius:12px;border:1px solid transparent;box-shadow:0 4px 12px rgba(0,76,152,.08);text-align:left;transition:transform .3s;background-image:linear-gradient(#f5f9ff,#f2f7ff),linear-gradient(to right,#034ea2,#53dfff)}.about-box:hover{transform:translateY(-5px)}.about-box .why-title{font-size:30px!important;height:42px!important}.about-box h3{font-size:20px;color:#064a9d;margin:15px 0}.about-box p{color:#093461}.link{border-bottom:1px solid;color:#2e90fa}.testimonial-card .testimonial-copy{padding:40px!important}
 	</style>
 	<div class="container">
 		@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRAboutUsSliderOurClients", language = language, portalId = portalId })
@@ -132,32 +37,52 @@
 </section>
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsTimeLine", language = language, portalId = portalId })
+
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsTeams", language = language, portalId = portalId })
+
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRAboutUsWordEnvironment", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsLienHe", language = language, portalId = portalId })
 <script>
-		document.addEventListener('DOMContentLoaded', () => {
-		const links = document.querySelectorAll('.narbarstory a');
-		links.forEach(link => {
-			link.addEventListener('click', (e) => {
-				e.preventDefault();
-				// Xóa class active
-				links.forEach(l => l.classList.remove('active'));
-				link.classList.add('active');
-				// Lấy ID mục tiêu
-				const targetId = link.getAttribute('href')?.trim();
-				// Nếu href null hoặc không phải id hợp lệ thì thoát
-				if (!targetId || !targetId.startsWith("#")) {
-					return;
-				}
-				const targetEl = document.querySelector(targetId);
-				if (targetEl) {
-					targetEl.scrollIntoView({
-						behavior: "smooth",
-						block: "start"
-					});
-				}
-			});
-		});
-	});
+     document.addEventListener('DOMContentLoaded', () => {
+        // smooth scroll for .narbarstory links
+        const links = document.querySelectorAll('.narbarstory a');
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                const targetId = link.getAttribute('href')?.trim();
+                if (!targetId || !targetId.startsWith("#")) return;
+                const targetEl = document.querySelector(targetId);
+                if (targetEl) targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+        });
+
+        // Tabs handling (index-based mapping)
+        const tabs = Array.from(document.querySelectorAll('.tab'));
+
+        // Define content sections in the order that matches the visual order of tabs
+        const contentIds = ['hdqt', 'ban-dieu-hanh', 'ban-cv'];
+        const contents = contentIds.map(id => document.getElementById(id));
+
+
+        function activateTab(index) {
+            if (!tabs.length) return;
+            tabs.forEach(t => t.classList.remove('active'));
+            if (tabs[index]) tabs[index].classList.add('active');
+            contents.forEach(c => { if (c) c.style.display = 'none'; });
+            if (contents[index]) contents[index].style.display = 'block';
+        }
+
+        // initialize: activate existing .active tab or fall back to index 0
+        const existingActive = tabs.findIndex(t => t.classList.contains('active'));
+        activateTab(existingActive >= 0 ? existingActive : 0);
+
+        tabs.forEach((tab, idx) => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                activateTab(idx);
+            });
+        });
+    });
 </script>
