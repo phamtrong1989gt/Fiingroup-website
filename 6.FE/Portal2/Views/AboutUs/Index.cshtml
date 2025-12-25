@@ -72,7 +72,6 @@
             if (tabs[index]) tabs[index].classList.add('active');
             contents.forEach(c => { if (c) c.style.display = 'none'; });
             if (contents[index]) contents[index].style.display = 'block';
-            setTitleForIndex(index);
         }
 
         // initialize: activate existing .active tab or fall back to index 0
