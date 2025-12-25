@@ -15,8 +15,149 @@
 	var portalId = _baseSettings.Value.PortalId;
 }
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsBanner", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsStoryFiin", language = language, portalId = portalId })
+
+<section id="StoryFinn">
+	<style>
+		.narbarstory {
+			padding: 50px 0;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+		}
+
+			.narbarstory a {
+				color: #093461;
+				text-decoration: none;
+				font-size: 18px;
+				padding: 8px 0;
+				display: flex;
+				justify-content: center;
+				min-width: 20%;
+				transition: color 0.3s, border-bottom 0.3s;
+				cursor: pointer;
+				border-bottom: 3px solid transparent;
+			}
+
+				.narbarstory a.active,
+				.narbarstory a:hover {
+					color: #0066CC;
+					border-bottom: 3px solid #093461;
+				}
+
+		.about-main-box {
+			padding: 15px 0;
+			border-radius: 12px;
+			margin-bottom: 40px;
+		}
+
+
+			.about-main-box::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				z-index: -1;
+			}
+
+		.about-main-box {
+			position: relative;
+			z-index: 1;
+		}
+
+			.about-main-box p {
+				margin-bottom: 0;
+				line-height: 1.6;
+				color: #093461;
+				font-size: 15px;
+				padding-top: 20px;
+				text-align: justify;
+			}
+
+		.about-wrap {
+			position: relative;
+			z-index: 1;
+		}
+
+
+		.about-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+			gap: 25px;
+		}
+
+		.about-box {
+			background: #ffffff;
+			padding: 25px;
+			border-radius: 12px;
+			border: 1px solid #d5e4ff;
+			box-shadow: 0 4px 12px rgba(0, 76, 152, 0.08);
+			text-align: left;
+			transition: transform 0.3s ease;
+			border: 1px solid transparent;
+			background-image: linear-gradient(#f5f9ff, #f2f7ff), linear-gradient(to right, #034EA2, #53DFFF);
+			background-origin: border-box;
+			background-clip: padding-box, border-box;
+		}
+
+			.about-box:hover {
+				transform: translateY(-5px);
+			}
+
+			.about-box .why-title {
+				font-size: 30px !important;
+				height: 42px !important;
+			}
+
+			.about-box h3 {
+				font-size: 20px;
+				color: #064A9D;
+				margin: 15px 0;
+			}
+
+			.about-box p {
+				color: #093461;
+				line-height: 1.6;
+				text-align: justify;
+			}
+
+		.link {
+			border-bottom: 1px solid;
+			color: #2E90FA;
+		}
+	</style>
+	<div class="container">
+		@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRAboutUsSliderOurClients", language = language, portalId = portalId })
+		@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsStoryFiin", language = language, portalId = portalId })
+	</div>
+</section>
+
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsTimeLine", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsTeams", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRAboutUsWordEnvironment", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsLienHe", language = language, portalId = portalId })
+<script>
+		document.addEventListener('DOMContentLoaded', () => {
+		const links = document.querySelectorAll('.narbarstory a');
+		links.forEach(link => {
+			link.addEventListener('click', (e) => {
+				e.preventDefault();
+				// Xóa class active
+				links.forEach(l => l.classList.remove('active'));
+				link.classList.add('active');
+				// Lấy ID mục tiêu
+				const targetId = link.getAttribute('href')?.trim();
+				// Nếu href null hoặc không phải id hợp lệ thì thoát
+				if (!targetId || !targetId.startsWith("#")) {
+					return;
+				}
+				const targetEl = document.querySelector(targetId);
+				if (targetEl) {
+					targetEl.scrollIntoView({
+						behavior: "smooth",
+						block: "start"
+					});
+				}
+			});
+		});
+	});
+</script>
