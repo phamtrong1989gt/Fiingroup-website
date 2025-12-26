@@ -51,6 +51,22 @@ namespace PT.Domain.Model
 
         [Display(Name = "Password")]
         public string Password { get; set; }
+
+        // ============ NEW RATING API ENDPOINTS ============
+        [Display(Name = "Report Scores Endpoint")]
+        public string ReportScoresEndpoint { get; set; }
+
+        [Display(Name = "Report Industries Endpoint")]
+        public string ReportIndustriesEndpoint { get; set; }
+
+        [Display(Name = "Report Outlooks Endpoint")]
+        public string ReportOutlooksEndpoint { get; set; }
+
+        [Display(Name = "Sustainable Finance Endpoint")]
+        public string SustainableFinanceEndpoint { get; set; }
+
+        [Display(Name = "Rating Results Endpoint")]
+        public string RatingResultsEndpoint { get; set; }
     }
 
 

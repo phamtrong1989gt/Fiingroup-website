@@ -1,0 +1,124 @@
+﻿@model PT.Domain.Model.RatingResultsResponse
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using PT.Domain.Model
+
+@{
+	Layout = null;
+	var stPage = Context.Request.Query["page"].ToString();
+	var pageIndex = 1;
+	if (!string.IsNullOrEmpty(stPage))
+	{
+		pageIndex = int.TryParse(stPage, out var result) ? result : 1;
+	}
+}
+
+@if (Model != null && Model.Success && Model.Data != null && Model.Data.Items != null && Model.Data.Items.Any())
+{
+	@for (int i = 0; i < Model.Data.Items.Count; i++)
+	{
+		var item = Model.Data.Items[i];
+		var radioName = $"language_{i}";
+		<tr>
+			<td data-label="Ngày công bố">
+				@if (!string.IsNullOrEmpty(item.Date))
+				{
+					@(Convert.ToDateTime(item.Date).ToString("yyyy/MM/dd"))
+				}
+			</td>
+			<td data-label="Tổ chức phát hành">
+				<a href="/vi/rating-detail.html" class="phat-hanh-text">@item.Issuer</a>
+			</td>
+			<td>
+                <span>---</span>
+			</td>
+			<td data-label="Ngành">@item.Industry</td>
+			<td data-label="Loại ý kiến">@item.RatingType</td>
+			<td data-label="Điểm xếp hạng">
+				@item.Rating
+				@if (!string.IsNullOrEmpty(item.Rating))
+				{
+					<span class="icon-info">
+						<i class="fa fa-info-circle" data-tooltip="Thông tin chi tiết về xếp hạng @item.Rating"></i>
+					</span>
+				}
+			</td>
+			<td data-label="Triển vọng">
+				@if (!string.IsNullOrEmpty(item.Outlook))
+				{
+					<span class="type-text">@item.Outlook</span>
+				}
+			</td>
+			<td data-label="Báo cáo">
+				<div class="language-switch">
+					@if(item.Announcement  != null && !string.IsNullOrEmpty(item.Announcement.Vi))
+					{
+						<label class="lang-option">
+							<input type="radio" name="@radioName" value="vi" checked>
+							<span class="radio"></span>
+							VN
+						</label>
+					}
+					@if (item.Announcement != null && !string.IsNullOrEmpty(item.Announcement.En))
+					{
+						<label class="lang-option">
+							<input type="radio" name="@radioName" value="en">
+							<span class="radio"></span>
+							EN
+						</label>
+					}
+
+					@if((item.Announcement != null) && (!string.IsNullOrEmpty(item.Announcement.Vi) || !string.IsNullOrEmpty(item.Announcement.En)))
+					{
+						<button class="btn-download"
+								onclick="downloadRatingReport('@(item.Announcement?.Vi)', '@(item.Announcement?.En)', '@radioName')"
+								title="Tải báo cáo">
+							<i class="fa fa-download"></i> Tải về
+						</button>
+                    }
+				</div>
+			</td>
+		</tr>
+	}
+	<tr>
+		<td colspan="10" style="padding: 0; border: none;background: transparent;">
+			<div class="page-table">
+				<div class="numberpage">
+					<div>
+						Hiển thị
+						<span>@((pageIndex - 1) * Model.Data.PageSize + 1)</span> -
+						<span>@Math.Min(pageIndex * Model.Data.PageSize, Model.Data.TotalRecords)</span>
+						có <span>@Model.Data.TotalRecords</span> bản ghi
+					</div>
+				</div>
+				<div class="pagination">
+					@Html.Raw(PT.Shared.Functions.GenPageListAjax2("",
+								pageIndex,
+								Model.Data.TotalRecords,
+								Model.Data.PageSize,
+								$"&companyName={Context.Request.Query["companyName"]}" +
+								$"&industryTypeId={Context.Request.Query["industryTypeId"]}" +
+								$"&scoreId={Context.Request.Query["scoreId"]}" +
+								$"&prospectsId={Context.Request.Query["prospectsId"]}",
+								"page-active",
+								null,
+								"getRakingsAjax"
+					))
+			</div>
+		</div>
+		</td>
+	</tr>
+}
+else
+{
+	<tr>
+		<td style='background: transparent;' colspan="10">
+			<div class="text-center py-5 text-center">
+				<img src="/Data/Banner/no-data.jpg" alt="Không có dữ liệu" style="max-width: 300px;" />
+				<p class="no-data-messege my-5">Chưa có kết quả xếp hạng nào được tìm thấy</p>
+			</div>
+		</td>
+	</tr>
+}
+
