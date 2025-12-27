@@ -25,6 +25,10 @@ namespace PT.Base.Services
         Task<ReportOutlooksResponse> GetReportOutlooksAsync(string language = "vi", bool clearCache = false);
         Task<SustainableFinanceResponse> GetSustainableFinanceReportsAsync(SustainableFinanceQueryParameters parameters, string language = "vi");
         Task<RatingResultsResponse> GetRatingResultsAsync(RatingResultsQueryParameters parameters);
+        
+        // ============ NEW SUSTAINABLE FINANCE API METHODS ============
+        Task<SustainableIndustriesResponse> GetSustainableIndustriesAsync(string language = "vi", bool clearCache = false);
+        Task<SustainableStandardsResponse> GetSustainableStandardsAsync(string language = "vi", bool clearCache = false);
     }
 
     public class NewsAPIService : INewsAPIService
@@ -36,6 +40,8 @@ namespace PT.Base.Services
         private const string REPORT_SCORES_CACHE_KEY = "ReportAPI_Scores";
         private const string REPORT_INDUSTRIES_CACHE_KEY = "ReportAPI_Industries";
         private const string REPORT_OUTLOOKS_CACHE_KEY = "ReportAPI_Outlooks";
+        private const string SUSTAINABLE_INDUSTRIES_CACHE_KEY = "SustainableAPI_Industries";
+        private const string SUSTAINABLE_STANDARDS_CACHE_KEY = "SustainableAPI_Standards";
 
         public NewsAPIService(
     ISeoSettingRepository iSeoSettingRepository,
@@ -677,6 +683,190 @@ namespace PT.Base.Services
                 {
                     token = await GetAccessTokenAsync(clearCache: true);
                     return await CallRatingAPIAsync<RatingResultsResponse>(url, token);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Lấy danh sách ngành cho Sustainable Finance (Industries) với cache 1 giờ
+        /// </summary>
+        /// <param name="language">Ngôn ngữ: "vi" hoặc "en"</param>
+        /// <param name="clearCache">True: Xóa cache và lấy dữ liệu mới. False: Dùng cache nếu có</param>
+        /// <returns>SustainableIndustriesResponse hoặc null nếu thất bại</returns>
+        public async Task<SustainableIndustriesResponse> GetSustainableIndustriesAsync(string language = "vi", bool clearCache = false)
+        {
+            var cacheKey = $"{SUSTAINABLE_INDUSTRIES_CACHE_KEY}_{language}";
+
+            if (clearCache)
+            {
+                _memoryCache.Remove(cacheKey);
+            }
+
+            if (_memoryCache.TryGetValue(cacheKey, out SustainableIndustriesResponse cachedData))
+            {
+                return cachedData;
+            }
+
+            var settings = _baseSettings.Value.NewAPI;
+            var endpoint = settings.SustainableIndustriesEndpoint;
+
+            if (string.IsNullOrWhiteSpace(endpoint))
+            {
+                return null;
+            }
+
+            var url = $"{endpoint}?lang={language}";
+
+            // Lấy token
+            string token;
+            try
+            {
+                token = await GetAccessTokenAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            // Gọi API với token hiện tại
+            try
+            {
+                var result = await CallRatingAPIAsync<SustainableIndustriesResponse>(url, token);
+                
+                if (result != null && result.Success)
+                {
+                    // Cache dữ liệu trong 1 giờ
+                    var cacheOptions = new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
+                        Priority = CacheItemPriority.Normal,
+                        Size = 10
+                    };
+                    _memoryCache.Set(cacheKey, result, cacheOptions);
+                }
+
+                return result;
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                // Gặp 401: Thử lấy token mới và retry 1 lần
+                try
+                {
+                    token = await GetAccessTokenAsync(clearCache: true);
+                    var result = await CallRatingAPIAsync<SustainableIndustriesResponse>(url, token);
+                    
+                    if (result != null && result.Success)
+                    {
+                        var cacheOptions = new MemoryCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
+                            Priority = CacheItemPriority.Normal,
+                            Size = 10
+                        };
+                        _memoryCache.Set(cacheKey, result, cacheOptions);
+                    }
+
+                    return result;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Lấy danh sách tiêu chuẩn áp dụng cho Sustainable Finance (Standards) với cache 1 giờ
+        /// </summary>
+        /// <param name="language">Ngôn ngữ: "vi" hoặc "en"</param>
+        /// <param name="clearCache">True: Xóa cache và lấy dữ liệu mới. False: Dùng cache nếu có</param>
+        /// <returns>SustainableStandardsResponse hoặc null nếu thất bại</returns>
+        public async Task<SustainableStandardsResponse> GetSustainableStandardsAsync(string language = "vi", bool clearCache = false)
+        {
+            var cacheKey = $"{SUSTAINABLE_STANDARDS_CACHE_KEY}_{language}";
+
+            if (clearCache)
+            {
+                _memoryCache.Remove(cacheKey);
+            }
+
+            if (_memoryCache.TryGetValue(cacheKey, out SustainableStandardsResponse cachedData))
+            {
+                return cachedData;
+            }
+
+            var settings = _baseSettings.Value.NewAPI;
+            var endpoint = settings.SustainableStandardsEndpoint;
+
+            if (string.IsNullOrWhiteSpace(endpoint))
+            {
+                return null;
+            }
+
+            var url = $"{endpoint}?lang={language}";
+
+            // Lấy token
+            string token;
+            try
+            {
+                token = await GetAccessTokenAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            // Gọi API với token hiện tại
+            try
+            {
+                var result = await CallRatingAPIAsync<SustainableStandardsResponse>(url, token);
+                
+                if (result != null && result.Success)
+                {
+                    // Cache dữ liệu trong 1 giờ
+                    var cacheOptions = new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
+                        Priority = CacheItemPriority.Normal,
+                        Size = 10
+                    };
+                    _memoryCache.Set(cacheKey, result, cacheOptions);
+                }
+
+                return result;
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                // Gặp 401: Thử lấy token mới và retry 1 lần
+                try
+                {
+                    token = await GetAccessTokenAsync(clearCache: true);
+                    var result = await CallRatingAPIAsync<SustainableStandardsResponse>(url, token);
+                    
+                    if (result != null && result.Success)
+                    {
+                        var cacheOptions = new MemoryCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
+                            Priority = CacheItemPriority.Normal,
+                            Size = 10
+                        };
+                        _memoryCache.Set(cacheKey, result, cacheOptions);
+                    }
+
+                    return result;
                 }
                 catch (Exception)
                 {

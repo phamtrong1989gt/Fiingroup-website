@@ -124,7 +124,7 @@
 
 
   <ItemGroup>
-    <Folder Include="Resources\Views\ContentPageHome\" />
+    <Folder Include="Views\Shared\Components\TopNews\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>

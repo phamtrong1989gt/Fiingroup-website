@@ -1,4 +1,4 @@
-﻿@model PT.Domain.Model.RatingResultsResponse
+﻿@model PT.Domain.Model.SustainableFinanceResponse
 @addTagHelper *, PT.UI
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
@@ -13,54 +13,38 @@
 	{
 		pageIndex = int.TryParse(stPage, out var result) ? result : 1;
 	}
-    string language = ViewBag.Language ?? "vi";
-	
+	string language = ViewBag.Language ?? "vi";
 }
 
 @if (Model != null && Model.Success && Model.Data != null && Model.Data.Items != null && Model.Data.Items.Any())
 {
-	@for (int i = 0; i < Model.Data.Items.Count; i++)
+	for (int i = 0; i < Model.Data.Items.Count; i++)
 	{
 		var item = Model.Data.Items[i];
-		string url = $"/{language}/ratings-fr/{Functions.ToUrlSlug(item.Issuer)}-id{Model.Data.Items[i].OrganizationId}.html";
+		string url = $"/{language}/ratings-fr/{Functions.ToUrlSlug(item.OrganizationName)}-id{Model.Data.Items[i].OrganizationId}.html";
+
 		var radioName = $"language_{i}";
 		<tr>
 			<td data-label="@Localizer["PublicationDate"]">
-				@if (!string.IsNullOrEmpty(item.Date))
+				@if (!string.IsNullOrEmpty(item.PublicDate))
 				{
-					@(Convert.ToDateTime(item.Date).ToString("yyyy/MM/dd"))
+					<div>@(Convert.ToDateTime(item.PublicDate).ToString("dd/MM/yyyy"))</div>
 				}
 			</td>
-			<td data-label="@Localizer["IssuingOrganization"]">
-				<a href="@url" class="phat-hanh-text">@item.Issuer</a>
+			<td data-label="@Localizer["Publisher"]">
+				<a href="@url" class="phat-hanh-text">@item.OrganizationName</a>
 			</td>
-			<td>
-                <span>---</span>
-			</td>
-			<td data-label="@Localizer["Industry"]">@item.Industry</td>
-			<td data-label="@Localizer["OpinionType"]">@item.RatingType</td>
-			<td data-label="@Localizer["RatingScore"]">
-				@item.Rating
-				@if (!string.IsNullOrEmpty(item.Rating))
+			<td data-label="@Localizer["Title"]">@item.Title</td>
+			<td data-label="@Localizer["Industry"]">@item.IndustryName</td>
+			<td data-label="@Localizer["SustainabilityLevel"]">
+				@if (!string.IsNullOrEmpty(item.ApplicableStandardsName))
 				{
-					<span class="icon-info">
-						<i class="fa fa-info-circle" 
-						   data-rating="@item.Rating"
-						   data-issuer="@item.Issuer"
-						   onclick="showRatingInfoPopup(this)"
-						   style="cursor: pointer;"></i>
-					</span>
-				}
-			</td>
-			<td data-label="@Localizer["Outlook"]">
-				@if (!string.IsNullOrEmpty(item.Outlook))
-				{
-					<span class="type-text">@item.Outlook</span>
+					<span>@item.ApplicableStandardsName</span>
 				}
 			</td>
 			<td data-label="@Localizer["Report"]">
 				<div class="language-switch">
-					@if(item.Announcement  != null && !string.IsNullOrEmpty(item.Announcement.Vi))
+					@if(item.Files != null && !string.IsNullOrEmpty(item.Files.Vi))
 					{
 						<label class="lang-option">
 							<input type="radio" name="@radioName" value="vi" checked>
@@ -68,7 +52,7 @@
 							VN
 						</label>
 					}
-					@if (item.Announcement != null && !string.IsNullOrEmpty(item.Announcement.En))
+					@if (item.Files != null && !string.IsNullOrEmpty(item.Files.En))
 					{
 						<label class="lang-option">
 							<input type="radio" name="@radioName" value="en">
@@ -77,10 +61,10 @@
 						</label>
 					}
 
-					@if((item.Announcement != null) && (!string.IsNullOrEmpty(item.Announcement.Vi) || !string.IsNullOrEmpty(item.Announcement.En)))
+					@if((item.Files != null) && (!string.IsNullOrEmpty(item.Files.Vi) || !string.IsNullOrEmpty(item.Files.En)))
 					{
 						<button class="btn-download"
-								onclick="downloadRatingReport('@(item.Announcement?.Vi)', '@(item.Announcement?.En)', '@radioName')"
+								onclick="downloadRatingReport('@(item.Files?.Vi)', '@(item.Files?.En)', '@radioName')"
 								title="@Localizer["DownloadReport"]">
 							<i class="fa fa-download"></i> @Localizer["Download"]
 						</button>
@@ -90,7 +74,7 @@
 		</tr>
 	}
 	<tr>
-		<td colspan="10" style="padding: 0; border: none;background: transparent;">
+		<td colspan="6" style="padding: 0; border: none;background: transparent;">
 			<div class="page-table">
 				<div class="numberpage">
 					<div>
@@ -106,9 +90,8 @@
 								Model.Data.TotalRecords,
 								Model.Data.PageSize,
 								$"&companyName={Context.Request.Query["companyName"]}" +
-								$"&industryTypeId={Context.Request.Query["industryTypeId"]}" +
-								$"&scoreId={Context.Request.Query["scoreId"]}" +
-								$"&prospectsId={Context.Request.Query["prospectsId"]}",
+								$"&industryId={Context.Request.Query["industryId"]}" +
+								$"&applicableStandardId={Context.Request.Query["applicableStandardId"]}",
 								"page-active",
 								null,
 								"getRakingsAjax"
@@ -121,7 +104,7 @@
 else
 {
 	<tr>
-		<td style='background: transparent;' colspan="10">
+		<td style='background: transparent;' colspan="6">
 			<div class="text-center py-5 text-center">
 				<img src="/Data/Banner/no-data.jpg" alt="@Localizer["NoData"]" style="max-width: 300px;" />
 				<p class="no-data-messege my-5">@Localizer["NoRatingResults"]</p>

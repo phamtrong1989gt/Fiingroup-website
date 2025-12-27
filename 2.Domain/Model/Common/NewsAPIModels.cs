@@ -81,6 +81,70 @@ namespace PT.Domain.Model
         public string Prospects { get; set; }
     }
 
+    // ============ SUSTAINABLE FINANCE API MODELS (NEW) ============
+
+    // Sustainable Finance Industries Response
+    public class SustainableIndustriesResponse
+    {
+        [JsonProperty("success")]
+        public bool Success { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
+
+        [JsonProperty("data")]
+        public List<SustainableIndustryItem> Data { get; set; }
+
+        [JsonProperty("code")]
+        public string Code { get; set; }
+
+        [JsonProperty("errorCode")]
+        public string ErrorCode { get; set; }
+
+        [JsonProperty("timestamp")]
+        public string Timestamp { get; set; }
+    }
+
+    public class SustainableIndustryItem
+    {
+        [JsonProperty("industryId")]
+        public int IndustryId { get; set; }
+
+        [JsonProperty("industryName")]
+        public string IndustryName { get; set; }
+    }
+
+    // Sustainable Finance Standards Response
+    public class SustainableStandardsResponse
+    {
+        [JsonProperty("success")]
+        public bool Success { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
+
+        [JsonProperty("data")]
+        public List<SustainableStandardItem> Data { get; set; }
+
+        [JsonProperty("code")]
+        public string Code { get; set; }
+
+        [JsonProperty("errorCode")]
+        public string ErrorCode { get; set; }
+
+        [JsonProperty("timestamp")]
+        public string Timestamp { get; set; }
+    }
+
+    public class SustainableStandardItem
+    {
+        [JsonProperty("applicableStandardsId")]
+        public int ApplicableStandardsId { get; set; }
+
+        [JsonProperty("applicableStandardsName")]
+        public string ApplicableStandardsName { get; set; }
+    }
+
     // Sustainable Finance Response
     public class SustainableFinanceResponse
     {

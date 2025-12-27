@@ -210,6 +210,7 @@ namespace PT.UI
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IBindContentSettingRepository, BindContentSettingRepository>();
             services.AddScoped<IEmailSettingRepository, EmailSettingRepository>();
+            services.AddScoped<IParameterRepository, ParameterRepository>();
 
             // ✅ Đăng ký NewsAPIService (phải sau AddHttpClient())
             services.AddScoped<INewsAPIService, NewsAPIService>();

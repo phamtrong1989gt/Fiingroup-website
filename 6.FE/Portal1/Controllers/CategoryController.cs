@@ -41,7 +41,6 @@ namespace PT.UI.Controllers
         {
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
-            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
@@ -90,7 +89,6 @@ namespace PT.UI.Controllers
             //await Task.Delay(1000);
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
-            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
@@ -124,7 +122,6 @@ namespace PT.UI.Controllers
                     {
                         Page = page ?? 1,
                         PageSize = 9,
-                        FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
                     }, language ?? "vi");
@@ -137,7 +134,6 @@ namespace PT.UI.Controllers
                         {
                             Page = page ?? 1,
                             PageSize = 1,
-                            FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                             CategoryIds = eventCategory.ExCategoryIds,
                             StatusIds = "1"
                         }, language ?? "vi");
@@ -226,7 +222,6 @@ namespace PT.UI.Controllers
                     {
                         Page = page ?? 1,
                         PageSize = 9,
-                        FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
                     }, language ?? "vi");

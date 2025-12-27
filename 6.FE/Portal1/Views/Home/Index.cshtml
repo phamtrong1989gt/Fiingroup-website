@@ -145,79 +145,28 @@
         .think-now-wrapper {
             text-align: center;
         }
+
+        .news-img {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        .news-title {
+            color: #1d2939;
+            font-size: 20px;
+            line-height: 30px;
+            word-break: break-word;
+            font-weight: 600;
+        }
+
     </style>
-    <div class="container">
-        <h2 class="price-title mb-5">Lastest <span style="color: #0066CC;">Thinking</span></h2>
-        <div class="thinks-grid">
-            <div class="thinks-featured">
-                <img src="/Data/FR/think1.png" alt="Main thinks" class="thinks-img" />
-                <div class="thinks-info">
-                    <div class="thinks-tags">
-                        <span class="tag">Market News</span>
-                        <span class="date">September 17, 2025</span>
-                    </div>
-                    <h3 class="thinks-title">
-                        Nhận định thị trường: Luật hóa Nghị quyết 42 – Từ góc nhìn của Tổ chức xếp hạng tín
-                        nhiệm nội địa
-                    </h3>
-                    <p class="thinks-desc">
-                        Nghị quyết 42/2017/QH14 được ban hành trong bối cảnh nợ xấu tăng mạnh giai đoạn 2012 –
-                        2017, trao quyền cho các Tổ chức tín dụng (TCTD) chủ động xử lý tài sản bảo đảm.
-                    </p>
-                    <a href="#" class="show-more">
-                        Show more <i class="fa fa-long-arrow-right"
-                                     aria-hidden="true"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="thinks-list">
-                <div class="thinks-item">
-                    <img src="/Data/FR/think2.png" alt="thinks 1" />
-                    <div class="thinks-content">
-                        <div class="thinks-tags">
-                            <span class="tag">Market News</span>
-                            <span class="date">September 17, 2025</span>
-                        </div>
-                        <p>
-                            Chủ tịch FiinGroup và FiinRatings chia sẻ tại Diễn đàn Ngân hàng bán lẻ Việt Nam
-                            2025 về vai trò dữ liệu trong chuyển đổi số ngân hàng
-                        </p>
-                    </div>
-                </div>
-                <div class="thinks-item">
-                    <img src="/Data/FR/think3.png" alt="thinks 2" />
-                    <div class="thinks-content">
-                        <div class="thinks-tags">
-                            <span class="tag">Market News</span>
-                            <span class="date">September 17, 2025</span>
-                        </div>
-                        <p>
-                            Chủ tịch Điều hành FiinRatings và FiinGroup tham gia chia sẻ tại Hội nghị quốc tế về
-                            Tài chính Xanh do Nam Á Bank tổ chức
-                        </p>
-                    </div>
-                </div>
-                <div class="thinks-item">
-                    <img src="/Data/FR/think4.png" alt="thinks 3" />
-                    <div class="thinks-content">
-                        <div class="thinks-tags">
-                            <span class="tag">Market News</span>
-                            <span class="date">September 17, 2025</span>
-                        </div>
-                        <p>
-                            Diễn giả và khách mời tham gia Toạ đàm "Thị trường Vốn Nợ Việt Nam 2025: Nguồn vốn
-                            cho Khu vực Tư nhân trong Kỷ nguyên Tăng trưởng Mới”
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="think-now-wrapper">
-            <div class="think-now">
-                <span>Sign up to receive reports</span>
-            </div>
-        </div>
+    <div id="topNewsContainer">
     </div>
+
 </section>
 <section id="Insights" class="py-5 mb-5">
     <style>
@@ -302,3 +251,31 @@
 </section>
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRHomeSliderTestimonials", language = language, portalId = portalId })
 <partial name="_Register" />
+
+<script>
+    function loadTopNews(containerId, url) {
+        $(containerId).html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'html',
+            success: function (response) {
+                console.log('Response received successfully');
+                $(containerId).html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error details:', {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    responseText: xhr.responseText,
+                    error: error
+                });
+                $(containerId).html('<div class="alert alert-danger">Không thể tải tin tức. Status: ' + xhr.status + '</div>');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+         loadTopNews('#topNewsContainer','/@(language)/ContentPage/TopNewsAjax?parameter=Home_TopNews&view=TopNews2Ajax&pageSize=4');
+    });
+</script>

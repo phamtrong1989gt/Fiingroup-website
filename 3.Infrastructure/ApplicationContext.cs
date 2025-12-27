@@ -68,6 +68,7 @@ namespace PT.Infrastructure
         public DbSet<SeoSetting> SeoSettings { get; set; }
         public DbSet<BindContentSetting> BindContentSettings { get; set; }
         public DbSet<EmailSetting> EmailSettings { get; set; }
+        public DbSet<Parameter> Parameters { get; set; }
         
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -127,6 +128,7 @@ namespace PT.Infrastructure
             builder.Entity<BindContentSetting>().ToTable("BindContentSetting");
             builder.Entity<EmailSetting>().ToTable("EmailSetting");
             builder.Entity<ContentPageShared>().ToTable("ContentPageShared").HasKey(c => new { c.ParentContentPageId, c.ParentPortalId, c.SharedContentPageId, c.SharedPortalId });
+            builder.Entity<Parameter>().ToTable("Parameter").HasKey(c => new { c.Id, c.PortalId, c.Language });
         }
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {

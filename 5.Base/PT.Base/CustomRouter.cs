@@ -249,7 +249,8 @@ namespace PT.Base
                     { "tin-tuc-fg", "FGNews" },
                     { "news-fg", "FGNews" },
                     { "su-kien-fg", "FGEvent" },
-                    { "event-fg", "FGEvent" }
+                    { "event-fg", "FGEvent" },
+                    { "ratings-fr", "FRatings" },
                 };
 
                 // Check custom routes

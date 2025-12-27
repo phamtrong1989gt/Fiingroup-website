@@ -67,6 +67,13 @@ namespace PT.Domain.Model
 
         [Display(Name = "Rating Results Endpoint")]
         public string RatingResultsEndpoint { get; set; }
+
+        // ============ NEW SUSTAINABLE FINANCE API ENDPOINTS ============
+        [Display(Name = "Sustainable Industries Endpoint")]
+        public string SustainableIndustriesEndpoint { get; set; }
+
+        [Display(Name = "Sustainable Standards Endpoint")]
+        public string SustainableStandardsEndpoint { get; set; }
     }
 
 
