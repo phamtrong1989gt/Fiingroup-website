@@ -600,6 +600,9 @@
                         Tables (<span id="tableCount">0</span>)
                     </h4>
                 </div>
+                <div style="padding: 10px 10px 5px 10px;">
+                    <input type="text" id="tableSearchInput" class="form-control input-sm" placeholder="🔍 Tìm kiếm table..." style="font-size: 12px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px;" />
+                </div>
                 <div class="tables-sidebar" id="tablesSidebar">
                     <div style="text-align: center; color: #999; padding: 20px;">
                         <i class="material-icons icon-align">hourglass_empty</i><br />
@@ -646,7 +649,7 @@
 </div>
 
 @section Scripts {
-    <script  src="~/js/database-query-extended.js?v=14"></script>
+    <script  src="~/js/database-query-extended.js?v=17"></script>
     <script>
         let currentResult = null;
         let currentScript = '';
@@ -793,26 +796,70 @@
                 success: function (response) {
                     if (response.output === 1) {
                         $('#tableCount').text(response.data.length);
-                        let html = '';
-                        response.data.forEach(table => {
-                            html += `
-                                <div class="table-item">
-                                    <div>
-                                        <span class="schema-name">[${table.schemaName}]</span>
-                                        <span class="table-name">${table.tableName}</span>
-                                        <span class="row-count">${table.rowCount.toLocaleString()}</span>
-                                    </div>
-                                    <div class="table-actions">
-                                        <a href="#" onclick="selectTable('${table.schemaName}', '${table.tableName}'); return false;">SELECT</a>
-                                        <a href="#" onclick="showTableInfo('${table.schemaName}', '${table.tableName}'); return false;">INFO</a>
-                                        <a href="#" onclick="generateTableScript('${table.schemaName}', '${table.tableName}'); return false;">CREATE</a>
-                                        <a href="#" onclick="generateDataScript('${table.schemaName}', '${table.tableName}'); return false;">INSERT</a>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        $('#tablesSidebar').html(html);
+                        
+                        // ✅ Store tables data globally for search
+                        window.allTables = response.data;
+                        
+                        renderTables(response.data);
+                        
+                        // ✅ Setup search functionality
+                        setupTableSearch();
                     }
+                }
+            });
+        }
+        
+        // ✅ THÊM: Render tables list
+        function renderTables(tables) {
+            let html = '';
+            tables.forEach(table => {
+                html += `
+                    <div class="table-item" data-schema="${table.schemaName}" data-table="${table.tableName}">
+                        <div>
+                            <span class="schema-name">[${table.schemaName}]</span>
+                            <span class="table-name">${table.tableName}</span>
+                            <span class="row-count">${table.rowCount.toLocaleString()}</span>
+                        </div>
+                        <div class="table-actions">
+                            <a href="#" onclick="selectTable('${table.schemaName}', '${table.tableName}'); return false;">SELECT</a>
+                            <a href="#" onclick="showTableInfo('${table.schemaName}', '${table.tableName}'); return false;">INFO</a>
+                            <a href="#" onclick="generateTableScript('${table.schemaName}', '${table.tableName}'); return false;">CREATE</a>
+                            <a href="#" onclick="generateDataScript('${table.schemaName}', '${table.tableName}'); return false;">INSERT</a>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (tables.length === 0) {
+                html = '<div style="text-align: center; color: #999; padding: 20px;">Không tìm thấy table nào</div>';
+            }
+            
+            $('#tablesSidebar').html(html);
+        }
+        
+        // ✅ THÊM: Setup table search
+        function setupTableSearch() {
+            $('#tableSearchInput').off('keyup').on('keyup', function() {
+                const searchText = $(this).val().toLowerCase().trim();
+                
+                if (searchText === '') {
+                    // Show all tables
+                    renderTables(window.allTables);
+                    $('#tableCount').text(window.allTables.length);
+                } else {
+                    // Filter tables
+                    const filtered = window.allTables.filter(table => {
+                        const schemaName = table.schemaName.toLowerCase();
+                        const tableName = table.tableName.toLowerCase();
+                        const fullName = `${schemaName}.${tableName}`;
+                        
+                        return schemaName.includes(searchText) || 
+                               tableName.includes(searchText) || 
+                               fullName.includes(searchText);
+                    });
+                    
+                    renderTables(filtered);
+                    $('#tableCount').text(filtered.length);
                 }
             });
         }

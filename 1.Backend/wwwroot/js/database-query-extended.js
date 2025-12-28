@@ -329,17 +329,9 @@ function showEditQueryForRow(rowIndex) {
             <div class="query-preview" style="background: #f5f5f5; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 11px; max-height: 300px; overflow-y: auto;">${escapeHtml(updateQuery)}</div>
             
             <div class="action-buttons" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="btn btn-success btn-sm btn-query-action" data-action="edit-direct" data-row-index="${rowIndex}">
-                    <i class="material-icons icon-align" style="font-size: 14px;">edit</i>
-                    Edit Trực Tiếp
-                </button>
                 <button class="btn btn-primary btn-sm btn-query-action" data-action="copy-clipboard" data-query-index="update-${rowIndex}">
                     <i class="material-icons icon-align" style="font-size: 14px;">content_copy</i>
                     Copy Query
-                </button>
-                <button class="btn btn-warning btn-sm btn-query-action" data-action="execute-query" data-query-index="update-${rowIndex}">
-                    <i class="material-icons icon-align" style="font-size: 14px;">play_arrow</i>
-                    Execute Now
                 </button>
             </div>
         </div>
@@ -407,10 +399,7 @@ function showDeleteQueryForRow(rowIndex) {
                     <i class="material-icons icon-align" style="font-size: 14px;">content_copy</i>
                     Copy Query
                 </button>
-                <button class="btn btn-danger btn-sm btn-query-action" data-action="execute-delete" data-row-index="${rowIndex}" data-query-index="delete-${rowIndex}">
-                    <i class="material-icons icon-align" style="font-size: 14px;">delete_forever</i>
-                    Execute Delete
-                </button>
+         
             </div>
         </div>
     `;
