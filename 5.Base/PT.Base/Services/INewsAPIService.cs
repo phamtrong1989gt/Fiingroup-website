@@ -15,20 +15,20 @@ namespace PT.Base.Services
 {
     public interface INewsAPIService
     {
-        Task<string> GetAccessTokenAsync(bool clearCache = false);
-        Task<NewsListResponse> GetNewsAsync(NewsQueryParameters parameters, string language = "vi");
-        Task<NewsDetailResponse> GetNewsByIdAsync(int id, string language = "vi");
+        Task<string> GetAccessTokenAsync(bool clearCache, int portalId);
+        Task<NewsListResponse> GetNewsAsync(NewsQueryParameters parameters, string language = "vi", int portalId = 1);
+        Task<NewsDetailResponse> GetNewsByIdAsync(int id, string language = "vi", int portalId = 1);
         
         // ============ NEW RATING API METHODS ============
-        Task<ReportScoresResponse> GetReportScoresAsync(bool clearCache = false);
-        Task<ReportIndustriesResponse> GetReportIndustriesAsync(string language = "vi", bool clearCache = false);
-        Task<ReportOutlooksResponse> GetReportOutlooksAsync(string language = "vi", bool clearCache = false);
-        Task<SustainableFinanceResponse> GetSustainableFinanceReportsAsync(SustainableFinanceQueryParameters parameters, string language = "vi");
-        Task<RatingResultsResponse> GetRatingResultsAsync(RatingResultsQueryParameters parameters);
+        Task<ReportScoresResponse> GetReportScoresAsync(int portalId = 1);
+        Task<ReportIndustriesResponse> GetReportIndustriesAsync(string language = "vi", int portalId = 1);
+        Task<ReportOutlooksResponse> GetReportOutlooksAsync(string language = "vi", int portalId = 1);
+        Task<SustainableFinanceResponse> GetSustainableFinanceReportsAsync(SustainableFinanceQueryParameters parameters, string language = "vi", int portalId = 1);
+        Task<RatingResultsResponse> GetRatingResultsAsync(RatingResultsQueryParameters parameters, int portalId = 1);
         
         // ============ NEW SUSTAINABLE FINANCE API METHODS ============
-        Task<SustainableIndustriesResponse> GetSustainableIndustriesAsync(string language = "vi", bool clearCache = false);
-        Task<SustainableStandardsResponse> GetSustainableStandardsAsync(string language = "vi", bool clearCache = false);
+        Task<SustainableIndustriesResponse> GetSustainableIndustriesAsync(string language = "vi", int portalId = 1);
+        Task<SustainableStandardsResponse> GetSustainableStandardsAsync(string language = "vi", int portalId = 1);
     }
 
     public class NewsAPIService : INewsAPIService
@@ -36,24 +36,22 @@ namespace PT.Base.Services
         private readonly IMemoryCache _memoryCache;
         private readonly IOptions<BaseSettings> _baseSettings;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IAPILoggerService _apiLogger;
         private const string TOKEN_CACHE_KEY = "NewsAPI_AccessToken";
-        private const string REPORT_SCORES_CACHE_KEY = "ReportAPI_Scores";
-        private const string REPORT_INDUSTRIES_CACHE_KEY = "ReportAPI_Industries";
-        private const string REPORT_OUTLOOKS_CACHE_KEY = "ReportAPI_Outlooks";
-        private const string SUSTAINABLE_INDUSTRIES_CACHE_KEY = "SustainableAPI_Industries";
-        private const string SUSTAINABLE_STANDARDS_CACHE_KEY = "SustainableAPI_Standards";
 
         public NewsAPIService(
-    ISeoSettingRepository iSeoSettingRepository,
-     IMemoryCache memoryCache,
+            ISeoSettingRepository iSeoSettingRepository,
+            IMemoryCache memoryCache,
             IBindContentSettingRepository iBindContentSettingRepository,
             IEmailSettingRepository iEmailSettingRepository,
             IOptions<BaseSettings> baseSettings,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            IAPILoggerService apiLogger)
         {
             _memoryCache = memoryCache;
             _baseSettings = baseSettings;
             _httpClientFactory = httpClientFactory;
+            _apiLogger = apiLogger;
         }
 
         /// <summary>
@@ -61,8 +59,10 @@ namespace PT.Base.Services
         /// </summary>
         /// <param name="clearCache">True: Xóa cache và lấy token mới. False: Dùng cache nếu có</param>
         /// <returns>Access Token</returns>
-        public async Task<string> GetAccessTokenAsync(bool clearCache = false)
+        public async Task<string> GetAccessTokenAsync(bool clearCache, int portalId)
         {
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            
             if (clearCache)
             {
                 _memoryCache.Remove(TOKEN_CACHE_KEY);
@@ -81,14 +81,14 @@ namespace PT.Base.Services
                 using var httpClient = _httpClientFactory.CreateClient();
 
                 var formData = new Dictionary<string, string>
-    {
-      { "grant_type", settings.GrantType },
-     { "client_id", settings.ClientId },
-        { "client_secret", settings.ClientSecret },
-      { "scope", settings.Scope },
-     { "username", settings.Username },
-          { "password", settings.Password }
-      };
+                {
+                    { "grant_type", settings.GrantType },
+                    { "client_id", settings.ClientId },
+                    { "client_secret", settings.ClientSecret },
+                    { "scope", settings.Scope },
+                    { "username", settings.Username },
+                    { "password", settings.Password }
+                };
 
                 var content = new FormUrlEncodedContent(formData);
                 var response = await httpClient.PostAsync(tokenUrl, content);
@@ -96,7 +96,6 @@ namespace PT.Base.Services
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 
-                // ✅ Kiểm tra responseContent có rỗng không trước khi deserialize
                 if (string.IsNullOrWhiteSpace(responseContent))
                 {
                     throw new Exception("Response content is null or empty");
@@ -104,19 +103,16 @@ namespace PT.Base.Services
 
                 var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
 
-                // ✅ Kiểm tra token có hợp lệ không
                 if (tokenResponse == null || string.IsNullOrWhiteSpace(tokenResponse.AccessToken))
                 {
                     throw new Exception("Access token is null or empty");
                 }
 
-                // ✅ Kiểm tra ExpiresIn có hợp lệ không (phải > 0)
                 if (tokenResponse.ExpiresIn <= 0)
                 {
                     throw new Exception("Token ExpiresIn is invalid (must be > 0)");
                 }
 
-                // ✅ CHỈ set cache khi token hợp lệ
                 var cacheExpiration = TimeSpan.FromSeconds(tokenResponse.ExpiresIn > 60 ? tokenResponse.ExpiresIn - 60 : tokenResponse.ExpiresIn);
 
                 var cacheOptions = new MemoryCacheEntryOptions
@@ -128,21 +124,76 @@ namespace PT.Base.Services
 
                 _memoryCache.Set(TOKEN_CACHE_KEY, tokenResponse.AccessToken, cacheOptions);
 
+                stopwatch.Stop();
+                
+                // ✅ Log thành công với portalId
+                _ = _apiLogger.LogAPICallAsync(new APILogModel
+                {
+                    Type = LogType.API_GetToken,
+                    Endpoint = tokenUrl,
+                    Method = "POST",
+                    DurationMs = stopwatch.ElapsedMilliseconds,
+                    StatusCode = 200,
+                    Success = true,
+                    RequestParams = $"portal={portalId}, grant_type={settings.GrantType}, client_id={settings.ClientId}",
+                    PortalId = portalId
+                });
+
                 return tokenResponse.AccessToken;
             }
             catch (HttpRequestException ex)
             {
-                // ✅ Không cache khi có lỗi HTTP
+                stopwatch.Stop();
+                
+                // ✅ Log lỗi HTTP với portalId
+                _ = _apiLogger.LogAPICallAsync(new APILogModel
+                {
+                    Type = LogType.API_Error_Other,
+                    Endpoint = tokenUrl,
+                    Method = "POST",
+                    DurationMs = stopwatch.ElapsedMilliseconds,
+                    StatusCode = (int)(ex.StatusCode ?? System.Net.HttpStatusCode.InternalServerError),
+                    Success = false,
+                    ErrorMessage = ex.Message,
+                    PortalId = portalId
+                });
+                
                 throw new Exception($"Failed to get access token: {ex.Message}", ex);
             }
             catch (JsonException ex)
             {
-                // ✅ Không cache khi JSON không hợp lệ
+                stopwatch.Stop();
+                
+                _ = _apiLogger.LogAPICallAsync(new APILogModel
+                {
+                    Type = LogType.API_Error_Other,
+                    Endpoint = tokenUrl,
+                    Method = "POST",
+                    DurationMs = stopwatch.ElapsedMilliseconds,
+                    StatusCode = 500,
+                    Success = false,
+                    ErrorMessage = $"JSON Error: {ex.Message}",
+                    PortalId = portalId
+                });
+                
                 throw new Exception($"Invalid JSON response: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
-                // ✅ Không cache khi có lỗi khác
+                stopwatch.Stop();
+                
+                _ = _apiLogger.LogAPICallAsync(new APILogModel
+                {
+                    Type = LogType.API_Error_Other,
+                    Endpoint = tokenUrl,
+                    Method = "POST",
+                    DurationMs = stopwatch.ElapsedMilliseconds,
+                    StatusCode = 500,
+                    Success = false,
+                    ErrorMessage = ex.Message,
+                    PortalId = portalId
+                });
+                
                 throw new Exception($"Error getting access token: {ex.Message}", ex);
             }
         }
@@ -153,48 +204,65 @@ namespace PT.Base.Services
         /// <param name="parameters">Query parameters</param>
         /// <param name="language">Ngôn ngữ: "vi" hoặc "en"</param>
         /// <returns>NewsListResponse hoặc null nếu thất bại</returns>
-        public async Task<NewsListResponse> GetNewsAsync(NewsQueryParameters parameters, string language = "vi")
+        public async Task<NewsListResponse> GetNewsAsync(NewsQueryParameters parameters, string language = "vi", int portalId = 1)
         {
-            var settings = _baseSettings.Value.NewAPI;
-            var endpoint = language.ToLower() == "vi" ? settings.NewsEndpointVI : settings.NewsEndpointEN;
-            var newsUrl = $"{endpoint}";
-
-            // Lấy token
-            string token;
-            try
-            {
-                token = await GetAccessTokenAsync();
-            }
-            catch (Exception)
-            {
-                // Không thể lấy token, trả về null
-                return null;
-            }
-
-            // ✅ Lần 1: Gọi API với token hiện tại
-            try
-            {
-                return await CallNewsAPIAsync(newsUrl, token, parameters);
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // ✅ Gặp 401: Thử lấy token mới và retry 1 LẦN DUY NHẤT
-                try
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetNews,
+                $"{_baseSettings.Value.NewAPI.NewsEndpointVI}",
+                "GET",
+                async () =>
                 {
-                    token = await GetAccessTokenAsync(clearCache: true);
-                    return await CallNewsAPIAsync(newsUrl, token, parameters);
-                }
-                catch (Exception)
-                {
-                    // ✅ Retry thất bại, trả về null
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                // ✅ Lỗi khác, trả về null
-                return null;
-            }
+                    var settings = _baseSettings.Value.NewAPI;
+                    var endpoint = language.ToLower() == "vi" ? settings.NewsEndpointVI : settings.NewsEndpointEN;
+                    var newsUrl = $"{endpoint}";
+
+                    string token;
+                    try
+                    {
+                        token = await GetAccessTokenAsync(false, portalId);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return await CallNewsAPIAsync(newsUrl, token, parameters);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _ = _apiLogger.LogAPICallAsync(new APILogModel
+                        {
+                            Type = LogType.API_Error_Unauthorized,
+                            Endpoint = newsUrl,
+                            Method = "GET",
+                            StatusCode = 401,
+                            Success = false,
+                            ErrorMessage = "Token expired, retrying with new token",
+                            Language = language,
+                            PortalId = portalId
+                        });
+
+                        try
+                        {
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            return await CallNewsAPIAsync(newsUrl, token, parameters);
+                        }
+                        catch (Exception)
+                        {
+                            return null;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                },
+                language,
+                parameters?.ToQueryString(),
+                portalId
+            );
         }
 
         /// <summary>
@@ -203,49 +271,66 @@ namespace PT.Base.Services
         /// <param name="id">News ID</param>
         /// <param name="language">Ngôn ngữ: "vi" hoặc "en"</param>
         /// <returns>NewsDetailResponse hoặc null nếu thất bại</returns>
-        public async Task<NewsDetailResponse> GetNewsByIdAsync(int id, string language = "vi")
+        public async Task<NewsDetailResponse> GetNewsByIdAsync(int id, string language = "vi", int portalId = 1)
         {
-            var settings = _baseSettings.Value.NewAPI;
-            var endpoint = language.ToLower() == "vi" ? settings.NewsEndpointVI.Replace("/Gets", "/Get") : settings.NewsEndpointEN.Replace("/Gets", "/Get");
-            var newsUrl = $"{endpoint}?id={id}";
-
-            // Lấy token
-            string token;
-            try
-            {
-                token = await GetAccessTokenAsync();
-            }
-            catch (Exception)
-            {
-                // Không thể lấy token, trả về null
-                return null;
-            }
-
-            // ✅ Lần 1: Gọi API với token hiện tại
-            try
-            {
-              //  newsUrl = "http://113.160.94.133:5050/FGFN/api/NewsEN/Get?id=6410206";
-                return await CallNewsDetailAPIAsync(newsUrl, token);
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // ✅ Gặp 401: Thử lấy token mới và retry 1 LẦN DUY NHẤT
-                try
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetNewsDetail,
+                $"{_baseSettings.Value.NewAPI.NewsEndpointVI}/Get?id={id}",
+                "GET",
+                async () =>
                 {
-                    token = await GetAccessTokenAsync(clearCache: true);
-                    return await CallNewsDetailAPIAsync(newsUrl, token);
-                }
-                catch (Exception)
-                {
-                    // ✅ Retry thất bại, trả về null
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                // ✅ Lỗi khác, trả về null
-                return null;
-            }
+                    var settings = _baseSettings.Value.NewAPI;
+                    var endpoint = language.ToLower() == "vi" ? settings.NewsEndpointVI.Replace("/Gets", "/Get") : settings.NewsEndpointEN.Replace("/Gets", "/Get");
+                    var newsUrl = $"{endpoint}?id={id}";
+
+                    string token;
+                    try
+                    {
+                        token = await GetAccessTokenAsync(false, portalId);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return await CallNewsDetailAPIAsync(newsUrl, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _ = _apiLogger.LogAPICallAsync(new APILogModel
+                        {
+                            Type = LogType.API_Error_Unauthorized,
+                            Endpoint = newsUrl,
+                            Method = "GET",
+                            StatusCode = 401,
+                            Success = false,
+                            ErrorMessage = "Token expired, retrying",
+                            Language = language,
+                            RequestParams = $"id={id}",
+                            PortalId = portalId
+                        });
+
+                        try
+                        {
+                            token = await GetAccessTokenAsync(clearCache: true,  portalId);
+                            return await CallNewsDetailAPIAsync(newsUrl, token);
+                        }
+                        catch (Exception)
+                        {
+                            return null;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                },
+                language,
+                $"id={id}",
+                portalId
+            );
         }
 
         /// <summary>
@@ -312,571 +397,428 @@ namespace PT.Base.Services
         // ============ RATING API IMPLEMENTATIONS ============
 
         /// <summary>
-        /// Lấy danh sách điểm xếp hạng (Scores) với cache 1 giờ
+        /// Lấy danh sách điểm xếp hạng (Scores) - không cache
         /// </summary>
-        /// <param name="clearCache">True: Xóa cache và lấy dữ liệu mới. False: Dùng cache nếu có</param>
         /// <returns>ReportScoresResponse hoặc null nếu thất bại</returns>
-        public async Task<ReportScoresResponse> GetReportScoresAsync(bool clearCache = false)
+        public async Task<ReportScoresResponse> GetReportScoresAsync(int portalId = 1)
         {
-            if (clearCache)
-            {
-                _memoryCache.Remove(REPORT_SCORES_CACHE_KEY);
-            }
-
-            if (_memoryCache.TryGetValue(REPORT_SCORES_CACHE_KEY, out ReportScoresResponse cachedData))
-            {
-                return cachedData;
-            }
-
-            var settings = _baseSettings.Value.NewAPI;
-            var endpoint = settings.ReportScoresEndpoint;
-
-            if (string.IsNullOrWhiteSpace(endpoint))
-            {
-                return null;
-            }
-
-            // Lấy token
-            string token;
-            try
-            {
-                token = await GetAccessTokenAsync();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            // Gọi API với token hiện tại
-            try
-            {
-                var result = await CallRatingAPIAsync<ReportScoresResponse>(endpoint, token);
-                
-                if (result != null && result.Success)
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetReportScores,
+                _baseSettings.Value.NewAPI.ReportScoresEndpoint ?? "N/A",
+                "GET",
+                async () =>
                 {
-                    // Cache dữ liệu trong 1 giờ
-                    var cacheOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                        Priority = CacheItemPriority.Normal,
-                        Size = 10
-                    };
-                    _memoryCache.Set(REPORT_SCORES_CACHE_KEY, result, cacheOptions);
-                }
+                    var settings = _baseSettings.Value.NewAPI;
+                    var endpoint = settings.ReportScoresEndpoint;
 
-                return result;
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // Gặp 401: Thử lấy token mới và retry 1 lần
-                try
-                {
-                    token = await GetAccessTokenAsync(clearCache: true);
-                    var result = await CallRatingAPIAsync<ReportScoresResponse>(endpoint, token);
-                    
-                    if (result != null && result.Success)
+                    if (string.IsNullOrWhiteSpace(endpoint))
                     {
-                        var cacheOptions = new MemoryCacheEntryOptions
-                        {
-                            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                            Priority = CacheItemPriority.Normal,
-                            Size = 10
-                        };
-                        _memoryCache.Set(REPORT_SCORES_CACHE_KEY, result, cacheOptions);
+                        return null;
                     }
 
-                    return result;
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                    string token;
+                    try
+                    {
+                        token = await GetAccessTokenAsync(false, portalId);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<ReportScoresResponse>(endpoint, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try
+                        {
+                            token = await GetAccessTokenAsync(clearCache: true, portalId);
+                            return await CallRatingAPIAsync<ReportScoresResponse>(endpoint, token);
+                        }
+                        catch (Exception)
+                        {
+                            return null;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                },
+                null,
+                null,
+                portalId
+            );
         }
 
         /// <summary>
-        /// Lấy danh sách ngành (Industries) với cache 1 giờ
+        /// Lấy danh sách ngành (Industries) - không cache
         /// </summary>
         /// <param name="language">Ngôn ngữ: "vi" hoặc "en"</param>
-        /// <param name="clearCache">True: Xóa cache và lấy dữ liệu mới. False: Dùng cache nếu có</param>
         /// <returns>ReportIndustriesResponse hoặc null nếu thất bại</returns>
-        public async Task<ReportIndustriesResponse> GetReportIndustriesAsync(string language = "vi", bool clearCache = false)
+        public async Task<ReportIndustriesResponse> GetReportIndustriesAsync(string language = "vi", int portalId = 1)
         {
-            var cacheKey = $"{REPORT_INDUSTRIES_CACHE_KEY}_{language}";
-
-            if (clearCache)
-            {
-                _memoryCache.Remove(cacheKey);
-            }
-
-            if (_memoryCache.TryGetValue(cacheKey, out ReportIndustriesResponse cachedData))
-            {
-                return cachedData;
-            }
-
-            var settings = _baseSettings.Value.NewAPI;
-            var endpoint = settings.ReportIndustriesEndpoint;
-
-            if (string.IsNullOrWhiteSpace(endpoint))
-            {
-                return null;
-            }
-
-            var url = $"{endpoint}?lang={language}";
-
-            // Lấy token
-            string token;
-            try
-            {
-                token = await GetAccessTokenAsync();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            // Gọi API với token hiện tại
-            try
-            {
-                var result = await CallRatingAPIAsync<ReportIndustriesResponse>(url, token);
-                
-                if (result != null && result.Success)
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetIndustries,
+                _baseSettings.Value.NewAPI.ReportIndustriesEndpoint ?? "N/A",
+                "GET",
+                async () =>
                 {
-                    // Cache dữ liệu trong 1 giờ
-                    var cacheOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                        Priority = CacheItemPriority.Normal,
-                        Size = 10
-                    };
-                    _memoryCache.Set(cacheKey, result, cacheOptions);
-                }
+                    var settings = _baseSettings.Value.NewAPI;
+                    var endpoint = settings.ReportIndustriesEndpoint;
 
-                return result;
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // Gặp 401: Thử lấy token mới và retry 1 lần
-                try
-                {
-                    token = await GetAccessTokenAsync(clearCache: true);
-                    var result = await CallRatingAPIAsync<ReportIndustriesResponse>(url, token);
-                    
-                    if (result != null && result.Success)
+                    if (string.IsNullOrWhiteSpace(endpoint))
                     {
-                        var cacheOptions = new MemoryCacheEntryOptions
-                        {
-                            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                            Priority = CacheItemPriority.Normal,
-                            Size = 10
-                        };
-                        _memoryCache.Set(cacheKey, result, cacheOptions);
+                        return null;
                     }
 
-                    return result;
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                    var url = $"{endpoint}?lang={language}";
+
+                    string token;
+                    try
+                    {
+                        token = await GetAccessTokenAsync(false, portalId);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<ReportIndustriesResponse>(url, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try
+                        {
+                            token = await GetAccessTokenAsync(clearCache: true, portalId);
+                            return await CallRatingAPIAsync<ReportIndustriesResponse>(url, token);
+                        }
+                        catch (Exception)
+                        {
+                            return null;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                },
+                language,
+                null,
+                portalId
+            );
         }
 
         /// <summary>
-        /// Lấy danh sách triển vọng (Outlooks) với cache 1 giờ
+        /// Lấy danh sách triển vọng (Outlooks) - không cache
         /// </summary>
         /// <param name="language">Ngôn ngữ: "vi" hoặc "en"</param>
-        /// <param name="clearCache">True: Xóa cache và lấy dữ liệu mới. False: Dùng cache nếu có</param>
         /// <returns>ReportOutlooksResponse hoặc null nếu thất bại</returns>
-        public async Task<ReportOutlooksResponse> GetReportOutlooksAsync(string language = "vi", bool clearCache = false)
+        public async Task<ReportOutlooksResponse> GetReportOutlooksAsync(string language = "vi", int portalId = 1)
         {
-            var cacheKey = $"{REPORT_OUTLOOKS_CACHE_KEY}_{language}";
-
-            if (clearCache)
-            {
-                _memoryCache.Remove(cacheKey);
-            }
-
-            if (_memoryCache.TryGetValue(cacheKey, out ReportOutlooksResponse cachedData))
-            {
-                return cachedData;
-            }
-
-            var settings = _baseSettings.Value.NewAPI;
-            var endpoint = settings.ReportOutlooksEndpoint;
-
-            if (string.IsNullOrWhiteSpace(endpoint))
-            {
-                return null;
-            }
-
-            var url = $"{endpoint}?lang={language}";
-
-            // Lấy token
-            string token;
-            try
-            {
-                token = await GetAccessTokenAsync();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            // Gọi API với token hiện tại
-            try
-            {
-                var result = await CallRatingAPIAsync<ReportOutlooksResponse>(url, token);
-                
-                if (result != null && result.Success)
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetOutlooks,
+                _baseSettings.Value.NewAPI.ReportOutlooksEndpoint ?? "N/A",
+                "GET",
+                async () =>
                 {
-                    // Cache dữ liệu trong 1 giờ
-                    var cacheOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                        Priority = CacheItemPriority.Normal,
-                        Size = 10
-                    };
-                    _memoryCache.Set(cacheKey, result, cacheOptions);
-                }
+                    var settings = _baseSettings.Value.NewAPI;
+                    var endpoint = settings.ReportOutlooksEndpoint;
 
-                return result;
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // Gặp 401: Thử lấy token mới và retry 1 lần
-                try
-                {
-                    token = await GetAccessTokenAsync(clearCache: true);
-                    var result = await CallRatingAPIAsync<ReportOutlooksResponse>(url, token);
-                    
-                    if (result != null && result.Success)
+                    if (string.IsNullOrWhiteSpace(endpoint))
                     {
-                        var cacheOptions = new MemoryCacheEntryOptions
-                        {
-                            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                            Priority = CacheItemPriority.Normal,
-                            Size = 10
-                        };
-                        _memoryCache.Set(cacheKey, result, cacheOptions);
+                        return null;
                     }
 
-                    return result;
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                    var url = $"{endpoint}?lang={language}";
+
+                    string token;
+                    try
+                    {
+                        token = await GetAccessTokenAsync(false, portalId);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<ReportOutlooksResponse>(url, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try
+                        {
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            return await CallRatingAPIAsync<ReportOutlooksResponse>(url, token);
+                        }
+                        catch (Exception)
+                        {
+                            return null;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                },
+                language,
+                null,
+                portalId
+            );
         }
 
         /// <summary>
-        /// Lấy danh sách báo cáo tài chính bền vững (không cache vì có phân trang)
+        /// Lấy danh sách báo cáo tài chính bền vững - không cache
         /// </summary>
         /// <param name="parameters">Query parameters</param>
         /// <param name="language">Ngôn ngữ: "vi" hoặc "en"</param>
         /// <returns>SustainableFinanceResponse hoặc null nếu thất bại</returns>
-        public async Task<SustainableFinanceResponse> GetSustainableFinanceReportsAsync(SustainableFinanceQueryParameters parameters, string language = "vi")
+        public async Task<SustainableFinanceResponse> GetSustainableFinanceReportsAsync(SustainableFinanceQueryParameters parameters, string language = "vi", int portalId = 1)
         {
-            var settings = _baseSettings.Value.NewAPI;
-            var endpoint = settings.SustainableFinanceEndpoint;
-
-            if (string.IsNullOrWhiteSpace(endpoint))
-            {
-                return null;
-            }
-
-            // Đảm bảo language được set trong parameters
-            if (string.IsNullOrWhiteSpace(parameters.Lang))
-            {
-                parameters.Lang = language;
-            }
-
-            var queryString = parameters.ToQueryString();
-            var url = string.IsNullOrEmpty(queryString) ? endpoint : $"{endpoint}?{queryString}";
-
-            // Lấy token
-            string token;
-            try
-            {
-                token = await GetAccessTokenAsync();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            // Gọi API với token hiện tại
-            try
-            {
-                return await CallRatingAPIAsync<SustainableFinanceResponse>(url, token);
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // Gặp 401: Thử lấy token mới và retry 1 lần
-                try
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetSustainableFinance,
+                _baseSettings.Value.NewAPI.SustainableFinanceEndpoint ?? "N/A",
+                "GET",
+                async () =>
                 {
-                    token = await GetAccessTokenAsync(clearCache: true);
-                    return await CallRatingAPIAsync<SustainableFinanceResponse>(url, token);
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                    var settings = _baseSettings.Value.NewAPI;
+                    var endpoint = settings.SustainableFinanceEndpoint;
+
+                    if (string.IsNullOrWhiteSpace(endpoint))
+                    {
+                        return null;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(parameters.Lang))
+                    {
+                        parameters.Lang = language;
+                    }
+
+                    var queryString = parameters.ToQueryString();
+                    var url = string.IsNullOrEmpty(queryString) ? endpoint : $"{endpoint}?{queryString}";
+
+                    string token;
+                    try
+                    {
+                        token = await GetAccessTokenAsync(false, portalId);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<SustainableFinanceResponse>(url, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try
+                        {
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            return await CallRatingAPIAsync<SustainableFinanceResponse>(url, token);
+                        }
+                        catch (Exception)
+                        {
+                            return null;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                },
+                language,
+                parameters?.ToQueryString(),
+                portalId
+            );
         }
 
         /// <summary>
-        /// Lấy kết quả xếp hạng tín nhiệm (không cache vì có phân trang và filter)
+        /// Lấy kết quả xếp hạng tín nhiệm - không cache
         /// </summary>
         /// <param name="parameters">Query parameters</param>
         /// <returns>RatingResultsResponse hoặc null nếu thất bại</returns>
-        public async Task<RatingResultsResponse> GetRatingResultsAsync(RatingResultsQueryParameters parameters)
+        public async Task<RatingResultsResponse> GetRatingResultsAsync(RatingResultsQueryParameters parameters, int portalId = 1)
         {
-            var settings = _baseSettings.Value.NewAPI;
-            var endpoint = settings.RatingResultsEndpoint;
-
-            if (string.IsNullOrWhiteSpace(endpoint))
-            {
-                return null;
-            }
-
-            var queryString = parameters.ToQueryString();
-            var url = string.IsNullOrEmpty(queryString) ? endpoint : $"{endpoint}?{queryString}";
-
-            // Lấy token
-            string token;
-            try
-            {
-                token = await GetAccessTokenAsync();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            // Gọi API với token hiện tại
-            try
-            {
-                return await CallRatingAPIAsync<RatingResultsResponse>(url, token);
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // Gặp 401: Thử lấy token mới và retry 1 lần
-                try
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetRatingResults,
+                _baseSettings.Value.NewAPI.RatingResultsEndpoint ?? "N/A",
+                "GET",
+                async () =>
                 {
-                    token = await GetAccessTokenAsync(clearCache: true);
-                    return await CallRatingAPIAsync<RatingResultsResponse>(url, token);
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                    var settings = _baseSettings.Value.NewAPI;
+                    var endpoint = settings.RatingResultsEndpoint;
+
+                    if (string.IsNullOrWhiteSpace(endpoint))
+                    {
+                        return null;
+                    }
+
+                    var queryString = parameters.ToQueryString();
+                    var url = string.IsNullOrEmpty(queryString) ? endpoint : $"{endpoint}?{queryString}";
+
+                    string token;
+                    try
+                    {
+                        token = await GetAccessTokenAsync(false, portalId);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<RatingResultsResponse>(url, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try
+                        {
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            return await CallRatingAPIAsync<RatingResultsResponse>(url, token);
+                        }
+                        catch (Exception)
+                        {
+                            return null;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                },
+                parameters?.Lang,
+                parameters?.ToQueryString(),
+                portalId
+            );
         }
 
         /// <summary>
-        /// Lấy danh sách ngành cho Sustainable Finance (Industries) với cache 1 giờ
+        /// Lấy danh sách ngành cho Sustainable Finance (Industries) - không cache
         /// </summary>
         /// <param name="language">Ngôn ngữ: "vi" hoặc "en"</param>
-        /// <param name="clearCache">True: Xóa cache và lấy dữ liệu mới. False: Dùng cache nếu có</param>
         /// <returns>SustainableIndustriesResponse hoặc null nếu thất bại</returns>
-        public async Task<SustainableIndustriesResponse> GetSustainableIndustriesAsync(string language = "vi", bool clearCache = false)
+        public async Task<SustainableIndustriesResponse> GetSustainableIndustriesAsync(string language = "vi", int portalId = 1)
         {
-            var cacheKey = $"{SUSTAINABLE_INDUSTRIES_CACHE_KEY}_{language}";
-
-            if (clearCache)
-            {
-                _memoryCache.Remove(cacheKey);
-            }
-
-            if (_memoryCache.TryGetValue(cacheKey, out SustainableIndustriesResponse cachedData))
-            {
-                return cachedData;
-            }
-
-            var settings = _baseSettings.Value.NewAPI;
-            var endpoint = settings.SustainableIndustriesEndpoint;
-
-            if (string.IsNullOrWhiteSpace(endpoint))
-            {
-                return null;
-            }
-
-            var url = $"{endpoint}?lang={language}";
-
-            // Lấy token
-            string token;
-            try
-            {
-                token = await GetAccessTokenAsync();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            // Gọi API với token hiện tại
-            try
-            {
-                var result = await CallRatingAPIAsync<SustainableIndustriesResponse>(url, token);
-                
-                if (result != null && result.Success)
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetIndustries,
+                _baseSettings.Value.NewAPI.SustainableIndustriesEndpoint ?? "N/A",
+                "GET",
+                async () =>
                 {
-                    // Cache dữ liệu trong 1 giờ
-                    var cacheOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                        Priority = CacheItemPriority.Normal,
-                        Size = 10
-                    };
-                    _memoryCache.Set(cacheKey, result, cacheOptions);
-                }
+                    var settings = _baseSettings.Value.NewAPI;
+                    var endpoint = settings.SustainableIndustriesEndpoint;
 
-                return result;
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // Gặp 401: Thử lấy token mới và retry 1 lần
-                try
-                {
-                    token = await GetAccessTokenAsync(clearCache: true);
-                    var result = await CallRatingAPIAsync<SustainableIndustriesResponse>(url, token);
-                    
-                    if (result != null && result.Success)
+                    if (string.IsNullOrWhiteSpace(endpoint))
                     {
-                        var cacheOptions = new MemoryCacheEntryOptions
-                        {
-                            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                            Priority = CacheItemPriority.Normal,
-                            Size = 10
-                        };
-                        _memoryCache.Set(cacheKey, result, cacheOptions);
+                        return null;
                     }
 
-                    return result;
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                    var url = $"{endpoint}?lang={language}";
+
+                    string token;
+                    try
+                    {
+                        token = await GetAccessTokenAsync(false, portalId);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<SustainableIndustriesResponse>(url, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try
+                        {
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            return await CallRatingAPIAsync<SustainableIndustriesResponse>(url, token);
+                        }
+                        catch (Exception)
+                        {
+                            return null;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                },
+                language,
+                null,
+                portalId
+            );
         }
 
         /// <summary>
-        /// Lấy danh sách tiêu chuẩn áp dụng cho Sustainable Finance (Standards) với cache 1 giờ
+        /// Lấy danh sách tiêu chuẩn áp dụng cho Sustainable Finance (Standards) - không cache
         /// </summary>
         /// <param name="language">Ngôn ngữ: "vi" hoặc "en"</param>
-        /// <param name="clearCache">True: Xóa cache và lấy dữ liệu mới. False: Dùng cache nếu có</param>
         /// <returns>SustainableStandardsResponse hoặc null nếu thất bại</returns>
-        public async Task<SustainableStandardsResponse> GetSustainableStandardsAsync(string language = "vi", bool clearCache = false)
+        public async Task<SustainableStandardsResponse> GetSustainableStandardsAsync(string language = "vi", int portalId = 1)
         {
-            var cacheKey = $"{SUSTAINABLE_STANDARDS_CACHE_KEY}_{language}";
-
-            if (clearCache)
-            {
-                _memoryCache.Remove(cacheKey);
-            }
-
-            if (_memoryCache.TryGetValue(cacheKey, out SustainableStandardsResponse cachedData))
-            {
-                return cachedData;
-            }
-
-            var settings = _baseSettings.Value.NewAPI;
-            var endpoint = settings.SustainableStandardsEndpoint;
-
-            if (string.IsNullOrWhiteSpace(endpoint))
-            {
-                return null;
-            }
-
-            var url = $"{endpoint}?lang={language}";
-
-            // Lấy token
-            string token;
-            try
-            {
-                token = await GetAccessTokenAsync();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-            // Gọi API với token hiện tại
-            try
-            {
-                var result = await CallRatingAPIAsync<SustainableStandardsResponse>(url, token);
-                
-                if (result != null && result.Success)
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetIndustries,
+                _baseSettings.Value.NewAPI.SustainableStandardsEndpoint ?? "N/A",
+                "GET",
+                async () =>
                 {
-                    // Cache dữ liệu trong 1 giờ
-                    var cacheOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                        Priority = CacheItemPriority.Normal,
-                        Size = 10
-                    };
-                    _memoryCache.Set(cacheKey, result, cacheOptions);
-                }
+                    var settings = _baseSettings.Value.NewAPI;
+                    var endpoint = settings.SustainableStandardsEndpoint;
 
-                return result;
-            }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                // Gặp 401: Thử lấy token mới và retry 1 lần
-                try
-                {
-                    token = await GetAccessTokenAsync(clearCache: true);
-                    var result = await CallRatingAPIAsync<SustainableStandardsResponse>(url, token);
-                    
-                    if (result != null && result.Success)
+                    if (string.IsNullOrWhiteSpace(endpoint))
                     {
-                        var cacheOptions = new MemoryCacheEntryOptions
-                        {
-                            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
-                            Priority = CacheItemPriority.Normal,
-                            Size = 10
-                        };
-                        _memoryCache.Set(cacheKey, result, cacheOptions);
+                        return null;
                     }
 
-                    return result;
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                    var url = $"{endpoint}?lang={language}";
+
+                    string token;
+                    try
+                    {
+                        token = await GetAccessTokenAsync(false, portalId);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<SustainableStandardsResponse>(url, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try
+                        {
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            return await CallRatingAPIAsync<SustainableStandardsResponse>(url, token);
+                        }
+                        catch (Exception)
+                        {
+                            return null;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                },
+                language,
+                null,
+                portalId
+            );
         }
 
         /// <summary>

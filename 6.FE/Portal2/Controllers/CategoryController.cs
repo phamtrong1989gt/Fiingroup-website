@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Base.Services;
 using PT.Domain.Model;
@@ -28,11 +29,13 @@ namespace PT.UI.Controllers
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ICategoryRepository _iCategoryRepository;
         private readonly INewsAPIService _iNewsAPIService;
-        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, INewsAPIService iNewsAPIService)
+        private readonly IOptions<BaseSettings> _baseSettings;
+        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, INewsAPIService iNewsAPIService, IOptions<BaseSettings> appSettings)
         {
             _iContentPageRepository = iContentPageRepository;
             _iCategoryRepository = iCategoryRepository;
             _iNewsAPIService = iNewsAPIService;
+            _baseSettings = appSettings;
         }
 
         [HttpGet]
@@ -41,10 +44,9 @@ namespace PT.UI.Controllers
         {
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
-            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             return View("NewsAjax", listNew);
         }
 
@@ -55,10 +57,9 @@ namespace PT.UI.Controllers
             //await Task.Delay(1000);
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
-            //prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             var ids =listNew.Items.Select(x => x.Id).ToList();
             // Cau id t ừ bảng CMS lưu
             var pages = await _iContentPageRepository.SearchAsync(true, 0, 100, x=> ids.Contains(x.NewsId ?? 0), null, x=> new ContentPage
@@ -91,10 +92,9 @@ namespace PT.UI.Controllers
             //await Task.Delay(1000);
             prs.PageSize = 9;
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
-            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             return View("PublicationsAjax", listNew);
         }
 
@@ -125,10 +125,9 @@ namespace PT.UI.Controllers
                     {
                         Page = page ?? 1,
                         PageSize = 9,
-                        FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
-                    }, language ?? "vi");
+                    }, language ?? "vi", _baseSettings.Value.PortalId);
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     // lấy danh mục  
                     var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.CategoryType == ECategoryType.ContentPage_Blog && x.Status && x.ParentId == 0 && x.Language == language && x.PortalId == dl.PortalId);
@@ -138,10 +137,9 @@ namespace PT.UI.Controllers
                         {
                             Page = page ?? 1,
                             PageSize = 1,
-                            FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                             CategoryIds = eventCategory.ExCategoryIds,
                             StatusIds = "1"
-                        }, language ?? "vi");
+                        }, language ?? "vi", _baseSettings.Value.PortalId);
 
                         dl.EventTop = (listEvent ?? new NewsListResponse { Items = [] });
 
@@ -185,10 +183,9 @@ namespace PT.UI.Controllers
                     {
                         Page = page ?? 1,
                         PageSize = 9,
-                        //FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
-                    }, language ?? "vi");
+                    }, language ?? "vi", _baseSettings.Value.PortalId);
                     dl.DataAPI = listEvent ?? new NewsListResponse { Items = [] };
 
                     var ids = dl.DataAPI.Items.Select(x => x.Id).ToList();
@@ -229,10 +226,9 @@ namespace PT.UI.Controllers
                     {
                         Page = page ?? 1,
                         PageSize = 9,
-                        FromDate = Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd"),
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
-                    }, language ?? "vi");
+                    }, language ?? "vi", _baseSettings.Value.PortalId);
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }
@@ -241,63 +237,6 @@ namespace PT.UI.Controllers
 
             if (dl.CategoryType == ECategoryType.ContentPage_Publications)
             {
-                DateTime? start = null, end = null;
-                if (!string.IsNullOrWhiteSpace(startDate)
-                    && DateTime.TryParseExact(startDate, "dd/MM/yyyy",
-                        CultureInfo.GetCultureInfo("vi-VN"), DateTimeStyles.None, out var d))
-                {
-                    start = d.Date;
-                    end = d.Date.AddDays(1);
-                }
-                if (!string.IsNullOrWhiteSpace(endDate)
-                    && DateTime.TryParseExact(endDate, "dd/MM/yyyy",
-                        CultureInfo.GetCultureInfo("vi-VN"), DateTimeStyles.None, out var dE))
-                {
-                    end = dE.Date;
-                }
-                dl.PageBlog = await _iContentPageRepository.SearchPagedListAsync(
-                     page ?? 1,
-                     9,
-                     id,
-                     null,
-                     m => (m.Name.Contains(key) || key == null || m.Content.Contains(key) || m.Summary.Contains(key))
-                         && (!start.HasValue || m.DatePosted >= start.Value)
-                         && (!end.HasValue || m.DatePosted <= end.Value)
-                         && m.CategoryType == Type
-                         && (m.Language == language)
-                         && m.Status
-                         , x => x.OrderByDescending(mbox => mbox.DatePosted), x => new ContentPage
-                         {
-                             Category = x.Category,
-                             Id = x.Id,
-                             Author = x.Author,
-                             Banner = x.Banner,
-                             DatePosted = x.DatePosted,
-                             Name = x.Name,
-                             Language = x.Language,
-                             Status = x.Status,
-                             Summary = x.Summary,
-                             Tags = x.Tags,
-                             Type = x.Type,
-                             Link = x.Link,
-                             Topic = x.Topic,
-                             FilePath = x.FilePath,
-                             Pages = x.Pages,
-                             Input1 = x.Input1
-                         });
-                int totalPage = (dl.PageBlog.TotalRows % dl.PageBlog.Limit > 0) ? (dl.PageBlog.TotalRows / dl.PageBlog.Limit + 1) : (dl.PageBlog.TotalRows / dl.PageBlog.Limit);
-                if (totalPage >= 2)
-                {
-                    page ??= 1;
-                    if (page < totalPage)
-                    {
-                        ViewData["linkNext"] = $"{Request.Path}?page={page + 1}";
-                    }
-                    if (page >= totalPage)
-                    {
-                        ViewData["linkPrev"] = $"{Request.Path}?page={page - 1}";
-                    }
-                }
             }
 
             objectLink.Title = $"{objectLink.Title}{((page == null) ? "" : (language == "vi" ? $" - trang {page}" : $" - page {page}"))}";

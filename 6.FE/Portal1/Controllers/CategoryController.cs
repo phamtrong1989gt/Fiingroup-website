@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Base.Services;
 using PT.Domain.Model;
@@ -28,11 +29,13 @@ namespace PT.UI.Controllers
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ICategoryRepository _iCategoryRepository;
         private readonly INewsAPIService _iNewsAPIService;
-        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, INewsAPIService iNewsAPIService)
+        private readonly IOptions<BaseSettings> _baseSettings;
+        public CategoryController(IContentPageRepository iContentPageRepository, ICategoryRepository iCategoryRepository, INewsAPIService iNewsAPIService, IOptions<BaseSettings> baseSettings)
         {
             _iContentPageRepository = iContentPageRepository;
             _iCategoryRepository = iCategoryRepository;
             _iNewsAPIService = iNewsAPIService;
+            _baseSettings = baseSettings;
         }
 
         [HttpGet]
@@ -43,7 +46,7 @@ namespace PT.UI.Controllers
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             return View("NewsAjax", listNew);
         }
 
@@ -56,7 +59,7 @@ namespace PT.UI.Controllers
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             var ids = listNew.Items.Select(x => x.Id).ToList();
             // Cau id t ừ bảng CMS lưu
             var pages = await _iContentPageRepository.SearchAsync(true, 0, 100, x => ids.Contains(x.NewsId ?? 0), null, x => new ContentPage
@@ -91,7 +94,7 @@ namespace PT.UI.Controllers
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             return View("PublicationsAjax", listNew);
         }
 
@@ -124,7 +127,7 @@ namespace PT.UI.Controllers
                         PageSize = 9,
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
-                    }, language ?? "vi");
+                    }, language ?? "vi", _baseSettings.Value.PortalId);
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     // lấy danh mục event 
                     var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.CategoryType == ECategoryType.ContentPage_Event && x.Status && x.ParentId == 0 && x.Language == language && x.PortalId == dl.PortalId);
@@ -136,7 +139,7 @@ namespace PT.UI.Controllers
                             PageSize = 1,
                             CategoryIds = eventCategory.ExCategoryIds,
                             StatusIds = "1"
-                        }, language ?? "vi");
+                        }, language ?? "vi", _baseSettings.Value.PortalId);
 
                         dl.EventTop = (listEvent ?? new NewsListResponse { Items = [] });
 
@@ -181,7 +184,7 @@ namespace PT.UI.Controllers
                         PageSize = 9,
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
-                    }, language ?? "vi");
+                    }, language ?? "vi", _baseSettings.Value.PortalId);
                     dl.DataAPI = listEvent ?? new NewsListResponse { Items = [] };
 
                     var ids = dl.DataAPI.Items.Select(x => x.Id).ToList();
@@ -224,7 +227,8 @@ namespace PT.UI.Controllers
                         PageSize = 9,
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
-                    }, language ?? "vi");
+                    }, language ?? "vi", _baseSettings.Value.PortalId);
+
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     ViewData["ExCategoryIds"] = dl.ExCategoryIds;
                 }

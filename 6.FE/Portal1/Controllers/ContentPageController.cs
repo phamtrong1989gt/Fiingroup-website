@@ -61,10 +61,9 @@ namespace PT.UI.Controllers
             }
             prs.PageSize = 3;
             prs.Page = 1;
-            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
             prs.CategoryIds = prs.ExCategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             return View("PublicationsAjax", listNew);
         }
 
@@ -97,7 +96,7 @@ namespace PT.UI.Controllers
             }
 
             prs.CategoryIds = prs.ExCategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             ViewData["param"] = param;
             return View(view, listNew);
         }
@@ -106,7 +105,7 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> FGNews(int id, string language, string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language);
+            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language, portalId);
             if(dl == null || dl.Success == false)
             {
                 return View("_Home404");
@@ -119,7 +118,7 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> FGEvent(int id, string language, string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language);
+            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language, portalId);
             if (dl.Success == false)
             {
                 return View("_Home404");
