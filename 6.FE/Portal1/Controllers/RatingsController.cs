@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using PT.Base.Services;
 using PT.Domain.Model;
 using System.Linq;
@@ -9,9 +10,11 @@ namespace PT.UI.Controllers
     public class RatingsController : Controller
     {
         private readonly INewsAPIService _newsAPIService;
-        public RatingsController(INewsAPIService newsAPIService)
+        private readonly IOptions<BaseSettings> _baseSettings;
+        public RatingsController(INewsAPIService newsAPIService, IOptions<BaseSettings> baseSettings)
         {
             _newsAPIService = newsAPIService;
+            _baseSettings = baseSettings;
         }
 
         public async Task<IActionResult> Index(string linkData, int portalId, string language)
@@ -22,7 +25,7 @@ namespace PT.UI.Controllers
             language = language ?? "vi";
 
             // Get industries
-            var industries = await _newsAPIService.GetReportIndustriesAsync(language);
+            var industries = await _newsAPIService.GetReportIndustriesAsync(language, _baseSettings.Value.PortalId);
             ViewBag.Industries = industries?.Data?.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
             {
                 Value = x.IndustryTypeId.ToString(),
@@ -30,7 +33,7 @@ namespace PT.UI.Controllers
             }).ToList();
 
             // Get scores
-            var scores = await _newsAPIService.GetReportScoresAsync();
+            var scores = await _newsAPIService.GetReportScoresAsync(_baseSettings.Value.PortalId);
             ViewBag.Scores = scores?.Data?.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
             {
                 Value = x.ScoreId.ToString(),
@@ -38,7 +41,7 @@ namespace PT.UI.Controllers
             }).ToList();
 
             // Get outlooks
-            var outlooks = await _newsAPIService.GetReportOutlooksAsync(language);
+            var outlooks = await _newsAPIService.GetReportOutlooksAsync(language, _baseSettings.Value.PortalId);
             ViewBag.Outlooks = outlooks?.Data?.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
             {
                 Value = x.ProspectsId,
@@ -50,7 +53,7 @@ namespace PT.UI.Controllers
         [Route("{language}/Ratings/IndexAjax")]
         public async Task<IActionResult> IndexAjax([FromQuery] RatingResultsQueryParameters parameters)
         {
-            var data = await _newsAPIService.GetRatingResultsAsync(parameters);
+            var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
             ViewBag.Language = parameters.Lang;
             return View("IndexAjax", data);
         }

@@ -329,8 +329,10 @@ namespace PT.UI
             services.AddScoped<ISeoSettingRepository, SeoSettingRepository>();
             services.AddScoped<IBindContentSettingRepository, BindContentSettingRepository>();
             services.AddScoped<IEmailSettingRepository, EmailSettingRepository>();
+            services.AddScoped<IAPILoggerService, APILoggerService>();
             services.AddScoped<INewsAPIService, NewsAPIService>();
-            
+            services.AddScoped<IParameterRepository, ParameterRepository>();
+
             // Services
             services.AddScoped<ISettingService, SettingService>();
             
