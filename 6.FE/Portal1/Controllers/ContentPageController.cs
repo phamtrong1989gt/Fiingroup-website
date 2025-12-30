@@ -81,7 +81,7 @@ namespace PT.UI.Controllers
             };
             ViewData["language"] = prs.Language;
             var param = await _iSettingService.ParameterGet(parameter, _baseSettings.Value.PortalId, language);
-            if(param == null)
+            if(param == null || param.Value == null)
             {
                 return View(view, null);
             }    

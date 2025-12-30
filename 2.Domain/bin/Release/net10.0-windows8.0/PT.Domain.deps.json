@@ -8,7 +8,9 @@
     ".NETCoreApp,Version=v10.0": {
       "PT.Domain/1.0.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "10.0.0"
+          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "10.0.0",
+          "PT.Shared": "1.0.0",
+          "PT.Shared.Reference": "1.0.0.0"
         },
         "runtime": {
           "PT.Domain.dll": {}
@@ -56,6 +58,24 @@
             "fileVersion": "1.0.2.22727"
           }
         }
+      },
+      "PT.Shared/1.0.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3"
+        },
+        "runtime": {
+          "PT.Shared.dll": {
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "PT.Shared.Reference/1.0.0.0": {
+        "runtime": {
+          "PT.Shared.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -92,6 +112,16 @@
       "sha512": "sha512-QYFyxhaABwmq3p/21VrZNYvCg3DaEoN/wUuw5nmfAf0X3HLjgupwhkEWdgfb9nvGAUIv3osmZoD3kKl4jxEmYQ==",
       "path": "newtonsoft.json.bson/1.0.2",
       "hashPath": "newtonsoft.json.bson.1.0.2.nupkg.sha512"
+    },
+    "PT.Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "PT.Shared.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

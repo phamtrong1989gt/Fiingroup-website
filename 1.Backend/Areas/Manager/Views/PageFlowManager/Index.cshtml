@@ -89,7 +89,7 @@
                                         <i class="material-icons">add</i><span>Hỗ trợ dòng chảy</span> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu drcontrol">
-                                        @foreach (var portal in portals)
+                                        @foreach (var portal in portals.Where(p => p.Value == "2"))
                                         {
                                             <li><strong class="label-portal">@portal.Text</strong></li>
                                             @foreach (var item in PT.Shared.ListData.ListLanguage)
@@ -117,7 +117,7 @@
                                         <i class="material-icons">add</i><span>Sản phầm dòng chảy</span> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu drcontrol">
-                                        @foreach (var portal in portals)
+                                        @foreach (var portal in portals.Where(p => p.Value == "2"))
                                         {
                                             <li><strong class="label-portal">@portal.Text</strong></li>
                                             @foreach (var item in PT.Shared.ListData.ListLanguage)
@@ -145,7 +145,7 @@
                                         <i class="material-icons">add</i><span>Giải pháp</span> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu drcontrol">
-                                        @foreach (var portal in portals)
+                                        @foreach (var portal in portals.Where(p => p.Value == "2"))
                                         {
                                             <li><strong class="label-portal">@portal.Text</strong></li>
                                             @foreach (var item in PT.Shared.ListData.ListLanguage)

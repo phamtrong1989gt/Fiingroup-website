@@ -277,6 +277,16 @@
 		word-break: break-word;
 		font-weight: 600;
 	}
+
+	.solution-item.active-solution {
+		background: #f0f7ff;
+		border-left: 4px solid #034ea2;
+		padding-left: 20px;
+	}
+
+	.solution-item:hover {
+		background: #f8fbff;
+	}
 </style>
 <section id="StockEconomy" class="hero-section">
 	<div class="hero-overlay">
@@ -436,6 +446,85 @@
 				$img.attr('src', imgUrl);
 			}
 		});
+	})(window.jQuery);
+
+	(function ($) {
+		'use strict';
+
+		const $solutionImg = $('.solution-img');
+		const $solutionItems = $('.solution-item');
+
+		// Store default image
+		const defaultImg = $solutionImg.data('default') || $solutionImg.attr('src');
+
+		// Add active class to first item by default
+		$solutionItems.first().addClass('active-solution');
+
+		// Handle hover events
+		$solutionItems.hover(
+			function () {
+				// Mouse enter
+				const imgUrl = $(this).data('img');
+
+				// Remove active from all items
+				$solutionItems.removeClass('active-solution');
+
+				// Add active to current item
+				$(this).addClass('active-solution');
+
+				// Change image if URL exists
+				if (imgUrl && imgUrl !== "" && imgUrl !== "null") {
+					$solutionImg.fadeOut(200, function() {
+						$solutionImg.attr('src', imgUrl).fadeIn(200);
+					});
+				}
+			},
+			function () {
+				// Mouse leave - Optional: reset to default
+				// Uncomment if you want image to reset when not hovering
+				// setTimeout(function() {
+				// 	if (!$('.solution-item:hover').length) {
+				// 		$solutionImg.attr('src', defaultImg);
+				// 		$solutionItems.removeClass('active-solution');
+				// 		$solutionItems.first().addClass('active-solution');
+				// 	}
+				// }, 100);
+			}
+		);
+
+		// Handle click for mobile
+		$solutionItems.on('click', function(e) {
+			const imgUrl = $(this).data('img');
+
+			if (imgUrl && imgUrl !== "" && imgUrl !== "null") {
+				// Remove active from all items
+				$solutionItems.removeClass('active-solution');
+
+				// Add active to current item
+				$(this).addClass('active-solution');
+
+				// Change image
+				$solutionImg.fadeOut(200, function() {
+					$solutionImg.attr('src', imgUrl).fadeIn(200);
+				});
+			}
+		});
+
+		// Preload images for better performance
+		const imagesToPreload = [];
+		$solutionItems.each(function() {
+			const imgUrl = $(this).data('img');
+			if (imgUrl && imgUrl !== "" && imgUrl !== "null") {
+				imagesToPreload.push(imgUrl);
+			}
+		});
+
+		// Preload images in background
+		imagesToPreload.forEach(function(src) {
+			const img = new Image();
+			img.src = src;
+		});
+
 	})(window.jQuery);
 
 	function loadTopNews(params, containerId = '#topNewsContainer') {

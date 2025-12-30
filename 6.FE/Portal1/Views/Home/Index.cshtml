@@ -168,88 +168,11 @@
     </div>
 
 </section>
-<section id="Insights" class="py-5 mb-5">
-    <style>
-        .news-title a {
-            font-size: 30px;
-        }
 
-        .btn-center {
-            width: 100%;
-            text-align: center;
-            margin: 20px 0;
-        }
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "S&PGlobalRatings", language = language, portalId = portalId })
 
-        .btn-view-all {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 8px 100px;
-            border: 1.5px solid #0066CC;
-            border-radius: 40px;
-            color: #0066CC;
-            font-size: 16px;
-            font-weight: 500;
-            text-decoration: none;
-            background: #fff;
-            transition: .2s ease;
-        }
-
-            .btn-view-all:hover {
-                background: #E8F3FF;
-            }
-
-            .btn-view-all i {
-                font-size: 16px;
-            }
-    </style>
-    <div class="container">
-        <h2 class="price-title mb-5">S&P Global Ratings' Insights</h2>
-        <div class="row news-grid">
-            <div class="col-sm-4">
-                <img src="/Data/FR/news1.jpg" class="img-fluid w-100" />
-                <div class="pt-3 pb-3">
-                    <div class="news-title text-break">
-                        <a target="_blank" href="#">
-                            Vietnam Corporate Bond Market
-                            Report – June 2025
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <img src="/Data/FR/news2.jpg" class="img-fluid w-100" />
-                <div class="pt-3 pb-3">
-                    <div class="news-title text-break">
-                        <a target="_blank" href="#">
-                            Vietnam Corporate Bond Market
-                            Report – June 2025
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <img src="/Data/FR/news3.jpg" class="img-fluid w-100" />
-                <div class="pt-3 pb-3">
-                    <div class="news-title text-break">
-                        <a target="_blank" href="#">
-                            Vietnam Corporate Bond Market
-                            Report – June 2025
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="btn-center">
-            <a href="#" class="btn-view-all">
-                Xem tất cả <i class="fa fa-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-</section>
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRHomeSliderTestimonials", language = language, portalId = portalId })
+
 <partial name="_Register" />
 
 <script>

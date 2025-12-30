@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
@@ -119,7 +120,24 @@ namespace PT.Base.Services
                 entry.Size = 1; // Thêm Size để tránh lỗi khi SizeLimit được set
                 entry.Priority = CacheItemPriority.Normal;
                 // fetch from underlying repository
-                return await _iParameterRepository.SingleOrDefaultAsync(true, s => s.PortalId == portalId && s.Id == id && s.Language == language);
+                var dl = await _iParameterRepository.SingleOrDefaultAsync(true, s => s.PortalId == portalId && s.Id == id && s.Language == language);
+                if(dl == null)
+                {
+                    dl = new Parameter
+                    {
+                        Id = id,
+                        PortalId = portalId,
+                        Language = language,
+                        Name = "Tự động tạo",
+                        Value = string.Empty,
+                        Title = string.Empty,
+                        Link = string.Empty,
+                        LinkName = string.Empty
+                    };
+                    await _iParameterRepository.AddAsync(dl);
+                    await _iParameterRepository.CommitAsync();
+                }
+                return dl;
             });
             return result;
         }
