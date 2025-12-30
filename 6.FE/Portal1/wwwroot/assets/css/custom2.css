@@ -270,3 +270,15 @@ a.btn.btn-primary.btn-join {
 .select2-container {
     z-index: 9999;
 }
+.pagination .page-item {
+    padding: 0;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #0066CC;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
+    font-size: 16px;
+}

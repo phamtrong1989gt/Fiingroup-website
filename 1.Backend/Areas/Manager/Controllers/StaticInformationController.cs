@@ -257,7 +257,7 @@ namespace PT.BE.Areas.Manager.Controllers
         /// <param name="tags">Danh sách tag liên quan</param>
         /// <returns>ResponseModel: Kết quả thực hiện</returns>
         [HttpPost, ActionName("Edit")]
-        [AuthorizePermission("Edit")]
+        [AuthorizePermission("Index")]
         public async Task<ResponseModel> EditPost(StaticInformationModel use, int id, string categoryIds, string tags)
         {
             try
@@ -343,7 +343,7 @@ namespace PT.BE.Areas.Manager.Controllers
         /// <param name="id">Id thông tin tĩnh cần xóa</param>
         /// <returns>ResponseModel: Kết quả thực hiện</returns>
         [HttpPost, ActionName("Delete")]
-        [AuthorizePermission("Delete")]
+        [AuthorizePermission("Index")]
         public async Task<ResponseModel> DeletePost(int id)
         {
             try

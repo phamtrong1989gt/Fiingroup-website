@@ -12,15 +12,6 @@
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var portalId = _baseSettings.Value.PortalId;
-    // var listCategory = new List<Category>();
-    // if (Model.ParentId == 0)
-    // {
-    //     listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Event || x.CategoryType == ECategoryType.ContentPage_Blog) && x.ParentId == 0 && x.Status);
-    // }
-    // else
-    // {
-    //     listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Event || x.CategoryType == ECategoryType.ContentPage_Blog) && x.Status && x.ParentId == Model.ParentId);
-    // }
 }
 
 <style>
@@ -76,27 +67,6 @@
         </div>
     </div>
 </section>
-
-@* <section id="NewButton">
-    <div class="container">
-        <div class="row d-flex justify-content-center">
-            <div class="row d-flex justify-content-center">
-                @foreach (var item in listCategory)
-                {
-                    string url = PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
-                    if (item.Id == Model.Id)
-                    {
-                        <a class="btn btn-active" title="@item.Name" href="@url">@item.Name</a>
-                    }
-                    else
-                    {
-                        <a class="btn btn-noactive" title="@item.Name" href="@url">@item.Name</a>
-                    }
-                }
-            </div>
-        </div>
-    </div>
-</section> *@
 
 <section id="FiinGroup">
     <div class="container">
@@ -234,7 +204,6 @@
                 } catch (e) {
                     // ignore
                 }
-
             });
         })(jQuery);
     </script>

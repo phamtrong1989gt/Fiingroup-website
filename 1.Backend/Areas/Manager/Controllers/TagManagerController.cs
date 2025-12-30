@@ -51,7 +51,7 @@ namespace PT.BE.Areas.Manager.Controllers
         }
 
         #region [Index]
-        [AuthorizePermission]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> Index()
         {
             // Lấy danh sách portal để hiển thị bộ lọc portal trên giao diện quản trị
@@ -62,7 +62,7 @@ namespace PT.BE.Areas.Manager.Controllers
         }
 
         [HttpPost, ActionName("Index")]
-        [AuthorizePermission]
+        [AuthorizePermission("Index")]
         public async Task<IActionResult> IndexPost(
             int? page,
             int? limit,

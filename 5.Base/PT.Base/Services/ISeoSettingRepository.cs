@@ -12,6 +12,7 @@ namespace PT.Base.Services
         //Task RefreshSeoSettingCache(string language, int portalId);
         void RefreshByKey(string cacheKey);
         Task<BindContentSetting> BindContentSettingGet(int portalId);
+        Task<Parameter> ParameterGet(string id, int portalId, string language);
     }
 
     public class SettingService :  ISettingService
@@ -20,12 +21,15 @@ namespace PT.Base.Services
         private readonly IBindContentSettingRepository _iBindContentSettingRepository;
         private readonly IMemoryCache _memoryCache;
         private readonly IEmailSettingRepository _iEmailSettingRepository;
-        public SettingService(ISeoSettingRepository iSeoSettingRepository, IMemoryCache memoryCache, IBindContentSettingRepository iBindContentSettingRepository, IEmailSettingRepository iEmailSettingRepository) 
+        private readonly IParameterRepository _iParameterRepository;
+
+        public SettingService(ISeoSettingRepository iSeoSettingRepository, IMemoryCache memoryCache, IBindContentSettingRepository iBindContentSettingRepository, IEmailSettingRepository iEmailSettingRepository, IParameterRepository iParameterRepository) 
         {
             _iSeoSettingRepository = iSeoSettingRepository;
             _memoryCache = memoryCache;
             _iBindContentSettingRepository = iBindContentSettingRepository;
             _iEmailSettingRepository = iEmailSettingRepository;
+            _iParameterRepository = iParameterRepository;
         }
 
         // Use memory cache for24 hours. Method is async to use GetOrCreateAsync.
@@ -105,6 +109,21 @@ namespace PT.Base.Services
             });
             return result;
         }
+
+        public async Task<Parameter> ParameterGet(string id, int portalId, string language)
+        {
+            var cacheKey = $"Parameter::{portalId}::{id}::{language}";
+            var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24);
+                entry.Size = 1; // Thêm Size để tránh lỗi khi SizeLimit được set
+                entry.Priority = CacheItemPriority.Normal;
+                // fetch from underlying repository
+                return await _iParameterRepository.SingleOrDefaultAsync(true, s => s.PortalId == portalId && s.Id == id && s.Language == language);
+            });
+            return result;
+        }
+
 
         public void RefreshByKey(string cacheKey)
         {

@@ -30,14 +30,13 @@
 }
 
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="@language">
 <head>
 	<!-- meta tags -->
 	<meta charset="UTF-8">
 
-	<meta name="robots" content="noindex">
-	<meta name="googlebot" content="noindex">
+@* 	<meta name="robots" content="noindex">
+	<meta name="googlebot" content="noindex"> *@
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -195,7 +194,6 @@
 						time: 1200
 					});
 				}
-				}
 			);
 		 $(function () {
 			let star = '.star',
@@ -271,7 +269,7 @@
 		  $owl2.owlCarousel({
 			margin: 0,
 			autoplay: true,
-			autoplayTimeout: 5000,
+			autoplayTimeout: 3000,
 			nav: false,
 			loop: true,
 			dots: false,
@@ -281,7 +279,7 @@
 			responsive: {
 			  0: { items: 1 },
 			  600: { items: 3 },
-			  1000: { items: 3 }
+			  1000: { items: 6 }
 			},
 			onInitialized: function (event) { prepareManualSlides($(event.target)); },
 			onRefreshed: function (event) { prepareManualSlides($(event.target)); },

@@ -1,0 +1,38 @@
+﻿@model PT.Domain.Model.NewsListResponse
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using Microsoft.Extensions.Options
+@using PT.Domain.Model
+@using PT.Shared;
+@inject IOptions<BaseSettings> _baseSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+
+@{
+	Layout = null;
+	string language = ViewData["language"]?.ToString();
+	var param =  (Parameter)ViewData["param"];
+}
+
+@if (Model != null && param != null)
+{
+    <div class="ranking-right">
+        <h3 class="points-title">@param.Title</h3>
+        <div class="points-list">
+            @foreach (var item in Model.Items)
+            {
+                string url = $"/{language}/news-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
+
+                <a class="points-item" style="color:#093461;" href="@url">
+                    @item.Title
+                </a>
+            }
+        </div>
+        <div class="pt-5">
+            <a href="@param.Link" class="show-more">@param.LinkName <i class="fa fa-arrow-right"></i></a>
+        </div>
+    </div>
+}
+
+
+

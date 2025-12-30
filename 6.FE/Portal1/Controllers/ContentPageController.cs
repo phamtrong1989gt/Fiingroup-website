@@ -17,13 +17,14 @@ namespace PT.UI.Controllers
         private readonly INewsAPIService _iNewsAPIService;
         private readonly ILinkRepository _iLinkRepository;
         private readonly IOptions<BaseSettings> _baseSettings;
-
+        private readonly ISettingService _iSettingService;
         public ContentPageController(IContentPageRepository iContentPageRepository,
             IContentPageTagRepository iContentPageTagRepository,
             ICategoryRepository iCategoryRepository,
             INewsAPIService iNewsAPIService,
             ILinkRepository iLinkRepository,
-            IOptions<BaseSettings> baseSettings
+            IOptions<BaseSettings> baseSettings,
+            ISettingService iSettingService
             )
         {
             _iContentPageRepository = iContentPageRepository;
@@ -32,6 +33,16 @@ namespace PT.UI.Controllers
             _iNewsAPIService = iNewsAPIService;
             _iLinkRepository = iLinkRepository;
             _baseSettings = baseSettings;
+            _iSettingService = iSettingService;
+        }
+
+        [HttpGet]
+        public IActionResult FRatings(int id, string language, string linkData, int portalId)
+        {
+            var link = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            link.Title = "FG Ratings";
+            ViewData["linkData"] = link;
+            return View("FRatings");
         }
 
         [HttpGet]
@@ -50,19 +61,31 @@ namespace PT.UI.Controllers
             }
             prs.PageSize = 3;
             prs.Page = 1;
-            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
             prs.StatusIds = "1";
             prs.CategoryIds = prs.ExCategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             return View("PublicationsAjax", listNew);
         }
 
         [HttpGet]
         [Route("{language}/ContentPage/TopNewsAjax")]
-        public async Task<ActionResult> TopNewsAjax([FromQuery] NewsQueryParameters prs)
+        public async Task<ActionResult> TopNewsAjax([FromQuery] NewsQueryParameters prs, string parameter, string view, int pageSize, string language)
         {
+
+            prs = new NewsQueryParameters
+            {
+                Language = language,
+                PageSize = pageSize <= 100 ? pageSize : 100,
+                Page = 1,
+                StatusIds = "1"
+            };
             ViewData["language"] = prs.Language;
-            var cmsCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.PortalId == _baseSettings.Value.PortalId && x.CategoryType == ECategoryType.ContentPage_Blog && x.ParentId == 0 );
+            var param = await _iSettingService.ParameterGet(parameter, _baseSettings.Value.PortalId, language);
+            if(param == null)
+            {
+                return View(view, null);
+            }    
+            var cmsCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.PortalId == _baseSettings.Value.PortalId && x.CategoryType == ECategoryType.ContentPage_Blog && x.Id == Convert.ToInt32(param.Value) );
             if (cmsCategory != null && !string.IsNullOrEmpty(cmsCategory.ExCategoryIds))
             {
                 prs.ExCategoryIds = cmsCategory.ExCategoryIds;
@@ -71,20 +94,18 @@ namespace PT.UI.Controllers
             {
                 return View("TopNewsAjax", null);
             }
-            prs.PageSize = 3;
-            prs.Page = 1;
-            prs.FromDate = prs.FromDate ?? Convert.ToDateTime($"{DateTime.Now.Year}/01/01").ToString("yyyy-MM-dd");
-            prs.StatusIds = "1";
+
             prs.CategoryIds = prs.ExCategoryIds ?? "0";
-            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi");
-            return View("TopNewsAjax", listNew);
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
+            ViewData["param"] = param;
+            return View(view, listNew);
         }
 
         [HttpGet]
         public async Task<IActionResult> FGNews(int id, string language, string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language);
+            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language, portalId);
             if(dl == null || dl.Success == false)
             {
                 return View("_Home404");
@@ -97,7 +118,7 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> FGEvent(int id, string language, string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language);
+            var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language, portalId);
             if (dl.Success == false)
             {
                 return View("_Home404");
@@ -144,10 +165,6 @@ namespace PT.UI.Controllers
             return View(viewName, dl);
         }
 
-        public IActionResult RatingDetails(string linkData, int portalId)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View("RatingDetails");
-        }
+
     }
 }

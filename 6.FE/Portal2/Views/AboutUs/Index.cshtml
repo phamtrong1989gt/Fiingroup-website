@@ -19,7 +19,6 @@
 
 <style>
   .member-card,.narbarstory a,.team-grid>.team-grid{cursor:pointer}.about-main-box,.about-wrap{position:relative;z-index:1}.about-box p,.about-main-box p{line-height:1.6;text-align:justify}.narbarstory{padding:50px 0;display:flex;justify-content:space-around;align-items:center}.narbarstory a{color:#093461;text-decoration:none;font-size:18px;padding:8px 0;display:flex;justify-content:center;min-width:25%;transition:color .3s,border-bottom .3s;border-bottom:3px solid transparent}.narbarstory a.active,.narbarstory a:hover{color:#06c}.narbarstory a.active span,.narbarstory a:hover span{border-bottom:3px solid #06c;min-width:170px;text-align:center}.about-main-box{padding:15px 0;border-radius:12px;margin-bottom:20px}.about-main-box::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1}.about-main-box p{margin-bottom:12px;color:#093461;font-size:15px;padding-top:20px}.corner-decor{position:absolute;top:-65px;right:17%;width:110px;z-index:3;pointer-events:none}.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}.about-box{background:border-box padding-box,border-box #fff;padding:25px;border-radius:12px;border:1px solid transparent;box-shadow:0 4px 12px rgba(0,76,152,.08);text-align:left;transition:transform .3s;background-image:linear-gradient(#f5f9ff,#f2f7ff),linear-gradient(to right,#034ea2,#53dfff)}.about-box:hover{transform:translateY(-5px)}.about-box .why-title{font-size:30px!important;height:42px!important}.about-box h3{font-size:20px;color:#064a9d;margin:15px 0}.about-box p{color:#093461}.abt-icon{width:40px;height:auto}.member-card img{width:100%}.member-card:hover .member-info,.team-grid>.team-grid:hover .member-info{height:100%;background:#fffffff5;position:absolute;left:0;right:0;bottom:0;top:0;padding:20px}.member-card:hover .member-info .member-desc{display:block}.member-card:hover .member-desc,.team-grid>.team-grid:hover .member-desc{opacity:1;max-height:400px}.tab-container{display:inline-flex;justify-content:center;border:1px solid #0066cf!important;border-radius:26px;overflow:hidden;font-size:16px}.tab.active{background:#0066cf!important}.testimonial-media .img{width:100%!important;height:420px}.testimonial-card{padding:0!important}.testimonial-card .align-items-stretch{background:#034ea2}.testimonial-card .testimonial-copy{padding:43px}.testimonial-card .testimonial-copy .quote{font-size:20px;color:#fff!important;height:auto}.testimonial-card .testimonial-copy .name{color:#fff!important}.owl-prev{margin-left:4px!important}.owl-theme .owl-nav [class*=owl-]{font-size:22px}.owl-next,.owl-prev{border:none!important}
-
     #Partner
     {
         height: 200px!important;
@@ -28,14 +27,20 @@
 
 <section id="StoryFinn">
     <div class="container">
-        @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "AboutUsSliderOurClients", language = language, portalId = portalId })
-        <div class="mb-5"></div>
+        @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsMenu", language = language, portalId = portalId })
         @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsStoryFiin", language = language, portalId = portalId })
     </div>
 </section>
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsCoreValue", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsTimeLineFiin", language = language, portalId = portalId })
+
+<div class="slide-abc">
+    <div class="container">
+        @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "AboutUsSliderOurClients", language = language, portalId = portalId })
+    </div>
+</div>
+
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "AboutUsUserTeam", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "AboutUsCustomers", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "AboutUsWordEnvironment", language = language, portalId = portalId })
@@ -72,7 +77,6 @@
             if (tabs[index]) tabs[index].classList.add('active');
             contents.forEach(c => { if (c) c.style.display = 'none'; });
             if (contents[index]) contents[index].style.display = 'block';
-            setTitleForIndex(index);
         }
 
         // initialize: activate existing .active tab or fall back to index 0

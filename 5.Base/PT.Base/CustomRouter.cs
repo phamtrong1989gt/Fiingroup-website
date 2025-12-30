@@ -223,6 +223,7 @@ namespace PT.Base
             }
             else if (path.ToLower().EndsWith(".html") || path.ToLower() == "" || path.ToLower() == "/" || ListData.ListLanguage.Any(x => $"/{x.Id}" == path || $"/{x.Id}/" == path))
             {
+                
                 var baseSettings = (IOptions<BaseSettings>)AppHttpContext.Current.RequestServices.GetService(typeof(IOptions<BaseSettings>));
                 string language = baseSettings.Value.DefaultLanguage;
                 var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
@@ -248,7 +249,8 @@ namespace PT.Base
                     { "tin-tuc-fg", "FGNews" },
                     { "news-fg", "FGNews" },
                     { "su-kien-fg", "FGEvent" },
-                    { "event-fg", "FGEvent" }
+                    { "event-fg", "FGEvent" },
+                    { "ratings-fr", "FRatings" },
                 };
 
                 // Check custom routes

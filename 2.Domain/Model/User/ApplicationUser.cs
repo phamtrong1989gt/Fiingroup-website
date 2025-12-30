@@ -48,7 +48,7 @@ namespace PT.Domain.Model
         [Display(Name = "Email")]
         //[Required(ErrorMessage = "{0} không được để trống!")]
         //[StringLength(100, ErrorMessage = "{0} ít nhất phải là {2} và tối đa {1} ký tự.", MinimumLength = 6)]
-        [EmailAddress(ErrorMessage ="Không đúng định dạng email.")]
+       // [EmailAddress(ErrorMessage ="Không đúng định dạng email.")]
         public string Email { get; set; }
 
         [Display(Name = "Số điện thoại")]

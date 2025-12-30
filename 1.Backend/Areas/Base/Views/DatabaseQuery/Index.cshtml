@@ -1,0 +1,1352 @@
+﻿@{
+    Layout = "~/Views/Shared/_Admin.cshtml";
+    ViewBag.Title = "Database Query Management Tool";
+}
+@addTagHelper *, PT.UI
+@Html.Partial("_EditRowModal")
+
+<style>
+    .db-query-container {
+        background: #f5f7fa;
+        min-height: calc(100vh - 100px);
+    }
+
+    .db-query-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    .db-query-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .db-query-header h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .db-query-header h3,
+    .db-query-header h4 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .db-query-header .info {
+        font-size: 12px;
+        opacity: 0.9;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .db-query-header .info a {
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 6px;
+        border-radius: 3px;
+        transition: background 0.2s;
+    }
+
+    .db-query-header .info a:hover {
+        background: rgba(255, 255, 255, 0.15);
+        text-decoration: none;
+    }
+
+    /* ✅ Icon alignment class */
+    .icon-align {
+        vertical-align: middle;
+        font-size: inherit;
+        line-height: 1;
+    }
+
+    .query-editor-wrapper {
+        padding: 20px;
+    }
+
+    #queryEditor {
+        width: 100%;
+        min-height: 300px;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 11px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        background: #282c34;
+        color: #abb2bf;
+        resize: vertical;
+    }
+
+    .query-toolbar {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-execute {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-execute:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-execute:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    /* ✅ Button styles với icon alignment */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 14px;
+        font-size: 13px;
+    }
+
+    .btn .icon-align {
+            font-size: 13px !important;
+            position: relative;
+            top: 0px !important;
+            font-weight: 500;
+    }
+
+    .result-container {
+        padding: 20px;
+    }
+
+    .result-info {
+        background: #e7f3ff;
+        border-left: 4px solid #2196F3;
+        padding: 10px 12px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        font-size: 13px;
+    }
+
+    .result-table-wrapper {
+        overflow-x: auto;
+        max-height: 600px;
+    }
+
+    .result-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        border: 1px solid #ddd;
+    }
+
+    .result-table th {
+        background: #667eea;
+        color: white;
+        padding: 10px;
+        text-align: left;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        font-weight: 600;
+        border: 1px solid #5569d8;
+        font-size: 12px;
+    }
+
+    .result-table td {
+        padding: 8px 10px;
+        border: 1px solid #e9ecef;
+        font-size: 12px;
+    }
+
+    .result-table tbody tr:hover {
+        background: #f8f9fa;
+    }
+
+    .view-content-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 6px;
+        background: #e7f3ff;
+        border-radius: 3px;
+        font-size: 11px;
+        transition: all 0.2s;
+    }
+
+    .view-content-btn:hover {
+        background: #667eea;
+        color: white !important;
+    }
+
+    .pin-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .pin-dialog {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 380px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    .pin-dialog h3 {
+        margin: 0 0 8px 0;
+        color: #333;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .pin-dialog p {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 13px;
+    }
+
+    .pin-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        margin-bottom: 15px;
+        text-align: center;
+        letter-spacing: 5px;
+        font-weight: 600;
+    }
+
+    .pin-input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    /* Tối ưu Tables Sidebar - compact hơn */
+    .tables-sidebar {
+        max-height: 350px;
+        overflow-y: auto;
+        background: white;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    .table-item {
+        padding: 6px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-bottom: 3px;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .table-item:hover {
+        background: #f0f0f0;
+        border-color: #667eea;
+    }
+
+    .table-item .schema-name {
+        font-size: 10px;
+        color: #999;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .table-item .table-name {
+        font-weight: 600;
+        color: #333;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    .table-item .row-count {
+        font-size: 10px;
+        color: #666;
+        float: right;
+    }
+
+    .table-item .table-actions {
+        font-size: 10px;
+        margin-top: 3px;
+    }
+
+    .table-item .table-actions a {
+        color: #667eea;
+        margin-right: 8px;
+        text-decoration: none;
+    }
+
+    .table-item .table-actions a:hover {
+        text-decoration: underline;
+    }
+
+    .loading-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @@keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .history-panel {
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .history-item {
+        padding: 6px 8px;
+        border-left: 3px solid #667eea;
+        margin-bottom: 6px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 11px;
+    }
+
+    .history-item:hover {
+        background: #e9ecef;
+    }
+
+    .history-item .time {
+        font-size: 10px;
+        color: #999;
+    }
+
+    .history-item .query {
+        font-family: 'Consolas', monospace;
+        font-size: 11px;
+        color: #333;
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .script-modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .script-modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 10px;
+        border-radius: 8px;
+        width: 80%;
+        max-width: 1200px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    #queryActionContent
+    {
+        padding: 10px !important;
+    }
+    .script-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #667eea;
+    }
+
+    .script-modal-header h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .script-modal-close {
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        line-height: 1;
+        color: #999;
+        transition: color 0.2s;
+    }
+
+    .script-modal-close:hover {
+        color: #333;
+    }
+
+    .script-content {
+        background: #282c34;
+        color: #abb2bf;
+        padding: 15px;
+        border-radius: 4px;
+        font-family: 'Consolas', monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    /* ✅ ROW ACTION BUTTONS CSS */
+    .row-action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        border: none;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin: 0 2px;
+    }
+
+    .row-action-btn .icon-align {
+        font-size: 14px;
+    }
+
+    .row-action-btn.btn-insert {
+        background: #2196F3;
+        color: white;
+    }
+
+    .row-action-btn.btn-insert:hover {
+        background: #1976D2;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.4);
+    }
+
+    .row-action-btn.btn-edit {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .row-action-btn.btn-edit:hover {
+        background: #388E3C;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+    }
+
+    .row-action-btn.btn-delete {
+        background: #f44336;
+        color: white;
+    }
+
+    .row-action-btn.btn-delete:hover {
+        background: #d32f2f;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4);
+    }
+  
+    .backup-table-checkbox
+    {
+        opacity: 1 !important;
+        position: relative !important;
+        z-index: 999999 !important; 
+        left: 0 !important;
+        margin-right: 5px !important;
+        top: 2px !important;
+    }
+</style>
+
+<div class="db-query-container">
+    @if (!ViewBag.IsPinVerified)
+    {
+        <div class="pin-overlay" id="pinOverlay">
+            <div class="pin-dialog">
+                <h3><i class="material-icons icon-align">lock</i> Xác thực bảo mật</h3>
+                <p>Vui lòng nhập PIN để sử dụng Database Query Tool</p>
+                <input type="password" class="pin-input" id="pinInput" placeholder="Nhập PIN" maxlength="20" />
+                <button class="btn btn-execute" style="width: 100%;" onclick="verifyPin()">
+                    <i class="material-icons icon-align">verified_user</i> Xác thực
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="db-query-card">
+                <div class="db-query-header">
+                    <h2>
+                        <i class="material-icons icon-align">storage</i>
+                        Database Query Management Tool
+                    </h2>
+                    <div class="info">
+                        <span><i class="material-icons icon-align" style="font-size: 14px;">person</i> @ViewBag.UserName</span>
+                        <span>|</span>
+                        <span><i class="material-icons icon-align" style="font-size: 14px;">dns</i> @ViewBag.DatabaseName</span>
+                        <span>|</span>
+                        <a href="#" onclick="generateBackupScript()">
+                            <i class="material-icons icon-align" style="font-size: 14px;">backup</i> Backup Script
+                        </a>
+                        <span>|</span>
+                        <a href="#" onclick="openFullBackupModal(); return false;">
+                            <i class="material-icons icon-align" style="font-size: 14px;">cloud_download</i> Full Backup
+                        </a>
+                        <span>|</span>
+                        <a href="#" onclick="revokePin()">
+                            <i class="material-icons icon-align" style="font-size: 14px;">logout</i> Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="db-query-card">
+                <div class="query-editor-wrapper">
+                    <textarea id="queryEditor" placeholder="-- Nhập câu lệnh SQL của bạn tại đây&#10;-- Ví dụ: SELECT * FROM [adm].[User] WHERE Status = 1&#10;-- Sau khi SELECT, bạn có thể Edit/Delete từng row trực tiếp"></textarea>
+                </div>
+                <div class="query-toolbar">
+                    <button class="btn-execute" id="btnExecute" onclick="executeQuery()">
+                        <i class="material-icons icon-align">play_arrow</i>
+                        Thực thi (F5)
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearEditor()">
+                        <i class="material-icons icon-align">clear</i> Xóa
+                    </button>
+                    <button class="btn btn-info" onclick="formatQuery()">
+                        <i class="material-icons icon-align">format_align_left</i> Format
+                    </button>
+                    <button class="btn btn-warning" onclick="showInsertOptions()" id="btnInsert" style="display:none;">
+                        <i class="material-icons icon-align">add</i> INSERT
+                    </button>
+                    <button class="btn btn-success" onclick="exportAllAsInsert()" id="btnExportInsert" style="display:none;">
+                        <i class="material-icons icon-align">file_download</i> Export INSERT
+                    </button>
+                    <button class="btn btn-primary" onclick="exportAllAsUpdate()" id="btnExportUpdate" style="display:none;">
+                        <i class="material-icons icon-align">file_upload</i> Export UPDATE
+                    </button>
+                    <label style="margin-left: auto; margin-bottom: 0; font-size: 13px;">
+                        Timeout (s):
+                        <input type="number" id="queryTimeout" value="30" min="5" max="300" style="width: 70px; padding: 4px; margin-left: 5px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;" />
+                    </label>
+                </div>
+            </div>
+
+            <div class="db-query-card" id="resultContainer" style="display:none;">
+                <div class="db-query-header" style="padding: 12px 15px;">
+                    <h4>
+                        <i class="material-icons icon-align" style="font-size: 16px;">list_alt</i> Kết quả
+                    </h4>
+                </div>
+                <div class="result-container">
+                    <div class="result-info" id="resultInfo"></div>
+                    <div class="result-table-wrapper" id="resultTableWrapper"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="db-query-card">
+                <div class="db-query-header" style="padding: 8px 12px;">
+                    <h4>
+                        <i class="material-icons icon-align" style="font-size: 16px;">table_chart</i>
+                        Tables (<span id="tableCount">0</span>)
+                    </h4>
+                </div>
+                <div style="padding: 10px 10px 5px 10px;">
+                    <input type="text" id="tableSearchInput" class="form-control input-sm" placeholder="🔍 Tìm kiếm table..." style="font-size: 12px; padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px;" />
+                </div>
+                <div class="tables-sidebar" id="tablesSidebar">
+                    <div style="text-align: center; color: #999; padding: 20px;">
+                        <i class="material-icons icon-align">hourglass_empty</i><br />
+                        Đang tải...
+                    </div>
+                </div>
+            </div>
+
+            <div class="db-query-card">
+                <div class="db-query-header" style="padding: 8px 12px;">
+                    <h4>
+                        <i class="material-icons icon-align" style="font-size: 16px;">history</i>
+                        Lịch sử
+                    </h4>
+                </div>
+                <div class="history-panel" id="historyPanel">
+                    <div style="text-align: center; color: #999; padding: 20px;">
+                        <i class="material-icons icon-align">info</i><br />
+                        Chưa có lịch sử
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script Modal -->
+<div id="scriptModal" class="script-modal">
+    <div class="script-modal-content">
+        <div class="script-modal-header">
+            <h3><i class="material-icons icon-align">code</i> Script</h3>
+            <span class="script-modal-close" onclick="closeScriptModal()">&times;</span>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <button class="btn btn-success btn-sm" onclick="copyScript()">
+                <i class="material-icons icon-align">content_copy</i> Copy
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="downloadScript()">
+                <i class="material-icons icon-align">download</i> Download
+            </button>
+        </div>
+        <div class="script-content" id="scriptContent"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script  src="~/js/database-query-extended.js?v=17"></script>
+    <script>
+        let currentResult = null;
+        let currentScript = '';
+        let currentScriptFileName = 'script.sql';
+
+        $(document).ready(function () {
+            $(document).keydown(function (e) {
+                if (e.key === 'F5') {
+                    e.preventDefault();
+                    executeQuery();
+                }
+            });
+
+            @if (ViewBag.IsPinVerified)
+            {
+                <text>
+                loadTables();
+                loadHistory();
+                </text>
+            }
+        });
+
+        function verifyPin() {
+            const pin = $('#pinInput').val().trim();
+            if (!pin) {
+                showNotification('Vui lòng nhập PIN!', 'warning');
+                return;
+            }
+
+            $.ajax({
+                url: '/Admin/Base/DatabaseQuery/VerifyPin',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ pin: pin }),
+                success: function (response) {
+                    if (response.output === 1) {
+                        showNotification(response.message, response.type);
+                        $('#pinOverlay').fadeOut();
+                        loadTables();
+                        loadHistory();
+                    } else {
+                        showNotification(response.message, response.type);
+                        $('#pinInput').val('').focus();
+                    }
+                },
+                error: function () {
+                    showNotification('Lỗi kết nối!', 'danger');
+                }
+            });
+        }
+
+        function executeQuery() {
+            const query = $('#queryEditor').val().trim();
+            if (!query) {
+                showNotification('Vui lòng nhập câu lệnh SQL!', 'warning');
+                return;
+            }
+
+            const timeout = parseInt($('#queryTimeout').val()) || 30;
+            const $btnExecute = $('#btnExecute');
+            
+            $btnExecute.prop('disabled', true).html('<span class="loading-spinner"></span> Đang thực thi...');
+            $('#resultContainer').hide();
+
+            $.ajax({
+                url: '/Admin/Base/DatabaseQuery/ExecuteQuery',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ query: query, timeout: timeout }),
+                success: function (response) {
+                    $btnExecute.prop('disabled', false).html('<i class="material-icons" style="vertical-align: middle;">play_arrow</i> Thực thi (F5)');
+                    
+                    if (response.output === 1) {
+                        displayResult(response.data);
+                        loadHistory();
+                    } else {
+                        showNotification(response.message, response.type);
+                    }
+                },
+                error: function (xhr) {
+                    $btnExecute.prop('disabled', false).html('<i class="material-icons" style="vertical-align: middle;">play_arrow</i> Thực thi (F5)');
+                    showNotification('Lỗi thực thi query!', 'danger');
+                }
+            });
+        }
+
+        function displayResult(data) {
+            currentResult = data;
+            
+            let infoHtml = `
+                <strong><i class="material-icons icon-align" style="font-size: 16px;">check_circle</i> Thành công!</strong><br />
+                <i class="material-icons icon-align" style="font-size: 14px;">timer</i> Thời gian thực thi: <strong>${data.executionTime}s</strong>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <i class="material-icons icon-align" style="font-size: 14px;">view_list</i> Số dòng: <strong>${data.rowCount}</strong>
+            `;
+
+            if (data.isLimitedResult) {
+                infoHtml += `<br /><span style="color: #ff9800;"><i class="material-icons icon-align">warning</i> Giới hạn 5000 dòng đầu tiên</span>`;
+            }
+
+            if (data.message) {
+                infoHtml = `<strong><i class="material-icons icon-align">info</i> ${data.message}</strong>`;
+            }
+
+            $('#resultInfo').html(infoHtml);
+
+            if (data.columns && data.rows) {
+                let tableHtml = '<table class="result-table"><thead><tr>';
+                data.columns.forEach(col => {
+                    tableHtml += `<th>${col}</th>`;
+                });
+                tableHtml += '</tr></thead><tbody>';
+
+                data.rows.forEach(row => {
+                    tableHtml += '<tr>';
+                    row.forEach(cell => {
+                        const displayValue = cell === null ? '<em style="color: #999;">NULL</em>' : escapeHtml(String(cell));
+                        tableHtml += `<td>${displayValue}</td>`;
+                    });
+                    tableHtml += '</tr>';
+                });
+
+                tableHtml += '</tbody></table>';
+                $('#resultTableWrapper').html(tableHtml);
+                $('#btnExport').show();
+                $('#btnInsert').show();
+                $('#btnExportInsert').show();
+                $('#btnExportUpdate').show();
+            } else {
+                $('#resultTableWrapper').html('');
+                $('#btnExport').hide();
+                $('#btnInsert').hide();
+                $('#btnExportInsert').hide();
+                $('#btnExportUpdate').hide();
+            }
+
+            $('#resultContainer').fadeIn();
+        }
+
+        function loadTables() {
+            $.ajax({
+                url: '/Admin/Base/DatabaseQuery/GetTables',
+                type: 'GET',
+                success: function (response) {
+                    if (response.output === 1) {
+                        $('#tableCount').text(response.data.length);
+                        
+                        // ✅ Store tables data globally for search
+                        window.allTables = response.data;
+                        
+                        renderTables(response.data);
+                        
+                        // ✅ Setup search functionality
+                        setupTableSearch();
+                    }
+                }
+            });
+        }
+        
+        // ✅ THÊM: Render tables list
+        function renderTables(tables) {
+            let html = '';
+            tables.forEach(table => {
+                html += `
+                    <div class="table-item" data-schema="${table.schemaName}" data-table="${table.tableName}">
+                        <div>
+                            <span class="schema-name">[${table.schemaName}]</span>
+                            <span class="table-name">${table.tableName}</span>
+                            <span class="row-count">${table.rowCount.toLocaleString()}</span>
+                        </div>
+                        <div class="table-actions">
+                            <a href="#" onclick="selectTable('${table.schemaName}', '${table.tableName}'); return false;">SELECT</a>
+                            <a href="#" onclick="showTableInfo('${table.schemaName}', '${table.tableName}'); return false;">INFO</a>
+                            <a href="#" onclick="generateTableScript('${table.schemaName}', '${table.tableName}'); return false;">CREATE</a>
+                            <a href="#" onclick="generateDataScript('${table.schemaName}', '${table.tableName}'); return false;">INSERT</a>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (tables.length === 0) {
+                html = '<div style="text-align: center; color: #999; padding: 20px;">Không tìm thấy table nào</div>';
+            }
+            
+            $('#tablesSidebar').html(html);
+        }
+        
+        // ✅ THÊM: Setup table search
+        function setupTableSearch() {
+            $('#tableSearchInput').off('keyup').on('keyup', function() {
+                const searchText = $(this).val().toLowerCase().trim();
+                
+                if (searchText === '') {
+                    // Show all tables
+                    renderTables(window.allTables);
+                    $('#tableCount').text(window.allTables.length);
+                } else {
+                    // Filter tables
+                    const filtered = window.allTables.filter(table => {
+                        const schemaName = table.schemaName.toLowerCase();
+                        const tableName = table.tableName.toLowerCase();
+                        const fullName = `${schemaName}.${tableName}`;
+                        
+                        return schemaName.includes(searchText) || 
+                               tableName.includes(searchText) || 
+                               fullName.includes(searchText);
+                    });
+                    
+                    renderTables(filtered);
+                    $('#tableCount').text(filtered.length);
+                }
+            });
+        }
+
+        function selectTable(schema, table) {
+            const query = `SELECT TOP 100 * FROM [${schema}].[${table}]`;
+            $('#queryEditor').val(query);
+        }
+
+        function generateTableScript(schema, table) {
+            $.ajax({
+                url: '/Admin/Base/DatabaseQuery/GenerateTableScript',
+                type: 'GET',
+                data: { schemaName: schema, tableName: table },
+                success: function (response) {
+                    if (response.output === 1) {
+                        showScript(`CREATE TABLE Script - [${schema}].[${table}]`, response.data, `${table}_create.sql`);
+                    } else {
+                        showNotification(response.message, response.type);
+                    }
+                },
+                error: function() {
+                    showNotification('Lỗi khi generate table script!', 'danger');
+                }
+            });
+        }
+
+        function generateDataScript(schema, table) {
+            const limit = prompt('Số dòng cần generate (tối đa 10000):', '1000');
+            if (!limit) return;
+
+            showNotification('Đang generate script...', 'info');
+            
+            $.ajax({
+                url: '/Admin/Base/DatabaseQuery/GenerateDataScript',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    schemaName: schema, 
+                    tableName: table,
+                    rowLimit: parseInt(limit)
+                }),
+                success: function (response) {
+                    if (response.output === 1) {
+                        showScript(`INSERT DATA Script - [${schema}].[${table}]`, response.data, `${table}_data.sql`);
+                    } else {
+                        showNotification(response.message, response.type);
+                    }
+                },
+                error: function() {
+                    showNotification('Lỗi khi generate data script!', 'danger');
+                }
+            });
+        }
+
+        function generateBackupScript() {
+            $.ajax({
+                url: '/Admin/Base/DatabaseQuery/GenerateBackupScript',
+                type: 'GET',
+                success: function (response) {
+                    if (response.output === 1) {
+                        showScript('Database Backup Script', response.data, response.fileName);
+                    } else {
+                        showNotification(response.message, response.type);
+                    }
+                },
+                error: function() {
+                    showNotification('Lỗi khi generate backup script!', 'danger');
+                }
+            });
+        }
+
+        function showScript(title, script, fileName) {
+            currentScript = script;
+            currentScriptFileName = fileName;
+            $('#scriptModalTitle').html('<i class="material-icons icon-align">code</i> ' + title);
+            $('#scriptContent').text(script);
+            $('#scriptModal').fadeIn();
+        }
+
+        function closeScriptModal() {
+            $('#scriptModal').fadeOut();
+        }
+
+        function showTableInfo(schema, table) {
+            $.ajax({
+                url: '/Admin/Base/DatabaseQuery/GetTableSchema',
+                type: 'GET',
+                data: { schemaName: schema, tableName: table },
+                success: function(response) {
+                    if (response.output === 1) {
+                        displayTableInfo(schema, table, response.data);
+                    } else {
+                        showNotification(response.message, response.type);
+                    }
+                },
+                error: function() {
+                    showNotification('Lỗi khi lấy thông tin table!', 'danger');
+                }
+            });
+        }
+
+        function displayTableInfo(schema, table, columns) {
+            let html = `
+                <div style="padding: 20px;">
+                    <h3 style="margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                        <i class="material-icons icon-align">table_chart</i>
+                        [${schema}].[${table}]
+                    </h3>
+                    <hr style="margin: 10px 0;"/>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 12px; border: 1px solid #ddd;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 8px; border: 1px solid #5569d8;">Column</th>
+                                    <th style="padding: 8px; border: 1px solid #5569d8;">Type</th>
+                                    <th style="padding: 8px; border: 1px solid #5569d8;">Length</th>
+                                    <th style="padding: 8px; border: 1px solid #5569d8;">Nullable</th>
+                                    <th style="padding: 8px; border: 1px solid #5569d8; text-align: center;">PK</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+            
+            columns.forEach(col => {
+                const length = col.maxLength ? col.maxLength : '-';
+                const nullable = col.isNullable ? 'YES' : 'NO';
+                const pk = col.isPrimaryKey ? '<i class="material-icons icon-align" style="color: gold; font-size: 14px;">vpn_key</i>' : '';
+                
+                html += `
+                    <tr style="border-bottom: 1px solid #e9ecef;">
+                        <td style="padding: 6px 8px; border: 1px solid #e9ecef;"><strong>${col.columnName}</strong></td>
+                        <td style="padding: 6px 8px; border: 1px solid #e9ecef;">${col.dataType}</td>
+                        <td style="padding: 6px 8px; border: 1px solid #e9ecef;">${length}</td>
+                        <td style="padding: 6px 8px; border: 1px solid #e9ecef;">${nullable}</td>
+                        <td style="padding: 6px 8px; border: 1px solid #e9ecef; text-align: center;">${pk}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn btn-info btn-sm" onclick="generateTableScript('${schema}', '${table}')">
+                            <i class="material-icons icon-align" style="font-size: 14px;">code</i> CREATE Script
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="generateDataScript('${schema}', '${table}')">
+                            <i class="material-icons icon-align" style="font-size: 14px;">save_alt</i> INSERT Script
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="selectTable('${schema}', '${table}'); closeCustomModal();">
+                            <i class="material-icons icon-align" style="font-size: 14px;">search</i> SELECT Data
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            showCustomModal('Table Information', html);
+        }
+
+        function showCustomModal(title, content) {
+            const modalHtml = `
+                <div id="customModal" class="script-modal" style="display: block;">
+                    <div class="script-modal-content" style="max-width: 800px;">
+                        <div class="script-modal-header">
+                            <h3>${title}</h3>
+                            <span class="script-modal-close" onclick="closeCustomModal()">&times;</span>
+                        </div>
+                        <div id="customModalContent">${content}</div>
+                    </div>
+                </div>
+            `;
+            
+            $('#customModal').remove();
+            $('body').append(modalHtml);
+        }
+
+        function closeCustomModal() {
+            $('#customModal').fadeOut(300, function() {
+                $(this).remove();
+            });
+        }
+
+        function copyScript() {
+            navigator.clipboard.writeText(currentScript).then(function() {
+                showNotification('Đã copy script vào clipboard!', 'success');
+            });
+        }
+
+        function downloadScript() {
+            const blob = new Blob([currentScript], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentScriptFileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            showNotification('Đã download script!', 'success');
+        }
+
+        function loadHistory() {
+            $.ajax({
+                url: '/Admin/Base/DatabaseQuery/GetQueryHistory',
+                type: 'GET',
+                success: function (response) {
+                    if (response.output === 1 && response.data.length > 0) {
+                        let html = '';
+                        response.data.slice(0, 10).forEach(item => {
+                            const queryText = item.name.includes(':') ? item.name.substring(item.name.indexOf(':') + 1).trim() : item.name;
+                            const queryPreview = queryText.substring(0, 60);
+                            html += `
+                                <div class="history-item" onclick="$('#queryEditor').val(\`${queryText.replace(/`/g, '\\`')}\`);" title="${queryText}">
+                                    <div class="time">${new Date(item.actionTime).toLocaleString('vi-VN')}</div>
+                                    <div class="query">${queryPreview}...</div>
+                                </div>
+                            `;
+                        });
+                        $('#historyPanel').html(html);
+                    }
+                }
+            });
+        }
+
+        function clearEditor() {
+            $('#queryEditor').val('');
+        }
+
+        function formatQuery() {
+            let query = $('#queryEditor').val();
+            query = query.replace(/\s+/g, ' ').trim();
+            const keywords = ['SELECT', 'FROM', 'WHERE', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'GROUP BY', 'ORDER BY', 'HAVING'];
+            keywords.forEach(keyword => {
+                query = query.replace(new RegExp(keyword, 'gi'), '\n' + keyword);
+            });
+            $('#queryEditor').val(query.trim());
+        }
+
+        function exportCsv() {
+            if (!currentResult || !currentResult.columns) {
+                showNotification('Không có dữ liệu để export!', 'warning');
+                return;
+            }
+
+            $.ajax({
+                url: '/Admin/Base/DatabaseQuery/ExportCsv',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    columns: currentResult.columns,
+                    rows: currentResult.rows
+                }),
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function (blob) {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `QueryResult_${new Date().getTime()}.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    showNotification('Export thành công!', 'success');
+                }
+            });
+        }
+
+        function revokePin() {
+            if (confirm('Bạn có chắc muốn đăng xuất khỏi Database Query Tool?')) {
+                $.ajax({
+                    url: '/Admin/Base/DatabaseQuery/RevokePin',
+                    type: 'POST',
+                    success: function () {
+                        location.reload();
+                    }
+                });
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function showNotification(message, type) {
+            alertify.notify(message, type);
+        }
+
+        // =============================================
+        // EXPORT ALL AS INSERT/UPDATE
+        // =============================================
+        
+        function exportAllAsInsert() {
+            if (!currentResult || !currentResult.columns || !currentResult.rows) {
+                showNotification('Không có dữ liệu để export!', 'warning');
+                return;
+            }
+            
+            if (!currentEditSchema || !currentEditTable) {
+                showNotification('Không xác định được table. Vui lòng chạy SELECT query trước!', 'warning');
+                return;
+            }
+            
+            const tableName = `[${currentEditSchema}].[${currentEditTable}]`;
+            const columns = currentResult.columns;
+            const rows = currentResult.rows;
+            
+            let script = `-- =============================================\n`;
+            script += `-- INSERT SCRIPT - ${tableName}\n`;
+            script += `-- Generated: ${new Date().toLocaleString('vi-VN')}\n`;
+            script += `-- Total Rows: ${rows.length}\n`;
+            script += `-- =============================================\n\n`;
+            
+            // ✅ SET IDENTITY_INSERT ON
+            script += `SET IDENTITY_INSERT ${tableName} ON;\n`;
+            script += `GO\n\n`;
+            
+            rows.forEach((rowData, index) => {
+                script += `-- Row ${index + 1}\n`;
+                script += `INSERT INTO ${tableName} (\n`;
+                
+                // ✅ Column list
+                columns.forEach((col, colIndex) => {
+                    if (colIndex === columns.length - 1) {
+                        script += `    [${col}]\n`;
+                    } else {
+                        script += `    [${col}],\n`;
+                    }
+                });
+                
+                script += `) VALUES (\n`;
+                
+                // ✅ Values list - QUAN TRỌNG: Không có comma ở dòng cuối
+                columns.forEach((col, colIndex) => {
+                    const value = rowData[colIndex];
+                    const formattedValue = formatSqlValueForExport(value);
+                    
+                    if (colIndex === columns.length - 1) {
+                        // ✅ Dòng cuối KHÔNG có dấu phẩy
+                        script += `    ${formattedValue} -- ${col}\n`;
+                    } else {
+                        script += `    ${formattedValue}, -- ${col}\n`;
+                    }
+                });
+                
+                script += `);\n`;
+                
+                if (index < rows.length - 1) {
+                    script += '\n';
+                }
+            });
+            
+            // ✅ SET IDENTITY_INSERT OFF
+            script += `\nGO\n`;
+            script += `SET IDENTITY_INSERT ${tableName} OFF;\n`;
+            script += `GO\n`;
+            
+            script += `\n-- =============================================\n`;
+            script += `-- END OF SCRIPT\n`;
+            script += `-- =============================================`;
+            
+            showScript(`Export INSERT - ${tableName}`, script, `${currentEditTable}_INSERT_${new Date().getTime()}.sql`);
+        }
+        
+        function exportAllAsUpdate() {
+            if (!currentResult || !currentResult.columns || !currentResult.rows) {
+                showNotification('Không có dữ liệu để export!', 'warning');
+                return;
+            }
+            
+            if (!currentEditSchema || !currentEditTable) {
+                showNotification('Không xác định được table. Vui lòng chạy SELECT query trước!', 'warning');
+                return;
+            }
+            
+            // Cần có Primary Key để generate UPDATE
+            if (!currentTablePrimaryKeys || currentTablePrimaryKeys.length === 0) {
+                if (!confirm('Table không có Primary Key. UPDATE sẽ dùng TẤT CẢ columns trong WHERE.\n\nBạn có muốn tiếp tục?')) {
+                    return;
+                }
+            }
+            
+            const tableName = `[${currentEditSchema}].[${currentEditTable}]`;
+            const columns = currentResult.columns;
+            const rows = currentResult.rows;
+            
+            let script = `-- =============================================\n`;
+            script += `-- UPDATE SCRIPT - ${tableName}\n`;
+            script += `-- Generated: ${new Date().toLocaleString('vi-VN')}\n`;
+            script += `-- Total Rows: ${rows.length}\n`;
+            if (currentTablePrimaryKeys && currentTablePrimaryKeys.length > 0) {
+                script += `-- Primary Keys: ${currentTablePrimaryKeys.join(', ')}\n`;
+            } else {
+                script += `-- ⚠️ WARNING: No Primary Key - WHERE clause uses ALL columns\n`;
+            }
+            script += `-- =============================================\n\n`;
+            
+            rows.forEach((rowData, index) => {
+                // Build WHERE conditions (chỉ dùng PK hoặc tất cả columns)
+                let whereConditions;
+                if (currentTablePrimaryKeys && currentTablePrimaryKeys.length > 0) {
+                    whereConditions = {};
+                    currentTablePrimaryKeys.forEach(pkCol => {
+                        const colIndex = columns.indexOf(pkCol);
+                        if (colIndex !== -1) {
+                            whereConditions[pkCol] = rowData[colIndex];
+                        }
+                    });
+                } else {
+                    // Fallback: dùng tất cả columns
+                    whereConditions = {};
+                    columns.forEach((col, colIndex) => {
+                        whereConditions[col] = rowData[colIndex];
+                    });
+                }
+                
+                script += `-- Row ${index + 1}\n`;
+                script += `UPDATE ${tableName}\nSET\n`;
+                
+                // ✅ THAY ĐỔI: SET clause - loại trừ Primary Key columns
+                let hasSetClause = false;
+                columns.forEach((col, colIndex) => {
+                    // ✅ Skip Primary Key columns
+                    if (currentTablePrimaryKeys && currentTablePrimaryKeys.includes(col)) {
+                        return; // Bỏ qua cột PK
+                    }
+                    
+                    const value = rowData[colIndex];
+                    const formattedValue = formatSqlValueForExport(value);
+                    script += `    [${col}] = ${formattedValue},\n`;
+                    hasSetClause = true;
+                });
+                
+                // ✅ Kiểm tra nếu không có column nào để SET (toàn PK)
+                if (!hasSetClause) {
+                    script += `    -- ⚠️ WARNING: No non-PK columns to update\n`;
+                    script += `    -- Skipping this row\n\n`;
+                    return;
+                }
+                
+                script = script.slice(0, -2); // Remove last comma
+                
+                // WHERE clause: chỉ PK (hoặc all columns nếu không có PK)
+                script += `\nWHERE\n`;
+                Object.keys(whereConditions).forEach(col => {
+                    const formattedValue = formatSqlValueForExport(whereConditions[col]);
+                    script += `    [${col}] = ${formattedValue} AND\n`;
+                });
+                script = script.slice(0, -5); // Remove last AND
+                script += ';\n';
+                
+                if (index < rows.length - 1) {
+                    script += '\n';
+                }
+            });
+            
+            script += `\n-- =============================================\n`;
+            script += `-- END OF SCRIPT\n`;
+            script += `-- =============================================`;
+            
+            showScript(`Export UPDATE - ${tableName}`, script, `${currentEditTable}_UPDATE_${new Date().getTime()}.sql`);
+        }
+        
+        function formatSqlValueForExport(value) {
+            if (value === null || value === undefined) {
+                return 'NULL';
+            }
+            
+            const type = typeof value;
+            if (type === 'string') {
+                let escaped = value.replace(/'/g, "''");
+                return `N'${escaped}'`;
+            } else if (type === 'boolean') {
+                return value ? '1' : '0';
+            } else if (value instanceof Date) {
+                return `'${value.toISOString()}'`;
+            } else {
+                return value.toString();
+            }
+        }
+    </script>
+}

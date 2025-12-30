@@ -1,0 +1,115 @@
+﻿@model PT.Domain.Model.SustainableFinanceResponse
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using PT.Domain.Model
+@using PT.Shared
+
+@{
+	Layout = null;
+	var stPage = Context.Request.Query["page"].ToString();
+	var pageIndex = 1;
+	if (!string.IsNullOrEmpty(stPage))
+	{
+		pageIndex = int.TryParse(stPage, out var result) ? result : 1;
+	}
+	string language = ViewBag.Language ?? "vi";
+}
+
+@if (Model != null && Model.Success && Model.Data != null && Model.Data.Items != null && Model.Data.Items.Any())
+{
+	for (int i = 0; i < Model.Data.Items.Count; i++)
+	{
+		var item = Model.Data.Items[i];
+		string url = $"/{language}/ratings-fr/{Functions.ToUrlSlug(item.OrganizationName)}-id{Model.Data.Items[i].OrganizationId}.html";
+
+		var radioName = $"language_{i}";
+		<tr>
+			<td data-label="@Localizer["PublicationDate"]">
+				@if (!string.IsNullOrEmpty(item.PublicDate))
+				{
+					<div>@(Convert.ToDateTime(item.PublicDate).ToString("dd/MM/yyyy"))</div>
+				}
+			</td>
+			<td data-label="@Localizer["Publisher"]">
+				<a href="@url" class="phat-hanh-text">@item.OrganizationName</a>
+			</td>
+			<td data-label="@Localizer["Title"]">@item.Title</td>
+			<td data-label="@Localizer["Industry"]">@item.IndustryName</td>
+			<td data-label="@Localizer["SustainabilityLevel"]">
+				@if (!string.IsNullOrEmpty(item.ApplicableStandardsName))
+				{
+					<span>@item.ApplicableStandardsName</span>
+				}
+			</td>
+			<td data-label="@Localizer["Report"]">
+				<div class="language-switch">
+					@if(item.Files != null && !string.IsNullOrEmpty(item.Files.Vi))
+					{
+						<label class="lang-option">
+							<input type="radio" name="@radioName" value="vi" checked>
+							<span class="radio"></span>
+							VN
+						</label>
+					}
+					@if (item.Files != null && !string.IsNullOrEmpty(item.Files.En))
+					{
+						<label class="lang-option">
+							<input type="radio" name="@radioName" value="en">
+							<span class="radio"></span>
+							EN
+						</label>
+					}
+
+					@if((item.Files != null) && (!string.IsNullOrEmpty(item.Files.Vi) || !string.IsNullOrEmpty(item.Files.En)))
+					{
+						<button class="btn-download"
+								onclick="downloadRatingReport('@(item.Files?.Vi)', '@(item.Files?.En)', '@radioName')"
+								title="@Localizer["DownloadReport"]">
+							<i class="fa fa-download"></i> @Localizer["Download"]
+						</button>
+                    }
+				</div>
+			</td>
+		</tr>
+	}
+	<tr>
+		<td colspan="6" style="padding: 0; border: none;background: transparent;">
+			<div class="page-table">
+				<div class="numberpage">
+					<div>
+						@Localizer["Showing"]
+						<span>@((pageIndex - 1) * Model.Data.PageSize + 1)</span> -
+						<span>@Math.Min(pageIndex * Model.Data.PageSize, Model.Data.TotalRecords)</span>
+						@Localizer["Of"] <span>@Model.Data.TotalRecords</span> @Localizer["Records"]
+					</div>
+				</div>
+				<div class="pagination">
+					@Html.Raw(PT.Shared.Functions.GenPageListAjax2("",
+								pageIndex,
+								Model.Data.TotalRecords,
+								Model.Data.PageSize,
+								$"&companyName={Context.Request.Query["companyName"]}" +
+								$"&industryId={Context.Request.Query["industryId"]}" +
+								$"&applicableStandardId={Context.Request.Query["applicableStandardId"]}",
+								"page-active",
+								null,
+								"getRakingsAjax"
+					))
+			</div>
+		</div>
+		</td>
+	</tr>
+}
+else
+{
+	<tr>
+		<td style='background: transparent;' colspan="6">
+			<div class="text-center py-5 text-center">
+				<img src="/Data/Banner/no-data.jpg" alt="@Localizer["NoData"]" style="max-width: 300px;" />
+				<p class="no-data-messege my-5">@Localizer["NoRatingResults"]</p>
+			</div>
+		</td>
+	</tr>
+}
+
