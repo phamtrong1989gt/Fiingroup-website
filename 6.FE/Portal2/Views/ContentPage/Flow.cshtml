@@ -19,7 +19,7 @@
 }
 
 <style>
- #StockEconomy{background:url('@(Model.Input12 ?? "/Data/Banner/bg-giaiphap.jpg")') top/cover no-repeat}.hero-content{color:#fff;max-width:89%;z-index:2;padding-bottom:30px}.hero-subtitle{display:inline-block;font-size:40px;font-weight:500;color:#fff;padding-top:60px}.hero-title{font-size:54px;font-weight:700;line-height:1.4;margin-bottom:15px}.hero-text{font-size:18px;line-height:1.7;color:#d7e9ff;text-align:justify;position:relative;padding-left:25px}.hero-text::before{content:"";position:absolute;left:0;top:0;width:5px;height:100%;background:linear-gradient(to bottom,#5086c0,#e2f2FB7A,#badcf1);border-radius:2px}.customer-box{position:relative;border-radius:15px;border:1px solid transparent;background-image:linear-gradient(#f5f9ff,#fff),linear-gradient(to right,#e6e6e6 0,#034ea2 100%);background-origin:border-box;background-clip:padding-box,border-box;box-shadow:0 6px 15px rgba(3,78,162,.08);text-align:center;padding:50px 30px 30px}.decor{position:absolute;pointer-events:none;z-index:5}.decor-left{left:-45px;top:55%;width:75px}.decor-topright{right:12%;top:-35px;width:90px}.decor-bottomright{right:-2%;bottom:25px;width:60px}.customer-grid{display:flex;justify-content:space-around;flex-wrap:wrap}.customer-item{text-align:center;color:#1d2939;font-size:16px;font-weight:500}.customer-icon{width:60px;margin-bottom:15px;transition:transform .3s}.customer-item:hover .customer-icon{transform:scale(1.1)}.customer-name{font-size:18px;color:#093461;font-weight:700}.solution-item{margin-bottom:50px;margin-right:30px}.solution-item h4{font-size:28px;font-weight:700;color:#093461;margin-bottom:6px}.solution-item h4:hover{color:#034ea2}.solution-item p{font-size:13px;color:#093461;margin-bottom:6px}.solution-link{font-size:14px;color:#034ea2;text-decoration:none;font-weight:500;transition:.3s}.solution-link:hover{text-decoration:underline;padding-left:4px}.solution-img{border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.12)}.pdt20{padding-top:20px}#WhatWe{background:url('/Data/Banner/bg-what.jpg') center center/cover no-repeat}#WhatWe h2{color:#fff}#WhatWe .itemwe{padding-right:35px}#WhatWe .number{font-weight:700;font-size:24px;color:#fff;margin:0}#WhatWe .tochuc{font-size:28px;color:#fff;margin:0}#WhatWe .desc{font-weight:500;font-size:16px;color:#fff;text-align:justify}#WhatWe .gach{border-bottom:1px solid #ffff;padding:0;margin:10px 0;width:155px}
+ #StockEconomy{background:url('@(Model.Input12 ?? "/Data/Banner/bg-giaiphap.jpg")') top/cover no-repeat}.hero-content{color:#fff;max-width:89%;z-index:2;padding-bottom:30px}.hero-subtitle{display:inline-block;font-size:40px;font-weight:500;color:#fff;padding-top:60px}.hero-title{font-size:54px;font-weight:700;line-height:1.4;margin-bottom:15px}.hero-text{font-size:18px;line-height:1.7;color:#d7e9ff;text-align:justify;position:relative;padding-left:25px}.hero-text::before{content:"";position:absolute;left:0;top:0;width:5px;height:100%;background:linear-gradient(to bottom,#5086c0,#e2f2FB7A,#badcf1);border-radius:2px}.customer-box{position:relative;border-radius:15px;border:1px solid transparent;background-image:linear-gradient(#f5f9ff,#fff),linear-gradient(to right,#e6e6e6 0,#034ea2 100%);background-origin:border-box;background-clip:padding-box,border-box;box-shadow:0 6px 15px rgba(3,78,162,.08);text-align:center;padding:50px 30px 30px}.decor{position:absolute;pointer-events:none;z-index:5}.decor-left{left:-45px;top:55%;width:75px}.decor-topright{right:12%;top:-35px;width:90px}.decor-bottomright{right:-2%;bottom:25px;width:60px}.customer-grid{display:flex;justify-content:space-around;flex-wrap:wrap}.customer-item{text-align:center;color:#1d2939;font-size:16px;font-weight:500}.customer-icon{width:60px;margin-bottom:15px;transition:transform .3s}.customer-item:hover .customer-icon{transform:scale(1.1)}.customer-name{font-size:18px;color:#093461;font-weight:700}.solution-item{margin-bottom:50px;margin-right:30px}.solution-item h4{font-size:28px;font-weight:700;color:#093461;margin-bottom:6px}.solution-item h4:hover{color:#034ea2}.solution-item p{font-size:13px;color:#093461;margin-bottom:6px}.solution-link{font-size:14px;color:#034ea2;text-decoration:none;font-weight:500;transition:.3s}.solution-link:hover{text-decoration:underline;padding-left:4px}.solution-img{border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.12)}.solution-item{transition:all .3s ease;padding:15px;border-radius:8px;cursor:pointer}.solution-item.active-solution{background:#f0f7ff;border-left:4px solid #034ea2;padding-left:20px}.solution-item:hover{background:#f8fbff}.pdt20{padding-top:20px}#WhatWe{background:url('/Data/Banner/bg-what.jpg') center center/cover no-repeat}#WhatWe h2{color:#fff}#WhatWe .itemwe{padding-right:35px}#WhatWe .number{font-weight:700;font-size:24px;color:#fff;margin:0}#WhatWe .tochuc{font-size:28px;color:#fff;margin:0}#WhatWe .desc{font-weight:500;font-size:16px;color:#fff;text-align:justify}#WhatWe .gach{border-bottom:1px solid #ffff;padding:0;margin:10px 0;width:155px}
 
 	.news-img {
 		width: 100%;
@@ -88,7 +88,7 @@
 					{
 						var item = listFlowItems[i];
 						string path = PT.Shared.Functions.FormatUrl(item.Language, item.Link?.Slug);
-						<div class="solution-item" data-img="@item.Input11">
+						<div class="solution-item" data-img="@item.Input11" data-index="@i">
 							<a href="@path" title="@item.Name"><h4>@item.Name</h4></a>
 							<p>@Html.Raw(item.RelatedNote)</p>
 							<a href="@path" class="solution-link">@Localizer["Details"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
@@ -97,7 +97,10 @@
 				</div>
 			</div>
 			<div class="col-lg-5 col-sm-12 text-center">
-				<img src="@(Model.Input5 ?? "/Data/Banner/solution_giaiphap5.png")" class="img-fluid solution-img" alt="@Model.Name">
+				<img src="@(Model.Input5 ?? (listFlowItems.Count > 0 ? listFlowItems[0].Input11 : "/Data/Banner/solution_giaiphap5.png"))" 
+					 class="img-fluid solution-img" 
+					 alt="@Model.Name"
+					 data-default="@(listFlowItems.Count > 0 ? listFlowItems[0].Input11 : "/Data/Banner/solution_giaiphap5.png")">
 			</div>
 		</div>
 	</div>
@@ -130,6 +133,87 @@
 				const $img = $('.solution-img');
 				$img.attr('src', imgUrl);
 			}
+		});
+	})(window.jQuery);
+
+	// ============================================
+	// SOLUTION ITEM IMAGE SWITCHER
+	// ============================================
+	(function ($) {
+		'use strict';
+
+		const $solutionImg = $('.solution-img');
+		const $solutionItems = $('.solution-item');
+		
+		// Store default image
+		const defaultImg = $solutionImg.data('default') || $solutionImg.attr('src');
+
+		// Add active class to first item by default
+		$solutionItems.first().addClass('active-solution');
+
+		// Handle hover events
+		$solutionItems.hover(
+			function () {
+				// Mouse enter
+				const imgUrl = $(this).data('img');
+				
+				// Remove active from all items
+				$solutionItems.removeClass('active-solution');
+				
+				// Add active to current item
+				$(this).addClass('active-solution');
+				
+				// Change image if URL exists
+				if (imgUrl && imgUrl !== "" && imgUrl !== "null") {
+					$solutionImg.fadeOut(200, function() {
+						$solutionImg.attr('src', imgUrl).fadeIn(200);
+					});
+				}
+			},
+			function () {
+				// Mouse leave - Optional: reset to default
+				// Uncomment if you want image to reset when not hovering
+				// setTimeout(function() {
+				// 	if (!$('.solution-item:hover').length) {
+				// 		$solutionImg.attr('src', defaultImg);
+				// 		$solutionItems.removeClass('active-solution');
+				// 		$solutionItems.first().addClass('active-solution');
+				// 	}
+				// }, 100);
+			}
+		);
+
+		// Handle click for mobile
+		$solutionItems.on('click', function(e) {
+			const imgUrl = $(this).data('img');
+			
+			if (imgUrl && imgUrl !== "" && imgUrl !== "null") {
+				// Remove active from all items
+				$solutionItems.removeClass('active-solution');
+				
+				// Add active to current item
+				$(this).addClass('active-solution');
+				
+				// Change image
+				$solutionImg.fadeOut(200, function() {
+					$solutionImg.attr('src', imgUrl).fadeIn(200);
+				});
+			}
+		});
+
+		// Preload images for better performance
+		const imagesToPreload = [];
+		$solutionItems.each(function() {
+			const imgUrl = $(this).data('img');
+			if (imgUrl && imgUrl !== "" && imgUrl !== "null") {
+				imagesToPreload.push(imgUrl);
+			}
+		});
+
+		// Preload images in background
+		imagesToPreload.forEach(function(src) {
+			const img = new Image();
+			img.src = src;
 		});
 
 	})(window.jQuery);
