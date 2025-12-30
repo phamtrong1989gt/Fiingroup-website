@@ -123,7 +123,7 @@
                                         <i class="material-icons">add</i><span>Thêm mới sự kiện</span> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu drcontrol">
-                                        @foreach (var portal in portals.Where(x => x.Value == "2"))
+                                        @foreach (var portal in portals)
                                         {
                                             <li><strong class="label-portal">@portal.Text</strong></li>
                                             @foreach (var item in PT.Shared.ListData.ListLanguage)
