@@ -786,4 +786,21 @@
     #Banner h1 {
         padding: 6% 3% !important;
     }
+    #FiinReport .solution-desc{padding:0 !important;margin:0 !important}
+}
+@media (max-width: 768px) {
+    .navbarfin a {
+        padding: 5px 30px !important;
+    }
+    .menu-news {
+        display: none !important
+    }
+    #CoreValue .content {
+        width: 100% !important;
+    }
+}
+@media (max-width: 1000px) {
+    .menu-news {
+        display: none !important
+    }
 }
