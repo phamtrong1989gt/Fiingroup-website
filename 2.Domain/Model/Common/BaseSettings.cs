@@ -146,6 +146,7 @@ namespace PT.Domain.Model
         public string BackendDomain { get; set; }
 
         public NewAPISettings NewAPI { get; set; }
+        public NewAPISettings RatingAPI { get; set; }
     }
 
     public class AsyncNewsSettings

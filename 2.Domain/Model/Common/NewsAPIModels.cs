@@ -340,6 +340,15 @@ namespace PT.Domain.Model
 
         [JsonProperty("organizationId")]
         public int OrganizationId { get; set; }
+
+        [JsonProperty("industryName")]
+        public string IndustryName { get; set; }
+
+        [JsonProperty("applicableStandardsName")]
+        public string ApplicableStandardsName { get; set; }
+
+        [JsonProperty("industryId")]
+        public int industryId { get; set; } 
     }
 
     // Query Parameters for Rating Results
@@ -352,6 +361,7 @@ namespace PT.Domain.Model
         public int? Page { get; set; }
         public int? PageSize { get; set; }
         public string Lang { get; set; }
+        public int? OrganizationId { get; set; }
 
         public string ToQueryString()
         {
@@ -375,6 +385,11 @@ namespace PT.Domain.Model
             if (!string.IsNullOrWhiteSpace(ProspectsId))
             {
                 queryParams.Add($"prospectsId={ProspectsId}");
+            }
+
+            if (OrganizationId.HasValue)
+            {
+                queryParams.Add($"organizationId={OrganizationId.Value}");
             }
 
             if (Page.HasValue)

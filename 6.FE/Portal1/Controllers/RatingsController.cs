@@ -53,6 +53,7 @@ namespace PT.UI.Controllers
         [Route("{language}/Ratings/IndexAjax")]
         public async Task<IActionResult> IndexAjax([FromQuery] RatingResultsQueryParameters parameters)
         {
+          //  parameters.Fro
             var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
             ViewBag.Language = parameters.Lang;
             return View("IndexAjax", data);

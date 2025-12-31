@@ -15,7 +15,7 @@ namespace PT.Base.Services
 {
     public interface INewsAPIService
     {
-        Task<string> GetAccessTokenAsync(bool clearCache, int portalId);
+        Task<string> GetAccessTokenAsync(bool clearCache, int portalId, bool isRatingAPI);
         Task<NewsListResponse> GetNewsAsync(NewsQueryParameters parameters, string language = "vi", int portalId = 1);
         Task<NewsDetailResponse> GetNewsByIdAsync(int id, string language = "vi", int portalId = 1);
         
@@ -59,7 +59,7 @@ namespace PT.Base.Services
         /// </summary>
         /// <param name="clearCache">True: Xóa cache và lấy token mới. False: Dùng cache nếu có</param>
         /// <returns>Access Token</returns>
-        public async Task<string> GetAccessTokenAsync(bool clearCache, int portalId)
+        public async Task<string> GetAccessTokenAsync(bool clearCache, int portalId, bool isRatingAPI)
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             
@@ -74,6 +74,11 @@ namespace PT.Base.Services
             }
 
             var settings = _baseSettings.Value.NewAPI;
+            if(isRatingAPI)
+            {
+                settings = _baseSettings.Value.RatingAPI;
+            }
+
             var tokenUrl = $"{settings.TokenEndpoint}";
 
             try
@@ -219,7 +224,7 @@ namespace PT.Base.Services
                     string token;
                     try
                     {
-                        token = await GetAccessTokenAsync(false, portalId);
+                        token = await GetAccessTokenAsync(false, portalId, false);
                     }
                     catch (Exception)
                     {
@@ -246,7 +251,7 @@ namespace PT.Base.Services
 
                         try
                         {
-                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId, false);
                             return await CallNewsAPIAsync(newsUrl, token, parameters);
                         }
                         catch (Exception)
@@ -286,7 +291,7 @@ namespace PT.Base.Services
                     string token;
                     try
                     {
-                        token = await GetAccessTokenAsync(false, portalId);
+                        token = await GetAccessTokenAsync(false, portalId, false);
                     }
                     catch (Exception)
                     {
@@ -314,7 +319,7 @@ namespace PT.Base.Services
 
                         try
                         {
-                            token = await GetAccessTokenAsync(clearCache: true,  portalId);
+                            token = await GetAccessTokenAsync(clearCache: true,  portalId, false);
                             return await CallNewsDetailAPIAsync(newsUrl, token);
                         }
                         catch (Exception)
@@ -404,11 +409,11 @@ namespace PT.Base.Services
         {
             return await _apiLogger.TrackAPICallAsync(
                 LogType.API_GetReportScores,
-                _baseSettings.Value.NewAPI.ReportScoresEndpoint ?? "N/A",
+                _baseSettings.Value.RatingAPI.ReportScoresEndpoint ?? "N/A",
                 "GET",
                 async () =>
                 {
-                    var settings = _baseSettings.Value.NewAPI;
+                    var settings = _baseSettings.Value.RatingAPI;
                     var endpoint = settings.ReportScoresEndpoint;
 
                     if (string.IsNullOrWhiteSpace(endpoint))
@@ -419,7 +424,7 @@ namespace PT.Base.Services
                     string token;
                     try
                     {
-                        token = await GetAccessTokenAsync(false, portalId);
+                        token = await GetAccessTokenAsync(false, portalId, true);
                     }
                     catch (Exception)
                     {
@@ -434,7 +439,7 @@ namespace PT.Base.Services
                     {
                         try
                         {
-                            token = await GetAccessTokenAsync(clearCache: true, portalId);
+                            token = await GetAccessTokenAsync(clearCache: true, portalId, true);
                             return await CallRatingAPIAsync<ReportScoresResponse>(endpoint, token);
                         }
                         catch (Exception)
@@ -462,11 +467,11 @@ namespace PT.Base.Services
         {
             return await _apiLogger.TrackAPICallAsync(
                 LogType.API_GetIndustries,
-                _baseSettings.Value.NewAPI.ReportIndustriesEndpoint ?? "N/A",
+                _baseSettings.Value.RatingAPI.ReportIndustriesEndpoint ?? "N/A",
                 "GET",
                 async () =>
                 {
-                    var settings = _baseSettings.Value.NewAPI;
+                    var settings = _baseSettings.Value.RatingAPI;
                     var endpoint = settings.ReportIndustriesEndpoint;
 
                     if (string.IsNullOrWhiteSpace(endpoint))
@@ -479,7 +484,7 @@ namespace PT.Base.Services
                     string token;
                     try
                     {
-                        token = await GetAccessTokenAsync(false, portalId);
+                        token = await GetAccessTokenAsync(false, portalId, true);
                     }
                     catch (Exception)
                     {
@@ -494,7 +499,7 @@ namespace PT.Base.Services
                     {
                         try
                         {
-                            token = await GetAccessTokenAsync(clearCache: true, portalId);
+                            token = await GetAccessTokenAsync(clearCache: true, portalId, true);
                             return await CallRatingAPIAsync<ReportIndustriesResponse>(url, token);
                         }
                         catch (Exception)
@@ -522,11 +527,11 @@ namespace PT.Base.Services
         {
             return await _apiLogger.TrackAPICallAsync(
                 LogType.API_GetOutlooks,
-                _baseSettings.Value.NewAPI.ReportOutlooksEndpoint ?? "N/A",
+                _baseSettings.Value.RatingAPI.ReportOutlooksEndpoint ?? "N/A",
                 "GET",
                 async () =>
                 {
-                    var settings = _baseSettings.Value.NewAPI;
+                    var settings = _baseSettings.Value.RatingAPI;
                     var endpoint = settings.ReportOutlooksEndpoint;
 
                     if (string.IsNullOrWhiteSpace(endpoint))
@@ -539,7 +544,7 @@ namespace PT.Base.Services
                     string token;
                     try
                     {
-                        token = await GetAccessTokenAsync(false, portalId);
+                        token = await GetAccessTokenAsync(false, portalId, true);
                     }
                     catch (Exception)
                     {
@@ -554,7 +559,7 @@ namespace PT.Base.Services
                     {
                         try
                         {
-                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId, true);
                             return await CallRatingAPIAsync<ReportOutlooksResponse>(url, token);
                         }
                         catch (Exception)
@@ -583,11 +588,11 @@ namespace PT.Base.Services
         {
             return await _apiLogger.TrackAPICallAsync(
                 LogType.API_GetSustainableFinance,
-                _baseSettings.Value.NewAPI.SustainableFinanceEndpoint ?? "N/A",
+                _baseSettings.Value.RatingAPI.SustainableFinanceEndpoint ?? "N/A",
                 "GET",
                 async () =>
                 {
-                    var settings = _baseSettings.Value.NewAPI;
+                    var settings = _baseSettings.Value.RatingAPI;
                     var endpoint = settings.SustainableFinanceEndpoint;
 
                     if (string.IsNullOrWhiteSpace(endpoint))
@@ -606,7 +611,7 @@ namespace PT.Base.Services
                     string token;
                     try
                     {
-                        token = await GetAccessTokenAsync(false, portalId);
+                        token = await GetAccessTokenAsync(false, portalId, true);
                     }
                     catch (Exception)
                     {
@@ -621,7 +626,7 @@ namespace PT.Base.Services
                     {
                         try
                         {
-                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId, true);
                             return await CallRatingAPIAsync<SustainableFinanceResponse>(url, token);
                         }
                         catch (Exception)
@@ -649,11 +654,11 @@ namespace PT.Base.Services
         {
             return await _apiLogger.TrackAPICallAsync(
                 LogType.API_GetRatingResults,
-                _baseSettings.Value.NewAPI.RatingResultsEndpoint ?? "N/A",
+                _baseSettings.Value.RatingAPI.RatingResultsEndpoint ?? "N/A",
                 "GET",
                 async () =>
                 {
-                    var settings = _baseSettings.Value.NewAPI;
+                    var settings = _baseSettings.Value.RatingAPI;
                     var endpoint = settings.RatingResultsEndpoint;
 
                     if (string.IsNullOrWhiteSpace(endpoint))
@@ -667,7 +672,7 @@ namespace PT.Base.Services
                     string token;
                     try
                     {
-                        token = await GetAccessTokenAsync(false, portalId);
+                        token = await GetAccessTokenAsync(false, portalId, true);
                     }
                     catch (Exception)
                     {
@@ -682,7 +687,7 @@ namespace PT.Base.Services
                     {
                         try
                         {
-                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId, true);
                             return await CallRatingAPIAsync<RatingResultsResponse>(url, token);
                         }
                         catch (Exception)
@@ -710,11 +715,11 @@ namespace PT.Base.Services
         {
             return await _apiLogger.TrackAPICallAsync(
                 LogType.API_GetIndustries,
-                _baseSettings.Value.NewAPI.SustainableIndustriesEndpoint ?? "N/A",
+                _baseSettings.Value.RatingAPI.SustainableIndustriesEndpoint ?? "N/A",
                 "GET",
                 async () =>
                 {
-                    var settings = _baseSettings.Value.NewAPI;
+                    var settings = _baseSettings.Value.RatingAPI;
                     var endpoint = settings.SustainableIndustriesEndpoint;
 
                     if (string.IsNullOrWhiteSpace(endpoint))
@@ -727,7 +732,7 @@ namespace PT.Base.Services
                     string token;
                     try
                     {
-                        token = await GetAccessTokenAsync(false, portalId);
+                        token = await GetAccessTokenAsync(false, portalId, true);
                     }
                     catch (Exception)
                     {
@@ -742,7 +747,7 @@ namespace PT.Base.Services
                     {
                         try
                         {
-                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId, true);
                             return await CallRatingAPIAsync<SustainableIndustriesResponse>(url, token);
                         }
                         catch (Exception)
@@ -770,11 +775,11 @@ namespace PT.Base.Services
         {
             return await _apiLogger.TrackAPICallAsync(
                 LogType.API_GetIndustries,
-                _baseSettings.Value.NewAPI.SustainableStandardsEndpoint ?? "N/A",
+                _baseSettings.Value.RatingAPI.SustainableStandardsEndpoint ?? "N/A",
                 "GET",
                 async () =>
                 {
-                    var settings = _baseSettings.Value.NewAPI;
+                    var settings = _baseSettings.Value.RatingAPI;
                     var endpoint = settings.SustainableStandardsEndpoint;
 
                     if (string.IsNullOrWhiteSpace(endpoint))
@@ -787,7 +792,7 @@ namespace PT.Base.Services
                     string token;
                     try
                     {
-                        token = await GetAccessTokenAsync(false, portalId);
+                        token = await GetAccessTokenAsync(false, portalId, true);
                     }
                     catch (Exception)
                     {
@@ -802,7 +807,7 @@ namespace PT.Base.Services
                     {
                         try
                         {
-                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId);
+                            token = await GetAccessTokenAsync(clearCache: true, portalId: portalId, true);
                             return await CallRatingAPIAsync<SustainableStandardsResponse>(url, token);
                         }
                         catch (Exception)
