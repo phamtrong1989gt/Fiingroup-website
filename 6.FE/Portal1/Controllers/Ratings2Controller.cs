@@ -50,5 +50,13 @@ namespace PT.UI.Controllers
             var data = await _newsAPIService.GetSustainableFinanceReportsAsync(parameters, language, _baseSettings.Value.PortalId);
             return View("IndexAjax", data);
         }
+
+        [Route("{language}/Ratings2/RatingsAjax")]
+        public async Task<IActionResult> RatingsAjax([FromQuery] SustainableFinanceQueryParameters parameters, string language)
+        {
+            ViewBag.Language = language;
+            var data = await _newsAPIService.GetSustainableFinanceReportsAsync(parameters, language, _baseSettings.Value.PortalId);
+            return View("RatingsAjax", data);
+        }
     }
 }

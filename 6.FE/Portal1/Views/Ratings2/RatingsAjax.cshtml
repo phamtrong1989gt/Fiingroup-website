@@ -1,0 +1,83 @@
+﻿@model PT.Domain.Model.SustainableFinanceResponse
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using PT.Domain.Model
+@using PT.Shared
+
+@{
+	Layout = null;
+	var stPage = Context.Request.Query["page"].ToString();
+	var pageIndex = 1;
+	if (!string.IsNullOrEmpty(stPage))
+	{
+		pageIndex = int.TryParse(stPage, out var result) ? result : 1;
+	}
+	string language = ViewBag.Language ?? "vi";
+}
+
+@if (Model != null && Model.Success && Model.Data != null && Model.Data.Items != null && Model.Data.Items.Any())
+{
+	for (int i = 0; i < Model.Data.Items.Count; i++)
+	{
+		var item = Model.Data.Items[i];
+		string url = $"/{language}/ratings-fr/{Functions.ToUrlSlug(item.OrganizationName)}-id{Model.Data.Items[i].OrganizationId}.html";
+
+		var radioName = $"language_{i}";
+		<tr>
+			<td data-label="@Localizer["Title"]">@item.Title</td>
+			<td data-label="@Localizer["PublicationDate"]">
+				@if (!string.IsNullOrEmpty(item.PublicDate))
+				{
+					<div>@(Convert.ToDateTime(item.PublicDate).ToString("dd/MM/yyyy"))</div>
+				}
+			</td>
+	
+			<td data-label="@Localizer["SustainabilityLevel"]">
+				@if (!string.IsNullOrEmpty(item.ApplicableStandardsName))
+				{
+					<span>@item.ApplicableStandardsName</span>
+				}
+			</td>
+
+			<td data-label="@Localizer["Report"]">
+				<div class="language-switch">
+					@if(item.Files != null && !string.IsNullOrEmpty(item.Files.Vi))
+					{
+						<label class="lang-option">
+							<input type="radio" name="@radioName" value="vi" checked>
+							<span class="radio"></span>
+							VN
+						</label>
+					}
+					@if (item.Files != null && !string.IsNullOrEmpty(item.Files.En))
+					{
+						<label class="lang-option">
+							<input type="radio" name="@radioName" value="en">
+							<span class="radio"></span>
+							EN
+						</label>
+					}
+
+					@if((item.Files != null) && (!string.IsNullOrEmpty(item.Files.Vi) || !string.IsNullOrEmpty(item.Files.En)))
+					{
+						<button class="btn-download"
+								onclick="downloadRatingReport('@(item.Files?.Vi)', '@(item.Files?.En)', '@radioName')"
+								title="@Localizer["DownloadReport"]">
+							<i class="fa fa-download"></i> @Localizer["Download"]
+						</button>
+                    }
+				</div>
+			</td>
+		</tr>
+	}
+}
+else
+{
+	<tr>
+		<td colspan="10" class="no-data">
+			Hiện tại tổ chức phát hành chưa thực hiện xếp hạng tài chính bền vững
+		</td>
+	</tr>
+}
+

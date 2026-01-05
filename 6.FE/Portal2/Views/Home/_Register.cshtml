@@ -10,7 +10,66 @@
     @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
     var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
     var portalId = _baseSettings.Value.PortalId;
-    var listServies = await _iContactRepository.ServiesList(language, portalId);
+    
+    // ============================================
+    // HARDCODED SECTOR EXPERTISE LIST
+    // ============================================
+    var sectorExpertiseList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+    
+    if (language == "vi")
+    {
+        sectorExpertiseList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+        {
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "1", Text = "Ngân hàng/Dịch vụ Tài chính" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "2", Text = "Chứng khoán" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "3", Text = "Quản lý Quỹ" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "4", Text = "Doanh nghiệp FDI" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "5", Text = "Tập đoàn lớn" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "6", Text = "Tư vấn/Kiểm toán" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "7", Text = "Pháp lý" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "8", Text = "Giáo dục và Nghiên cứu" }
+        };
+    }
+    else // English
+    {
+        sectorExpertiseList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+        {
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "1", Text = "Banking/Financial Services" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "2", Text = "Securities" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "3", Text = "Fund Management" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "4", Text = "FDI Enterprises" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "5", Text = "Large Corporations" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "6", Text = "Consulting & Audit" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "7", Text = "Legal Services" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "8", Text = "Education & Research" }
+        };
+    }
+    
+    // ============================================
+    // HARDCODED PRODUCTS & SERVICES LIST
+    // ============================================
+    var productsServicesList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+    
+    if (language == "vi")
+    {
+        productsServicesList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+        {
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "1", Text = "Xếp hạng tín nhiệm Tổ chức phát hành" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "2", Text = "Xếp hạng tín nhiệm Công cụ nợ" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "3", Text = "Dịch vụ cho Nhà đầu tư" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "4", Text = "Dịch vụ Tài chính bền vững" }
+        };
+    }
+    else // English
+    {
+        productsServicesList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
+        {
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "1", Text = "Issuer Credit Rating" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "2", Text = "Issue Credit Rating" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "3", Text = "Investor Services" },
+            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "4", Text = "Sustainable Finance" }
+        };
+    }
 }
 <style>
 
@@ -51,8 +110,17 @@
                         </div>
 
                         <div class="col-sm-12 mb-2">
-                            <label class="form-label" asp-for="ServiceId"></label> <strong class="error">*</strong>
-                            <select asp-for="ServiceId" asp-items="listServies" class="form-select" id="dichVuQT">
+                            <label class="form-label">
+                                @if (language == "vi") 
+                                { 
+                                    <text>Nhóm ngành</text> 
+                                } 
+                                else 
+                                { 
+                                    <text>Sector Expertise</text> 
+                                }
+                            </label> <strong class="error">*</strong>
+                            <select asp-for="ServiceId" asp-items="sectorExpertiseList" class="form-select" id="dichVuQT">
                                 <option value="">@Localizer["SelectServiceId"]</option>
                             </select>
                             <span asp-validation-for="ServiceId" class="validate-style"></span>
@@ -60,8 +128,7 @@
 
                         <div class="col-sm-12 mb-2">
                             <label class="form-label" asp-for="Products"></label> <strong class="error">*</strong>
-                            <select class="form-select" id="sanPhamQT" multiple="multiple">
-                                <option value="">@Localizer["SelectProducts"]</option>
+                            <select class="form-select" id="sanPhamQT" asp-items="productsServicesList" multiple="multiple">
                             </select>
                             <span class="validate-style" asp-validation-for="Products"></span>
                         </div>
@@ -95,8 +162,8 @@
                closeOnSelect: false,
                allowHtml: true,
                allowClear: true,
-        tags: true
-    });
+               tags: true
+            });
       const $form = $('#formLienHe');
       $form.on('submit', function (e) {
         e.preventDefault();
@@ -105,7 +172,7 @@
         var serviceVal = $('#dichVuQT').val();
         var $serviceMsg = $('[data-valmsg-for="ServiceId"]');
         if (!serviceVal || serviceVal.toString().trim() === '') {
-          $serviceMsg.text('Vui lòng chọn dịch vụ.');
+          $serviceMsg.text('@Localizer["MsgNotUse"]');
           $serviceMsg.addClass('field-validation-error').removeClass('field-validation-valid');
           $('#dichVuQT').focus();
           return;
@@ -142,6 +209,7 @@
                 alertify.success(res.message);
                 $form[0].reset();
                 $("#products").val("");
+                $('#sanPhamQT').val(null).trigger('change');
                 hideRecaptchaPopup();
                 if (recaptchaWidgetId !== null) {
                     grecaptcha.reset(recaptchaWidgetId);
@@ -153,7 +221,7 @@
             }
           },
           error: function (xhr) {
-            alertify.warning('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
+            alertify.warning('@Localizer["ErrorMessage"]');
           }
         });
       });
@@ -169,51 +237,4 @@
         }
     });
 
-    $("#dichVuQT").on("change", function () {
-        let serviceId = $(this).val();
-        let language = $("#languageId").val();;
-        let portId = '@portalId';
-        let parentId = serviceId;
-        $("#products").val("");
-        // clear service validation on change
-        if (serviceId && serviceId.toString().trim() !== '') {
-            $('[data-valmsg-for="ServiceId"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
-        }
-        if (!serviceId) {
-            $("#sanPhamQT").empty()
-                .append('<option value="">@Localizer["SelectProducts"]</option>');
-            return;
-        }
-
-        $.ajax({
-            url: '@Url.Action("FlowSelectList", "ContactHome")',
-            method: "POST",
-            data: {
-                language: language,
-                portId: portId,
-                parrentId: parentId
-            },
-            success: function (res) {
-                if (res.output === 1 || res.output === "1") {
-                    $("#sanPhamQT").empty();
-                    let lst = res.data;
-                    if (lst && lst.length > 0) {
-                        lst.forEach(x => {
-                            $("#sanPhamQT").append(
-                                `<option value="${x.id}">${x.name}</option>`
-                            );
-                        });
-                    } else {
-                        $("#sanPhamQT").append('<option value="">@Localizer["NoProducts"]</option>');
-                    }
-                }
-                else {
-                    //alert(res.message || "Không thể tải danh sách!");
-                }
-            },
-            error: function () {
-                //alert("Lỗi kết nối máy chủ.");
-            }
-        });
-    });
 </script>

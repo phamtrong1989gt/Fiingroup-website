@@ -4,6 +4,7 @@
 @inject IViewLocalizer Localizer
 @using PT.Domain.Model
 @using PT.Shared
+@using Newtonsoft.Json
 
 @{
 	Layout = null;
@@ -19,32 +20,31 @@
 
 @if (Model != null && Model.Success && Model.Data != null && Model.Data.Items != null && Model.Data.Items.Any())
 {
+	@* ============================================ *@
+	@* BIND DETAIL DATA FROM FIRST ITEM *@
+	@* ============================================ *@
+	
+
 	@for (int i = 0; i < Model.Data.Items.Count; i++)
 	{
 		var item = Model.Data.Items[i];
 		string url = $"/{language}/ratings-fr/{Functions.ToUrlSlug(item.Issuer)}-id{Model.Data.Items[i].OrganizationId}.html";
 		var radioName = $"language_{i}";
 		<tr>
+			<td data-label="@Localizer["OpinionType"]">@item.RatingType</td>
 			<td data-label="@Localizer["PublicationDate"]">
 				@if (!string.IsNullOrEmpty(item.Date))
 				{
 					@(Convert.ToDateTime(item.Date).ToString("yyyy/MM/dd"))
 				}
 			</td>
-			<td data-label="@Localizer["IssuingOrganization"]">
-				<a href="@url" class="phat-hanh-text">@item.Issuer</a>
-			</td>
-			<td>
-				<span>@(item.BondCode ?? "---")</span>
-			</td>
-			<td data-label="@Localizer["Industry"]">@item.Industry</td>
-			<td data-label="@Localizer["OpinionType"]">@item.RatingType</td>
+
 			<td data-label="@Localizer["RatingScore"]">
 				@item.Rating
 				@if (!string.IsNullOrEmpty(item.Rating))
 				{
 					<span class="icon-info">
-						<i class="fa fa-info-circle" 
+						<i class="fa fa-info-circle"
 						   data-rating="@item.Rating"
 						   data-issuer="@item.Issuer"
 						   onclick="showRatingInfoPopup(this)"
@@ -52,6 +52,9 @@
 					</span>
 				}
 			</td>
+
+			@* <td data-label="@Localizer["Industry"]">@item.Industry</td> *@
+			
 			<td data-label="@Localizer["Outlook"]">
 				@if (!string.IsNullOrEmpty(item.Outlook))
 				{
@@ -89,43 +92,59 @@
 			</td>
 		</tr>
 	}
-	<tr>
-		<td colspan="10" style="padding: 0; border: none;background: transparent;">
-			<div class="page-table">
-				<div class="numberpage">
-					<div>
-						@Localizer["Showing"]
-						<span>@((pageIndex - 1) * Model.Data.PageSize + 1)</span> -
-						<span>@Math.Min(pageIndex * Model.Data.PageSize, Model.Data.TotalRecords)</span>
-						@Localizer["Of"] <span>@Model.Data.TotalRecords</span> @Localizer["Records"]
-					</div>
-				</div>
-				<div class="pagination">
-					@Html.Raw(PT.Shared.Functions.GenPageListAjax2("",
-								pageIndex,
-								Model.Data.TotalRecords,
-								Model.Data.PageSize,
-								$"&companyName={Context.Request.Query["companyName"]}" +
-								$"&industryTypeId={Context.Request.Query["industryTypeId"]}" +
-								$"&scoreId={Context.Request.Query["scoreId"]}" +
-								$"&prospectsId={Context.Request.Query["prospectsId"]}",
-								"page-active",
-								null,
-								"getRakingsAjax"
-					))
-			</div>
-		</div>
+	<tr style="display:none;">
+		<td colspan="1000">
+			@if (Model.Data.Items.Count > 0)
+			{
+				var firstItem = Model.Data.Items[0];
+
+				// Create DTO object for binding
+				var detailData = new
+				{
+					IssuingOrganization = firstItem.Issuer ?? "---",
+					RatingScore = firstItem.Rating ?? "---",
+					Industry = firstItem.Industry ?? "---",
+					Rating = firstItem.Outlook ?? "---", // Triển vọng
+					OpinionType = firstItem.RatingType ?? "---",
+					PublicationDate = !string.IsNullOrEmpty(firstItem.Date) ? Convert.ToDateTime(firstItem.Date).ToString("dd/MM/yyyy") : "---"
+				};
+
+				var jsonData = JsonConvert.SerializeObject(detailData);
+
+				<script>
+					// Call bindDetail when this partial is loaded
+					(function() {
+						try {
+							var detailData = @Html.Raw(jsonData);
+							console.log('[RatingsAjax] Calling bindDetail with:', detailData);
+
+							if (typeof window.bindDetail === 'function') {
+								window.bindDetail(detailData);
+							} else {
+								console.warn('[RatingsAjax] bindDetail function not found, retrying...');
+								// Retry after 500ms if function not ready
+								setTimeout(function() {
+									if (typeof window.bindDetail === 'function') {
+										window.bindDetail(detailData);
+									} else {
+										console.error('[RatingsAjax] bindDetail function still not available');
+									}
+								}, 500);
+							}
+						} catch (error) {
+							console.error('[RatingsAjax] Error calling bindDetail:', error);
+						}
+					})();
+				</script>
+			}
 		</td>
 	</tr>
 }
 else
 {
 	<tr>
-		<td style='background: transparent;' colspan="10">
-			<div class="text-center py-5 text-center">
-				<img src="/Data/Banner/no-data.jpg" alt="@Localizer["NoData"]" style="max-width: 300px;" />
-				<p class="no-data-messege my-5">@Localizer["NoRatingResults"]</p>
-			</div>
+		<td colspan="10" class="no-data">
+			Hiện tại tổ chức phát hành chưa thực hiện xếp hạng tín nhiệm
 		</td>
 	</tr>
 }

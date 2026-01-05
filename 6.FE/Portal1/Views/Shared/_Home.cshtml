@@ -60,7 +60,22 @@
 	@Html.Raw(bindContentSetting.Head)
 	<style>
 		.field-validation-error{font-size:12px;position:absolute;display:block}.form-select{font-size:14px!important;border-radius:4px!important}.select2-container--default .select2-selection--multiple .select2-selection__rendered{padding:0 10px!important}.select2-selection__choice{font-size:13px!important;background-color:#034ea2!important;border:1px solid #023b7b!important;color:#fff}.select2-results__option{font-size:14px!important}#recaptcha-backdrop{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,.6);backdrop-filter:blur(5px);z-index:9998}#recaptcha-wrapper{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:9999;min-width:340px}#recaptcha-container{min-width:304px}#recaptcha-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:78px}.spinner{border:4px solid #f3f3f3;border-top:4px solid #3498db;border-radius:50%;width:40px;height:40px;animation:1s linear infinite spin}100%{transform:rotate(360deg)}#btnClose,#recaptcha-close-btn{position:absolute;top:-15px;right:-15px;background:#034ea2;color:#fff;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;z-index:10000}#recaptcha-close-btn:hover{background:#d32f2f}:root{--manual-slide-height-mobile:140px;--manual-slide-height-tablet:180px;--manual-slide-height-desktop:220px}.manual-slide{display:flex;align-items:center;justify-content:center;overflow:hidden;width:100%;height:var(--manual-slide-height-desktop);box-sizing:border-box}.manual-bg{background-repeat:no-repeat;background-position:center;background-size:contain;width:100%;height:100%;display:block}#manualsct img{height:auto}#manualsct img:hover{background:initial}
-	</style>
+
+		#manualsct img
+		{
+border: none;
+    background: transparent;
+		}
+
+		#manualsct img
+		{
+			padding:0px;
+		}
+		.testimonial-content p
+		{
+			height: 200px;
+		}
+		</style>
 </head>
 
 <body id="Body">
@@ -167,26 +182,6 @@
 					}
 				})
 
-				let owl2 = $('#manualsct');
-				owl2.owlCarousel({
-					margin: 0,
-					autoplay: true,
-					autoplayTimeout: 3000,
-					nav: false,
-					loop: true,
-					dots: false,
-					dotsData: true,
-					pagination: false,
-					responsive: {
-						0: { items: 3 },
-						600: { items: 3 },
-						1000: { items: 6 }
-					},
-					onInitialized: function (event) { prepareManualSlides($(event.target)); },
-					onRefreshed: function (event) { prepareManualSlides($(event.target)); },
-					onChanged: function (event) { prepareManualSlides($(event.target)); } // cover dynamic updates
-				});
-
 				$('.counter').counterUp({
 					delay: 10,
 					time: 1200
@@ -218,6 +213,73 @@
 			});
 		});
 	</script>
+
+	<script>
+		function prepareManualSlides($carousel) {
+		  if (!$carousel || !$carousel.length) return;
+		  // find actual slide content containers (adjust selectors if your markup differs)
+		  $carousel.find('.owl-stage .owl-item').each(function () {
+			const $owlItem = $(this);
+			// try to find a meaningful content node inside this owl item
+			let $content = $owlItem.children().first(); // typical: <div class="item">...</div>
+			if (!$content || !$content.length) return;
+
+			// If content already wrapped, skip
+			if ($content.hasClass('manual-slide') || $content.find('.manual-slide').length) {
+			  // ensure images have correct CSS
+			  $content.find('img').css({ 'max-width': '80%', 'max-height': '80%', 'object-fit': 'contain' });
+			  return;
+			}
+
+			// If the content itself is suitable to be the wrapper (e.g. plain <div>), add class
+			// Otherwise, wrap inner HTML into .manual-slide to guarantee equal boxes
+			// We prefer wrapping inner contents to avoid breaking existing structure
+			$content.wrapInner('<div class="manual-slide"></div>');
+
+			// Ensure images inside get proper inline styles in case CSS is missing or overridden
+			const $wrap = $content.find('.manual-slide').first();
+			const $img = $wrap.find('img').first();
+			if ($img.length) {
+			  $img.css({ 'max-width': '80%', 'max-height': '80%', 'object-fit': 'contain', 'display': 'block' });
+			} else {
+			  // fallback: if an element has data-bg attribute (your template may use that)
+			  const $bgEl = $wrap.find('[data-bg]').first();
+			  if ($bgEl.length) {
+				const bg = $bgEl.attr('data-bg');
+				if (bg) $bgEl.addClass('manual-bg').css('background-image', 'url(' + bg + ')');
+			  }
+			}
+		  });
+		}
+
+		$(function () {
+		  const $owl2 = $('#manualsct');
+		  if (!$owl2.length) return;
+
+		  $owl2.owlCarousel({
+			margin: 0,
+			autoplay: true,
+			autoplayTimeout: 3000,
+			nav: false,
+			loop: true,
+			dots: false,
+			dotsData: true,
+			pagination: false,
+			autoHeight: false,
+			responsive: {
+			  0: { items: 3 },
+			  600: { items: 5 },
+			  1000: { items: 5 }
+			},
+			onInitialized: function (event) { prepareManualSlides($(event.target)); },
+			onRefreshed: function (event) { prepareManualSlides($(event.target)); },
+			onChanged: function (event) { prepareManualSlides($(event.target)); } // cover dynamic updates
+		  });
+
+		  // If slides are loaded asynchronously later, call prepareManualSlides($('#manualsct')) again.
+		});
+	</script>
+
 	<script>
 		var recaptchaSiteKey = '@_authorizeSettings.Value.CapChaDataSitekey';
 		var recaptchaWidgetId = null;

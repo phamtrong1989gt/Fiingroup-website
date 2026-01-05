@@ -228,6 +228,7 @@ namespace PT.Domain.Model
         public int? Page { get; set; }
         public int? PageSize { get; set; }
         public string Lang { get; set; }
+        public int? OrganizationId { get; set; }
 
         public string ToQueryString()
         {
@@ -266,6 +267,11 @@ namespace PT.Domain.Model
             if (!string.IsNullOrWhiteSpace(Lang))
             {
                 queryParams.Add($"lang={Lang}");
+            }
+
+            if(OrganizationId != null)
+            {
+                queryParams.Add($"organizationId={OrganizationId.Value}");
             }
 
             return string.Join("&", queryParams);
@@ -348,7 +354,10 @@ namespace PT.Domain.Model
         public string ApplicableStandardsName { get; set; }
 
         [JsonProperty("industryId")]
-        public int industryId { get; set; } 
+        public int industryId { get; set; }
+
+        [JsonProperty("bondCode")]
+        public string BondCode { get; set; }
     }
 
     // Query Parameters for Rating Results
@@ -362,6 +371,8 @@ namespace PT.Domain.Model
         public int? PageSize { get; set; }
         public string Lang { get; set; }
         public int? OrganizationId { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
 
         public string ToQueryString()
         {
@@ -405,6 +416,16 @@ namespace PT.Domain.Model
             if (!string.IsNullOrWhiteSpace(Lang))
             {
                 queryParams.Add($"lang={Lang}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(FromDate))
+            {
+                queryParams.Add($"fromDate={FromDate}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(ToDate))
+            {
+                queryParams.Add($"toDate={ToDate}");
             }
 
             return string.Join("&", queryParams);

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using PT.Base.Services;
 using PT.Domain.Model;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -53,12 +54,32 @@ namespace PT.UI.Controllers
         [Route("{language}/Ratings/IndexAjax")]
         public async Task<IActionResult> IndexAjax([FromQuery] RatingResultsQueryParameters parameters)
         {
-          //  parameters.Fro
+            parameters.FromDate = "2020-01-01";
+            parameters.ToDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
             var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
             ViewBag.Language = parameters.Lang;
             return View("IndexAjax", data);
         }
 
-        
+        [Route("{language}/Ratings/RatingsAjax")]
+        public async Task<IActionResult> RatingsAjax([FromQuery] RatingResultsQueryParameters parameters)
+        {
+            parameters.FromDate = "2020-01-01";
+            parameters.ToDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+            var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
+            ViewBag.Language = parameters.Lang;
+            return View("RatingsAjax", data);
+        }
+
+        [Route("{language}/Ratings/RatingsDebtAjax")]
+        public async Task<IActionResult> RatingsDebtAjax([FromQuery] RatingResultsQueryParameters parameters)
+        {
+            parameters.FromDate = "2020-01-01";
+            parameters.ToDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+            parameters.IndustryTypeId = 2; // Set a default industry type ID
+            var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
+            ViewBag.Language = parameters.Lang;
+            return View("RatingsDebtAjax", data);
+        }
     }
 }
