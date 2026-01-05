@@ -33,23 +33,23 @@
                         @Html.AntiForgeryToken()
                         <div class="row">
                             <div class="col-sm-6 mb-2">
-                                <label class="form-label" asp-for="FullName"></label> <strong class="error">*</strong>
+                                <label class="form-label" for="hoTen" asp-for="FullName"></label> <strong class="error">*</strong>
                                 <input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder="">
                                 <span class="validate-style" asp-validation-for="FullName"></span>
                             </div>
                             <div class="col-sm-6 mb-2">
-                                <label asp-for="Phone" class="form-label"></label><span class="error">*</span>
+                                <label asp-for="Phone" for="soDienThoai" class="form-label"></label><span class="error">*</span>
                                 <input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder="">
                                 <span class="validate-style" asp-validation-for="Phone"></span>
                             </div>
                             <div class="col-sm-12 mb-2">
-                                <label asp-for="Email" class="form-label"></label><span class="error">*</span>
+                                <label asp-for="Email" for="email" class="form-label"></label><span class="error">*</span>
                                 <input type="email" class="form-control" id="email" asp-for="Email" placeholder="">
                                 <span class="validate-style" asp-validation-for="Email"></span>
                             </div>
 
                             <div class="col-sm-6 mb-2">
-                                <label class="form-label" asp-for="ConpanyName"></label> <strong class="error">*</strong>
+                                <label class="form-label"  asp-for="ConpanyName"></label> <strong class="error">*</strong>
                                 <input type="text" class="form-control" asp-for="ConpanyName" placeholder="">
                                 <span class="validate-style" asp-validation-for="ConpanyName"></span>
                             </div>
@@ -60,10 +60,9 @@
                             </div>
 
                             <div class="col-sm-12 mb-3">
-                                <label asp-for="Products" class="form-label"></label>
+                                <label asp-for="Products" for="dichVuQT2" class="form-label"></label>
                                 <input class="Capcha" type="hidden" id="g-recaptcha-response" name="capcha" />
                                 <select asp-items="listServies" class="form-select" id="dichVuQT2" multiple="multiple" style="width:100%;">
-                                    @* <option value="">Chọn nhận tin tức liên quan đến lĩnh vực</option> *@
                                 </select>
                                 <input type="hidden" class="form-control" id="products2" asp-for="Products">
                             </div>
@@ -141,8 +140,6 @@
         });
       });
     });
-
- 
 
     $("#btnClose").on("click", function () {
         $('#popsolutionmore').modal('hide');
