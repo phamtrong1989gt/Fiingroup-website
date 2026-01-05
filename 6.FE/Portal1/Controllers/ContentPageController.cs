@@ -5,7 +5,6 @@ using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using System;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.UI.Controllers
 {
@@ -42,6 +41,7 @@ namespace PT.UI.Controllers
             var link = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             link.Title = "FG Ratings";
             ViewData["linkData"] = link;
+            ViewBag.Id = id;
             return View("FRatings");
         }
 
@@ -106,7 +106,7 @@ namespace PT.UI.Controllers
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language, portalId);
-            if(dl == null || dl.Success == false)
+            if (dl == null || dl.Success == false)
             {
                 return View("_Home404");
             }
