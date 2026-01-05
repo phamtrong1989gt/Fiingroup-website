@@ -20,5 +20,6 @@ namespace PT.Domain.Model
         public string Title { get; set; }
         public string Link { get; set; }
         public string LinkName { get; set; }
+        public string LinkViewName { get; set; }
     }
 }
