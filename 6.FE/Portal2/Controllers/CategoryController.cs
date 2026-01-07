@@ -128,9 +128,10 @@ namespace PT.UI.Controllers
                         CategoryIds = dl.ExCategoryIds,
                         StatusIds = "1"
                     }, language ?? "vi", _baseSettings.Value.PortalId);
+
                     dl.DataAPI = listNew ?? new NewsListResponse { Items = [] };
                     // lấy danh mục  
-                    var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.CategoryType == ECategoryType.ContentPage_Blog && x.Status && x.ParentId == 0 && x.Language == language && x.PortalId == dl.PortalId);
+                    var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == dl.Id);
                     if(eventCategory != null)
                     {
                         var listEvent = await _iNewsAPIService.GetNewsAsync(new NewsQueryParameters

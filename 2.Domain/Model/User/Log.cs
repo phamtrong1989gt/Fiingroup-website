@@ -37,7 +37,11 @@ namespace PT.Domain.Model
         [Display(Name = "API - Lỗi 401")]
         API_Error_Unauthorized = 200,
         [Display(Name = "API - Lỗi khác")]
-        API_Error_Other = 201
+        API_Error_Other = 201,
+        [Display(Name = "API - Category")]
+        API_Category = 202,
+        [Display(Name = "Error")]
+        Error = 203,
     }
   
     public class Log : IAggregateRoot

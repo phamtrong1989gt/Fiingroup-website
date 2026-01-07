@@ -207,5 +207,8 @@ namespace PT.Domain.Model
 
         [Display(Name = "Get Endpoint EN")]
         public string GetEndPointEN { get; set; }
+
+        [Display(Name = "GetCategorys")]
+        public string GetCategorys { get; set; }
     }
 }

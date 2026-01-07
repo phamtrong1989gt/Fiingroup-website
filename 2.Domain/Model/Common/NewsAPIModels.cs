@@ -417,18 +417,26 @@ namespace PT.Domain.Model
             {
                 queryParams.Add($"lang={Lang}");
             }
-
-            if (!string.IsNullOrWhiteSpace(FromDate))
-            {
-                queryParams.Add($"fromDate={FromDate}");
-            }
-
-            if (!string.IsNullOrWhiteSpace(ToDate))
-            {
-                queryParams.Add($"toDate={ToDate}");
-            }
-
             return string.Join("&", queryParams);
         }
+    }
+
+    // DTO for GetCategorys endpoint
+    public class NewsCategoryItem
+    {
+        [JsonProperty("newsCategoryId")]
+        public int NewsCategoryId { get; set; }
+
+        [JsonProperty("newsCategoryName")]
+        public string NewsCategoryName { get; set; }
+
+        [JsonProperty("en_NewsCategoryName")]
+        public string En_NewsCategoryName { get; set; }
+
+        [JsonProperty("parentNewsCategoryId")]
+        public int ParentNewsCategoryId { get; set; }
+
+        [JsonProperty("newsCategoryLevel")]
+        public int NewsCategoryLevel { get; set; }
     }
 }
