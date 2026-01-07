@@ -871,10 +871,10 @@ namespace PT.Shared
         {
  "aAeEoOuUiIdDyY",
  "áàṭảãâấầuậẩmẫăắằặẳẵ",
- "ÁẠ̀ẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
+ "ÁẠ̀ẢÃÂẤẦẬẨẪĂẮẰẶẲẴ",
  "éèẹẻẽêếềệểễ",
  "ÉÈẸẺẼÊẾỜệỂỄ",
- "óòọỏõôốồộổỗơớờợởỡ",
+ "óòọỏõôốỒộổỗơớờợởỡ",
  "ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỬ",
  "úùụủũưứừựửूस",
  "ÚÙỤỦŨƯỨỪỰỬỮ",
@@ -885,5 +885,98 @@ namespace PT.Shared
  "ýỳỵỷỹ",
  "ÝỲỴỶỸ"
         };
-    }
-}
+
+        /// <summary>
+        /// Converts a regular image URL to a thumbnail URL by inserting '_thumb' before the file extension.
+        /// </summary>
+        /// <param name="imageUrl">The original image URL</param>
+        /// <returns>The thumbnail URL with '_thumb' suffix before extension</returns>
+        /// <example>
+        /// Input: https://cdn.fiingroup.vn/medialib/245453/I/2025/12/26/15553189468640700_FG_A-Hieu-nhan-vinh-danh-thue_4463.png
+        /// Output: https://cdn.fiingroup.vn/medialib/245453/I/2025/12/26/15553189468640700_FG_A-Hieu-nhan-vinh-danh-thue_4463_thumb.png
+        /// </example>
+        public static string ConvertToThumbUrl(string imageUrl)
+        {
+            if (string.IsNullOrWhiteSpace(imageUrl))
+            {
+                return imageUrl;
+            }
+
+            try
+            {
+                // Get the file extension
+                var extension = Path.GetExtension(imageUrl);
+                
+                // If no extension found, return original URL
+                if (string.IsNullOrEmpty(extension))
+                {
+                    return imageUrl;
+                }
+
+                // Check if already a thumb URL to avoid double conversion
+                if (imageUrl.EndsWith($"_thumb{extension}", StringComparison.OrdinalIgnoreCase))
+                {
+                    return imageUrl;
+                }
+
+                // Get URL without extension
+                var urlWithoutExtension = imageUrl.Substring(0, imageUrl.Length - extension.Length);
+                
+                // Return URL with '_thumb' inserted before extension
+                return $"{urlWithoutExtension}_thumb{extension}";
+            }
+            catch (Exception)
+            {
+                // If any error occurs, return original URL
+                return imageUrl;
+            }
+        }
+
+        /// <summary>
+        /// Converts a thumbnail URL back to the original image URL by removing '_thumb' suffix.
+        /// </summary>
+        /// <param name="thumbUrl">The thumbnail URL</param>
+        /// <returns>The original image URL without '_thumb' suffix</returns>
+        /// <example>
+        /// Input: https://cdn.fiingroup.vn/medialib/245453/I/2025/12/26/15553189468640700_FG_A-Hieu-nhan-vinh-danh-thue_4463_thumb.png
+        /// Output: https://cdn.fiingroup.vn/medialib/245453/I/2025/12/26/15553189468640700_FG_A-Hieu-nhan-vinh-danh-thue_4463.png
+        /// </example>
+        public static string ConvertFromThumbUrl(string thumbUrl)
+        {
+            if (string.IsNullOrWhiteSpace(thumbUrl))
+            {
+                return thumbUrl;
+            }
+
+            try
+            {
+                // Get the file extension
+                var extension = Path.GetExtension(thumbUrl);
+                
+                // If no extension found, return original URL
+                if (string.IsNullOrEmpty(extension))
+                {
+                    return thumbUrl;
+                }
+
+                // Check if it's a thumb URL
+                var urlWithoutExtension = thumbUrl.Substring(0, thumbUrl.Length - extension.Length);
+                
+                if (urlWithoutExtension.EndsWith("_thumb", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Remove '_thumb' suffix
+                    var originalUrl = urlWithoutExtension.Substring(0, urlWithoutExtension.Length - 6);
+                    return $"{originalUrl}{extension}";
+                }
+
+                // Not a thumb URL, return as is
+                return thumbUrl;
+            }
+            catch (Exception)
+            {
+                // If any error occurs, return original URL
+                return thumbUrl;
+            }
+        }
+     }
+ }

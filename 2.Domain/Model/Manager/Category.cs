@@ -92,5 +92,8 @@ namespace PT.Domain.Model
 
         [Display(Name = "ID danh mục tương ứng")]
         public int? ReferentCategoryId { get; set; }
+
+        public SelectList CMCategorySelectList { get; set; }
+
     }
 }

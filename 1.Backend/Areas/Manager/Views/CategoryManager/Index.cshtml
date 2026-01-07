@@ -11,10 +11,13 @@
     }
 }
 
+
+
 <div class="block-header">
     <h2><i class="material-icons">list</i> Quản lý danh mục <span class="label label-primary label-t">Danh sách</span></h2>
 </div>
 <div style="height:15px;"></div>
+
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card card-t">
@@ -46,6 +49,10 @@
     <script src="~/Content/Admin/plugins/nestable/jquery.nestable.js"></script>
     <link href="~/Content/Admin/plugins/nestable/jquery-nestable.css" rel="stylesheet" />
     <script src="~/Content/Admin/plugins/ckeditor/ckeditor.js"></script>
+    <script src="~/Content/Admin/plugins/jstree/jstree.min.js"></script>
+    <link href="~/Content/Admin/plugins/jstree/themes/default/style.css" rel="stylesheet" />
+    <link href="~/Content/Admin/plugins/jstree/themes/default-dark/style.css" rel="stylesheet" />
+
     <script>
         var serializedData = "[]";
         $("[button-open-file-manager]").toButtonOpenFile();
@@ -107,5 +114,69 @@
         $("[button-static]").toStaticForm(function ($this) {
             $("[form-static]").scrollView();
         });
+
+        // Initialize DC Category Tree (similar to BlogManager pattern)
+           function getTreeDCCategory(language, id) {
+               $.post("@Url.Action("TreeDCCategory")?language=" + language + "&id=" + id, function(data) {
+                   console.log("Raw data from API:", data);   
+                   
+                   // Fix data structure: nodes where parent == id are root nodes, change parent to "#"
+                   data.forEach(function(node) {
+                       if (node.parent === node.id) {
+                           node.parent = "#";
+                       }
+                   });
+                   
+                   console.log("Processed data:", data);
+                   
+                   var $treeview = $('#treeDCCategory').jstree({
+                       'check_callback': true,
+                       'core': {
+                           'data': data,
+                           "themes": {
+                               "dots": true,
+                               "icons": false
+                           }
+                       },
+                       "plugins": ["checkbox", "search"]
+                   }).on("changed.jstree", function(e, data) {
+                       // Sync selected nodes to ExCategoryIds input
+                       var selectedIds = [];
+                       if (data.selected && data.selected.length > 0) {
+                           selectedIds = data.selected;
+                       }
+                       $("[name='ExCategoryIds']").val(selectedIds.join(','));
+                       console.log("Selected IDs updated:", selectedIds.join(','));
+                   });
+
+                   $treeview.on('ready.jstree', function() {
+                       console.log("Tree is ready!");
+                       $treeview.jstree('open_all');
+                       // Pre-select nodes if ExCategoryIds has values
+                       var currentIds = $("[name='ExCategoryIds']").val();
+                       if (currentIds) {
+                           var ids = currentIds.split(',').filter(function(id) { return id.trim(); });
+                           ids.forEach(function(id) {
+                               $treeview.jstree('select_node', id);
+                           });
+                       }
+                   });
+               });
+
+           }
+
+           // Add search functionality
+           var searchTimeout = false;
+           $('#treeDCCategorySearch').keyup(function() {
+               if (searchTimeout) { clearTimeout(searchTimeout); }
+               searchTimeout = setTimeout(function() {
+                   var searchValue = $('#treeDCCategorySearch').val();
+                   var tree = $('#treeDCCategory').jstree(true);
+                   if (tree) {
+                       tree.search(searchValue);
+                   }
+               }, 250);
+           });
     </script>
 }
+

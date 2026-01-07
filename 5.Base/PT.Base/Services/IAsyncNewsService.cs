@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
+using PT.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,6 +25,7 @@ namespace PT.Base.Services
         Task<NewsCreateResult> CreateAsync(ContentPage contentPage, List<int> tags, List<int> categories, string updateBy);
         Task<NewsCreateResult> UpdateAsync(ContentPage contentPage, List<int> tags, List<int> categories, string updateBy);
         Task<NewsCreateResult> DeleteAsync(int newsId, string deleteBy, string language = "en");
+        Task<List<NewsCategoryItem>> GetCategoriesAsync(string lang = "vi");
     }
 
     public class AsyncNewsService : IAsyncNewsService
@@ -38,6 +40,7 @@ namespace PT.Base.Services
         private readonly ILinkRepository _ilinkRepository;
         private readonly ITagRepository _iTagRepository;
         private readonly ILogger _logger;
+        private readonly ILogRepository _iLogRepository;
 
         public AsyncNewsService(
             ISeoSettingRepository iSeoSettingRepository,
@@ -46,7 +49,7 @@ namespace PT.Base.Services
             IBindContentSettingRepository iBindContentSettingRepository,
             IEmailSettingRepository iEmailSettingRepository,
             IOptions<AsyncNewsSettings> settings,
-            IHttpClientFactory httpClientFactory, IPortalRepository iPortalRepository, IWebHostEnvironment env, ICategoryRepository iCategoryRepository, ILinkRepository iLinkRepository, ITagRepository iTagRepository)
+            IHttpClientFactory httpClientFactory, IPortalRepository iPortalRepository, IWebHostEnvironment env, ICategoryRepository iCategoryRepository, ILinkRepository iLinkRepository, ITagRepository iTagRepository, ILogRepository iLogRepository)
         {
             _memoryCache = memoryCache;
             _logger = logger;
@@ -57,28 +60,29 @@ namespace PT.Base.Services
             _ilinkRepository = iLinkRepository;
             _env = env;
             _iTagRepository = iTagRepository;
+            _iLogRepository = iLogRepository;
         }
   
         public async Task<string> GetAccessTokenAsync(bool clearCache = false)
         {
             var stopwatch = Stopwatch.StartNew();
-            _logger.LogDebug("[GetAccessTokenAsync] Start - ClearCache: {ClearCache}", clearCache);
+            _logger.LogInformation("[GetAccessTokenAsync] Start - ClearCache: {ClearCache}", clearCache);
 
             if (clearCache)
             {
                 _memoryCache.Remove(TOKEN_CACHE_KEY);
-                _logger.LogDebug("[GetAccessTokenAsync] Cache cleared");
+                 _logger.LogInformation("[GetAccessTokenAsync] Cache cleared");
             }
 
             if (_memoryCache.TryGetValue(TOKEN_CACHE_KEY, out string cachedToken))
             {
                 stopwatch.Stop();
-                _logger.LogDebug("[GetAccessTokenAsync] Token retrieved from cache - Duration: {Duration}ms", stopwatch.ElapsedMilliseconds);
+                 _logger.LogInformation("[GetAccessTokenAsync] Token retrieved from cache - Duration: {Duration}ms", stopwatch.ElapsedMilliseconds);
                 return cachedToken;
             }
 
             var tokenUrl = $"{_settings.Value.TokenEndpoint}";
-            _logger.LogDebug("[GetAccessTokenAsync] Requesting new token from: {TokenUrl}", tokenUrl);
+             _logger.LogInformation("[GetAccessTokenAsync] Requesting new token from: {TokenUrl}", tokenUrl);
 
             try
             {
@@ -99,7 +103,7 @@ namespace PT.Base.Services
                 var response = await httpClient.PostAsync(tokenUrl, content);
                 apiCallStopwatch.Stop();
                 
-                _logger.LogDebug("[GetAccessTokenAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
+                 _logger.LogInformation("[GetAccessTokenAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
                     response.StatusCode, apiCallStopwatch.ElapsedMilliseconds);
 
                 response.EnsureSuccessStatusCode();
@@ -124,7 +128,7 @@ namespace PT.Base.Services
                 _memoryCache.Set(TOKEN_CACHE_KEY, tokenResponse.AccessToken, cacheOptions);
                 
                 stopwatch.Stop();
-                _logger.LogDebug("[GetAccessTokenAsync] Token cached successfully - Total Duration: {Duration}ms, Expires In: {ExpiresIn}s", 
+                 _logger.LogInformation("[GetAccessTokenAsync] Token cached successfully - Total Duration: {Duration}ms, Expires In: {ExpiresIn}s", 
                     stopwatch.ElapsedMilliseconds, tokenResponse.ExpiresIn);
 
                 return tokenResponse.AccessToken;
@@ -143,10 +147,211 @@ namespace PT.Base.Services
             }
         }
 
+        public async Task<List<NewsCategoryItem>> GetCategoriesAsync(string lang = "vi")
+        {
+            var url = _settings.Value.GetCategorys;
+            var stopwatch = Stopwatch.StartNew();
+             _logger.LogInformation("[GetCategoriesAsync] Start - {url} Lang: {Lang} ", url, lang);
+
+            var cacheKey = $"NewsAPI_Categories::{lang ?? ""}";
+            if (_memoryCache.TryGetValue(cacheKey, out List<NewsCategoryItem> cachedCategories))
+            {
+                 _logger.LogInformation("[GetCategoriesAsync] Returning categories from cache - Count: {Count}", cachedCategories?.Count ?? 0);
+                
+                // Log cache hit
+                await _iLogRepository.AddAsync(new Domain.Model.Log
+                {
+                    AcctionUser = "System",
+                    ActionTime = DateTime.Now,
+                    Name = "GetCategoriesAsync",
+                    Object = $"Cache hit for categories with lang={lang}, Count={cachedCategories?.Count ?? 0}",
+                    ObjectId = 0,
+                    ObjectType = "NewsAPI",
+                    Type = Domain.Model.LogType.API_GetToken
+                });
+                await _iLogRepository.CommitAsync();
+                
+                return cachedCategories;
+            }
+            
+            // Log cache miss
+            await _iLogRepository.AddAsync(new Domain.Model.Log
+            {
+                AcctionUser = "System",
+                ActionTime = DateTime.Now,
+                Name = "GetCategoriesAsync",
+                Object = $"Cache miss for categories with lang={lang}",
+                ObjectId = 0,
+                ObjectType = "NewsAPI",
+                Type = Domain.Model.LogType.API_GetToken
+            });
+            await _iLogRepository.CommitAsync();
+
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                _logger.LogWarning("[GetCategoriesAsync] GetCategorys endpoint is not configured");
+                
+                // Log configuration error
+                await _iLogRepository.AddAsync(new Domain.Model.Log
+                {
+                    AcctionUser = "System",
+                    ActionTime = DateTime.Now,
+                    Name = "GetCategoriesAsync",
+                    Object = $"GetCategorys endpoint is not configured for lang={lang}",
+                    ObjectId = 0,
+                    ObjectType = "NewsAPI",
+                    Type = Domain.Model.LogType.API_Category
+                });
+                await _iLogRepository.CommitAsync();
+                
+                return new List<NewsCategoryItem>();
+            }
+
+            // append lang as query if provided
+            var separator = url.Contains("?") ? "&" : "?";
+            var requestUrl = string.IsNullOrWhiteSpace(lang) ? url : $"{url}{separator}lang={Uri.EscapeDataString(lang)}";
+
+            try
+            {
+                async Task<HttpResponseMessage> GetWithTokenAsync(string bearerToken)
+                {
+                    using var client = _httpClientFactory.CreateClient();
+                    if (!string.IsNullOrWhiteSpace(bearerToken))
+                    {
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+                    }
+
+                    var apiStopwatch = Stopwatch.StartNew();
+                    var result = await client.GetAsync(requestUrl);
+                    apiStopwatch.Stop();
+                     _logger.LogInformation("[GetCategoriesAsync] HTTP GET completed - Status: {StatusCode}, Duration: {Duration}ms", result.StatusCode, apiStopwatch.ElapsedMilliseconds);
+                    return result;
+                }
+
+                var token = await GetAccessTokenAsync();
+                var response = await GetWithTokenAsync(token);
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    _logger.LogWarning("[GetCategoriesAsync] Unauthorized, retrying with fresh token");
+                    
+                    // Log unauthorized retry
+                    await _iLogRepository.AddAsync(new Domain.Model.Log
+                    {
+                        AcctionUser = "System",
+                        ActionTime = DateTime.Now,
+                        Name = "GetCategoriesAsync",
+                        Object = $"Unauthorized response, retrying with fresh token for lang={lang}",
+                        ObjectId = 0,
+                        ObjectType = "NewsAPI",
+                        Type = Domain.Model.LogType.API_Category
+                    });
+                    await _iLogRepository.CommitAsync();
+                    
+                    response.Dispose();
+                    token = await GetAccessTokenAsync(clearCache: true);
+                    response = await GetWithTokenAsync(token);
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                response.Dispose();
+
+                stopwatch.Stop();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        var data = JsonConvert.DeserializeObject<List<NewsCategoryItem>>(responseContent) ?? new List<NewsCategoryItem>();
+
+                        // Cache the result for 30 minutes
+                        var cacheOptions = new MemoryCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30),
+                            Priority = CacheItemPriority.Normal
+                        };
+                        _memoryCache.Set(cacheKey, data, cacheOptions);
+
+                         _logger.LogInformation("[GetCategoriesAsync] Success - Count: {Count}, Duration: {Duration}ms (cached)", data?.Count ?? 0, stopwatch.ElapsedMilliseconds);
+                        
+                        // Log successful API call
+                        await _iLogRepository.AddAsync(new Domain.Model.Log
+                        {
+                            AcctionUser = "System",
+                            ActionTime = DateTime.Now,
+                            Name = "GetCategoriesAsync",
+                            Object = $"Successfully fetched categories for lang={lang}, Count={data?.Count ?? 0}, Duration={stopwatch.ElapsedMilliseconds}ms",
+                            ObjectId = 0,
+                            ObjectType = "NewsAPI",
+                            Type = Domain.Model.LogType.API_Category
+                        });
+                        await _iLogRepository.CommitAsync();
+                        
+                        return data;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "[GetCategoriesAsync] Failed to deserialize response");
+                        
+                        // Log deserialization error
+                        await _iLogRepository.AddAsync(new Domain.Model.Log
+                        {
+                            AcctionUser = "System",
+                            ActionTime = DateTime.Now,
+                            Name = "GetCategoriesAsync",
+                            Object = $"Failed to deserialize response for lang={lang}: {ex.Message}",
+                            ObjectId = 0,
+                            ObjectType = "NewsAPI",
+                            Type = Domain.Model.LogType.API_Category
+                        });
+                        await _iLogRepository.CommitAsync();
+                        
+                        return new List<NewsCategoryItem>();
+                    }
+                }
+
+                _logger.LogError("[GetCategoriesAsync] Failed - StatusCode: {StatusCode}, Response: {Response}", (int)response.StatusCode, responseContent);
+                
+                // Log API failure
+                await _iLogRepository.AddAsync(new Domain.Model.Log
+                {
+                    AcctionUser = "System",
+                    ActionTime = DateTime.Now,
+                    Name = "GetCategoriesAsync",
+                    Object = $"API failed for lang={lang}, StatusCode={(int)response.StatusCode}, Response={responseContent.Substring(0, Math.Min(500, responseContent.Length))}",
+                    ObjectId = 0,
+                    ObjectType = "NewsAPI",
+                    Type = Domain.Model.LogType.API_Category
+                });
+                await _iLogRepository.CommitAsync();
+                
+                return new List<NewsCategoryItem>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[GetCategoriesAsync] Exception");
+                
+                // Log exception
+                await _iLogRepository.AddAsync(new Domain.Model.Log
+                {
+                    AcctionUser = "System",
+                    ActionTime = DateTime.Now,
+                    Name = "GetCategoriesAsync",
+                    Object = $"Exception for lang={lang}: {ex.Message}, StackTrace={ex.StackTrace?.Substring(0, Math.Min(500, ex.StackTrace?.Length ?? 0))}",
+                    ObjectId = 0,
+                    ObjectType = "NewsAPI",
+                    Type = Domain.Model.LogType.API_Category
+                });
+                await _iLogRepository.CommitAsync();
+                
+                return new List<NewsCategoryItem>();
+            }
+        }
+
         public async Task<NewsCreateResult> CreateAsync(ContentPage contentPage, List<int> tags, List<int> categories, string createBy)
         {
             var stopwatch = Stopwatch.StartNew();
-            _logger.LogDebug("[CreateAsync] Start - ContentPageId: {ContentPageId}, Language: {Language}, PortalId: {PortalId}", 
+             _logger.LogInformation("[CreateAsync] Start - ContentPageId: {ContentPageId}, Language: {Language}, PortalId: {PortalId}", 
                 contentPage?.Id, contentPage?.Language, contentPage?.PortalId);
 
             var url = $"{_settings.Value.CreatedEndPointVI}";
@@ -155,7 +360,7 @@ namespace PT.Base.Services
                 url = $"{_settings.Value.CreatedEndPointEN}";
             }
             
-            _logger.LogDebug("[CreateAsync] API Endpoint: {Url}", url);
+             _logger.LogInformation("[CreateAsync] API Endpoint: {Url}", url);
 
             if (string.IsNullOrWhiteSpace(url) || contentPage == null)
             {
@@ -182,7 +387,7 @@ namespace PT.Base.Services
                 domain = domain.TrimEnd('/');
             }
             
-            _logger.LogDebug("[CreateAsync] Domain: {Domain}", domain);
+             _logger.LogInformation("[CreateAsync] Domain: {Domain}", domain);
 
             try
             {
@@ -196,13 +401,13 @@ namespace PT.Base.Services
                 var categoryConvertStopwatch = Stopwatch.StartNew();
                 var categoryIds = await ConvertCategories(categories, contentPage.CategoryId);
                 categoryConvertStopwatch.Stop();
-                _logger.LogDebug("[CreateAsync] Categories converted - Count: {Count}, Duration: {Duration}ms", 
+                 _logger.LogInformation("[CreateAsync] Categories converted - Count: {Count}, Duration: {Duration}ms", 
                     categoryIds.Count, categoryConvertStopwatch.ElapsedMilliseconds);
 
                 var tagsConvertStopwatch = Stopwatch.StartNew();
                 var convertTags = await ConvertTags(tags);
                 tagsConvertStopwatch.Stop();
-                _logger.LogDebug("[CreateAsync] Tags converted - Count: {Count}, Duration: {Duration}ms", 
+                 _logger.LogInformation("[CreateAsync] Tags converted - Count: {Count}, Duration: {Duration}ms", 
                     convertTags.Count, tagsConvertStopwatch.ElapsedMilliseconds);
 
                 var cmd = new NewsCMD
@@ -227,7 +432,7 @@ namespace PT.Base.Services
 
                 };
 
-                _logger.LogDebug("[CreateAsync] Request payload prepared - Title: {Title}, StatusId: {StatusId}, SourceId: {SourceId}", 
+                 _logger.LogInformation("[CreateAsync] Request payload prepared - Title: {Title}, StatusId: {StatusId}, SourceId: {SourceId}", 
                     cmd.Title, cmd.StatusId, sourceId);
 
                 async Task<HttpResponseMessage> PostWithTokenAsync(string bearerToken)
@@ -239,7 +444,7 @@ namespace PT.Base.Services
                     }
 
                     var json = JsonConvert.SerializeObject(cmd);
-                    _logger.LogDebug("[CreateAsync] Request JSON length: {Length} characters", json.Length);
+                     _logger.LogInformation("[CreateAsync] Request JSON length: {Length} characters", json.Length);
                     
                     using var content = new StringContent(json, Encoding.UTF8, "application/json");
                     
@@ -247,7 +452,7 @@ namespace PT.Base.Services
                     var result = await client.PostAsync(url, content);
                     apiStopwatch.Stop();
                     
-                    _logger.LogDebug("[CreateAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
+                     _logger.LogInformation("[CreateAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
                         result.StatusCode, apiStopwatch.ElapsedMilliseconds);
                     
                     return result;
@@ -256,7 +461,7 @@ namespace PT.Base.Services
                 var tokenStopwatch = Stopwatch.StartNew();
                 var token = await GetAccessTokenAsync();
                 tokenStopwatch.Stop();
-                _logger.LogDebug("[CreateAsync] Token retrieved - Duration: {Duration}ms", tokenStopwatch.ElapsedMilliseconds);
+                 _logger.LogInformation("[CreateAsync] Token retrieved - Duration: {Duration}ms", tokenStopwatch.ElapsedMilliseconds);
 
                 var response = await PostWithTokenAsync(token);
 
@@ -268,7 +473,7 @@ namespace PT.Base.Services
                     var retryTokenStopwatch = Stopwatch.StartNew();
                     token = await GetAccessTokenAsync(clearCache: true);
                     retryTokenStopwatch.Stop();
-                    _logger.LogDebug("[CreateAsync] New token retrieved - Duration: {Duration}ms", retryTokenStopwatch.ElapsedMilliseconds);
+                     _logger.LogInformation("[CreateAsync] New token retrieved - Duration: {Duration}ms", retryTokenStopwatch.ElapsedMilliseconds);
                     
                     response = await PostWithTokenAsync(token);
                 }
@@ -282,7 +487,7 @@ namespace PT.Base.Services
                 {
                     response.Dispose();
                     var data = JsonConvert.DeserializeObject<NewsDTO>(responseContent);
-                    _logger.LogDebug("[CreateAsync] Success - NewsId: {NewsId}, Total Duration: {Duration}ms", 
+                     _logger.LogInformation("[CreateAsync] Success - NewsId: {NewsId}, Total Duration: {Duration}ms", 
                         data.NewsId, stopwatch.ElapsedMilliseconds);
                     return new NewsCreateResult { Success = true, Data = data, StatusCode = statusCode };
                 }
@@ -405,7 +610,7 @@ namespace PT.Base.Services
         public async Task<NewsCreateResult> UpdateAsync(ContentPage contentPage, List<int> tags, List<int> categories, string updateBy)
         {
             var stopwatch = Stopwatch.StartNew();
-            _logger.LogDebug("[UpdateAsync] Start - ContentPageId: {ContentPageId}, NewsId: {NewsId}, Language: {Language}", 
+             _logger.LogInformation("[UpdateAsync] Start - ContentPageId: {ContentPageId}, NewsId: {NewsId}, Language: {Language}", 
                 contentPage?.Id, contentPage?.NewsId, contentPage?.Language);
 
             if (contentPage == null)
@@ -420,7 +625,7 @@ namespace PT.Base.Services
                 url = _settings.Value.EditEndPointEN;
             }
             
-            _logger.LogDebug("[UpdateAsync] API Endpoint: {Url}", url);
+             _logger.LogInformation("[UpdateAsync] API Endpoint: {Url}", url);
 
             if (string.IsNullOrWhiteSpace(url))
             {
@@ -446,7 +651,7 @@ namespace PT.Base.Services
                 domain = domain.TrimEnd('/');
             }
             
-            _logger.LogDebug("[UpdateAsync] Domain: {Domain}", domain);
+             _logger.LogInformation("[UpdateAsync] Domain: {Domain}", domain);
 
             try
             {
@@ -463,13 +668,13 @@ namespace PT.Base.Services
                 var categoryConvertStopwatch = Stopwatch.StartNew();
                 var categoryIds = await ConvertCategories(categories, contentPage.CategoryId);
                 categoryConvertStopwatch.Stop();
-                _logger.LogDebug("[UpdateAsync] Categories converted - Count: {Count}, Duration: {Duration}ms", 
+                 _logger.LogInformation("[UpdateAsync] Categories converted - Count: {Count}, Duration: {Duration}ms", 
                     categoryIds.Count, categoryConvertStopwatch.ElapsedMilliseconds);
 
                 var tagsConvertStopwatch = Stopwatch.StartNew();
                 var convertTags = await ConvertTags(tags);
                 tagsConvertStopwatch.Stop();
-                _logger.LogDebug("[UpdateAsync] Tags converted - Count: {Count}, Duration: {Duration}ms", 
+                 _logger.LogInformation("[UpdateAsync] Tags converted - Count: {Count}, Duration: {Duration}ms", 
                     convertTags.Count, tagsConvertStopwatch.ElapsedMilliseconds);
 
                 var cmd = new NewsCMD
@@ -494,7 +699,7 @@ namespace PT.Base.Services
                     StatusId = contentPage.Status ? 1 : 4,
                 };
 
-                _logger.LogDebug("[UpdateAsync] Request payload prepared - Title: {Title}, NewsId: {NewsId}, StatusId: {StatusId}", 
+                 _logger.LogInformation("[UpdateAsync] Request payload prepared - Title: {Title}, NewsId: {NewsId}, StatusId: {StatusId}", 
                     cmd.Title, cmd.NewsId, cmd.StatusId);
 
                 async Task<HttpResponseMessage> PutWithTokenAsync(string bearerToken, string endpoint)
@@ -506,7 +711,7 @@ namespace PT.Base.Services
                     }
 
                     var json = JsonConvert.SerializeObject(cmd);
-                    _logger.LogDebug("[UpdateAsync] Request JSON length: {Length} characters", json.Length);
+                     _logger.LogInformation("[UpdateAsync] Request JSON length: {Length} characters", json.Length);
                     
                     using var content = new StringContent(json, Encoding.UTF8, "application/json");
                     
@@ -514,7 +719,7 @@ namespace PT.Base.Services
                     var result = await client.PutAsync(endpoint, content);
                     apiStopwatch.Stop();
                     
-                    _logger.LogDebug("[UpdateAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
+                     _logger.LogInformation("[UpdateAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
                         result.StatusCode, apiStopwatch.ElapsedMilliseconds);
                     
                     return result;
@@ -523,7 +728,7 @@ namespace PT.Base.Services
                 var tokenStopwatch = Stopwatch.StartNew();
                 var token = await GetAccessTokenAsync();
                 tokenStopwatch.Stop();
-                _logger.LogDebug("[UpdateAsync] Token retrieved - Duration: {Duration}ms", tokenStopwatch.ElapsedMilliseconds);
+                 _logger.LogInformation("[UpdateAsync] Token retrieved - Duration: {Duration}ms", tokenStopwatch.ElapsedMilliseconds);
 
                 var response = await PutWithTokenAsync(token, url);
 
@@ -535,7 +740,7 @@ namespace PT.Base.Services
                     var retryTokenStopwatch = Stopwatch.StartNew();
                     token = await GetAccessTokenAsync(clearCache: true);
                     retryTokenStopwatch.Stop();
-                    _logger.LogDebug("[UpdateAsync] New token retrieved - Duration: {Duration}ms", retryTokenStopwatch.ElapsedMilliseconds);
+                     _logger.LogInformation("[UpdateAsync] New token retrieved - Duration: {Duration}ms", retryTokenStopwatch.ElapsedMilliseconds);
                     
                     response = await PutWithTokenAsync(token, url);
                 }
@@ -549,7 +754,7 @@ namespace PT.Base.Services
                 {
                     response.Dispose();
                     var data = JsonConvert.DeserializeObject<NewsDTO>(responseContent);
-                    _logger.LogDebug("[UpdateAsync] Success - NewsId: {NewsId}, Total Duration: {Duration}ms", 
+                     _logger.LogInformation("[UpdateAsync] Success - NewsId: {NewsId}, Total Duration: {Duration}ms", 
                         data?.NewsId, stopwatch.ElapsedMilliseconds);
                     return new NewsCreateResult { Success = true, Data = data, StatusCode = statusCode };
                 }
@@ -584,7 +789,7 @@ namespace PT.Base.Services
         public async Task<NewsCreateResult> DeleteAsync(int newsId, string deleteBy, string language = "")
         {
             var stopwatch = Stopwatch.StartNew();
-            _logger.LogDebug("[DeleteAsync] Start - NewsId: {NewsId}, DeleteBy: {DeleteBy}, Language: {Language}", 
+             _logger.LogInformation("[DeleteAsync] Start - NewsId: {NewsId}, DeleteBy: {DeleteBy}, Language: {Language}", 
                 newsId, deleteBy, language);
 
             if (newsId <= 0)
@@ -593,6 +798,7 @@ namespace PT.Base.Services
                 return new NewsCreateResult { Success = false, ErrorMessage = "Invalid newsId" };
             }
 
+
             var url = language == "en" ? _settings.Value.DeleteEndPointEN : _settings.Value.DeleteEndPointVI;
             if (string.IsNullOrWhiteSpace(url))
             {
@@ -600,7 +806,7 @@ namespace PT.Base.Services
                 return new NewsCreateResult { Success = false, ErrorMessage = "Delete endpoint URL is not configured" };
             }
 
-            _logger.LogDebug("[DeleteAsync] API Endpoint: {Url}", url);
+             _logger.LogInformation("[DeleteAsync] API Endpoint: {Url}", url);
 
             var request = new DeleteNewsRequest { NewsId = newsId, DeleteBy = deleteBy };
 
@@ -615,14 +821,14 @@ namespace PT.Base.Services
                     }
                     
                     var deleteUrl = $"{url}";
-                    _logger.LogDebug("[DeleteAsync] Delete URL: {DeleteUrl}", deleteUrl);
+                     _logger.LogInformation("[DeleteAsync] Delete URL: {DeleteUrl}", deleteUrl);
                     
                     var apiStopwatch = Stopwatch.StartNew();
                     using var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
                     var result = await client.PostAsync(deleteUrl, content);
                     apiStopwatch.Stop();
                     
-                    _logger.LogDebug("[DeleteAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
+                     _logger.LogInformation("[DeleteAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
                         result.StatusCode, apiStopwatch.ElapsedMilliseconds);
                     
                     return result;
@@ -631,7 +837,7 @@ namespace PT.Base.Services
                 var tokenStopwatch = Stopwatch.StartNew();
                 var token = await GetAccessTokenAsync();
                 tokenStopwatch.Stop();
-                _logger.LogDebug("[DeleteAsync] Token retrieved - Duration: {Duration}ms", tokenStopwatch.ElapsedMilliseconds);
+                 _logger.LogInformation("[DeleteAsync] Token retrieved - Duration: {Duration}ms", tokenStopwatch.ElapsedMilliseconds);
 
                 var response = await DeleteWithTokenAsync(token);
 
@@ -643,7 +849,7 @@ namespace PT.Base.Services
                     var retryTokenStopwatch = Stopwatch.StartNew();
                     token = await GetAccessTokenAsync(clearCache: true);
                     retryTokenStopwatch.Stop();
-                    _logger.LogDebug("[DeleteAsync] New token retrieved - Duration: {Duration}ms", retryTokenStopwatch.ElapsedMilliseconds);
+                     _logger.LogInformation("[DeleteAsync] New token retrieved - Duration: {Duration}ms", retryTokenStopwatch.ElapsedMilliseconds);
                     
                     response = await DeleteWithTokenAsync(token);
                 }
@@ -657,7 +863,7 @@ namespace PT.Base.Services
                 {
                     response.Dispose();
                     var data = JsonConvert.DeserializeObject<NewsDTO>(responseContent);
-                    _logger.LogDebug("[DeleteAsync] Success - NewsId: {NewsId}, Total Duration: {Duration}ms", 
+                     _logger.LogInformation("[DeleteAsync] Success - NewsId: {NewsId}, Total Duration: {Duration}ms", 
                         newsId, stopwatch.ElapsedMilliseconds);
                     return new NewsCreateResult { Success = true, Data = data, StatusCode = statusCode };
                 }

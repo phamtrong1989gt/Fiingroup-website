@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PT.Base;
+using PT.Base.Services;
 using PT.BE.Areas.Manager.Controllers;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
@@ -44,6 +45,7 @@ namespace PT.BE.Areas.User.Controllers
         private readonly IPortalRepository _iPortalRepository;
         private readonly IContentPageCategoryRepository _iContentPageCategoryRepository;
         private readonly IContentPageRepository _iContentPageRepository;
+        private readonly IAsyncNewsService _iAsyncNewsService;
         /// <summary>
         /// Hàm khởi tạo controller, inject các repository và service cần thiết.
         /// </summary>
@@ -63,7 +65,8 @@ namespace PT.BE.Areas.User.Controllers
             IFileRepository iFileRepository,
             IPortalRepository iPortalRepository,
             IContentPageCategoryRepository iContentPageCategoryRepository,
-            IContentPageRepository iContentPageRepository
+            IContentPageRepository iContentPageRepository,
+            IAsyncNewsService iAsyncNewsService
             )
         {
             _logger = logger;
@@ -73,6 +76,7 @@ namespace PT.BE.Areas.User.Controllers
             _iWebHostEnvironment = iWebHostEnvironment;
             _iFileRepository = iFileRepository;
             _iPortalRepository = iPortalRepository;
+            _iAsyncNewsService = iAsyncNewsService;
             _iContentPageCategoryRepository = iContentPageCategoryRepository;
             _iContentPageRepository = iContentPageRepository;
         }
@@ -110,8 +114,83 @@ namespace PT.BE.Areas.User.Controllers
             ViewData["language"] = _baseSettings.Value.MultipleLanguage ? $"/{language}" : "";
             dl.PortalId = portalId;
             dl.PortalName = portals.FirstOrDefault(x => x.Id == portalId)?.Name;
+
+            dl.PortalSelectList = new SelectList(portals, "Id", "Name");
+            try
+            {
+                var cmCategorys = await _iAsyncNewsService.GetCategoriesAsync(dl.Language);
+                var cmCategorysForDisplay = BuildNewsCategoryOptions(cmCategorys, language);
+                dl.CMCategorySelectList = new SelectList(cmCategorysForDisplay, "Value", "Text");
+            }
+            catch
+            {
+            }
             return View(dl);
         }
+
+        // Helper: build tree-like options from flat NewsCategoryItem list
+        private List<SelectListItem> BuildNewsCategoryOptions(List<NewsCategoryItem> categories, string language)
+        {
+            var result = new List<SelectListItem>();
+            if (categories == null || categories.Count == 0)
+                return result;
+
+            // build lookup by parent id for quick child lookup
+            var lookup = categories.GroupBy(x => x.ParentNewsCategoryId)
+                                   .ToDictionary(g => g.Key, g => g.OrderBy(y => (language == "en" ? y.En_NewsCategoryName : y.NewsCategoryName)).ToList());
+
+            var added = new HashSet<int>();
+
+            void AddNodeAndChildren(NewsCategoryItem node, int depth)
+            {
+                if (node == null) return;
+                // prevent cycles / re-processing
+                if (added.Contains(node.NewsCategoryId)) return;
+
+                var prefix = string.Concat(Enumerable.Repeat("-----", depth));
+                var text = $"({node.NewsCategoryId}){(language == "en" ? node.En_NewsCategoryName : node.NewsCategoryName)}";
+                var display = string.IsNullOrEmpty(prefix) ? text : prefix + text;
+                result.Add(new SelectListItem { Value = node.NewsCategoryId.ToString(), Text = display });
+                added.Add(node.NewsCategoryId);
+
+                if (lookup.ContainsKey(node.NewsCategoryId))
+                {
+                    foreach (var child in lookup[node.NewsCategoryId])
+                    {
+                        AddNodeAndChildren(child, depth + 1);
+                    }
+                }
+            }
+
+            // Determine root level: the smallest NewsCategoryLevel in the list
+            int minLevel = categories.Min(c => c.NewsCategoryLevel);
+
+            var roots = categories.Where(c => c.NewsCategoryLevel == minLevel)
+                                  .OrderBy(c => (language == "en" ? c.En_NewsCategoryName : c.NewsCategoryName))
+                                  .ToList();
+
+            // Start from each root and add children recursively
+            foreach (var root in roots)
+            {
+                AddNodeAndChildren(root, 0);
+            }
+
+            // Append any remaining items that were not added (safety)
+            if (added.Count < categories.Count)
+            {
+                var remaining = categories.Where(c => !added.Contains(c.NewsCategoryId))
+                                          .OrderBy(c => (language == "en" ? c.En_NewsCategoryName : c.NewsCategoryName));
+                foreach (var item in remaining)
+                {
+                    var text = $"({item.NewsCategoryId}){(language == "en" ? item.En_NewsCategoryName : item.NewsCategoryName)}";
+                    result.Add(new SelectListItem { Value = item.NewsCategoryId.ToString(), Text = text });
+                }
+            }
+
+            return result;
+        }
+
+ 
         /// <summary>
         /// Xử lý POST tạo mới danh mục.
         /// Các bước:
@@ -238,6 +317,17 @@ namespace PT.BE.Areas.User.Controllers
             model.PortalName = portals.FirstOrDefault(x => x.Id == dl.PortalId)?.Name;
             model.CategoryType = dl.CategoryType;
             model.FullPath = await _iPortalRepository.GetFullPathAsync(model.PortalId ?? 1, model.Slug ?? string.Empty, portals, model.Language, _baseSettings.Value.MultipleLanguage);
+
+            try
+            {
+                var cmCategorys = await _iAsyncNewsService.GetCategoriesAsync(dl.Language);
+                var cmCategorysForDisplay = BuildNewsCategoryOptions(cmCategorys, ktLink.Language);
+                model.CMCategorySelectList = new SelectList(cmCategorysForDisplay, "Value", "Text", dl.ReferentCategoryId);
+            }
+            catch
+            {
+            }
+
             return View(model);
         }
         /// <summary>
@@ -622,6 +712,56 @@ namespace PT.BE.Areas.User.Controllers
             }
 
             return new ResponseModel<FileDataModel>() { Output = -1, Message = "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại.", Type = ResponseTypeMessage.Danger, Status = false };
+        }
+        #endregion
+
+        #region [Tree DC Category]
+        /// <summary>
+        /// Lấy cây danh mục DC dạng tree view để chọn một hoặc nhiều danh mục
+        /// </summary>
+        [HttpPost]
+        [AuthorizePermission("Index")]
+        public async Task<List<TreeRoleModel>> TreeDCCategory(int id, string language = "vi")
+        {
+            try
+            {
+                var listCurrent = new List<int>();
+                if (id > 0)
+                {
+                    var category = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == id);
+                    if (category != null && !string.IsNullOrWhiteSpace(category.ExCategoryIds))
+                    {
+                        listCurrent = category.ExCategoryIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                           .Select(x => int.Parse(x))
+                                                           .ToList();
+                    }
+                }
+
+                var dcCategories = await _iAsyncNewsService.GetCategoriesAsync(language);
+                
+                var result = dcCategories.Select(x =>
+                    new TreeRoleModel
+                    {
+                        Id = x.NewsCategoryId.ToString(),
+                        Parent = x.ParentNewsCategoryId == 0 ? "#" : x.ParentNewsCategoryId.ToString(),
+                        Text = $"({x.NewsCategoryId}) {(language == "en" ? x.En_NewsCategoryName : x.NewsCategoryName)}",
+                        State = new TreeRoleStateModel 
+                        { 
+                            Disabled = false, 
+                            Opened = true, 
+                            Selected = listCurrent.Contains(x.NewsCategoryId) && !dcCategories.Any(z => z.ParentNewsCategoryId == x.NewsCategoryId)
+                        },
+                        Icon = null
+                    }
+                ).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(LoggingEvents.GENERATE_ITEMS, "#Trong-[Log]{0}", ex);
+                return new List<TreeRoleModel>();
+            }
         }
         #endregion
     }

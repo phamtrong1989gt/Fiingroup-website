@@ -38,7 +38,7 @@ namespace PT.UI
             Configuration = configuration;
             // Cấu hình Serilog để ghi log ra file theo mức độ
             Serilog.Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Debug()
+               .MinimumLevel.Error()
                .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Information).WriteTo.File("logs/info_.log", rollingInterval: RollingInterval.Day))
                .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Warning).WriteTo.File("logs/warning_.log", rollingInterval: RollingInterval.Day))
                .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Error).WriteTo.File("logs/error_.log", rollingInterval: RollingInterval.Day))

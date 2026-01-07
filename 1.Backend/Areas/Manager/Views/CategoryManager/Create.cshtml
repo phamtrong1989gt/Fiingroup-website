@@ -19,6 +19,9 @@
     };
 }
 
+<link href="~/Content/Admin/plugins/jstree/themes/default/style.css" rel="stylesheet" />
+<script src="~/Content/Admin/plugins/jstree/jstree.min.js"></script>
+
 <form form-edit asp-action="Create">
     <input type="hidden" asp-for="Language" />
     <input type="hidden" name="categoryIds" />
@@ -44,7 +47,30 @@
                     <div class="labelinfo-t bg-info mb-10">
                         CẤU HÌNH HIỂN THỊ
                     </div>
+
                     <div class="pt-5"></div>
+
+                    <div class="row">
+          @*               <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Tìm kiếm danh mục DC</label>
+                                <input type="text" id="treeDCCategorySearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." />
+                            </div>
+                        </div> *@
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Cây danh mục DC chọn để hiển thị</label>
+                                <div id="treeDCCategory" style="max-height: 500px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; background: #fff;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>IDs đã chọn (ExCategoryIds)</label>
+                                <input type="text" name="ExCategoryIds" class="form-control" placeholder="Các ID được chọn sẽ hiện ở đây..." readonly />
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <input type="checkbox" asp-for="Status" class="filled-in chk-col-green" />
                         <label for="Status" asp-for="Status"></label>
@@ -79,7 +105,6 @@
                                                         <option value="@PT.Domain.Model.ECategoryType.ContentPage_Report">@PT.Domain.Model.ECategoryType.ContentPage_Report.GetDisplayName()</option>
                                                         <option value="@PT.Domain.Model.ECategoryType.ContentPage_Product">@PT.Domain.Model.ECategoryType.ContentPage_Product.GetDisplayName()</option>
                                                         <option value="@PT.Domain.Model.ECategoryType.ContentPage_FAQ">@PT.Domain.Model.ECategoryType.ContentPage_FAQ.GetDisplayName()</option>
-
                                                     </select>
                                                 </div>
                                             </div>
@@ -94,20 +119,23 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-6">
 
                                             <div class="form-group">
-                                                <label class="form-label" asp-for="ExCategoryIds"></label> <span asp-validation-for="ExCategoryIds"></span>
+                                                <label class="form-label" asp-for="ExCategoryIds"></label> <span asp-validation-for="ExCategoryIds"></span> <small class="text-muted">(Hoặc chọn từ cây danh mục bên trái)</small>
                                                 <div class="controls">
                                                     <input type="text" class="form-control input-sm form-control-t" placeholder="Ví dụ: 1,2,3" asp-for="ExCategoryIds">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="form-label" asp-for="ReferentCategoryId"></label> <span asp-validation-for="ReferentCategoryId"></span>
                                                 <div class="controls">
-                                                    <input type="number" class="form-control input-sm form-control-t" placeholder="Ví dụ: 1" asp-for="ReferentCategoryId">
+
+                                                    <select required data-live-search="true" asp-for="ReferentCategoryId" data-size="10" class="input-sm form-control-t show-tick" asp-items="Model.CMCategorySelectList">
+                                                        <option value="">Chọn</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -141,6 +169,7 @@
     </div>
 </form>
 <script>
-     initRickText("@pathUpload");
+    initRickText("@pathUpload");
     $("[name='Lastmod']").toDateTimePicker();
-</script>
+    getTreeDCCategory('@Model.Language', 0);
+ </script>

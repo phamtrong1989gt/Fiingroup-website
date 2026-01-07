@@ -183,16 +183,9 @@
             type: 'GET',
             dataType: 'html',
             success: function (response) {
-                console.log('Response received successfully');
                 $(containerId).html(response);
             },
             error: function (xhr, status, error) {
-                console.error('Error details:', {
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    responseText: xhr.responseText,
-                    error: error
-                });
                 $(containerId).html('<div class="alert alert-danger">Không thể tải tin tức. Status: ' + xhr.status + '</div>');
             }
         });
