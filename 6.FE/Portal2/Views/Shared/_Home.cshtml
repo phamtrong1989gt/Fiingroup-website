@@ -71,7 +71,6 @@
 		<section id="Header">
 			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeBannerTop", language = language, portalId = portalId })
 			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuPC", language = language, portalId = portalId })
-			
 		</section>
 		<!-- header area end -->
 		@RenderBody()
@@ -112,156 +111,8 @@
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 	<script>
-		$(document).ready(
-			function () {
-
-				$("#keySearch").on('change keyup paste', function () {
-				$("#search-content").show();
-				var key = $(this).val();
-					if (key.length >= 3 || key.length == 0) {
-							var url = '@Url.Action("Search", "Home")';
-							// Call API Search and bind results into #search-content
-							function bindSearchResults(data) {
-								var $container = $('#search-content');
-								$container.empty();
-								if (!data || !Array.isArray(data) || data.length === 0) {
-									$container.append('<ul class="list-unstyled"><li>Không có kết quả tìm kiếm</li></ul>');
-									return;
-								}
-								var $ul = $('<ul class="list-unstyled"></ul>');
-								data.forEach(function (item) {
-									var title = item.Title || item.title || item.Name || item.name || item.Text || item.text || 'Không có tiêu đề';
-									var href = item.href || item.Href || item.url || item.Link || item.link || '#';
-									var $li = $('<li></li>');
-									var $a = $('<a></a>').attr('href', href).text(title);
-									$li.append($a);
-									$ul.append($li);
-								});
-								$container.append($ul);
-							}
-
-							// perform GET
-							$.get(url, { key: key, language: '@language' })
-								.done(function (res) {
-									var data = res && res.data ? res.data : res;
-									bindSearchResults(data);
-								})
-								.fail(function () {
-									$('#search-content').empty().append('<ul class="list-unstyled"><li>Không có kết quả tìm kiếm</li></ul>');
-								});
-
-						}
-					});
-
-					let owl = $('#owlour');
-					owl.owlCarousel({
-						margin: 0,
-						autoplay: true,
-						autoplayTimeout: 5000,
-						nav: false,
-						loop: true,
-						dots: false,
-						dotsData: true,
-						pagination: false,
-						margin: 0,
-						responsive: {
-							0: { items: 1 },
-							480: { items: 1 },
-							768: { items: 2 },
-							1000: { items: 3 }
-						}
-					});
-
-					// let owl2 = $('#manualsct');
-					// owl2.owlCarousel({
-					// 	margin: 0,
-					// 	autoplay: true,
-					// 	autoplayTimeout: 5000,
-					// 	nav: false,
-					// 	loop: true,
-					// 	dots: false,
-					// 	dotsData: true,
-					// 	pagination: false,
-					// 	responsive: {
-					// 		0: { items: 1 },
-					// 		600: { items: 3 },
-					// 		1000: { items: 3 }
-					// 	}
-					// });
-
-					$('.counter').counterUp({
-						delay: 10,
-						time: 1200
-					});
-				}
-			);
-		 $(function () {
-			let star = '.star',
-				selected = '.selected';
-
-			$(star).on('click', function () {
-				$(selected).each(function () {
-					$(this).removeClass('selected');
-				});
-				$(this).addClass('selected');
-			});
-		});
-		 $(document).ready(function () {
-			$(window).scroll(function () {
-				if ($(this).scrollTop() > 200) {
-					$('#scroll-top').fadeIn();
-				} else {
-					$('#scroll-top').fadeOut();
-				}
-			});
-			$('#scroll-top').click(function () {
-				$('html, body').animate({ scrollTop: 0 }, 500);
-				return false;
-			});
-		});
-	</script>
-	<style>
-		
-	</style>
-
-	<script>
-		function prepareManualSlides($carousel) {
-		  if (!$carousel || !$carousel.length) return;
-		  // find actual slide content containers (adjust selectors if your markup differs)
-		  $carousel.find('.owl-stage .owl-item').each(function () {
-			const $owlItem = $(this);
-			// try to find a meaningful content node inside this owl item
-			let $content = $owlItem.children().first(); // typical: <div class="item">...</div>
-			if (!$content || !$content.length) return;
-
-			// If content already wrapped, skip
-			if ($content.hasClass('manual-slide') || $content.find('.manual-slide').length) {
-			  // ensure images have correct CSS
-			  $content.find('img').css({ 'max-width': '80%', 'max-height': '80%', 'object-fit': 'contain' });
-			  return;
-			}
-
-			// If the content itself is suitable to be the wrapper (e.g. plain <div>), add class
-			// Otherwise, wrap inner HTML into .manual-slide to guarantee equal boxes
-			// We prefer wrapping inner contents to avoid breaking existing structure
-			$content.wrapInner('<div class="manual-slide"></div>');
-
-			// Ensure images inside get proper inline styles in case CSS is missing or overridden
-			const $wrap = $content.find('.manual-slide').first();
-			const $img = $wrap.find('img').first();
-			if ($img.length) {
-			  $img.css({ 'max-width': '80%', 'max-height': '80%', 'object-fit': 'contain', 'display': 'block' });
-			} else {
-			  // fallback: if an element has data-bg attribute (your template may use that)
-			  const $bgEl = $wrap.find('[data-bg]').first();
-			  if ($bgEl.length) {
-				const bg = $bgEl.attr('data-bg');
-				if (bg) $bgEl.addClass('manual-bg').css('background-image', 'url(' + bg + ')');
-			  }
-			}
-		  });
-		}
-
+		$(document).ready(function (){var language='@language';var noResultsText=(language==='vi') ? 'Không có kết quả tìm kiếm' :'No search results';var noTitleText=(language==='vi') ? 'Không có tiêu đề' :'No title';$("#keySearch").on('change keyup paste',function (){$("#search-content").show();var key=$(this).val();if (key.length>=3 || key.length==0){var url='@Url.Action("Search", "Home")';function bindSearchResults(data){var $container=$('#search-content');$container.empty();if (!data || !Array.isArray(data) || data.length===0){$container.append('<ul class="list-unstyled"><li>'+noResultsText+'</li></ul>');return}var $ul=$('<ul class="list-unstyled"></ul>');data.forEach(function (item){var title=item.Title || item.title || item.Name || item.name || item.Text || item.text || noTitleText;var href=item.href || item.Href || item.url || item.Link || item.link || '#';var $li=$('<li></li>');var $a=$('<a></a>').attr('href',href).text(title);$li.append($a);$ul.append($li)});$container.append($ul)}$.get(url,{key:key,language:'@language'}) .done(function (res){var data=res && res.data ? res.data:res;bindSearchResults(data)}) .fail(function (){$('#search-content').empty().append('<ul class="list-unstyled"><li>'+noResultsText+'</li></ul>')})}});let owl=$('#owlour');owl.owlCarousel({margin:0,autoplay:true,autoplayTimeout:5000,nav:false,loop:true,dots:false,dotsData:true,pagination:false,margin:0,responsive:{0:{items:1},480:{items:1},768:{items:2},1000:{items:3}}});$('.counter').counterUp({delay:10,time:1200})});$(function (){let star='.star',selected='.selected';$(star).on('click',function (){$(selected).each(function (){$(this).removeClass('selected')});$(this).addClass('selected')})});$(document).ready(function (){$(window).scroll(function (){if ($(this).scrollTop()>200){$('#scroll-top').fadeIn()}else{$('#scroll-top').fadeOut()}});$('#scroll-top').click(function (){$('html, body').animate({scrollTop:0},500);return false})});
+		function prepareManualSlides($carousel){if(!$carousel||!$carousel.length)return;$carousel.find('.owl-stage .owl-item').each(function(){const $owlItem=$(this);let $content=$owlItem.children().first();if(!$content||!$content.length)return;if($content.hasClass('manual-slide')||$content.find('.manual-slide').length){$content.find('img').css({'max-width':'80%','max-height':'80%','object-fit':'contain'});return}$content.wrapInner('<div class="manual-slide"></div>');const $wrap=$content.find('.manual-slide').first();const $img=$wrap.find('img').first();if($img.length){$img.css({'max-width':'80%','max-height':'80%','object-fit':'contain','display':'block'})}else{const $bgEl=$wrap.find('[data-bg]').first();if($bgEl.length){const bg=$bgEl.attr('data-bg');if(bg)$bgEl.addClass('manual-bg').css('background-image','url('+bg+')')}}})}
 		$(function () {
 		  const $owl2 = $('#manualsct');
 		  if (!$owl2.length) return;
@@ -285,118 +136,19 @@
 			onRefreshed: function (event) { prepareManualSlides($(event.target)); },
 			onChanged: function (event) { prepareManualSlides($(event.target)); } // cover dynamic updates
 		  });
-
-		  // If slides are loaded asynchronously later, call prepareManualSlides($('#manualsct')) again.
 		});
 	</script>
 
 	<script>
-		var recaptchaSiteKey = '@_authorizeSettings.Value.CapChaDataSitekey';
-		var recaptchaWidgetId = null;
-		var isRecaptchaShown = false;
-		var btnSend = null;	
-		// Initialize reCAPTCHA V2
-		function initRecaptcha() {
-			if (typeof grecaptcha !== 'undefined' && recaptchaWidgetId === null) {
-				// Clear container to ensure it's empty
-				$('#recaptcha-container').empty();
-
-				recaptchaWidgetId = grecaptcha.render('recaptcha-container', {
-					'sitekey': recaptchaSiteKey,
-					'callback': onRecaptchaSuccess,
-					'expired-callback': onRecaptchaExpired
-				});
-
-				// Hide loading, show reCAPTCHA
-				$('#recaptcha-loading').hide();
-				$('#recaptcha-container').show();
-			}
-		}
-
-		// Callback when reCAPTCHA is successfully verified
-		function onRecaptchaSuccess(token) {
-			$(".Capcha").val(token);
-			hideRecaptchaPopup();
-			// Auto submit form after getting token
-            $(this.btnSend).click();
-		}
-
-		// Callback when reCAPTCHA expires
-		function onRecaptchaExpired() {
-			$(".Capcha").val("");
-			if (recaptchaWidgetId !== null) {
-				grecaptcha.reset(recaptchaWidgetId);
-			}
-		}
-
-		// Show reCAPTCHA popup
-		function showRecaptchaPopup(btnElement) {
-            this.btnSend = btnElement;
-			if (!isRecaptchaShown) {
-				// Show popup immediately with loading
-				$('#recaptcha-loading').show();
-				$('#recaptcha-container').hide();
-				$("#recaptcha-backdrop").fadeIn(200);
-				$("#recaptcha-wrapper").fadeIn(200);
-				isRecaptchaShown = true;
-
-				// Initialize reCAPTCHA (will hide loading when ready)
-				if (typeof grecaptcha === 'undefined' || recaptchaWidgetId === null) {
-					// Wait for grecaptcha to be ready
-					var checkInterval = setInterval(function() {
-						if (typeof grecaptcha !== 'undefined' && grecaptcha.render) {
-							clearInterval(checkInterval);
-							initRecaptcha();
-						}
-					}, 100);
-
-					// Timeout after 5 seconds
-					setTimeout(function() {
-						clearInterval(checkInterval);
-						if (recaptchaWidgetId === null) {
-							$('#recaptcha-loading p').text('Lỗi tải reCAPTCHA. Vui lòng thử lại.');
-						}
-					}, 5000);
-				} else {
-					grecaptcha.reset(recaptchaWidgetId);
-					$('#recaptcha-loading').hide();
-					$('#recaptcha-container').show();
-				}
-			}
-		}
-
-		// Hide reCAPTCHA popup
-		function hideRecaptchaPopup() {
-			$("#recaptcha-backdrop").fadeOut(300);
-			$("#recaptcha-wrapper").fadeOut(300);
-			isRecaptchaShown = false;
-		}
-
-		$("#recaptcha-close-btn").on("click", function () {
-			hideRecaptchaPopup();
-        });
+		var recaptchaSiteKey = '@_authorizeSettings.Value.CapChaDataSitekey';var recaptchaWidgetId = null;var isRecaptchaShown = false;var btnSend = null;	
+		function initRecaptcha(){if(typeof grecaptcha!=='undefined'&&recaptchaWidgetId===null){$('#recaptcha-container').empty();recaptchaWidgetId=grecaptcha.render('recaptcha-container',{'sitekey':recaptchaSiteKey,'callback':onRecaptchaSuccess,'expired-callback':onRecaptchaExpired});$('#recaptcha-loading').hide();$('#recaptcha-container').show()}}
+		function onRecaptchaSuccess(token){$(".Capcha").val(token);hideRecaptchaPopup();$(this.btnSend).click()}
+		function onRecaptchaExpired(){$(".Capcha").val("");if(recaptchaWidgetId!==null){grecaptcha.reset(recaptchaWidgetId)}}
+		function showRecaptchaPopup(btnElement){this.btnSend=btnElement;if(!isRecaptchaShown){$('#recaptcha-loading').show();$('#recaptcha-container').hide();$("#recaptcha-backdrop").fadeIn(200);$("#recaptcha-wrapper").fadeIn(200);isRecaptchaShown=!0;if(typeof grecaptcha==='undefined'||recaptchaWidgetId===null){var checkInterval=setInterval(function(){if(typeof grecaptcha!=='undefined'&&grecaptcha.render){clearInterval(checkInterval);initRecaptcha()}},100);setTimeout(function(){clearInterval(checkInterval);if(recaptchaWidgetId===null){$('#recaptcha-loading p').text('Lỗi tải reCAPTCHA. Vui lòng thử lại.')}},5000)}else{grecaptcha.reset(recaptchaWidgetId);$('#recaptcha-loading').hide();$('#recaptcha-container').show()}}}
+		function hideRecaptchaPopup(){$("#recaptcha-backdrop").fadeOut(300);$("#recaptcha-wrapper").fadeOut(300);isRecaptchaShown=!1}
+		$("#recaptcha-close-btn").on("click",function(){hideRecaptchaPopup()})
+		$(document).ready(function(){var linkId=$('#linkId').val()||'0';$('.btn-lang .dropdown-menu a').each(function(){var $link=$(this);var currentHref=$link.attr('href');var language=currentHref.replace('/','');var newHref='@Url.Action("ChangeLanguage", "Home")'+'?language='+language+'&linkId='+linkId;$link.attr('href',newHref)})})
 	</script>
-	<script>
-		// Update language dropdown links with current linkId
-		$(document).ready(function() {
-			var linkId = $('#linkId').val() || '0';
-			
-			$('.btn-lang .dropdown-menu a').each(function() {
-				var $link = $(this);
-				var currentHref = $link.attr('href');
-				
-				// Extract language from current href (e.g., "/vi" -> "vi", "/en" -> "en")
-				var language = currentHref.replace('/', '');
-				
-				// Build new URL with ChangeLanguage action
-				var newHref = '@Url.Action("ChangeLanguage", "Home")' + '?language=' + language + '&linkId=' + linkId;
-				
-				// Update href
-				$link.attr('href', newHref);
-			});
-		});
-	</script>
-
 
 	@Html.Raw(bindContentSetting.Body)
 </body>
