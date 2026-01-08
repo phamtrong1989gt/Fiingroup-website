@@ -97,6 +97,7 @@
                allowClear: true,
         tags: true
     });
+      $("#dichVuQT").append('<option value="0">@Localizer["OtherProduct"]</option>');
       const $form = $('#formLienHe');
       $form.on('submit', function (e) {
         e.preventDefault();
@@ -184,6 +185,10 @@
                 .append('<option value="">@Localizer["SelectProducts"]</option>');
             return;
         }
+        if(parentId == 0){
+            $("#sanPhamQT").append('<option value="0">@Localizer["OtherProduct"]</option>');
+            return;
+        }
 
         $.ajax({
             url: '@Url.Action("FlowSelectList", "ContactHome")',
@@ -203,6 +208,7 @@
                                 `<option value="${x.id}">${x.name}</option>`
                             );
                         });
+                        $("#sanPhamQT").append('<option value="0">@Localizer["OtherProduct"]</option>');
                     } else {
                         $("#sanPhamQT").append('<option value="">@Localizer["NoProducts"]</option>');
                     }

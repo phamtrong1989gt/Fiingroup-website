@@ -139,6 +139,9 @@
   <data name="NoProducts" xml:space="preserve">
     <value>No products</value>
   </data>
+  <data name="OtherProduct" xml:space="preserve">
+    <value>Others</value>
+  </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone number</value>
   </data>
