@@ -427,5 +427,6 @@ namespace PT.UI.Controllers
         {
             return View("BannerHomePage", language);
         }
+        
     }
 }

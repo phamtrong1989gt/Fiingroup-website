@@ -335,6 +335,7 @@ namespace PT.UI
 
             // Services
             services.AddScoped<ISettingService, SettingService>();
+            services.AddScoped<IAutoCssService, AutoCssService>();
             
             // Generic repository
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));

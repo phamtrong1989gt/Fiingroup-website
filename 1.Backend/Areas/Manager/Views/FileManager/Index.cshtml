@@ -1,0 +1,368 @@
+@{
+    ViewData["Title"] = "File Manager";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<style>
+    .file-manager-container { max-width: 100%;  }
+    .path-input-container { margin-bottom: 20px; display: flex; gap: 10px; align-items: center; }
+    .path-input-container input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; }
+    .path-input-container button { padding: 10px 20px; background: #034ea2; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .path-input-container button:hover { background: #023b7b; }
+    .path-input-container .btn-clear { background: #6c757d; }
+    .path-input-container .btn-clear:hover { background: #5a6268; }
+    .drive-selector { margin-bottom: 20px; }
+    .drive-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+    .drive-item { border: 2px solid #ddd; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .drive-item:hover { border-color: #034ea2; background: #f8f9fa; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .drive-icon { font-size: 48px; color: #034ea2; margin-bottom: 10px; }
+    .drive-name { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 5px; }
+    .drive-info { font-size: 12px; color: #666; }
+    .breadcrumb-path { padding: 10px; background: #f5f5f5; border-radius: 4px; margin-bottom: 20px; }
+    .breadcrumb-path .btn-back-drives { background: #6c757d; color: white; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; margin-right: 10px; }
+    .breadcrumb-path .btn-back-drives:hover { background: #5a6268; }
+    .breadcrumb-path a { color: #034ea2; text-decoration: none; }
+    .breadcrumb-path a:hover { text-decoration: underline; }
+    .file-list { list-style: none; padding: 0; }
+    .file-item { padding: 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; cursor: pointer; }
+    .file-item:hover { background: #f9f9f9; }
+    .file-icon { font-size: 24px; margin-right: 15px; width: 30px; text-align: center; }
+    .file-info { flex: 1; }
+    .file-name { font-weight: 500; color: #333; }
+    .file-meta { font-size: 12px, 0, 0.5em, 'Courier New', monospace; }
+    .file-actions { display: flex; gap: 10px; }
+    .file-actions button { padding: 5px 12px; font-size: 12px; border: none; border-radius: 3px; cursor: pointer; }
+    .btn-download { background: #28a745; color: white; }
+    .btn-edit { background: #034ea2; color: white; }
+    .editor-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; }
+    .editor-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 90%; max-width: 1200px; height: 80vh; border-radius: 8px; display: flex; flex-direction: column; }
+    .editor-header { padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; }
+    .editor-body { flex: 1; padding: 0; overflow: hidden; }
+    .editor-textarea { width: 100%; height: 100%; border: none; padding: 20px; font-family: 'Courier New', monospace; font-size: 14px; resize: none; }
+    .editor-footer { padding: 15px 20px; border-top: 1px solid #ddd; text-align: right; }
+    .loading { text-align: center; padding: 40px; color: #666; }
+    .empty-folder { text-align: center; padding: 60px; color: #999; }
+</style>
+
+
+<div>
+    <div class="path-input-container">
+        <input type="text" id="pathInput" placeholder="Enter path (e.g., C:\, D:\Projects\)" />
+        <button onclick="loadFromInput()">
+            <i class="fa fa-folder-open"></i> Load
+        </button>
+        <button class="btn-clear" onclick="clearAndShowDrives()">
+            <i class="fa fa-home"></i> Drives
+        </button>
+    </div>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-path" id="breadcrumb" style="display: none;">
+        <button class="btn-back-drives" onclick="showDrives()">
+            <i class="fa fa-arrow-left"></i> Back to Drives
+        </button>
+        <span id="breadcrumbContent"></span>
+    </div>
+
+    <!-- File List -->
+    <div id="fileListContainer">
+        <div class="loading">
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
+            <p>Loading...</p>
+        </div>
+    </div>
+</div>
+<!-- Editor Modal -->
+<div class="editor-modal" id="editorModal">
+    <div class="editor-content">
+        <div class="editor-header">
+            <div>
+                <h5 id="editorFileName">Edit File</h5>
+                <small id="editorFilePath" style="color: #666;"></small>
+            </div>
+            <button onclick="closeEditor()" class="btn btn-sm btn-secondary">
+                <i class="fa fa-times"></i> Close
+            </button>
+        </div>
+        <div class="editor-body">
+            <textarea id="editorTextarea" class="editor-textarea"></textarea>
+        </div>
+        <div class="editor-footer">
+            <button onclick="saveFile()" class="btn btn-primary">
+                <i class="fa fa-save"></i> Save Changes
+            </button>
+            <button onclick="closeEditor()" class="btn btn-secondary">
+                <i class="fa fa-times"></i> Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    let currentPath = '';
+    let currentEditPath = '';
+    let isShowingDrives = true;
+
+    $(document).ready(function() {
+        showDrives();
+        
+        // Allow Enter key to load path
+        $('#pathInput').on('keypress', function(e) {
+            if (e.which === 13) { // Enter key
+                loadFromInput();
+            }
+        });
+    });
+
+    function loadFromInput() {
+        const path = $('#pathInput').val().trim();
+        if (!path) {
+            alertify.warning('Please enter a path');
+            return;
+        }
+        loadDirectory(path);
+    }
+    
+    function clearAndShowDrives() {
+        $('#pathInput').val('');
+        showDrives();
+    }
+    
+    function updatePathInput(path) {
+        $('#pathInput').val(path);
+    }
+
+    function showDrives() {
+        isShowingDrives = true;
+        currentPath = '';
+        updatePathInput('');
+        $('#breadcrumb').hide();
+        $('#fileListContainer').html('<div class="loading"><i class="fa fa-spinner fa-spin fa-2x"></i><p>Loading drives...</p></div>');
+
+        $.get('@Url.Action("GetDrives", "FileManager")')
+            .done(function(response) {
+                if (response.success && response.drives) {
+                    renderDriveList(response.drives);
+                } else {
+                    alertify.error('Failed to load drives');
+                }
+            })
+            .fail(function() {
+                alertify.error('Failed to load drives');
+            });
+    }
+
+    function renderDriveList(drives) {
+        if (drives.length === 0) {
+            $('#fileListContainer').html('<div class="empty-folder"><i class="fa fa-hdd-o fa-3x"></i><p>No drives available</p></div>');
+            return;
+        }
+
+        let html = '<div class="drive-selector"><h5><i class="fa fa-hdd-o"></i> Select a Drive:</h5><div class="drive-list">';
+        
+        drives.forEach(drive => {
+            const icon = drive.driveType === 'Fixed' ? 'fa-hdd-o' : (drive.driveType === 'Removable' ? 'fa-usb' : 'fa-server');
+            // Use data attribute instead of inline onclick to avoid escaping issues
+            html += '<div class="drive-item" data-path="' + drive.name + '">';
+            html += '<div class="drive-icon"><i class="fa ' + icon + '"></i></div>';
+            html += '<div class="drive-name">' + drive.label + '</div>';
+            html += '<div class="drive-info">' + drive.availableSpaceFormatted + ' free of ' + drive.totalSizeFormatted + '</div>';
+            html += '</div>';
+        });
+        
+        html += '</div></div>';
+        $('#fileListContainer').html(html);
+        
+        // Attach click handlers using jQuery (avoids escaping issues)
+        $('.drive-item').on('click', function() {
+            const path = $(this).data('path');
+            loadDirectory(path);
+        });
+    }
+
+    function loadDirectory(path) {
+        isShowingDrives = false;
+        currentPath = path;
+        updatePathInput(path);
+        $('#breadcrumb').show();
+        $('#fileListContainer').html('<div class="loading"><i class="fa fa-spinner fa-spin fa-2x"></i><p>Loading...</p></div>');
+
+        $.get('@Url.Action("Browse", "FileManager")', { path: path })
+            .done(function(response) {
+                if (response.success) {
+                    renderBreadcrumb(response.path, response.parentPath);
+                    renderFileList(response.items, response.path);
+                } else {
+                    alertify.error(response.message);
+                }
+            })
+            .fail(function() {
+                alertify.error('Failed to load directory');
+            });
+    }
+
+    function renderBreadcrumb(path, parentPath) {
+        let html = '';
+        
+        if (path) {
+            // For Windows paths: C:\, D:\Projects\, etc.
+            const parts = path.split('\\').filter(p => p);
+            let builtPath = '';
+            
+            parts.forEach((part, index) => {
+                builtPath += part + (index === 0 ? '\\' : '\\');
+                const displayText = index === 0 ? part : part;
+                html += (index > 0 ? ' \\ ' : '') + '<a href="#" class="breadcrumb-link" data-path="' + builtPath + '">' + displayText + '</a>';
+            });
+        }
+        
+        $('#breadcrumbContent').html(html || '<i class="fa fa-folder-o"></i> Root');
+        
+        // Attach click handlers for breadcrumb links
+        $('.breadcrumb-link').on('click', function(e) {
+            e.preventDefault();
+            const path = $(this).data('path');
+            loadDirectory(path);
+        });
+    }
+
+    function renderFileList(items, basePath) {
+        if (items.length === 0) {
+            $('#fileListContainer').html('<div class="empty-folder"><i class="fa fa-folder-open-o fa-3x"></i><p>This folder is empty</p></div>');
+            return;
+        }
+
+        let html = '<ul class="file-list">';
+        
+        items.forEach(item => {
+            const icon = item.type === 'folder' ? 'fa-folder' : getFileIcon(item.extension);
+            const iconColor = item.type === 'folder' ? '#FFA500' : '#666';
+            
+            html += '<li class="file-item">';
+            html += '<div class="file-icon" style="color: ' + iconColor + '"><i class="fa ' + icon + '"></i></div>';
+            html += '<div class="file-info">';
+            
+            if (item.type === 'folder') {
+                html += '<div class="file-name"><a href="#" class="folder-link" data-path="' + item.path + '">' + item.name + '</a></div>';
+            } else {
+                html += '<div class="file-name">' + item.name + '</div>';
+            }
+            
+            html += '<div class="file-meta">';
+            if (item.type === 'file') {
+                html += '<span>' + item.sizeFormatted + '</span> • ';
+            }
+            html += '<span>' + item.modified + '</span>';
+            html += '</div>';
+            html += '</div>';
+            
+            html += '<div class="file-actions">';
+            if (item.type === 'file') {
+                html += '<button class="btn-download" data-path="' + item.path + '"><i class="fa fa-download"></i> Download</button>';
+                if (item.canEdit) {
+                    html += '<button class="btn-edit" data-path="' + item.path + '"><i class="fa fa-edit"></i> Edit</button>';
+                }
+            }
+            html += '</div>';
+            html += '</li>';
+        });
+        
+        html += '</ul>';
+        $('#fileListContainer').html(html);
+        
+        // Attach click handlers using jQuery
+        $('.folder-link').on('click', function(e) {
+            e.preventDefault();
+            const path = $(this).data('path');
+            loadDirectory(path);
+        });
+        
+        $('.btn-download').on('click', function() {
+            const path = $(this).data('path');
+            downloadFile(path);
+        });
+        
+        $('.btn-edit').on('click', function() {
+            const path = $(this).data('path');
+            editFile(path);
+        });
+    }
+
+    function getFileIcon(extension) {
+        const iconMap = {
+            '.css': 'fa-file-code-o',
+            '.js': 'fa-file-code-o',
+            '.json': 'fa-file-code-o',
+            '.html': 'fa-file-code-o',
+            '.htm': 'fa-file-code-o',
+            '.txt': 'fa-file-text-o',
+            '.pdf': 'fa-file-pdf-o',
+            '.jpg': 'fa-file-image-o',
+            '.jpeg': 'fa-file-image-o',
+            '.png': 'fa-file-image-o',
+            '.gif': 'fa-file-image-o',
+            '.zip': 'fa-file-archive-o',
+            '.xml': 'fa-file-code-o'
+        };
+        return iconMap[extension] || 'fa-file-o';
+    }
+
+    function downloadFile(path) {
+        window.location.href = '@Url.Action("Download", "FileManager")?path=' + encodeURIComponent(path);
+    }
+
+    function editFile(path) {
+        currentEditPath = path;
+        $('#editorModal').fadeIn(200);
+        $('#editorTextarea').val('Loading...');
+
+        $.get('@Url.Action("GetContent", "FileManager")', { path: path })
+            .done(function(response) {
+                if (response.success) {
+                    $('#editorFileName').text(response.fileName);
+                    $('#editorFilePath').text(response.path);
+                    $('#editorTextarea').val(response.content);
+                } else {
+                    alertify.error(response.message);
+                    closeEditor();
+                }
+            })
+            .fail(function() {
+                alertify.error('Failed to load file content');
+                closeEditor();
+            });
+    }
+
+    function saveFile() {
+        const content = $('#editorTextarea').val();
+        
+        $.ajax({
+            url: '@Url.Action("SaveContent", "FileManager")',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                path: currentEditPath,
+                content: content
+            }),
+            success: function(response) {
+                if (response.success) {
+                    alertify.success(response.message);
+                    closeEditor();
+                    loadDirectory(currentPath);
+                } else {
+                    alertify.error(response.message);
+                }
+            },
+            error: function() {
+                alertify.error('Failed to save file');
+            }
+        });
+    }
+
+    function closeEditor() {
+        $('#editorModal').fadeOut(200);
+        currentEditPath = '';
+    }
+</script>
+}

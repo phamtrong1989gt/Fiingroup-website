@@ -84,6 +84,19 @@ namespace PT.BE.Areas.Manager.Controllers
                 {
                     var producids = item.Products.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToList();
                     item.ProductsList = producs.Where(x => producids.Contains(x.Id)).ToList();
+                    // Add "Other" option if id = 0 is present
+                    if (producids.Contains(0))
+                    {
+                        if (item.ProductsList == null)
+                        {
+                            item.ProductsList = new List<ContentPage>();
+                        }
+                        item.ProductsList.Add(new ContentPage
+                        {
+                            Id = 0,
+                            Name = item.Language == "en" ? "Other" : "Lựa chọn khác"
+                        });
+                    }
                 }
                 catch
                 {
@@ -204,6 +217,19 @@ namespace PT.BE.Areas.Manager.Controllers
                         {
                             var producIds = item.Products.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToList();
                             item.ProductsList = products.Where(x => producIds.Contains(x.Id)).ToList();
+                            // Add "Other" option if id = 0 is present
+                            if (producIds.Contains(0))
+                            {
+                                if (item.ProductsList == null)
+                                {
+                                    item.ProductsList = new List<ContentPage>();
+                                }
+                                item.ProductsList.Add(new ContentPage
+                                {
+                                    Id = 0,
+                                    Name = item.Language == "en" ? "Other" : "Lựa chọn khác"
+                                });
+                            }
                         }
                         catch { }
                     }

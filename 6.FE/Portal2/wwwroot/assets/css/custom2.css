@@ -407,3 +407,6 @@ to {
 {
     z-index: 9999!important;
 }
+.btn {
+    width: auto;
+}

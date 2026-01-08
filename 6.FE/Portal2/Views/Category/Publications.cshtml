@@ -94,12 +94,12 @@
 				</section>
 
 				<div style="position:relative;">
-					<input id="startDate" lang="vi" name="startDate" class="date-input mr-2" value="" type="text" placeholder="dd/MM/yyyy" />
+					<input style="width:140px;" id="startDate" lang="vi" name="startDate" class="date-input mr-2" value="" type="text" placeholder="dd/MM/yyyy" />
 					<span style="position: absolute;right: 29px;top: 6px;font-weight: bold;color: #034ea2;" class="input-group-addon"><i class="fa fa-calendar"></i></span>
 				</div>
 
 				<div style="position:relative;">
-					<input id="endDate" lang="vi" name="endDate" class="date-input mr-2" value="" type="text" placeholder="dd/MM/yyyy" />
+					<input style="width:140px;" id="endDate" lang="vi" name="endDate" class="date-input mr-2" value="" type="text" placeholder="dd/MM/yyyy" />
 					<span style="position: absolute;right: 29px;top: 6px;font-weight: bold;color: #034ea2;" class="input-group-addon"><i class="fa fa-calendar"></i></span>
 				</div>
 
@@ -189,9 +189,6 @@
 			window.getNewsAjax = function(page) {
 				page = page ||1;
 				var params = buildParams(page);
-
-				// normalize dates before sending
-				formatDateInputsBeforeSubmit();
 
 				showLoading();
 
