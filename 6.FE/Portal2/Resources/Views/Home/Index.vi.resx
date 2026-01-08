@@ -120,6 +120,9 @@
   <data name="ExploreMore" xml:space="preserve">
     <value>Khám phá thêm</value>
   </data>
+  <data name="MsgAgreeTerms" xml:space="preserve">
+    <value>Vui lòng đồng ý với điều khoản và chính sách để tiếp tục</value>
+  </data>
   <data name="RegisterForConsultation" xml:space="preserve">
     <value>Đăng ký để nhận tư vấn</value>
   </data>

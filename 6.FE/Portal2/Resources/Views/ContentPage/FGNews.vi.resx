@@ -135,4 +135,7 @@
   <data name="OurCustomers" xml:space="preserve">
     <value>&lt;span style="color: #0066CC;"&gt; Khách hàng &lt;/span&gt; của chúng tôi</value>
   </data>
+  <data name="ShareTo" xml:space="preserve">
+    <value>Chia sẻ</value>
+  </data>
 </root>

@@ -66,6 +66,7 @@
                                 </select>
                                 <input type="hidden" class="form-control" id="products2" asp-for="Products">
                             </div>
+                            @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ContactFormMsg2", language = language, portalId = portalId })
                         </div>
                         <button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH2>@Localizer["BtnSend"]</button>
                     </form>
@@ -78,6 +79,33 @@
 {
 }
 <script>
+
+       // Show Thank You Modal
+    function showThankYouModal2() {
+        $('#thankYouModal2').fadeIn(300);
+        $('body').css('overflow', 'hidden');
+    }
+
+    // Close Thank You Modal
+    function closeThankYouModal2() {
+        $('#thankYouModal2').fadeOut(300);
+        $('body').css('overflow', '');
+    }
+
+    // Close modal when clicking backdrop
+    $(document).on('click', '#thankYouModal2', function(e) {
+        if (e.target === this) {
+            closeThankYouModal2();
+        }
+    });
+
+    // Close modal with ESC key
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $('#thankYouModal2').is(':visible')) {
+            closeThankYouModal();
+        }
+    });
+
     $(function () {
             $('#dichVuQT2').select2({
             placeholder: "",
@@ -120,9 +148,8 @@
 
             if(res.output == 1)
             {
-                alertify.success(res.message);
+                showThankYouModal2();
                 $form[0].reset();
-                $('#popsolutionmore').modal('hide');
                 $("#products2").val("");
                 hideRecaptchaPopup();
                 if (recaptchaWidgetId !== null) {

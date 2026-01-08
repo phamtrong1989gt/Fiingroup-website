@@ -895,42 +895,42 @@ namespace PT.Shared
         /// Input: https://cdn.fiingroup.vn/medialib/245453/I/2025/12/26/15553189468640700_FG_A-Hieu-nhan-vinh-danh-thue_4463.png
         /// Output: https://cdn.fiingroup.vn/medialib/245453/I/2025/12/26/15553189468640700_FG_A-Hieu-nhan-vinh-danh-thue_4463_thumb.png
         /// </example>
-        public static string ConvertToThumbUrl(string imageUrl)
-        {
-            if (string.IsNullOrWhiteSpace(imageUrl))
-            {
-                return imageUrl;
-            }
+        //public static string ConvertToThumbUrl(string imageUrl)
+        //{
+        //    if (string.IsNullOrWhiteSpace(imageUrl))
+        //    {
+        //        return imageUrl;
+        //    }
 
-            try
-            {
-                // Get the file extension
-                var extension = Path.GetExtension(imageUrl);
+        //    try
+        //    {
+        //        // Get the file extension
+        //        var extension = Path.GetExtension(imageUrl);
                 
-                // If no extension found, return original URL
-                if (string.IsNullOrEmpty(extension))
-                {
-                    return imageUrl;
-                }
+        //        // If no extension found, return original URL
+        //        if (string.IsNullOrEmpty(extension))
+        //        {
+        //            return imageUrl;
+        //        }
 
-                // Check if already a thumb URL to avoid double conversion
-                if (imageUrl.EndsWith($"_thumb{extension}", StringComparison.OrdinalIgnoreCase))
-                {
-                    return imageUrl;
-                }
+        //        // Check if already a thumb URL to avoid double conversion
+        //        if (imageUrl.EndsWith($"_thumb{extension}", StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            return imageUrl;
+        //        }
 
-                // Get URL without extension
-                var urlWithoutExtension = imageUrl.Substring(0, imageUrl.Length - extension.Length);
+        //        // Get URL without extension
+        //        var urlWithoutExtension = imageUrl.Substring(0, imageUrl.Length - extension.Length);
                 
-                // Return URL with '_thumb' inserted before extension
-                return $"{urlWithoutExtension}_thumb{extension}";
-            }
-            catch (Exception)
-            {
-                // If any error occurs, return original URL
-                return imageUrl;
-            }
-        }
+        //        // Return URL with '_thumb' inserted before extension
+        //        return $"{urlWithoutExtension}_thumb{extension}";
+        //    }
+        //    catch (Exception)
+        //    {
+        //        // If any error occurs, return original URL
+        //        return imageUrl;
+        //    }
+        //}
 
         /// <summary>
         /// Converts a thumbnail URL back to the original image URL by removing '_thumb' suffix.

@@ -135,4 +135,7 @@
   <data name="OurCustomers" xml:space="preserve">
     <value>Our &lt;span style="color: #0066CC;"&gt; Customers&lt;/span&gt;</value>
   </data>
+  <data name="ShareTo" xml:space="preserve">
+    <value>Share to</value>
+  </data>
 </root>

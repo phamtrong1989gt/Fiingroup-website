@@ -212,7 +212,7 @@
 <section id="newsDetail" class="py-5">
     <div class="container">
         <h1 class="title-h1">
-            @Model.Title
+            @Html.Raw(Model.Title)
         </h1>
         <div class="news-meta">
             <p class="news-time">@Model.PublicDate?.ToString("HH:mm dd/MM/yyyy")</p>
@@ -237,10 +237,13 @@
 
             <div class="news-bottom">
                 <div class="social-icons">
-                    <span>Share to:</span>
-                    <a><img src="/Data/Banner/new-icon1.png" alt="decor" class="youtube"></a>
-                    <a><img src="/Data/Banner/new-icon2.png" alt="decor" class="facebook"></a>
-                    <a><img src="/Data/Banner/new-icon3.png" alt="decor" class="instagram"></a>
+                    <span>@Localizer["ShareTo"]:</span>
+                    <a href="#" id="shareFacebook" target="_blank" rel="noopener" title="@Localizer["ShareTo"] Facebook">
+                        <img src="/Data/Banner/new-icon2.png" alt="Facebook" class="facebook">
+                    </a>
+                    <a href="#" id="shareLinkedIn" target="_blank" rel="noopener" title="@Localizer["ShareTo"] LinkedIn">
+                        <img src="/Data/Banner/new-icon3.png" alt="LinkedIn" class="instagram">
+                    </a>
                 </div>
             </div>
         </div>
@@ -258,6 +261,14 @@
     </div>
 </section>
 <script>
+    // Setup share links with current URL
+    $(document).ready(function() {
+        var currentUrl = encodeURIComponent(window.location.href);
+        // Facebook share link
+        $('#shareFacebook').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=' + currentUrl);
+        // LinkedIn share link
+        $('#shareLinkedIn').attr('href', 'https://www.linkedin.com/shareArticle?mini=true&url=' + currentUrl);
+    });
 
     function loadTopNews(params, containerId = '#topNewsContainer') {
         // Set default values

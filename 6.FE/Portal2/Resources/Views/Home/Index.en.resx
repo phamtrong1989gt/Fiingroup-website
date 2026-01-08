@@ -120,7 +120,10 @@
   <data name="ExploreMore" xml:space="preserve">
     <value>Explore More</value>
   </data>
+  <data name="MsgAgreeTerms" xml:space="preserve">
+    <value>Please agree to the terms and policies to continue.</value>
+  </data>
   <data name="RegisterForConsultation" xml:space="preserve">
-    <value>Register For Consultation</value>
+    <value>Register for consultation</value>
   </data>
 </root>

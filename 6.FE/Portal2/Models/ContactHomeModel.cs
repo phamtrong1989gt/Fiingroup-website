@@ -15,7 +15,7 @@ namespace PT.UI.Models
 
         [Display(Name = "FullName")]
         [Required(ErrorMessage = "ValidateRequired")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "ValidateStringLength")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "ValidateStringLength")]
         public string FullName { get; set; }
 
         [Display(Name = nameof(Phone))]
@@ -66,7 +66,7 @@ namespace PT.UI.Models
 
         [Display(Name = nameof(FullName))]
         [Required(ErrorMessage = "ValidateRequired")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "ValidateStringLength")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "ValidateStringLength")]
         public string FullName { get; set; }
 
         [Display(Name = nameof(Phone))]
