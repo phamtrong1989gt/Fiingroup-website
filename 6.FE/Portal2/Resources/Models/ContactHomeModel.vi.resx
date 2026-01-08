@@ -135,6 +135,9 @@
   <data name="NoProducts" xml:space="preserve">
     <value>Không có sản phẩm nào</value>
   </data>
+  <data name="OtherProduct" xml:space="preserve">
+    <value>Lựa chọn khác</value>
+  </data>
   <data name="Phone" xml:space="preserve">
     <value>Số điện thoại</value>
   </data>
