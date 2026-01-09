@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-sm-12 mb-2">
                             <label class="form-label" for="yeuCauCT" asp-for="Content"></label>
-                            <textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder=""></textarea>
+                            <textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="@Localizer["ContentPlaceholder"]"></textarea>
                             <span class="validate-style" asp-validation-for="Content"></span>
                             <input type="hidden" class="form-control" id="products" asp-for="Products">
                         </div>

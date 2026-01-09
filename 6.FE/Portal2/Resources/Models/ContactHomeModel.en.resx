@@ -118,12 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BtnSend" xml:space="preserve">
-    <value>Submit a request</value>
+    <value>Submit request</value>
   </data>
   <data name="ConpanyName" xml:space="preserve">
     <value>Company name</value>
   </data>
   <data name="Content" xml:space="preserve">
+    <value>More details</value>
+  </data>
+  <data name="ContentPlaceholder" xml:space="preserve">
     <value>Tell us more about your needs</value>
   </data>
   <data name="Email" xml:space="preserve">
@@ -142,10 +145,10 @@
     <value>Phone number</value>
   </data>
   <data name="Position" xml:space="preserve">
-    <value>Job Title</value>
+    <value>Job title</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>Product &amp; Service</value>
+    <value>Products &amp; Services</value>
   </data>
   <data name="SelectProducts" xml:space="preserve">
     <value>Select Product &amp; Service</value>
