@@ -300,26 +300,12 @@ namespace PT.UI.Controllers
             //ViewData["linkData"] = objectLink;
             return View(viewName, dl);
         }
-
-        public IActionResult Product(string linkData, int portalId)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View("Product");
-        }
+      
         public IActionResult Methodology(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View("Methodology");
         }
-        public IActionResult Services(string linkData, int portalId)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View("Services");
-        }
-        public IActionResult Finance(string linkData, int portalId)
-        {
-            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            return View("Finance");
-        }
+       
     }
 }

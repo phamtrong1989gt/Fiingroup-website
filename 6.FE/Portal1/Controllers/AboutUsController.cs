@@ -41,16 +41,27 @@ namespace PT.UI.Controllers
             _iLinkReferenceRepository = iLinkReferenceRepository;
         }
 
+        // Giới thiệu doanh nghiệp
         public IActionResult Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();
         }
+
+        // Thông tin doanh nghiệp
+        public IActionResult Business(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View();
+        }
+
+        // Chính sách của chúng tôi
         public IActionResult Policy(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View("Policy");
         }
+
         public IActionResult Process(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);

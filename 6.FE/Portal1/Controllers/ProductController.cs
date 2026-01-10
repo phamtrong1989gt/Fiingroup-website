@@ -25,14 +25,14 @@ using PT.Shared;
 
 namespace PT.UI.Controllers
 {
-    public class BusinessController : Controller
+    public class ProductController : Controller
     {
         private readonly ILinkRepository _iLinkRepository;
         private readonly IOptions<BaseSettings> _baseSettings;
         private readonly IWebHostEnvironment _iHostingEnvironment;
         private readonly IContentPageRepository _iContentPageRepository;
         private readonly ILinkReferenceRepository _iLinkReferenceRepository;
-        public BusinessController(ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository)
+        public ProductController(ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository)
         {
             _iLinkRepository = iLinkRepository;
             _baseSettings = baseSettings;
@@ -40,8 +40,20 @@ namespace PT.UI.Controllers
             _iContentPageRepository = iContentPageRepository;
             _iLinkReferenceRepository = iLinkReferenceRepository;
         }
-
-        public IActionResult Index(string linkData, int portalId)
+        //  Xếp Hạng Tín nhiệm
+        public IActionResult CreditRating(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View();
+        }
+        //  Dịch vụ nhà đầu tư
+        public IActionResult InvestorServices(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View();
+        }
+        // Tài chính bền vững
+        public IActionResult SustainableFinance(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();
