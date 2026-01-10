@@ -23,26 +23,15 @@
 }
 
 @* ✅ Hiển thị timestamp để kiểm tra cache *@
-<div style="display:none;">ServerTime: @ViewData["ServerTime"]</div>
-<div style="display:none;">CacheInfo: @ViewData["CacheTime"]</div>
-
+<div style="display:none;">ServerTime: @ViewData["ServerTime"]</div><div style="display:none;">CacheInfo: @ViewData["CacheTime"]</div>
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSlider", language = language, portalId = portalId })
-
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeVideo", language = language, portalId = portalId })
-
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerHeSinhThai", language = language, portalId = portalId })
-
-<style>
-    .why-title a
-    {
-        color: var(--title-color);
-    }
-</style>
+<style>.why-title a{color: var(--title-color);}</style>
 
 <section id="HoTro" class="pt-5">
     <div class="container">
         <div class="row">
-
             @for (int i =0; i < listFlow.Count; i++)
             {
                 var item = listFlow[i];
@@ -50,168 +39,62 @@
                 var isEven = (i % 2 == 0);
                 if (isEven)
                 {
-                    <div class="col-lg-7 col-sm-12 d-none d-md-block animate-on-scroll fade-from-left">
-                        <a href="@path" title="Hỗ trợ">
-                            <img src="@item.Banner" class="img-hotro" alt="Hỗ trợ" loading="lazy" />
-                        </a>
-                    </div>
-
-                    <div class="col-lg-5 col-sm-12 animate-on-scroll fade-from-right">
-                        <div class="why-title"><a href="@path">@item.Name</a></div>
-                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
-                            <defs>
-                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
-                                    <stop offset="0.384615" stop-color="#034EA2" />
-                                    <stop offset="1" stop-color="#53DFFF" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <p class="why-desc">@Html.Raw(item.Summary)</p>
-                        <div class="hotro-list">
-                            <div class="row">
+                    <div class="col-lg-7 col-sm-12 d-none d-md-block animate-on-scroll fade-from-left"><a href="@path" title="Hỗ trợ"><img src="@item.Banner" class="img-hotro" alt="Hỗ trợ" loading="lazy" /></a></div>
+                    <div class="col-lg-5 col-sm-12 animate-on-scroll fade-from-right"><div class="why-title"><a href="@path">@item.Name</a></div><img src="/Data/Icon/icon-line.svg" class="line-fix" alt="line"><p class="why-desc">@Html.Raw(item.Summary)</p><div class="hotro-list"><div class="row">
                                 @for (int j = 0; j < item.Relateds.Count; j++)
                                 {
                                     string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
-                                    <div class="mb-3 item d-flex flex-row flex-wrap col-sm-12">
-                                        <div class="left"><img src="/Data/Banner/iconht.svg" alt="@item.Relateds[j].Name" /></div>
-                                        <div class="right"><a href="@pathItem"><span>@item.Relateds[j].Name</span></a></div>
-                                    </div>
+                                    <div class="mb-3 item d-flex flex-row flex-wrap col-sm-12"><div class="left"><img src="/Data/Banner/iconht.svg" alt="@item.Relateds[j].Name" /></div><div class="right"><a href="@pathItem"><span>@item.Relateds[j].Name</span></a></div></div>
                                 }
-                            </div>
-                        </div>
-                        <div class="pt-4">
-                            <a class="show-more" href="@path">@Localizer["ExploreMore"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
-                        </div>
-                    </div>
-
-                    <div class="clearfix mb-6"></div>
+                            </div></div><div class="pt-4"><a class="show-more" href="@path">@Localizer["ExploreMore"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></div></div><div class="clearfix mb-6"></div>
                 }
                 else
                 {
-                    <div class="col-lg-5 col-sm-12 animate-on-scroll fade-from-left">
-                        <div class="why-title"><a href="@path">@item.Name</a></div>
-                        <svg width="156" height="2" viewBox="0 0 156 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="0.666626" width="156" height="4" fill="url(#paint0_linear_4337_26784)" />
-                            <defs>
-                                <linearGradient id="paint0_linear_4337_26784" x1="-22.7334" y1="0.7" x2="-22.0174" y2="14.2709" gradientUnits="userSpaceOnUse">
-                                    <stop offset="0.384615" stop-color="#034EA2" />
-                                    <stop offset="1" stop-color="#53DFFF" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <p class="why-desc">@Html.Raw(item.Summary)</p>
-                        <div class="hotro-list">
-                            <div class="row">
+                    <div class="col-lg-5 col-sm-12 animate-on-scroll fade-from-left"><div class="why-title"><a href="@path">@item.Name</a></div><img src="/Data/Icon/icon-line.svg" class="line-fix" alt="line"><p class="why-desc">@Html.Raw(item.Summary)</p><div class="hotro-list"><div class="row">
                                 @for (int j = 0; j < item.Relateds.Count; j++)
                                 {
                                     string pathItem = PT.Shared.Functions.FormatUrl(item.Relateds[j].Language, item.Relateds[j].Link?.Slug);
-                                    <div class="mb-3 item d-flex flex-row flex-wrap col-sm-12">
-                                        <div class="left"><img src="/Data/Banner/iconht.svg" alt="@item.Relateds[j].Name" /></div>
-                                        <div class="right"><a href="@pathItem"><span>@item.Relateds[j].Name</span></a></div>
-                                    </div>
+                                    <div class="mb-3 item d-flex flex-row flex-wrap col-sm-12"><div class="left"><img src="/Data/Banner/iconht.svg" alt="@item.Relateds[j].Name" /></div><div class="right"><a href="@pathItem"><span>@item.Relateds[j].Name</span></a></div></div>
                                 }
-                            </div>
-                        </div>
-                        <div class="pt-4">
-                            <a class="show-more" href="@path">@Localizer["ExploreMore"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-7 col-sm-12 d-none d-md-block text-right animate-on-scroll fade-from-right">
-                        <a href="@path" title="Hỗ trợ">
-                            <img src="@item.Banner" class="img-hotro" alt="Hỗ trợ" loading="lazy" />
-                        </a>
-                    </div>
-                    <div class="clearfix mb-6"></div>
+                    </div></div><div class="pt-4"><a class="show-more" href="@path">@Localizer["ExploreMore"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></div></div><div class="col-lg-7 col-sm-12 d-none d-md-block text-right animate-on-scroll fade-from-right"><a href="@path" title="Hỗ trợ"><img src="@item.Banner" class="img-hotro" alt="Hỗ trợ" loading="lazy" /></a></div><div class="clearfix mb-6"></div>
                 }
                 { flowi++; }
             }
         </div>
-        <div class="text-center p-dangky">
-            <a class="btn btn-primary btn-join" href="#DangKy" title="@Localizer["RegisterForConsultation"]">@Localizer["RegisterForConsultation"]</a>
-        </div>
+        <div class="text-center p-dangky"><a class="btn btn-primary btn-join" href="#DangKy" title="@Localizer["RegisterForConsultation"]">@Localizer["RegisterForConsultation"]</a></div>
     </div>
 </section>
-
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderDauAn", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "HomeSliderOurClients", language = language, portalId = portalId })
 <partial name="_Register" />
-
 <style>
-    .video-play-button {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        cursor: pointer;
-        z-index: 10;
-        transition: all 0.3s ease;
-    }
-    .video-play-button:hover {
-        transform: translate(-50%, -50%) scale(1.1);
-    }
-
-    .video-play-button svg {
-        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-    }
-
-    .video-loading {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 20;
-    }
-
-    .video-loading::after {
-        content: "";
-        display: block;
-        width: 60px;
-        height: 60px;
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #0066CC;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
+ .video-play-button{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);cursor:pointer;z-index:10;transition:all .3s ease}.video-play-button:hover{transform:translate(-50%,-50%) scale(1.1)}.video-play-button svg{filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3))}.video-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20}.video-loading::after{content:"";display:block;width:60px;height:60px;border:4px solid #f3f3f3;border-top:4px solid #06C;border-radius:50%;animation:spin 1s linear infinite}
     @@keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
-
-    .fade-out {
-        animation: fadeOut 0.3s forwards;
-    }
-
-    .fade-in {
-        animation: fadeIn 0.5s forwards;
-    }
-
+    .fade-out {animation: fadeOut 0.3s forwards;}.fade-in {animation: fadeIn 0.5s forwards;}
     @@keyframes fadeOut {
         from { opacity: 1; }
         to { opacity: 0; }
     }
-
     @@keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
     }
 </style>
 <script>
-   
     function openVideo(target) {
         if (target instanceof Event) {
             target.preventDefault();
             target.stopPropagation();
             target = target.currentTarget;
         }
-
         const videoContainer = target.closest('.videoitem');
         if (!videoContainer) {
             console.error('Không tìm thấy video container');
             return;
         }
-
         const thumbnail = videoContainer.querySelector('.video-thumbnail');
         const playButton = videoContainer.querySelector('.video-play-button');
         
@@ -219,25 +102,20 @@
             console.error('Không tìm thấy thumbnail');
             return;
         }
-
         const iframeUrl = thumbnail.getAttribute('data-iframe');
         
         if (!iframeUrl) {
             console.error('Không tìm thấy data-iframe attribute');
             return;
         }
-
         if (playButton) {
             playButton.classList.add('fade-out');
             setTimeout(() => playButton.remove(), 300);
         }
-
         const loadingDiv = document.createElement('div');
         loadingDiv.className = 'video-loading';
         videoContainer.appendChild(loadingDiv);
-
         thumbnail.classList.add('fade-out');
-
         const iframe = document.createElement('iframe');
         iframe.title = thumbnail.getAttribute('title') || 'video giới thiệu';
         iframe.frameBorder = '0';
@@ -245,28 +123,21 @@
         iframe.referrerPolicy = 'strict-origin-when-cross-origin';
         iframe.allowFullscreen = true;
         iframe.loading = 'lazy';
-        
         iframe.className = 'fade-in';
         iframe.style.opacity = '0';
-
         iframe.onload = function() {
             if (loadingDiv.parentNode) {
                 loadingDiv.remove();
             }
-            
             if (thumbnail.parentNode) {
                 thumbnail.remove();
             }
-            
             iframe.style.opacity = '1';
         };
-
         videoContainer.appendChild(iframe);
-
         setTimeout(() => {
             iframe.src = iframeUrl;
         }, 100);
-
         setTimeout(() => {
             if (loadingDiv.parentNode) {
                 loadingDiv.remove();
@@ -280,7 +151,6 @@
         preconnect.rel = 'preconnect';
         preconnect.href = 'https://www.youtube.com';
         document.head.appendChild(preconnect);
-
         const preconnectCdn = document.createElement('link');
         preconnectCdn.rel = 'preconnect';
         preconnectCdn.href = 'https://i.ytimg.com';
