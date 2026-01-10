@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --Base-Brand-Blue: rgba(0, 102, 204, 1);
     /*--Text-Primary: rgba(29, 41, 57, 1) ;*/
     --Text-Primary: #093461;
@@ -281,4 +281,157 @@ a.btn.btn-primary.btn-join {
     justify-content: center;
     margin: 2px;
     font-size: 16px;
+}
+.field-validation-error {
+    font-size: 12px;
+    position: absolute;
+    display: block
+}
+
+.form-select {
+    font-size: 14px !important;
+    border-radius: 4px !important
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    padding: 0 10px !important
+}
+
+.select2-selection__choice {
+    font-size: 13px !important;
+    background-color: #034ea2 !important;
+    border: 1px solid #023b7b !important;
+    color: #fff
+}
+
+.select2-results__option {
+    font-size: 14px !important
+}
+
+#recaptcha-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.6);
+    backdrop-filter: blur(5px);
+    z-index: 9998
+}
+
+#recaptcha-wrapper {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    z-index: 9999;
+    min-width: 340px
+}
+
+#recaptcha-container {
+    min-width: 304px
+}
+
+#recaptcha-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 78px
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: 1s linear infinite spin
+}
+
+100% {
+    transform: rotate(360deg)
+}
+
+#btnClose, #recaptcha-close-btn {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: #034ea2;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000
+}
+
+    #recaptcha-close-btn:hover {
+        background: #d32f2f
+    }
+
+:root {
+    --manual-slide-height-mobile: 140px;
+    --manual-slide-height-tablet: 180px;
+    --manual-slide-height-desktop: 220px
+}
+
+.manual-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
+    height: var(--manual-slide-height-desktop);
+    box-sizing: border-box
+}
+
+.manual-bg {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    display: block
+}
+
+#manualsct img {
+    height: auto
+}
+
+    #manualsct img:hover {
+        background: initial
+    }
+
+#manualsct img {
+    border: none;
+    background: transparent;
+}
+
+#manualsct img {
+    padding: 0px;
+}
+
+.testimonial-content p {
+    height: 200px;
+}
+
+.row.row2 {
+    --bs-gutter-x: 4rem; /* tăng khoảng cách ngang giữa các col */
+}
+
+.why-desc {
+    padding-right: inherit !important;
 }

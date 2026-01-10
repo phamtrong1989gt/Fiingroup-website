@@ -136,7 +136,18 @@ namespace PT.UI.Controllers
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();
         }
-
+        public async Task<IActionResult> ChangeLanguage(string language = "vi", int linkId = 0)
+        {
+            var url = await _iLinkReferenceRepository.GetLink(language, linkId);
+            if (url == null)
+            {
+                return LocalRedirect($"/{language}");
+            }
+            else
+            {
+                return LocalRedirect(url);
+            }
+        }
         public async Task<IActionResult> Search(string language, string k, int? page, string linkData)
         {
             var objectLink = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
@@ -185,19 +196,6 @@ namespace PT.UI.Controllers
             }
 
             return View(data);
-        }
-
-        public async Task<IActionResult> ChangeLanguage(string language = "vi", int linkId = 0)
-        {
-            var url = await _iLinkReferenceRepository.GetLink(language, linkId);
-            if (url == null)
-            {
-                return LocalRedirect($"/{language}");
-            }
-            else
-            {
-                return LocalRedirect(url);
-            }
         }
 
         [HttpPost]
