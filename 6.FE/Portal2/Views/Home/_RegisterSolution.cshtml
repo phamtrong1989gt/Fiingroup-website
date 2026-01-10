@@ -20,61 +20,24 @@
     }).ToList();
 }
 
-<div class="modal" tabindex="-1" role="dialog" id="popsolutionmore">
-    <div class="modal-dialog" role="document" style="margin-top:10%;width: 800px;max-width: 800px;">
-        <div class="modal-content" style="background:#fff;">
-            <button type="button" id="btnClose" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+<div class="modal" tabindex="-1" role="dialog" id="popsolutionmore"><div class="modal-dialog" role="document" style="margin-top:10%;width: 800px;max-width: 800px;">
+        <div class="modal-content" style="background:#fff;"><button type="button" id="btnClose" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <div class="modal-body">
                 <div class="col-lg-12 col-sm-12">
                     <input type="hidden" id="languageId" value="@language" />
                     <form id="formLienHe2" method="post">
                         @Html.AntiForgeryToken()
                         <div class="row">
-                            <div class="col-sm-6 mb-2">
-                                <label class="form-label" for="hoTen" asp-for="FullName"></label> <strong class="error">*</strong>
-                                <input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder="">
-                                <span class="validate-style" asp-validation-for="FullName"></span>
-                            </div>
-                            <div class="col-sm-6 mb-2">
-                                <label asp-for="Phone" for="soDienThoai" class="form-label"></label><span class="error">*</span>
-                                <input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder="">
-                                <span class="validate-style" asp-validation-for="Phone"></span>
-                            </div>
-                            <div class="col-sm-12 mb-2">
-                                <label asp-for="Email" for="email" class="form-label"></label><span class="error">*</span>
-                                <input type="email" class="form-control" id="email" asp-for="Email" placeholder="">
-                                <span class="validate-style" asp-validation-for="Email"></span>
-                            </div>
-
-                            <div class="col-sm-6 mb-2">
-                                <label class="form-label"  asp-for="ConpanyName"></label> <strong class="error">*</strong>
-                                <input type="text" class="form-control" asp-for="ConpanyName" placeholder="">
-                                <span class="validate-style" asp-validation-for="ConpanyName"></span>
-                            </div>
-                            <div class="col-sm-6 mb-2">
-                                <label class="form-label" asp-for="Position"></label> <strong class="error">*</strong>
-                                <input type="text" class="form-control" asp-for="Position" placeholder="">
-                                <span class="validate-style" asp-validation-for="Position"></span>
-                            </div>
-
-                            <div class="col-sm-12 mb-3">
-                                <label asp-for="Products" for="dichVuQT2" class="form-label"></label>
-                                <input class="Capcha" type="hidden" id="g-recaptcha-response" name="capcha" />
-                                <select asp-items="listServies" class="form-select" id="dichVuQT2" multiple="multiple" style="width:100%;">
-                                </select>
-                                <input type="hidden" class="form-control" id="products2" asp-for="Products">
-                            </div>
+                            <div class="col-sm-6 mb-2"><label class="form-label" for="hoTen" asp-for="FullName"></label> <strong class="error">*</strong><input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder=""><span class="validate-style" asp-validation-for="FullName"></span></div>
+                            <div class="col-sm-6 mb-2"><label asp-for="Phone" for="soDienThoai" class="form-label"></label><span class="error">*</span><input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder=""><span class="validate-style" asp-validation-for="Phone"></span></div>
+                            <div class="col-sm-12 mb-2"><label asp-for="Email" for="email" class="form-label"></label><span class="error">*</span><input type="email" class="form-control" id="email" asp-for="Email" placeholder=""><span class="validate-style" asp-validation-for="Email"></span></div>
+                            <div class="col-sm-6 mb-2"><label class="form-label"  asp-for="ConpanyName"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="ConpanyName" placeholder=""><span class="validate-style" asp-validation-for="ConpanyName"></span></div>
+                            <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Position"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="Position" placeholder=""><span class="validate-style" asp-validation-for="Position"></span></div>
+                            <div class="col-sm-12 mb-3"><label asp-for="Products" for="dichVuQT2" class="form-label"></label><input class="Capcha" type="hidden" id="g-recaptcha-response" name="capcha" /><select asp-items="listServies" class="form-select" id="dichVuQT2" multiple="multiple" style="width:100%;"></select><input type="hidden" class="form-control" id="products2" asp-for="Products"></div>
                             @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ContactFormMsg2", language = language, portalId = portalId })
-                        </div>
-                        <button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH2>@Localizer["BtnSend"]</button>
+                        </div><button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH2>@Localizer["BtnSend"]</button>
                     </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+</div></div></div></div></div>
 @section Scripts
 {
 }
