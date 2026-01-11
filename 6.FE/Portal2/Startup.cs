@@ -49,7 +49,7 @@ namespace PT.UI
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-            
+
             // ✅ CẤU HÌNH SERILOG - Ghi log theo mức độ vào các file riêng biệt
             Serilog.Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
@@ -76,7 +76,7 @@ namespace PT.UI
                 client.Timeout = TimeSpan.FromSeconds(30); // Timeout mặc định 30 giây
                 client.DefaultRequestHeaders.Add("User-Agent", "PT.UI/1.0");
             });
-            
+
             // HttpClient cho NewsAPIService
             services.AddHttpClient<INewsAPIService, NewsAPIService>(client =>
             {
@@ -150,10 +150,10 @@ namespace PT.UI
             {
                 // Giới hạn kích thước response body tối đa = 64MB
                 options.MaximumBodySize = 64 * 1024 * 1024;
-                
+
                 // Không phân biệt hoa thường trong đường dẫn
                 options.UseCaseSensitivePaths = false;
-                
+
                 // Giảm SizeLimit từ 100MB xuống 50MB để tránh chiếm quá nhiều RAM
                 // Cache size lớn không đồng nghĩa với hiệu suất cao
                 options.SizeLimit = 50 * 1024 * 1024;
@@ -172,7 +172,7 @@ namespace PT.UI
             {
                 // Không yêu cầu consent cho non-essential cookies (điều chỉnh theo yêu cầu GDPR)
                 options.CheckConsentNeeded = context => false;
-                
+
                 // SameSite=None cho phép cross-site cookies (cần thiết cho OAuth, external login)
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
@@ -188,10 +188,10 @@ namespace PT.UI
                             maxRetryDelay: TimeSpan.FromSeconds(10), // Tăng delay tối đa từ 5s lên 10s
                             errorNumbersToAdd: null
                         );
-                        
+
                         // Command timeout: 60 giây (tăng từ 30s cho queries phức tạp)
                         sqlOptions.CommandTimeout(60);
-                        
+
                         // Migration assembly (nếu cần thiết)
                         // sqlOptions.MigrationsAssembly("PT.Infrastructure");
                     }),
@@ -215,7 +215,7 @@ namespace PT.UI
 
                 // ===== USER - Cấu hình tài khoản người dùng =====
                 options.User.RequireUniqueEmail = true; // Email phải unique
-                
+
                 // ===== SIGN IN - Cấu hình đăng nhập =====
                 options.SignIn.RequireConfirmedEmail = false; // Không bắt buộc xác nhận email (có thể bật = true)
                 options.SignIn.RequireConfirmedPhoneNumber = false; // Không bắt buộc xác nhận phone
@@ -225,7 +225,7 @@ namespace PT.UI
 
             // ✅ CUSTOM CLAIMS FACTORY - Thêm custom claims vào user principal
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsPrincipalFactory>();
-            
+
             // ✅ CONFIGURATION BINDING - Bind appsettings.json sections vào strongly-typed objects
             services.Configure<BaseSettings>(Configuration.GetSection("BaseSettings"));
             services.Configure<LogSettings>(Configuration.GetSection("LogSettings"));
@@ -239,18 +239,18 @@ namespace PT.UI
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Chỉ gửi qua HTTPS (production)
                 options.Cookie.SameSite = SameSiteMode.Lax; // Bảo vệ chống CSRF
                 options.Cookie.Name = ".PhamTrong.Auth"; // Tên cookie custom
-                
+
                 // Thời gian sống cookie: tăng từ 2 giờ lên 8 giờ để giảm phiền người dùng
                 options.ExpireTimeSpan = TimeSpan.FromHours(8);
-                
+
                 // Sliding expiration: gia hạn cookie khi user active (sau 1/2 thời gian ExpireTimeSpan)
                 options.SlidingExpiration = true;
-                
+
                 // Đường dẫn redirect
                 options.LoginPath = "/Login";
                 options.LogoutPath = "/Logout";
                 options.AccessDeniedPath = "/Admin/AccessDenied";
-                
+
                 // Tự động refresh cookie khi gần hết hạn
                 options.Events = new CookieAuthenticationEvents
                 {
@@ -261,15 +261,15 @@ namespace PT.UI
             // ✅ LOCALIZATION - Đa ngôn ngữ
             var baseSettings = Configuration.GetSection("BaseSettings").Get<BaseSettings>();
             var supportedCultures = ListData.ListLanguage.Select(x => new CultureInfo(x.Id)).ToArray();
-            
+
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-            
+
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = new RequestCulture(baseSettings.DefaultLanguage);
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
-                
+
                 // Fallback về parent culture nếu không tìm thấy resource (vd: en-US -> en)
                 options.FallBackToParentCultures = true;
                 options.FallBackToParentUICultures = true;
@@ -293,7 +293,7 @@ namespace PT.UI
             services.AddScoped<ILogRepository, LogRepository>();
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
-            
+
             // Content repositories
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ILinkRepository, LinkRepository>();
@@ -303,7 +303,7 @@ namespace PT.UI
             services.AddScoped<IContentPageTagRepository, ContentPageTagRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IPaymentTransactionRepository, PaymentTransactionRepository>();
-            
+
             // Business repositories
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IContactRepository, ContactRepository>();
@@ -337,7 +337,7 @@ namespace PT.UI
             // Services
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IAutoCssService, AutoCssService>();
-            
+
             // Generic repository
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
 
@@ -352,29 +352,29 @@ namespace PT.UI
             {
                 // Loại bỏ whitespace
                 options.MinificationSettings.WhitespaceMinificationMode = WebMarkupMin.Core.WhitespaceMinificationMode.Aggressive;
-                
+
                 // Loại bỏ tất cả comments (trừ conditional comments)
                 options.MinificationSettings.RemoveHtmlComments = true;
                 options.MinificationSettings.RemoveHtmlCommentsFromScriptsAndStyles = true;
-                
+
                 // Loại bỏ CDATA sections không cần thiết
                 options.MinificationSettings.RemoveCdataSectionsFromScriptsAndStyles = true;
-                
+
                 // Loại bỏ optional end tags
                 options.MinificationSettings.RemoveOptionalEndTags = false; // Giữ lại để tránh break layout
-                
+
                 // Collapse whitespace trong attributes
                 options.MinificationSettings.CollapseBooleanAttributes = true;
-                
+
                 // Loại bỏ quotes không cần thiết trong attributes
                 options.MinificationSettings.RemoveRedundantAttributes = true;
-                
+
                 // Loại bỏ empty attributes
                 options.MinificationSettings.RemoveEmptyAttributes = true;
-                
+
                 // Minify inline CSS
                 options.MinificationSettings.MinifyInlineCssCode = true;
-                
+
                 // Minify inline JavaScript
                 options.MinificationSettings.MinifyInlineJsCode = true;
             });
@@ -383,11 +383,11 @@ namespace PT.UI
             services.AddResponseCompression(options =>
             {
                 options.EnableForHttps = true; // Bật compression cho HTTPS
-                
+
                 // Thứ tự providers: Brotli trước (nén tốt hơn), fallback Gzip
                 options.Providers.Add<BrotliCompressionProvider>(); // Brotli: nén tốt hơn Gzip 15-20%
                 options.Providers.Add<GzipCompressionProvider>();
-                
+
                 // MIME types được nén
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
                 {
@@ -407,14 +407,14 @@ namespace PT.UI
                     "application/font-woff2"
                 });
             });
-            
+
             // ✅ COMPRESSION PROVIDERS - Cấu hình mức độ nén
             services.Configure<BrotliCompressionProviderOptions>(options =>
             {
                 // Brotli: Optimal = cân bằng giữa tốc độ và tỉ lệ nén
                 options.Level = CompressionLevel.Optimal;
             });
-            
+
             services.Configure<GzipCompressionProviderOptions>(options =>
             {
                 // Gzip: Fastest = nhanh nhất (thay vì Optimal) để giảm CPU usage
@@ -426,22 +426,22 @@ namespace PT.UI
             {
                 // Giới hạn multipart body = 200MB (≈ 200MB upload file)
                 options.MultipartBodyLengthLimit = 209_715_200;
-                
+
                 // Buffer size cho multipart (8KB mặc định)
                 options.MultipartBoundaryLengthLimit = 128;
-                
+
                 // Value count limit
                 options.ValueCountLimit = 1024;
             });
 
             // ✅ SESSION - Quản lý session state
             services.AddDistributedMemoryCache(); // Cache cho session (có thể thay bằng Redis)
-            
+
             services.AddSession(options =>
             {
                 // Session timeout: tăng từ 30 phút lên 60 phút (phù hợp với ExpireTimeSpan của cookie)
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
-                
+
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true; // Essential cookie (không cần consent)
@@ -453,9 +453,9 @@ namespace PT.UI
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false; // Legacy routing (MVC 2.x style)
-                
+
                 // ===== CACHE PROFILES - Định nghĩa các profile cache cho ResponseCache attribute =====
-                
+
                 // Profile 1: Cache ngắn 10 giây cho pagination/dynamic content
                 options.CacheProfiles.Add("Default10Seconds", new CacheProfile
                 {
@@ -478,7 +478,7 @@ namespace PT.UI
                     Location = ResponseCacheLocation.Any,
                     VaryByQueryKeys = new string[] { } // Không vary theo query
                 });
-                
+
                 // Profile 4: Cache 5 phút cho trang chủ, category pages
                 options.CacheProfiles.Add("Default5Minutes", new CacheProfile
                 {
@@ -486,12 +486,12 @@ namespace PT.UI
                     Location = ResponseCacheLocation.Any,
                     VaryByHeader = "Accept-Language" // Vary theo ngôn ngữ
                 });
-                
+
                 // ===== FILTERS - Thêm global filters =====
                 // options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); // CSRF protection
             })
             .AddViewLocalization(
-                LanguageViewLocationExpanderFormat.Suffix, 
+                LanguageViewLocationExpanderFormat.Suffix,
                 opts => { opts.ResourcesPath = "Resources"; }
             )
             .AddDataAnnotationsLocalization()
@@ -509,13 +509,13 @@ namespace PT.UI
         {
             // ✅ SERILOG - Đăng ký Serilog vào logging pipeline
             loggerFactory.AddSerilog();
-            
+
             // ✅ EXCEPTION HANDLING - Xử lý lỗi theo môi trường
             if (env.IsDevelopment())
             {
                 // Development: Hiển thị chi tiết lỗi
                 app.UseDeveloperExceptionPage();
-                
+
                 // ⭐ FORCE ENABLE CACHE TRONG DEVELOPMENT (để test)
                 // Bình thường ASP.NET Core tự động set no-cache trong dev mode
                 // Middleware này sẽ ghi đè no-cache header
@@ -533,7 +533,7 @@ namespace PT.UI
                         }
                         return Task.CompletedTask;
                     });
-                    
+
                     await next();
                 });
             }
@@ -542,7 +542,7 @@ namespace PT.UI
                 // Production: Trang lỗi tùy chỉnh
                 app.UseExceptionHandler("/Home/Error");
                 app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
-                
+
                 // ✅ HSTS - HTTP Strict Transport Security (bắt buộc HTTPS)
                 app.UseHsts(); // MaxAge mặc định = 30 ngày, có thể tùy chỉnh trong ConfigureServices
             }
@@ -565,26 +565,26 @@ namespace PT.UI
 
             // 3. Response Caching - Cache responses (fallback cho endpoints không dùng Output Cache)
             app.UseResponseCaching();
-            
+
             // 4. Security Headers - Thêm các header bảo mật
             app.Use(async (context, next) =>
             {
                 // X-Content-Type-Options: Ngăn MIME sniffing
                 //context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-                
+
                 //// X-Frame-Options: Chống clickjacking
                 //context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
-                
+
                 //// X-XSS-Protection: Bật XSS filter (legacy, nhưng vẫn hữu ích)
                 //context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
-                
+
                 //// Referrer-Policy: Kiểm soát referrer information
                 //context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
-                
+
                 // Content-Security-Policy: Chống XSS, injection (cấu hình cơ bản)
                 // Lưu ý: Cần test kỹ CSP vì có thể break tính năng
                 // context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';");
-                
+
                 await next();
             });
 
@@ -618,7 +618,7 @@ namespace PT.UI
             {
                 // Custom router
                 routes.Routes.Add(new CustomRouter(routes.DefaultHandler));
-                
+
                 // Admin area route
                 routes.MapRoute(
                     name: "areas",

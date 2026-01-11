@@ -42,8 +42,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="assets/img/logo/favicon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Tối ưu kết nối reCAPTCHA -->
+    <link rel="preconnect" href="https://www.google.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.google.com">
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -91,7 +95,9 @@
             @await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "FRMenuPC", language = language, portalId = portalId })
         </section>
         <!-- header area end -->
-        @RenderBody()
+        <main>
+            @RenderBody()
+        </main>
         <!-- footer area -->
         <div class="footter hidden-login">
             @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRHomeFooter", language = language, portalId = portalId })
@@ -102,7 +108,7 @@
         <partial name="~/Views/Home/_RegisterSolution.cshtml" model="@(new ContactSolotionModel { })" />
 
         <!-- scroll-top -->
-        <button class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button>
+        <button aria-label="Lên đầu trang" class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button>
         <!-- scroll-top end -->
         <div id="recaptcha-backdrop"></div>
         <div id="recaptcha-wrapper">
