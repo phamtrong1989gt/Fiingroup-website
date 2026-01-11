@@ -77,6 +77,9 @@ namespace PT.UI.Models
         public string Products { get; set; }
         [Display(Name = "Loại liên hệ")]
         public int Type { get; set; }
+
+        public string ConpanyName { get; set; }
+        public string Position { get; set; }
     }
 
 }

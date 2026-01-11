@@ -29,87 +29,47 @@
         linkData = (Link)ViewData["linkData"];
     }
 }
-
 <!DOCTYPE html>
 <html lang="@language">
 <head>
-    <!-- meta tags -->
     <meta charset="UTF-8">
-
     <meta name="robots" content="noindex">
     <meta name="googlebot" content="noindex">
-
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="assets/img/logo/favicon.png">
-    <!-- Tối ưu kết nối reCAPTCHA -->
-    <link rel="preconnect" href="https://www.google.com" crossorigin>
-    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://www.google.com">
-    <link rel="dns-prefetch" href="https://www.gstatic.com">
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link asp-append-version="true" rel="stylesheet" href="/assets/css/style.css" />
-    <link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" />
-    <link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" />
-    <link rel="stylesheet" href="/plugins/alertifyjs/css/alertify.min.css" />
-    <link href="/plugins/select2/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/plugins/alertifyjs/css/themes/default.min.css" />
-    <link asp-append-version="true" rel="stylesheet" href="/assets/css/custom.css" />
-    <link asp-append-version="true" rel="stylesheet" href="/assets/css/custom2.css" />
-    <link href="/assets/lib/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
-    <script src="/assets/js/jquery.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    </noscript>
+    <link rel="stylesheet" href="/vendor.bundle.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/site.bundle.min.css" asp-append-version="true" />
     <partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
-    @* Auto-generated CSS per view - Pure Razor *@
-    @{
-        try
-        {
-            var cssLinkId = linkData?.Id ?? 0;
-            if (cssLinkId >= 0)
-            {
-                // Ensure CSS file exists (create if not)
-                var cssFileCreated = await PT.UI.Helpers.AutoCssHelper.EnsureAutoCssFileAsync(_webHostEnvironment, cssLinkId, language);
-                var cssPath = PT.UI.Helpers.AutoCssHelper.GetAutoCssPath(cssLinkId, language);
-                <!-- Auto-generated CSS for this page -->
-                <link asp-append-version="true" rel="stylesheet" href="@cssPath" data-auto-css="link_@(cssLinkId)_@(language)" />
-            }
-        }
-        catch
-        {
-        }
-    }
-
+    <script src="/assets/js/jquery.min.js"></script>
     @Html.Raw(bindContentSetting.Head)
-
 </head>
 
 <body id="Body">
     <input type="hidden" id="linkId" value="@linkData?.Id" />
 
     <div class="body">
-        <!-- header area -->
         <section id="Header">
             @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRHomeBannerTop", language = language, portalId = portalId })
             @await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "FRMenuPC", language = language, portalId = portalId })
         </section>
-        <!-- header area end -->
         <main>
             @RenderBody()
         </main>
-        <!-- footer area -->
         <div class="footter hidden-login">
             @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRHomeFooter", language = language, portalId = portalId })
             @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRHomeFooterMenu", language = language, portalId = portalId })
         </div>
-        <!-- footer area end -->
         @await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "FRMenuMobile", language = language, portalId = portalId })
         <partial name="~/Views/Home/_RegisterSolution.cshtml" model="@(new ContactSolotionModel { })" />
-
-        <!-- scroll-top -->
-        <button aria-label="Lên đầu trang" class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button>
-        <!-- scroll-top end -->
+        <button aria-label="top" class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button>
         <div id="recaptcha-backdrop"></div>
         <div id="recaptcha-wrapper">
             <button id="recaptcha-close-btn" type="button">&times;</button>
@@ -120,20 +80,6 @@
             <div id="recaptcha-container"></div>
         </div>
     </div>
-    <!-- js -->
-    <script src="/plugins/jquery-validate/jquery.validate.min.js"></script>
-    <script src="/plugins/jquery-validate/jquery.validate.unobtrusive.min.js"></script>
-    <script src="/plugins/alertifyjs/alertify.min.js"></script>
-    <script src="/plugins/select2/select2.min.js"></script>
-    <script src="/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/bootstrap.js?v=5.5.9"></script>
-    <script src="/assets/js/owl.carousel.min.js?v=5.5.9"></script>
-    <script asp-append-version="true" src="/assets/js/site.js"></script>
-    <script src="/assets/js/waypoints.min.js"></script>
-    <script src="/assets/js/jquery.counterup.min.js"></script>
-    <script src="/assets/lib/fancybox/dist/jquery.fancybox.min.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
     <script>
         function prepareManualSlides($carousel){if(!$carousel||!$carousel.length)return;$carousel.find('.owl-stage .owl-item').each(function(){const $owlItem=$(this);let $content=$owlItem.children().first();if(!$content||!$content.length)return;if($content.hasClass('manual-slide')||$content.find('.manual-slide').length){$content.find('img').css({'max-width':'80%','max-height':'80%','object-fit':'contain'});return}
         $content.wrapInner('<div class="manual-slide"></div>');const $wrap=$content.find('.manual-slide').first();const $img=$wrap.find('img').first();if($img.length){$img.css({'max-width':'80%','max-height':'80%','object-fit':'contain','display':'block'})}else{const $bgEl=$wrap.find('[data-bg]').first();if($bgEl.length){const bg=$bgEl.attr('data-bg');if(bg)$bgEl.addClass('manual-bg').css('background-image','url('+bg+')')}}})}
@@ -149,6 +95,12 @@
         function hideRecaptchaPopup(){$("#recaptcha-backdrop").fadeOut(300);$("#recaptcha-wrapper").fadeOut(300);isRecaptchaShown=!1}
         $("#recaptcha-close-btn").on("click",function(){hideRecaptchaPopup()})
         $(document).ready(function(){var linkId=$('#linkId').val()||'0';$('.btn-lang .dropdown-menu a').each(function(){var $link=$(this);var currentHref=$link.attr('href');var language=currentHref.replace('/','');var newHref='@Url.Action("ChangeLanguage", "Home")'+'?language='+language+'&linkId='+linkId;$link.attr('href',newHref)})})
+    </script>
+    <script src="/vendor.bundle.min.js" asp-append-version="true"></script>
+    <script src="/site.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        var recaptchaSiteKey = '@_authorizeSettings.Value.CapChaDataSitekey';
+        var language = '@language';
     </script>
     @Html.Raw(bindContentSetting.Body)
 </body>

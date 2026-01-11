@@ -1,6 +1,7 @@
 ﻿@using Microsoft.Extensions.Options
 @inject PT.Infrastructure.Interfaces.IContactRepository _iContactRepository;
 @inject IOptions<BaseSettings> _baseSettings;
+@inject IViewLocalizer Localizer;
 
 @{
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
@@ -170,58 +171,29 @@
 }
 
 <script>
+    window.registerFormConfig = {
+        // URLs
+        urls: {
+            contact: '@Url.Action("Contact", "ContactHome")',
+            flowSelectList: '@Url.Action("FlowSelectList", "ContactHome")'
+        },
+        // Localized strings
+        i18n: {
+            selectProducts: '@Localizer["SelectProducts"]',
+            otherProduct: '@Localizer["OtherProduct"]',
+            msgNotUse: '@Localizer["MsgNotUse"]',
+            noProducts: '@Localizer["NoProducts"]',
+            errorMessage: 'Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!'
+        },
+        language: '@language',
+        portalId: @portalId
+    };
 
-    $(function () {
-            $('#sanPhamQT').select2({
-               placeholder: "@(language == "vi" ? "" : "")",
-               closeOnSelect: false,
-               allowHtml: true,
-               allowClear: true,
-               tags: true
-            });
-      const $form = $('#formLienHe');
-      $form.on('submit', function (e) {
-        e.preventDefault();
-        if (!$form.valid()) {
-          return;
-        }
-        const token = $form.find('input[name="__RequestVerificationToken"]').val();
-        $.ajax({
-          url: '@Url.Action("Contact", "ContactHome")',
-          type: 'POST',
-          data: $form.serialize(),
-          headers: { 'RequestVerificationToken': token },
-          success: function (res) {
-            if(res.output == 1)
-            {
-                alertify.success(res.message);
-                $form[0].reset();
-                $("#products").val("");
-                $('#sanPhamQT').val(null).trigger('change');
-                hideRecaptchaPopup();
-                if (recaptchaWidgetId !== null) {
-                    grecaptcha.reset(recaptchaWidgetId);
-                }
-            }
-            else if (res.output == 69) {
-                showRecaptchaPopup("[btnSendLH]");
-                return;
-            }
-          },
-          error: function (xhr) {
-            alertify.warning('@(language == "vi" ? "Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!" : "An error occurred, please refresh and try again!")');
-          }
-        });
-      });
-    });
-
-    $("#sanPhamQT").on("change", function () {
-        let selected = $(this).val();
-        if (selected && selected.length > 0) {
-            $("#products").val(selected.join("; "));
+    $(document).ready(function() {
+        if (typeof initRegisterForm === 'function') {
+            initRegisterForm(window.registerFormConfig);
         } else {
-            $("#products").val("");
+            console.error('initRegisterForm function not found in site.js');
         }
     });
-
 </script>

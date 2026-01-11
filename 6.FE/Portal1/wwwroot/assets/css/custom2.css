@@ -1,6 +1,5 @@
 ﻿:root {
     --Base-Brand-Blue: rgba(0, 102, 204, 1);
-    /*--Text-Primary: rgba(29, 41, 57, 1) ;*/
     --Text-Primary: #093461;
     --Base-Brand-FiinNavy: rgba(9, 52, 97, 1)
 }
@@ -172,88 +171,98 @@ a.btn.btn-primary.btn-join {
     .menu-bar .mn-group .mn-group-items .gr-item {
         display: flex;
     }
-    /*end menu*/
-    /*button hover*/
-    .btn-primary {
-        transition: all .3s;
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
 
-        &:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 102, 204, 1);
-            border-radius: 10rem;
-            z-index: -2;
-        }
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all .3s;
+    display: inline-block; /* đảm bảo pseudo-element hiển thị */
+    border-radius: 10rem;
+    color: #000; /* màu chữ mặc định */
+}
 
-        &:before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0%;
-            height: 100%;
-            background-color: #04417f;
-            transition: all .3s;
-            border-radius: 10rem;
-            z-index: -1;
-        }
-
-        &:hover {
-            color: #fff;
-
-            &:before {
-                width: 100%;
-            }
-        }
+    /* lớp nền chính */
+    .btn-primary::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 102, 204, 1);
+        border-radius: 10rem;
+        z-index: -2;
     }
 
-    #WhatWe .btn-about, #SliderBanner .btn-request {
+    /* lớp nền hiệu ứng hover */
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background-color: #04417f;
         transition: all .3s;
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
-
-        &:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #fff;
-            border-radius: 10rem;
-            z-index: -2;
-        }
-
-        &:before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0%;
-            height: 100%;
-            background-color: #04417f;
-            transition: all .3s;
-            border-radius: 10rem;
-            z-index: -1;
-        }
-
-        &:hover {
-            color: #fff;
-
-            &:before {
-                width: 100%;
-            }
-        }
+        border-radius: 10rem;
+        z-index: -1;
     }
-    /*end button hover*/
+
+    .btn-primary:hover {
+        color: #fff;
+    }
+
+        .btn-primary:hover::before {
+            width: 100%;
+        }
+
+#WhatWe .btn-about,
+#SliderBanner .btn-request {
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    color: #04417f;
+}
+
+    #WhatWe .btn-about::after,
+    #SliderBanner .btn-request::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        border-radius: 10rem;
+        z-index: -2;
+    }
+
+    #WhatWe .btn-about::before,
+    #SliderBanner .btn-request::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background-color: #04417f;
+        transition: width 0.3s ease;
+        border-radius: 10rem;
+        z-index: -1;
+    }
+
+    #WhatWe .btn-about:hover,
+    #SliderBanner .btn-request:hover {
+        color: #fff;
+    }
+
+        #WhatWe .btn-about:hover::before,
+        #SliderBanner .btn-request:hover::before {
+            width: 100%;
+        }
+   
 .dang-ky-card:hover {
     background: #0066cc;
     color: #fff;
@@ -355,10 +364,6 @@ a.btn.btn-primary.btn-join {
     animation: 1s linear infinite spin
 }
 
-100% {
-    transform: rotate(360deg)
-}
-
 #btnClose, #recaptcha-close-btn {
     position: absolute;
     top: -15px;
@@ -429,7 +434,7 @@ a.btn.btn-primary.btn-join {
 }
 
 .row.row2 {
-    --bs-gutter-x: 4rem; /* tăng khoảng cách ngang giữa các col */
+    --bs-gutter-x: 4rem;
 }
 
 .why-desc {
