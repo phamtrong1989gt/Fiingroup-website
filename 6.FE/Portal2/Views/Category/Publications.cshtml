@@ -9,218 +9,417 @@
 @inject PT.Infrastructure.Interfaces.ICategoryRepository _iCategoryRepository;
 
 @{
-	Layout = "~/Views/Shared/_Home.cshtml";
-	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-	var portalId = _baseSettings.Value.PortalId;
+    Layout = "~/Views/Shared/_Home.cshtml";
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var portalId = _baseSettings.Value.PortalId;
 
-	var listCategory = new List<Category>();
-	if (Model.ParentId == 0)
-	{
-		listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Publications || x.CategoryType == ECategoryType.ContentPage_Report) && x.ParentId == 0 && x.Status && x.Language == language && x.PortalId == portalId);
-	}
-	else
-	{
-		listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Publications || x.CategoryType == ECategoryType.ContentPage_Report) && x.Status && x.ParentId == Model.ParentId && x.Language == language && x.PortalId == portalId);
-	}
+    var listCategory = new List<Category>();
+    if (Model.ParentId == 0)
+    {
+        listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Publications || x.CategoryType == ECategoryType.ContentPage_Report) && x.ParentId == 0 && x.Status && x.Language == language && x.PortalId == portalId);
+    }
+    else
+    {
+        listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Publications || x.CategoryType == ECategoryType.ContentPage_Report) && x.Status && x.ParentId == Model.ParentId && x.Language == language && x.PortalId == portalId);
+    }
 }
 
 <style>
-	.btn-active,body{background:#fff}.item-date{font-weight:400;font-size:18px;line-height:150%;display:flex;align-items:center;color:#fff}.btn-active,.btn-noactive{display:flex;padding:12px 40px;gap:40px;width:302px;height:72px;border-radius:12px;font-size:24px;font-weight:500}.news-title,.pub-title{line-height:120%;order:0;align-self:stretch;overflow:hidden}.item-date i{padding:0 10px 0 0;width:30px}.item-date .item-label{padding:0 10px 0 0;width:126px}#NewButton{align-items:center;justify-content:center;margin:-1.5% 0 0}.btn-active{flex-direction:row;justify-content:center;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.08);color:#093461;margin:0 10px}.btn-active:hover{background:#f6f6f6}.btn-noactive{flex-direction:row;justify-content:center;align-items:center;background:#06c;box-shadow:0 8px 20px rgba(0,102,204,.12),0 -8px 20px rgba(255,255,255,.2);color:#fff}#search #search-input,.date-input{gap:10px;height:38px;background:#fff;display:flex}.news-title,.no-data-messege,.pub-title{font-weight:700;font-size:28px}.btn-noactive:hover{background:#0f65ba;color:#fff}.btn-reset{color:#06c}#search #search-input{flex-direction:column;align-items:flex-start;padding:12px;width:485px;border:1px solid #034ea2;border-radius:4px}#search{position:relative;font-size:18px}#search label{position:absolute;right:8px;top:6px;color:#034ea2}.date-input{flex-direction:column;align-items:flex-start;padding:6px;border:1px solid #034ea2;border-radius:4px;color:#838282}.mr-2{margin:0 1rem}.btn-search{display:flex;flex-direction:row;justify-content:center;align-items:center;padding:10px 50px;height:40px;background:#06c;border-radius:200px}.no-data-messege{font-style:normal;text-align:center;color:#093461}.pub-title{height:80px;display:flex;align-items:center;color:#1d2939;flex:none;flex-grow:0}.show-download{color:#06c;text-decoration:underline}.pub-list-tag button{margin:0 10px 0 0}.btn-tag{display:flex;flex-direction:row;justify-content:center;align-items:center;padding:12px 16px;gap:8px;width:148px;height:40px;background:#e9f0fb;border-radius:8px}.btn-tag:hover{background:#e1f4fd}.btn-tag-active{background:#e1f4fd!important}.news-img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center;border-radius:12px;border:1px solid #eee}
+    .btn-active, body {
+        background: #fff
+    }
 
-	.loader {
-		width: 18px;
-		height: 18px;
-		border: 2px solid rgba(255,255,255,.3);
-		border-top: 2px solid #fff;
-		border-radius: 50%;
-		animation: 1s linear infinite spin;
-		display: inline-block;
-		margin-left: 8px;
-		position: absolute;
-		left: 5px
-	}
+    .item-date {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 150%;
+        display: flex;
+        align-items: center;
+        color: #fff
+    }
 
-	to {
-		transform: rotate(360deg)
-	}
-	.news-title {
-		display: block;
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 3;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		color: #1d2939;
-		font-size: 20px;
-		line-height: 30px;
-		max-height: calc(30px * 3);
-		word-break: break-word;
-		font-weight: 600;
-	}
+    .btn-active, .btn-noactive {
+        display: flex;
+        padding: 12px 40px;
+        gap: 40px;
+        width: 302px;
+        height: 72px;
+        border-radius: 12px;
+        font-size: 24px;
+        font-weight: 500
+    }
+
+    .news-title, .pub-title {
+        line-height: 120%;
+        order: 0;
+        align-self: stretch;
+        overflow: hidden
+    }
+
+    .item-date i {
+        padding: 0 10px 0 0;
+        width: 30px
+    }
+
+    .item-date .item-label {
+        padding: 0 10px 0 0;
+        width: 126px
+    }
+
+    #NewButton {
+        align-items: center;
+        justify-content: center;
+        margin: -1.5% 0 0
+    }
+
+    .btn-active {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,.08);
+        color: #093461;
+        margin: 0 10px
+    }
+
+        .btn-active:hover {
+            background: #f6f6f6
+        }
+
+    .btn-noactive {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background: #06c;
+        box-shadow: 0 8px 20px rgba(0,102,204,.12),0 -8px 20px rgba(255,255,255,.2);
+        color: #fff
+    }
+
+    #search #search-input, .date-input {
+        gap: 10px;
+        height: 38px;
+        background: #fff;
+        display: flex
+    }
+
+    .news-title, .no-data-messege, .pub-title {
+        font-weight: 700;
+        font-size: 28px
+    }
+
+    .btn-noactive:hover {
+        background: #0f65ba;
+        color: #fff
+    }
+
+    .btn-reset {
+        color: #06c
+    }
+
+    #search #search-input {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px;
+        width: 485px;
+        border: 1px solid #034ea2;
+        border-radius: 4px
+    }
+
+    #search {
+        position: relative;
+        font-size: 18px
+    }
+
+        #search label {
+            position: absolute;
+            right: 8px;
+            top: 6px;
+            color: #034ea2
+        }
+
+    .date-input {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 6px;
+        border: 1px solid #034ea2;
+        border-radius: 4px;
+        color: #838282
+    }
+
+    .mr-2 {
+        margin: 0 1rem
+    }
+
+    .btn-search {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 50px;
+        height: 40px;
+        background: #06c;
+        border-radius: 200px
+    }
+
+    .no-data-messege {
+        font-style: normal;
+        text-align: center;
+        color: #093461
+    }
+
+    .pub-title {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        color: #1d2939;
+        flex: none;
+        flex-grow: 0
+    }
+
+    .show-download {
+        color: #06c;
+        text-decoration: underline
+    }
+
+    .pub-list-tag button {
+        margin: 0 10px 0 0
+    }
+
+    .btn-tag {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 16px;
+        gap: 8px;
+        width: 148px;
+        height: 40px;
+        background: #e9f0fb;
+        border-radius: 8px
+    }
+
+        .btn-tag:hover {
+            background: #e1f4fd
+        }
+
+    .btn-tag-active {
+        background: #e1f4fd !important
+    }
+
+    .news-img {
+        width: 100%;
+        aspect-ratio: 16/10;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+        border: 1px solid #eee
+    }
+
+    .loader {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255,255,255,.3);
+        border-top: 2px solid #fff;
+        border-radius: 50%;
+        animation: 1s linear infinite spin;
+        display: inline-block;
+        margin-left: 8px;
+        position: absolute;
+        left: 5px
+    }
+
+    to {
+        transform: rotate(360deg)
+    }
+
+    .news-title {
+        display: block;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #1d2939;
+        font-size: 20px;
+        line-height: 30px;
+        max-height: calc(30px * 3);
+        word-break: break-word;
+        font-weight: 600;
+    }
 </style>
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "PublicationsBanner", language = language, portalId = portalId })
 
 <section id="NewButton">
-	<div class="container">
-		<div class="row d-flex justify-content-center">
-			<div class="row d-flex justify-content-center">
-				@foreach (var item in listCategory)
-				{
-					string url = PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
-					if (item.Id == Model.Id)
-					{
-						<a class="btn btn-active" title="@item.Name" href="@url">@item.Name</a>
-					}
-					else
-					{
-						<a class="btn btn-noactive" title="@item.Name" href="@url">@item.Name</a>
-					}
-				}
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="row d-flex justify-content-center">
+                @foreach (var item in listCategory)
+                {
+                    string url = PT.Shared.Functions.FormatUrl(@language, item.Link?.Slug);
+                    if (item.Id == Model.Id)
+                    {
+                        <a class="btn btn-active" title="@item.Name" href="@url">@item.Name</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-noactive" title="@item.Name" href="@url">@item.Name</a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
 </section>
 
 
 
 <section id="FiinGroup">
-	<div class="container">
-		<form method="get">
-			<div class="d-flex justify-content-start mt-5 menu-news">
-				<section id="search" class="mr-2" style="margin-left:0px;">
-					<input id="search-input" name="key" type="text" class="form-control input-lg" placeholder="@Localizer["SearchHere"] ..." autocomplete="off" spellcheck="false" autocorrect="off" tabindex="1">
-					<label for="search-input"><i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">Search icons</span></label>
-				</section>
+    <div class="container">
+        <form method="get">
+            <div class="d-flex justify-content-start mt-5 menu-news">
+                <section id="search" class="mr-2" style="margin-left:0px;">
+                    <input id="search-input" name="key" type="text" class="form-control input-lg" placeholder="@Localizer["SearchHere"] ..." autocomplete="off" spellcheck="false" autocorrect="off" tabindex="1">
+                    <label for="search-input"><i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">Search icons</span></label>
+                </section>
 
-				<div style="position:relative;">
-					<input style="width:140px;" id="startDate" lang="vi" name="startDate" class="date-input mr-2" value="" type="text" placeholder="dd/MM/yyyy" />
-					<span style="position: absolute;right: 29px;top: 6px;font-weight: bold;color: #034ea2;" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-				</div>
+                <div style="position:relative;">
+                    <input style="width:140px;" id="startDate" lang="vi" name="startDate" class="date-input mr-2" value="" type="text" placeholder="@(language == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy")" />
+                    <span style="position: absolute;right: 29px;top: 6px;font-weight: bold;color: #034ea2;" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
 
-				<div style="position:relative;">
-					<input style="width:140px;" id="endDate" lang="vi" name="endDate" class="date-input mr-2" value="" type="text" placeholder="dd/MM/yyyy" />
-					<span style="position: absolute;right: 29px;top: 6px;font-weight: bold;color: #034ea2;" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-				</div>
+                <div style="position:relative;">
+                    <input style="width:140px;" id="endDate" lang="vi" name="endDate" class="date-input mr-2" value="" type="text" placeholder="@(language == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy")" />
+                    <span style="position: absolute;right: 29px;top: 6px;font-weight: bold;color: #034ea2;" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
 
-				<button type="button" class="btn btn-reset btn-clear">
-					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M8.0007 15.1666C4.53404 15.1666 1.7207 12.3466 1.7207 8.88659C1.7207 7.63993 2.08737 6.43326 2.7807 5.39326C2.93404 5.16659 3.24737 5.09993 3.47404 5.25326C3.7007 5.4066 3.76737 5.71993 3.61404 5.94659C3.03404 6.81326 2.72737 7.83326 2.72737 8.87993C2.72737 11.7933 5.09404 14.1599 8.00737 14.1599C10.9207 14.1599 13.2874 11.7933 13.2874 8.87993C13.2874 5.96659 10.914 3.59993 8.0007 3.59993C7.38737 3.59993 6.78737 3.68659 6.2207 3.85993C5.95404 3.93993 5.67404 3.79326 5.59404 3.52659C5.51404 3.25993 5.6607 2.97993 5.92737 2.89993C6.59404 2.69993 7.28737 2.59326 8.0007 2.59326C11.4674 2.59326 14.2807 5.41326 14.2807 8.87326C14.2807 12.3333 11.4674 15.1666 8.0007 15.1666Z" fill="#0066CC" />
-						<path d="M5.24625 4.04658C5.13292 4.04658 5.01292 4.00658 4.91959 3.92658C4.70626 3.73992 4.68626 3.42658 4.86626 3.21992L6.79292 1.00658C6.97292 0.799918 7.29292 0.773251 7.49959 0.959918C7.70625 1.13992 7.72625 1.45992 7.54625 1.66658L5.61959 3.87325C5.51959 3.98658 5.37959 4.04658 5.24625 4.04658Z" fill="#0066CC" />
-						<path d="M7.49241 5.68659C7.39241 5.68659 7.28574 5.65325 7.19907 5.59325L4.94574 3.94659C4.72574 3.78659 4.67907 3.47325 4.83907 3.25325C4.99907 3.02659 5.31241 2.97992 5.53907 3.13992L7.78574 4.77992C8.00574 4.93992 8.05907 5.25325 7.89241 5.47992C7.79907 5.61992 7.64574 5.68659 7.49241 5.68659Z" fill="#0066CC" />
-					</svg>
-					@Localizer["FilterButton"]
-				</button>
-				<button style="margin-right:0px;" type="button" class="btn btn-primary btn-search" id="btn-search" onclick="getNewsAjax(1)">@Localizer["SearchButton"] <span id="news-loading" class="loader d-none" aria-hidden="true"></span></button>
-			</div>
-		</form>
-		<div id="content-bind">
-			<partial name="PublicationsAjax" model="Model.DataAPI" />
-		</div>
-	</div>
+                <button type="button" class="btn btn-reset btn-clear">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.0007 15.1666C4.53404 15.1666 1.7207 12.3466 1.7207 8.88659C1.7207 7.63993 2.08737 6.43326 2.7807 5.39326C2.93404 5.16659 3.24737 5.09993 3.47404 5.25326C3.7007 5.4066 3.76737 5.71993 3.61404 5.94659C3.03404 6.81326 2.72737 7.83326 2.72737 8.87993C2.72737 11.7933 5.09404 14.1599 8.00737 14.1599C10.9207 14.1599 13.2874 11.7933 13.2874 8.87993C13.2874 5.96659 10.914 3.59993 8.0007 3.59993C7.38737 3.59993 6.78737 3.68659 6.2207 3.85993C5.95404 3.93993 5.67404 3.79326 5.59404 3.52659C5.51404 3.25993 5.6607 2.97993 5.92737 2.89993C6.59404 2.69993 7.28737 2.59326 8.0007 2.59326C11.4674 2.59326 14.2807 5.41326 14.2807 8.87326C14.2807 12.3333 11.4674 15.1666 8.0007 15.1666Z" fill="#0066CC" />
+                        <path d="M5.24625 4.04658C5.13292 4.04658 5.01292 4.00658 4.91959 3.92658C4.70626 3.73992 4.68626 3.42658 4.86626 3.21992L6.79292 1.00658C6.97292 0.799918 7.29292 0.773251 7.49959 0.959918C7.70625 1.13992 7.72625 1.45992 7.54625 1.66658L5.61959 3.87325C5.51959 3.98658 5.37959 4.04658 5.24625 4.04658Z" fill="#0066CC" />
+                        <path d="M7.49241 5.68659C7.39241 5.68659 7.28574 5.65325 7.19907 5.59325L4.94574 3.94659C4.72574 3.78659 4.67907 3.47325 4.83907 3.25325C4.99907 3.02659 5.31241 2.97992 5.53907 3.13992L7.78574 4.77992C8.00574 4.93992 8.05907 5.25325 7.89241 5.47992C7.79907 5.61992 7.64574 5.68659 7.49241 5.68659Z" fill="#0066CC" />
+                    </svg>
+                    @Localizer["FilterButton"]
+                </button>
+                <button style="margin-right:0px;" type="button" class="btn btn-primary btn-search" id="btn-search" onclick="getNewsAjax(1)">@Localizer["SearchButton"] <span id="news-loading" class="loader d-none" aria-hidden="true"></span></button>
+            </div>
+        </form>
+        <div id="content-bind">
+            <partial name="PublicationsAjax" model="Model.DataAPI" />
+        </div>
+    </div>
 </section>
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "NewsDeliver", language = language, portalId = portalId })
 
 @section Scripts {
-	<script src="~/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-	<link href="~/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
-	<script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-au.min.js"></script>
-	<script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js"></script>
-	<script>
-		(function ($) {
+    <script src="~/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <link href="~/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-au.min.js"></script>
+    <script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js"></script>
+    <script>
+        (function ($) {
+            var lang = '@language';
+            $('#startDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true
+            });
 
-			 $('#startDate').datepicker({
-				format: "dd/mm/yyyy",
-				language: "@language",
-				 todayHighlight: true
-			});
+            $('#endDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true
+            });
 
-			$('#endDate').datepicker({
-				format: "dd/mm/yyyy",
-				language: "@language",
-				todayHighlight: true
-			});
-
-			var newsAjaxUrl = '@Url.Action("PublicationsAjax", "Category", new { language = language })';
-			var currentLanguage = '@language';
+            var newsAjaxUrl = '@Url.Action("PublicationsAjax", "Category", new { language = language })';
+            var currentLanguage = '@language';
 
 
-		function buildParams(page) {
-				  var keyword = $('#search-input').val() || '';
-				  var fromDate = $('#startDate').val() || '';
-				  var toDate = $('#endDate').val() || '';
+        function buildParams(page) {
+                  var keyword = $('#search-input').val() || '';
+                  var fromDate = $('#startDate').val() || '';
+                  var toDate = $('#endDate').val() || '';
 
-				  // Convert date format from dd/MM/yyyy to yyyy-MM-dd
-				  if (fromDate) {
-					  var fromParts = fromDate.split('/');
-					  if (fromParts.length === 3) {
-						  fromDate = fromParts[2] + '-' + fromParts[1] + '-' + fromParts[0];
-					  }
-				  }
+                if (fromDate) {
+                    var fromParts = fromDate.split('/');
+                    if (fromParts.length === 3) {
+                        if(lang !== "vi") {
+                            fromDate = fromParts[2] + '-' + fromParts[0] + '-' + fromParts[1];
+                        }
+                        else
+                        {
+                            fromDate = fromParts[2] + '-' + fromParts[1] + '-' + fromParts[0];
+                        }
+                    }
+                }
 
-				  if (toDate) {
-					  var toParts = toDate.split('/');
-					  if (toParts.length === 3) {
-						  toDate = toParts[2] + '-' + toParts[1] + '-' + toParts[0];
-					  }
-				  }
+                if (toDate) {
+                    var toParts = toDate.split('/');
+                    if (toParts.length === 3) {
+                        if(lang !== "vi") {
+                            toDate = toParts[2] + '-' + toParts[0] + '-' + toParts[1];
+                        }
+                        else
+                        {
+                            toDate = toParts[2] + '-' + toParts[1] + '-' + toParts[0];
+                        }
+                    }
+                }
 
-				  return {
-					  Page: page ||1,
-					  Keyword: keyword,
-					  FromDate: fromDate,
-					  ToDate: toDate,
-					  Language: currentLanguage,
-					  CategoryIds: '@ViewData["ExCategoryIds"]'
-				  };
-			  }
+                  return {
+                      Page: page ||1,
+                      Keyword: keyword,
+                      FromDate: fromDate,
+                      ToDate: toDate,
+                      Language: currentLanguage,
+                      CategoryIds: '@ViewData["ExCategoryIds"]'
+                  };
+              }
 
-			function showLoading() {
-				$('#news-loading').removeClass('d-none');
-				$('#btn-search').prop('disabled', true).attr('aria-busy', 'true');
-			}
+            function showLoading() {
+                $('#news-loading').removeClass('d-none');
+                $('#btn-search').prop('disabled', true).attr('aria-busy', 'true');
+            }
 
-			function hideLoading() {
-				$('#news-loading').addClass('d-none');
-				$('#btn-search').prop('disabled', false).removeAttr('aria-busy');
-			}
+            function hideLoading() {
+                $('#news-loading').addClass('d-none');
+                $('#btn-search').prop('disabled', false).removeAttr('aria-busy');
+            }
 
-			window.getNewsAjax = function(page) {
-				page = page ||1;
-				var params = buildParams(page);
+            window.getNewsAjax = function(page) {
+                page = page ||1;
+                var params = buildParams(page);
 
-				showLoading();
+                showLoading();
 
-				$.get(newsAjaxUrl, params)
-					.done(function (html) {
-						$('#content-bind').html(html);
-					})
-					.fail(function () {
-						$('#content-bind').html('<div class="no-data-messege">No data</div>');
-					})
-					.always(function () {
-						hideLoading();
-					});
-			};
+                $.get(newsAjaxUrl, params)
+                    .done(function (html) {
+                        $('#content-bind').html(html);
+                    })
+                    .fail(function () {
+                        $('#content-bind').html('<div class="no-data-messege">No data</div>');
+                    })
+                    .always(function () {
+                        hideLoading();
+                    });
+            };
 
-			$(function () {
-				// initial load (if page has query params, keep them)
-				var urlParams = new URLSearchParams(window.location.search);
-				var initialKey = urlParams.get('key');
-				var initialFrom = urlParams.get('startDate');
-				var initialTo = urlParams.get('endDate');
+            $(function () {
+                // initial load (if page has query params, keep them)
+                var urlParams = new URLSearchParams(window.location.search);
+                var initialKey = urlParams.get('key');
+                var initialFrom = urlParams.get('startDate');
+                var initialTo = urlParams.get('endDate');
 
-				if (initialKey) $('#search-input').val(initialKey);
-				if (initialFrom) $('#startDate').val(initialFrom);
-				if (initialTo) $('#endDate').val(initialTo);
+                if (initialKey) $('#search-input').val(initialKey);
+                if (initialFrom) $('#startDate').val(initialFrom);
+                if (initialTo) $('#endDate').val(initialTo);
 
-				// Clear button should clear and submit form to reload server-side results
-				$('.btn-clear').on('click', function () {
-					$('#search-input').val('');
-					$('#startDate, #endDate').val('');
-				});
-			});
-		})(jQuery);
-	</script>
+                // Clear button should clear and submit form to reload server-side results
+                $('.btn-clear').on('click', function () {
+                    $('#search-input').val('');
+                    $('#startDate, #endDate').val('');
+                });
+            });
+        })(jQuery);
+    </script>
 }

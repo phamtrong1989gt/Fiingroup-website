@@ -9,109 +9,76 @@
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment _webHostEnvironment;
 
 @{
-	string domain = Context.Request.Host.ToString();
-	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
-	var listLanguage = PT.Shared.ListData.ListLanguage;
-	var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
-	var portalId = _baseSettings.Value.PortalId;
-	var seoSettings = await _settingService.SeoSettingGet(language, portalId);
+    string domain = Context.Request.Host.ToString();
+    string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
+    var listLanguage = PT.Shared.ListData.ListLanguage;
+    var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
+    var portalId = _baseSettings.Value.PortalId;
+    var seoSettings = await _settingService.SeoSettingGet(language, portalId);
     var bindContentSetting = await _settingService.BindContentSettingGet(portalId);
-	var homeModel = new HomeModel
-	{
-		Domain = domain,
-		SeoSetting = seoSettings ?? new SeoSetting()
-	};
-	var currentType = PT.Base.CookieExtensions.Get("CurrentPrice");
+    var homeModel = new HomeModel
+    {
+        Domain = domain,
+        SeoSetting = seoSettings ?? new SeoSetting()
+    };
+    var currentType = PT.Base.CookieExtensions.Get("CurrentPrice");
 
-	var linkData = new Link();
-	if (ViewData["linkData"] != null)
-	{
-		linkData = (Link)ViewData["linkData"];
-	}
+    var linkData = new Link();
+    if (ViewData["linkData"] != null)
+    {
+        linkData = (Link)ViewData["linkData"];
+    }
 }
 
 <!DOCTYPE html>
 <html lang="@language">
 <head>
-	<!-- meta tags -->
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" type="image/x-icon" href="assets/img/logo/favicon.png">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-	<noscript>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-	</noscript>
-	<link rel="stylesheet" href="/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css" />
-	<link asp-append-version="true" rel="stylesheet" href="/assets/css/style.css" />
-	<link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" />
-	<link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" />
-	<link rel="stylesheet" href="/plugins/alertifyjs/css/alertify.min.css" />
-	<link href="/plugins/select2/select2.min.css" rel="stylesheet" />
-	<link rel="stylesheet" href="/plugins/alertifyjs/css/themes/default.min.css" />
-	<link href="/assets/lib/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
-	<link asp-append-version="true" rel="stylesheet" href="/assets/css/custom.css" />
-	<link asp-append-version="true" rel="stylesheet" href="/assets/css/custom2.css" />
-	<link asp-append-version="true" href="~/assets/css/custom3.css" rel="stylesheet" />
-	@{
-		try
-		{
-			var cssLinkId = linkData?.Id ?? 0;
-			if (cssLinkId >= 0)
-			{
-				var cssFileCreated = await PT.UI.Helpers.AutoCssHelper.EnsureAutoCssFileAsync(_webHostEnvironment, cssLinkId, language);
-				var cssPath = PT.UI.Helpers.AutoCssHelper.GetAutoCssPath(cssLinkId, language);
-				<link asp-append-version="true" rel="stylesheet" href="@cssPath" data-auto-css="link_@(cssLinkId)_@(language)" />
-			}
-		}
-		catch {}
-	}
-	<partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
-	<script src="/assets/js/jquery.min.js"></script>
-	@Html.Raw(bindContentSetting.Head)
+    <!-- meta tags -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/img/logo/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    </noscript>
+    <link rel="stylesheet" href="/vendor.bundle.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/site.bundle.min.css" asp-append-version="true" />
+    <partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
+    <script src="/assets/js/jquery.min.js"></script>
+    @Html.Raw(bindContentSetting.Head)
 </head>
 
 <body id="Body">
     <input type="hidden" id="linkId" value="@linkData?.Id" />
-	<div class="body">
-		<!-- header area -->
-		<section id="Header">
-			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeBannerTop", language = language, portalId = portalId })
-			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuPC", language = language, portalId = portalId })
-		</section>
-		<!-- header area end -->
-		@RenderBody()
-		<!-- footer area -->
-		<div class="footter hidden-login">
-			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeFooter", language = language, portalId = portalId })
-			@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeFooterMenu", language = language, portalId = portalId })
-		</div>
-		<!-- footer area end -->
-		@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuMobile", language = language, portalId = portalId })
-		<partial name="~/Views/Home/_RegisterSolution.cshtml" model="@(new ContactSolotionModel { })" /> 
-		<button aria-label="Lên đầu trang - Move top" class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button><div id="recaptcha-backdrop"></div><div id="recaptcha-wrapper"><button id="recaptcha-close-btn" type="button">&times;</button><div id="recaptcha-loading"><div class="spinner"></div><p>@Localizer["Đang tải xác thực..."]</p></div><div id="recaptcha-container"></div></div>
-	</div>
-	<!-- js -->
-	<script src="/plugins/jquery-validate/jquery.validate.min.js"></script>
-	<script src="/plugins/jquery-validate/jquery.validate.unobtrusive.min.js"></script>
-	<script src="/plugins/alertifyjs/alertify.min.js"></script>
-	<script src="/plugins/select2/select2.min.js"></script>
-	<script src="/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js"></script>
-	<script src="/assets/js/bootstrap.js?v=5.5.9"></script>
-	<script src="/assets/js/owl.carousel.min.js?v=5.5.9"></script>
-	<script src="/assets/js/waypoints.min.js"></script>
-	<script src="/assets/js/jquery.counterup.min.js"></script>
-	<script src="/assets/lib/fancybox/dist/jquery.fancybox.min.js"></script>
-	<script asp-append-version="true" src="/assets/js/site.js"></script>
-	<script>
-		var recaptchaSiteKey = '@_authorizeSettings.Value.CapChaDataSitekey';
-		var language = '@language';
-	</script>
-	@Html.Raw(bindContentSetting.Body)
+    <div class="body">
+        <!-- header area -->
+        <section id="Header">
+            @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeBannerTop", language = language, portalId = portalId })
+            @await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuPC", language = language, portalId = portalId })
+        </section>
+        <!-- header area end -->
+        @RenderBody()
+        <!-- footer area -->
+        <div class="footter hidden-login">
+            @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeFooter", language = language, portalId = portalId })
+            @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "HomeFooterMenu", language = language, portalId = portalId })
+        </div>
+        <!-- footer area end -->
+        @await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuMobile", language = language, portalId = portalId })
+        <partial name="~/Views/Home/_RegisterSolution.cshtml" model="@(new ContactSolotionModel { })" />
+        <button aria-label="Lên đầu trang - Move top" class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button><div id="recaptcha-backdrop"></div><div id="recaptcha-wrapper"><button id="recaptcha-close-btn" type="button">&times;</button><div id="recaptcha-loading"><div class="spinner"></div><p>@Localizer["Đang tải xác thực..."]</p></div><div id="recaptcha-container"></div></div>
+    </div>
+    <script src="/vendor.bundle.min.js" asp-append-version="true"></script>
+    <script src="/site.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        var recaptchaSiteKey = '@_authorizeSettings.Value.CapChaDataSitekey';
+        var language = '@language';
+    </script>
+    @Html.Raw(bindContentSetting.Body)
 </body>
 </html>
 @Html.Raw(bindContentSetting.Footer)

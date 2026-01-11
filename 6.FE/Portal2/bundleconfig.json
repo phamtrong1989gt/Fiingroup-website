@@ -1,11 +1,63 @@
-﻿
-[
-    {
-        "outputFileName": "wwwroot/content/assets/site.min.css",
-        "inputFiles": []
-    },
-    {
-        "outputFileName": "wwwroot/content/assets/site.min.js",
-        "inputFiles": []
+﻿[
+  {
+    "outputFileName": "wwwroot/vendor.bundle.min.css",
+    "inputFiles": [
+      "wwwroot/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css",
+      "wwwroot/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css",
+      "wwwroot/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css",
+      "wwwroot/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css",
+      "wwwroot/plugins/alertifyjs/css/alertify.css",
+      "wwwroot/plugins/select2/select2.min.css",
+      "wwwroot/plugins/alertifyjs/css/themes/default.min.css",
+      "wwwroot/assets/lib/fancybox/dist/jquery.fancybox.min.css"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
     }
+  },
+  {
+    "outputFileName": "wwwroot/site.bundle.min.css",
+    "inputFiles": [
+      "wwwroot/assets/css/style.css",
+      "wwwroot/assets/css/custom.css",
+      "wwwroot/assets/css/custom2.css",
+      "wwwroot/assets/css/custom3.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": false
+    }
+  },
+  {
+    "outputFileName": "wwwroot/vendor.bundle.min.js",
+    "inputFiles": [
+      "wwwroot/plugins/jquery-validate/jquery.validate.min.js",
+      "wwwroot/plugins/jquery-validate/jquery.validate.unobtrusive.min.js",
+      "wwwroot/plugins/alertifyjs/alertify.min.js",
+      "wwwroot/plugins/select2/select2.min.js",
+      "wwwroot/assets/js/bootstrap.js",
+      "wwwroot/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js",
+      "wwwroot/assets/js/owl.carousel.min.js",
+      "wwwroot/assets/js/waypoints.min.js",
+      "wwwroot/assets/js/jquery.counterup.min.js",
+      "wwwroot/assets/lib/fancybox/dist/jquery.fancybox.min.js"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/site.bundle.min.js",
+    "inputFiles": [
+      "wwwroot/assets/js/site.js"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  }
 ]

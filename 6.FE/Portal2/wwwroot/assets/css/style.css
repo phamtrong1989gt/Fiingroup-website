@@ -86,7 +86,7 @@ a {
     position: sticky;
     top: 0;
     z-index: 999999;
-    box-shadow: 0 2px 4px 0 rgb(182 182 182 / 50%);
+    box-shadow: 0 2px 4px 0 rgba(182, 182, 182, 0.5);
 }
 
 #Header .imglogo {
@@ -135,8 +135,6 @@ a {
     border-radius: 60px;
     -webkit-border-radius: 60px;
     -moz-border-radius: 60px;
-    -ms-border-radius: 60px;
-    -o-border-radius: 60px;
     box-shadow: 0 1px 6px rgba(0, 0, 0, .06), 0 2px 32px rgba(0, 0, 0, .16);
     -webkit-transition: box-shadow .2s ease;
 }
@@ -330,7 +328,6 @@ a {
 .menuall>ul li a {
     font-size: 16px;
     color: white;
-    ;
     font-weight: 700;
     line-height: 37px;
 }
@@ -1075,11 +1072,6 @@ a:hover {
 
 .member-card .member-desc{display:none;}
 
-/*.member-card:hover .member-desc {
-    display: block;
-}*/
-
-/* Popup styles for AboutUs member-card hover popup */
 .member-popup{
   position:absolute;
   z-index:1200;

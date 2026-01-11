@@ -22,23 +22,8 @@
         listCategory = await _iCategoryRepository.SearchAsync(true, 0, 10, x => (x.CategoryType == ECategoryType.ContentPage_Event || x.CategoryType == ECategoryType.ContentPage_Blog) && x.Status && x.ParentId == Model.ParentId && x.Language == language && x.PortalId == portalId);
     }
 }
-
 <style>
-   .btn-active,body{background:#fff}.item-date i,.item-date-sub i{width:30px;padding:0 10px 0 0}#Banner{background:url(/Data/Banner/news-bg.jpg) top/cover no-repeat;height:637px}#Banner h1{font-style:normal;font-weight:700;font-size:36px;line-height:150%}#Banner h2{font-weight:700;font-size:24px;line-height:36px}#Banner img{border-radius:16px}.item-date{font-weight:400;font-size:18px;line-height:150%;display:flex;align-items:center;color:#fff}.btn-active,.btn-noactive{display:flex;padding:12px 40px;gap:40px;width:302px;height:72px;border-radius:12px;font-size:24px;font-weight:500}.item-date .item-label,.item-date-sub .item-label{padding:0 10px 0 0;width:126px}#NewButton{align-items:center;justify-content:center;margin:-37px 0 0}.btn-active{flex-direction:row;justify-content:center;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.08);color:#093461}.btn-active:hover{background:#f6f6f6}.btn-noactive{flex-direction:row;justify-content:center;align-items:center;background:#06c;box-shadow:0 8px 20px rgba(0,102,204,.12),0 -8px 20px rgba(255,255,255,.2);color:#fff}#search #search-input,.date-input{gap:10px;height:38px;background:#fff;display:flex}.btn-noactive:hover{background:#0f65ba;color:#fff}.btn-reset{color:#06c}#search #search-input{flex-direction:column;align-items:flex-start;padding:12px;width:485px;border:1px solid #034ea2;border-radius:4px}#search{position:relative;font-size:18px}#search label{position:absolute;right:8px;top:6px;color:#034ea2}.date-input{flex-direction:column;align-items:flex-start;padding:6px 10px;border:1px solid #034ea2;border-radius:4px;color:#838282}.mr-2{margin:0 1rem}.btn-search{display:flex;flex-direction:row;justify-content:center;align-items:center;padding:10px 50px;height:40px;background:#06c;border-radius:200px}.loader{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top:2px solid #fff;border-radius:50%;animation:1s linear infinite spin;display:inline-block;margin-left:8px;position:absolute;left:5px}to{transform:rotate(360deg)}.no-data-messege{font-style:normal;font-weight:700;font-size:28px;text-align:center;color:#093461}.news-img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center;border-radius:12px;border:1px solid #eee}#NewButton .btn{margin-left:5px;margin-right:5px}.item-date-sub{font-weight:400;font-size:18px;line-height:150%;display:flex;align-items:center;color:#1d2939}.item-date-sub i{color:#06c}.item-date-sub .item-label-sub{padding:0 10px 0 0;font-weight:600;color:#1d2939}.news-title{display:block;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;text-overflow:ellipsis;color:#1d2939;font-size:1.2rem;line-height:1.7rem;max-height:calc(1.7rem * 3);word-break:break-word}.news-title-sub{font-weight:700;font-size:20px;line-height:32px;display:flex;align-items:center;color:#1d2939;flex:none;order:0;align-self:stretch;flex-grow:0;overflow:hidden}
-   	.news-title {
-		display: block;
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 3;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		color: #1d2939;
-		font-size: 20px;
-		line-height: 30px;
-		max-height: calc(30px * 3);
-		word-break: break-word;
-        font-weight: 600;
-	}
+.btn-active,body{background:#fff}.item-date i,.item-date-sub i{width:30px;padding:0 10px 0 0}#Banner{background:url(/Data/Banner/news-bg.jpg) top/cover no-repeat;height:637px}#Banner h1{font-style:normal;font-weight:700;font-size:36px;line-height:150%}#Banner h2{font-weight:700;font-size:24px;line-height:36px}#Banner img{border-radius:16px}.item-date{font-weight:400;font-size:18px;line-height:150%;display:flex;align-items:center;color:#fff}.btn-active,.btn-noactive{display:flex;padding:12px 40px;gap:40px;width:302px;height:72px;border-radius:12px;font-size:24px;font-weight:500}.item-date .item-label,.item-date-sub .item-label{padding:0 10px 0 0;width:126px}#NewButton{align-items:center;justify-content:center;margin:-37px 0 0}.btn-active{flex-direction:row;justify-content:center;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,.08);color:#093461}.btn-active:hover{background:#f6f6f6}.btn-noactive{flex-direction:row;justify-content:center;align-items:center;background:#06c;box-shadow:0 8px 20px rgba(0,102,204,.12),0 -8px 20px rgba(255,255,255,.2);color:#fff}#search #search-input,.date-input{gap:10px;height:38px;background:#fff;display:flex}.btn-noactive:hover{background:#0f65ba;color:#fff}.btn-reset,.item-date-sub i{color:#06c}#search #search-input{flex-direction:column;align-items:flex-start;padding:12px;width:485px;border:1px solid #034ea2;border-radius:4px}#search{position:relative;font-size:18px}#search label{position:absolute;right:8px;top:6px;color:#034ea2}.date-input{flex-direction:column;align-items:flex-start;padding:6px 10px;border:1px solid #034ea2;border-radius:4px;color:#838282}.mr-2{margin:0 1rem}.btn-search{display:flex;flex-direction:row;justify-content:center;align-items:center;padding:10px 50px;height:40px;background:#06c;border-radius:200px}.loader{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top:2px solid #fff;border-radius:50%;animation:1s linear infinite spin;display:inline-block;margin-left:8px;position:absolute;left:5px}to{transform:rotate(360deg)}.no-data-messege{font-style:normal;font-weight:700;font-size:28px;text-align:center;color:#093461}.news-img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center;border-radius:12px;border:1px solid #eee}#NewButton .btn{margin-left:5px;margin-right:5px}.item-date-sub{font-weight:400;font-size:18px;line-height:150%;display:flex;align-items:center;color:#1d2939}.news-title,.news-title-sub{overflow:hidden;color:#1d2939;font-size:20px}.item-date-sub .item-label-sub{padding:0 10px 0 0;font-weight:600;color:#1d2939}.news-title-sub{font-weight:700;line-height:32px;display:flex;align-items:center;flex:none;order:0;align-self:stretch;flex-grow:0}.news-title{-webkit-box-orient:vertical;-webkit-line-clamp:3;word-break:break-word;display:block;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;text-overflow:ellipsis;line-height:30px;max-height:calc(30px * 3);word-break:break-word;font-weight:600}
 </style>
 <section id="Banner">
     <div class="container">
@@ -99,12 +84,12 @@
                 </section>
 
                 <div style="position:relative;">
-                    <input style="width:140px;" id="startDate" lang="vi" name="startDate" class="date-input mr-2" value="" type="text" placeholder="dd/MM/yyyy" />
+                    <input style="width:140px;" id="startDate" lang="vi" name="startDate" class="date-input mr-2" value="" type="text" placeholder="@(language == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy")" />
                     <span style="position: absolute;right: 29px;top: 6px;font-weight: bold;color: #034ea2;" class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
 
                 <div style="position:relative;">
-                    <input style="width:140px;" id="endDate" lang="vi" name="endDate" class="date-input mr-2" value="" type="text" placeholder="dd/MM/yyyy" />
+                    <input style="width:140px;" id="endDate" lang="vi" name="endDate" class="date-input mr-2" value="" type="text" placeholder="@(language == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy")" />
                     <span style="position: absolute;right: 29px;top: 6px;font-weight: bold;color: #034ea2;" class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
 
@@ -131,43 +116,51 @@
     <script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-au.min.js"></script>
     <script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js"></script>
     <script>
-
-        
         (function ($) {
-
+            var lang = '@language';
             $('#startDate').datepicker({
-                format: "dd/mm/yyyy",
-                language: "@language",
-                 todayHighlight: true
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true
             });
 
             $('#endDate').datepicker({
-                format: "dd/mm/yyyy",
-                language: "@language",
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
                 todayHighlight: true
             });
 
             var newsAjaxUrl = '@Url.Action("NewsAjax", "Category", new { language = language })';
-            var currentLanguage = '@language';
-
+            var currentLanguage = lang;
 
             function buildParams(page) {
                 var keyword = $('#search-input').val() || '';
                 var fromDate = $('#startDate').val() || '';
                 var toDate = $('#endDate').val() || '';
 
-                // Convert date format from dd/MM/yyyy to yyyy-MM-dd
                 if (fromDate) {
                     var fromParts = fromDate.split('/');
                     if (fromParts.length === 3) {
-                        fromDate = fromParts[2] + '-' + fromParts[1] + '-' + fromParts[0];
+                        if(lang !== "vi") {
+                            fromDate = fromParts[2] + '-' + fromParts[0] + '-' + fromParts[1];
+                        }
+                        else
+                        {
+                            fromDate = fromParts[2] + '-' + fromParts[1] + '-' + fromParts[0];
+                        }
                     }
                 }
 
                 if (toDate) {
                     var toParts = toDate.split('/');
                     if (toParts.length === 3) {
-                        toDate = toParts[2] + '-' + toParts[1] + '-' + toParts[0];
+                        if(lang !== "vi") {
+                            toDate = toParts[2] + '-' + toParts[0] + '-' + toParts[1];
+                        }
+                        else
+                        {
+                            toDate = toParts[2] + '-' + toParts[1] + '-' + toParts[0];
+                        }
                     }
                 }
 
