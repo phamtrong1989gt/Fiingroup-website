@@ -40,6 +40,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO.Compression;
+using WebMarkupMin.AspNetCoreLatest;
 
 namespace PT.UI
 {
@@ -340,6 +341,44 @@ namespace PT.UI
             // Generic repository
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
 
+            // ✅ HTML MINIFICATION - Nén HTML xuống 1 dòng (loại bỏ whitespace, comment)
+            services.AddWebMarkupMin(options =>
+            {
+                options.AllowMinificationInDevelopmentEnvironment = true; // Bật minify trong dev
+                options.AllowCompressionInDevelopmentEnvironment = true;
+                options.DisablePoweredByHttpHeaders = true; // Ẩn header "X-Powered-By"
+            })
+            .AddHtmlMinification(options =>
+            {
+                // Loại bỏ whitespace
+                options.MinificationSettings.WhitespaceMinificationMode = WebMarkupMin.Core.WhitespaceMinificationMode.Aggressive;
+                
+                // Loại bỏ tất cả comments (trừ conditional comments)
+                options.MinificationSettings.RemoveHtmlComments = true;
+                options.MinificationSettings.RemoveHtmlCommentsFromScriptsAndStyles = true;
+                
+                // Loại bỏ CDATA sections không cần thiết
+                options.MinificationSettings.RemoveCdataSectionsFromScriptsAndStyles = true;
+                
+                // Loại bỏ optional end tags
+                options.MinificationSettings.RemoveOptionalEndTags = false; // Giữ lại để tránh break layout
+                
+                // Collapse whitespace trong attributes
+                options.MinificationSettings.CollapseBooleanAttributes = true;
+                
+                // Loại bỏ quotes không cần thiết trong attributes
+                options.MinificationSettings.RemoveRedundantAttributes = true;
+                
+                // Loại bỏ empty attributes
+                options.MinificationSettings.RemoveEmptyAttributes = true;
+                
+                // Minify inline CSS
+                options.MinificationSettings.MinifyInlineCssCode = true;
+                
+                // Minify inline JavaScript
+                options.MinificationSettings.MinifyInlineJsCode = true;
+            });
+
             // ✅ RESPONSE COMPRESSION - Nén response để giảm băng thông
             services.AddResponseCompression(options =>
             {
@@ -515,6 +554,9 @@ namespace PT.UI
 
             // 1. Response Compression - Phải đặt trước Static Files
             app.UseResponseCompression();
+
+            // 1.5. HTML Minification - Nén HTML (đặt sau compression)
+            app.UseWebMarkupMin();
 
             // 2. ⭐ OUTPUT CACHING - PHẢI ĐẶT SAU Response Compression và TRƯỚC Response Caching
             // Output Caching mạnh hơn Response Caching, cache toàn bộ response
