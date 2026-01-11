@@ -10,12 +10,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.ResponseCaching;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -36,10 +37,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.IO.Compression;
 using WebMarkupMin.AspNetCoreLatest;
 
 namespace PT.UI
@@ -52,7 +53,7 @@ namespace PT.UI
 
             // ✅ CẤU HÌNH SERILOG - Ghi log theo mức độ vào các file riêng biệt
             Serilog.Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Error()
             .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Information).WriteTo.File("logs/info_.log", rollingInterval: RollingInterval.Day))
             .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Warning).WriteTo.File("logs/warning_.log", rollingInterval: RollingInterval.Day))
             .WriteTo.Logger(lc => lc.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Error).WriteTo.File("logs/error_.log", rollingInterval: RollingInterval.Day))
@@ -587,6 +588,46 @@ namespace PT.UI
 
                 await next();
             });
+
+            // Ánh xạ thư mục vật lý dùng chung cho Data (/Data)
+            try
+            {
+                // Đọc DataPath từ cấu hình BaseSettings
+                var configuredDataPath = Configuration["BaseSettings:DataPath"];
+
+                string dataPath;
+                if (string.IsNullOrWhiteSpace(configuredDataPath))
+                {
+                    // fallback to ContentRootPath/SharedData/Data
+                    dataPath = Path.Combine(env.ContentRootPath, "SharedData", "Data");
+                }
+                else
+                {
+                    // Nếu là đường dẫn tương đối, kết hợp với ContentRootPath
+                    dataPath = Path.IsPathRooted(configuredDataPath) ? configuredDataPath : Path.GetFullPath(Path.Combine(env.ContentRootPath, configuredDataPath));
+                }
+
+                // Kiểm tra và tạo thư mục nếu chưa tồn tại
+                if (!Directory.Exists(dataPath))
+                {
+                    Directory.CreateDirectory(dataPath);
+                }
+
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(dataPath),
+                    RequestPath = "/Data",
+                    OnPrepareResponse = ctx =>
+                    {
+                        ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800 * 58}");
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                // Ghi log nhưng tiếp tục; không làm ứng dụng lỗi khi ánh xạ thất bại
+                Serilog.Log.Error(ex, "Failed to configure shared Data static file mapping");
+            }
 
             // 5. Static Files - Phục vụ files tĩnh với cache headers
             app.UseStaticFiles(new StaticFileOptions

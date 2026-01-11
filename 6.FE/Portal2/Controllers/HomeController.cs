@@ -27,6 +27,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+// ⭐ THÊM USING CHO IMAGESHARP
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Webp;
+using Microsoft.Extensions.Logging;
 
 namespace PT.UI.Controllers
 {
@@ -39,7 +44,8 @@ namespace PT.UI.Controllers
         private readonly ILinkReferenceRepository _iLinkReferenceRepository;
         private readonly ISettingService _iSettingService;
         private readonly IOptions<BaseSettings> _baseSetting;
-        public HomeController(ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository, ISettingService iSettingService, IOptions<BaseSettings> baseSetting)
+        private readonly ILogger<HomeController> _logger;
+        public HomeController(ILinkRepository iLinkRepository, IOptions<BaseSettings> baseSettings, IWebHostEnvironment iHostingEnvironment, IContentPageRepository iContentPageRepository, ILinkReferenceRepository iLinkReferenceRepository, ISettingService iSettingService, IOptions<BaseSettings> baseSetting, ILogger<HomeController> logger)
         {
             _iLinkRepository = iLinkRepository;
             _baseSettings = baseSettings;
@@ -48,6 +54,7 @@ namespace PT.UI.Controllers
             _iLinkReferenceRepository = iLinkReferenceRepository;
             _iSettingService = iSettingService;
             _baseSetting = baseSetting;
+            _logger = logger;
         }
 
 
@@ -335,7 +342,7 @@ namespace PT.UI.Controllers
         {
             try
             {
-                path = $"{_iHostingEnvironment.WebRootPath}\\{path}";
+                path = $"{_baseSetting.Value.DataPath}\\{path}";
                 var image = System.Drawing.Image.FromFile(path);
                 var a = ResizeImage(Path.GetFileName(path), image, size, s ?? false);
                 return File(CopyImageToByteArray(a, GetImageFormat(a)), "image/jpeg");
@@ -368,7 +375,7 @@ namespace PT.UI.Controllers
                 tempGraphic.SmoothingMode = SmoothingMode.AntiAlias;
                 tempGraphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 tempGraphic.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                tempGraphic.DrawImage(tempImage, new Rectangle(0, 0, maxSideSize, maxSideSize), cropX, cropY, maxSideSize, maxSideSize, GraphicsUnit.Pixel);
+                tempGraphic.DrawImage(tempImage, new System.Drawing.Rectangle(0, 0, maxSideSize, maxSideSize), cropX, cropY, maxSideSize, maxSideSize, GraphicsUnit.Pixel);
             }
             else
             {
@@ -428,5 +435,106 @@ namespace PT.UI.Controllers
             return View("BannerHomePage", language);
         }
         
+        // ⭐ HÀM MỚI: Convert ảnh sang WebP với resize
+        [ResponseCache(Duration = 31536000, Location = ResponseCacheLocation.Any)]
+        [Route("data/image-webp")]
+        [Route("data2/image-webp")]
+        public IActionResult ImageWebP(string path, int? size, bool? s, int? quality)
+        {
+            try
+            {
+                // ⭐ FIX: Loại bỏ "/data" ở đầu path nếu có (tránh duplicate)
+                if (path.StartsWith("/data/", StringComparison.OrdinalIgnoreCase))
+                {
+                    path = path.Substring(6); // Remove "/data/"
+                }
+                else if (path.StartsWith("data/", StringComparison.OrdinalIgnoreCase))
+                {
+                    path = path.Substring(5); // Remove "data/"
+                }
+
+                // Xây dựng đường dẫn đầy đủ
+                string fullPath = Path.Combine(_baseSetting.Value.DataPath, path.Replace('/', Path.DirectorySeparatorChar));
+                _logger.LogError("ImageWebP {0}", $"Vitual path {fullPath}");
+                if (!System.IO.File.Exists(fullPath))
+                {
+                    return NotFound($"Image not found: {fullPath}");
+                }
+
+                // Load ảnh bằng ImageSharp (cross-platform)
+                using var image = SixLabors.ImageSharp.Image.Load(fullPath);
+
+                // Resize nếu có size parameter
+                if (size.HasValue && size.Value > 0)
+                {
+                    image.Mutate(x =>
+                    {
+                        if (s == true) // Square mode - crop và resize
+                        {
+                            int smallerSide = Math.Min(image.Width, image.Height);
+                            int cropX = (image.Width - smallerSide) / 2;
+                            int cropY = (image.Height - smallerSide) / 2;
+
+                            // Crop thành hình vuông
+                            x.Crop(new SixLabors.ImageSharp.Rectangle(cropX, cropY, smallerSide, smallerSide));
+                            
+                            // Resize về kích thước mong muốn
+                            x.Resize(size.Value, size.Value);
+                        }
+                        else // Resize giữ tỷ lệ
+                        {
+                            var options = new ResizeOptions
+                            {
+                                Size = new SixLabors.ImageSharp.Size(size.Value, size.Value),
+                                Mode = ResizeMode.Max, // Giữ tỷ lệ, fit trong size
+                                Sampler = KnownResamplers.Lanczos3 // High quality resampling
+                            };
+                            x.Resize(options);
+                        }
+                    });
+                }
+
+                // Cấu hình WebP encoder
+                var encoder = new WebpEncoder
+                {
+                    Quality = quality ?? 80, // Default quality 80 (0-100)
+                    FileFormat = WebpFileFormatType.Lossy, // Lossy compression (nhỏ hơn)
+                    Method = WebpEncodingMethod.BestQuality // Chất lượng tốt nhất
+                };
+
+                // Convert sang WebP và trả về
+                var ms = new MemoryStream();
+                image.SaveAsWebp(ms, encoder);
+                ms.Position = 0;
+
+                return File(ms, "image/webp");
+            }
+            catch (Exception ex)
+            {
+                // Log error nếu cần
+                return StatusCode(500, $"Error processing image: {ex.Message}");
+            }
+        }
+
+        // ⭐ HÀM AUTO-DETECT: Trả về WebP nếu browser hỗ trợ, ngược lại JPEG
+        [ResponseCache(Duration = 31536000, Location = ResponseCacheLocation.Any)]
+        [Route("data/image-smart")]
+        public IActionResult ImageSmart(string path, int? size, bool? s, int? quality)
+        {
+            // Check Accept header của browser
+            var acceptHeader = Request.Headers["Accept"].ToString();
+            bool supportsWebP = acceptHeader.Contains("image/webp", StringComparison.OrdinalIgnoreCase);
+
+            if (supportsWebP)
+            {
+                // Browser hỗ trợ WebP → trả về WebP (nhỏ hơn ~30%)
+                return ImageWebP(path, size, s, quality);
+            }
+            else
+            {
+                // Browser cũ không hỗ trợ WebP → fallback về JPEG
+                return Image(path, size ?? 0, s);
+            }
+        }
     }
 }

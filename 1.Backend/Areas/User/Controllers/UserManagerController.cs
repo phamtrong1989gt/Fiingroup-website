@@ -335,7 +335,7 @@ namespace PT.BE.Areas.User.Controllers
         {
             try
             {
-                string[] allowedExtensions = _baseSettings.Value.ImagesType.Split(',');
+                string[] allowedExtensions = (_baseSettings.Value.ImagesType + ",.webp").Split(',');
                 string pathAvatar = $"{_iHostingEnvironment.WebRootPath}/Data/Avatar/";
                 string pathServer = "/Data/Avatar/";
                 if (!Directory.Exists(pathAvatar))

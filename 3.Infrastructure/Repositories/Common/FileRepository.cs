@@ -83,7 +83,7 @@ namespace PT.Infrastructure.Repositories
         {
             try
             {
-                string[] allowedExtensions = _baseSettings.ImagesType.Split(',');
+                string[] allowedExtensions = (_baseSettings.ImagesType + ",.webp").Split(',');
                 string path = $"{webPath}{folder}";
                 string pathServer = folder;
                 if (!Directory.Exists(path))

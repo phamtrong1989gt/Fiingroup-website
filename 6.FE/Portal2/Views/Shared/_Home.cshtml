@@ -35,8 +35,11 @@
 <head>
 	<!-- meta tags -->
 	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/x-icon" href="assets/img/logo/favicon.png">
-	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="assets/img/logo/favicon.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 	<noscript>
@@ -80,7 +83,7 @@
 		<!-- footer area end -->
 		@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuMobile", language = language, portalId = portalId })
 		<partial name="~/Views/Home/_RegisterSolution.cshtml" model="@(new ContactSolotionModel { })" /> 
-		<button class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button><div id="recaptcha-backdrop"></div><div id="recaptcha-wrapper"><button id="recaptcha-close-btn" type="button">&times;</button><div id="recaptcha-loading"><div class="spinner"></div><p>@Localizer["Đang tải xác thực..."]</p></div><div id="recaptcha-container"></div></div>
+		<button aria-label="Lên đầu trang - Move top" class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button><div id="recaptcha-backdrop"></div><div id="recaptcha-wrapper"><button id="recaptcha-close-btn" type="button">&times;</button><div id="recaptcha-loading"><div class="spinner"></div><p>@Localizer["Đang tải xác thực..."]</p></div><div id="recaptcha-container"></div></div>
 	</div>
 	<!-- js -->
 	<script src="/plugins/jquery-validate/jquery.validate.min.js"></script>

@@ -404,7 +404,10 @@ namespace PT.BE.Areas.Manager.Controllers
             try
             {
                 var allowed = (_baseSettings.Value.ImagesType ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet(StringComparer.OrdinalIgnoreCase);
-
+                if (!allowed.Contains(".webp"))
+                {
+                    allowed.Add(".webp");
+                }
                 var folderByDate = Functions.GenFolderByDate();
                 string configuredDataPath = _baseSettings.Value.DataPath;
 

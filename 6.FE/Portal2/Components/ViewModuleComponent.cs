@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Domain.Model;
@@ -24,7 +25,15 @@ namespace PT.Component
         private readonly IBannerRepository _iBannerRepository;
         private readonly IStaticInformationRepository _iStaticInformationRepository;
         private readonly IOptions<BaseSettings> _baseSettings;
-        public ViewModuleComponent(IWebHostEnvironment hostingEnvironment, IMemoryCache iMemoryCache, IMenuRepository iMenuRepository, IMenuItemRepository iMenuItemRepository, IBannerRepository iBannerRepository, IStaticInformationRepository iStaticInformationRepository, IOptions<BaseSettings> baseSettings)
+
+        public ViewModuleComponent(
+            IWebHostEnvironment hostingEnvironment, 
+            IMemoryCache iMemoryCache, 
+            IMenuRepository iMenuRepository, 
+            IMenuItemRepository iMenuItemRepository, 
+            IBannerRepository iBannerRepository, 
+            IStaticInformationRepository iStaticInformationRepository, 
+            IOptions<BaseSettings> baseSettings)
         {
             _hostingEnvironment = hostingEnvironment;
             _iMemoryCache = iMemoryCache;
@@ -40,16 +49,20 @@ namespace PT.Component
             {
                 if (portalId > 0)
                 {
+                    // ⭐ KIỂM TRA MÔI TRƯỜNG - Tắt cache trong Development
+                    bool isDevelopment = _hostingEnvironment.IsDevelopment();
+                    
                     // Cache key duy nhất cho module (bao gồm type, code, language, portalId)
                     string cacheKey = $"ModuleHtml::{type}::{code}::{language}::{portalId}";
-                    if(code == "HomeSlider")
+                    
+                    // ⭐ CHỈ SỬ DỤNG CACHE TRONG PRODUCTION/STAGING
+                    if (!isDevelopment)
                     {
-                        string a = "";
-                    }    
-                    // Thử lấy từ cache trước
-                    if (_iMemoryCache.TryGetValue(cacheKey, out string cachedHtml) && !string.IsNullOrEmpty(cachedHtml))
-                    {
-                        return new HtmlContentViewComponentResult(new HtmlString(cachedHtml));
+                        // Thử lấy từ cache trước
+                        if (_iMemoryCache.TryGetValue(cacheKey, out string cachedHtml) && !string.IsNullOrEmpty(cachedHtml))
+                        {
+                            return new HtmlContentViewComponentResult(new HtmlString(cachedHtml));
+                        }
                     }
 
                     string url = "";
@@ -108,16 +121,24 @@ namespace PT.Component
                         newKyTu = Functions.ZipStringHTML(data);
                     }
 
-                    // Lưu rendered HTML vào cache trong 24 giờ
-                    var cacheOptions = new MemoryCacheEntryOptions
+                    // ⭐ CHỈ CACHE TRONG PRODUCTION/STAGING
+                    if (!isDevelopment)
                     {
-                        //AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24),
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_baseSettings.Value.TimeCache),
-                        Priority = CacheItemPriority.Normal,
-                        Size = 1 // Thêm Size để tránh lỗi khi SizeLimit được set
-                    };
+                        // Lưu rendered HTML vào cache
+                        var cacheOptions = new MemoryCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_baseSettings.Value.TimeCache * 1000 * 60),
+                            Priority = CacheItemPriority.Normal,
+                            Size = 1
+                        };
 
-                    _iMemoryCache.Set(cacheKey, newKyTu, cacheOptions);
+                        _iMemoryCache.Set(cacheKey, newKyTu, cacheOptions);
+                    }
+                    else
+                    {
+                        // ⭐ LOG trong Development để dev biết cache bị tắt
+                        Console.WriteLine($"[DEV] ViewModule loaded without cache: {type}::{code}");
+                    }
 
                     return new HtmlContentViewComponentResult(new HtmlString(newKyTu ?? string.Empty));
                 }

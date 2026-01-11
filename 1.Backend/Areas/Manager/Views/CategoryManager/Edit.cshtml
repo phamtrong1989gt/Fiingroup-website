@@ -5,7 +5,7 @@
     Layout = null;
     var fileUploadSingleBanner = new PT.Domain.Model.PluginFileUploadModel
     {
-        Extention = _baseSettings.Value.ImagesType,
+        Extention = _baseSettings.Value.ImagesType + ",.webp",
         InputName = "Banner",
         MaxSize = _baseSettings.Value.DocumentsMaxSize,
         UrlUpload = Url.Action("UploadImage", new { id = Model.Id, oldPath = Model.Banner }),
