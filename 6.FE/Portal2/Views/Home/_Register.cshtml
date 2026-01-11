@@ -13,8 +13,12 @@
     var listServies = await _iContactRepository.ServiesList(language, portalId);
 }
 
-<section class="py-5 mb-3 mt-3" id="DangKy"><div class="container"><h2 class="price-title mb-5">@Localizer["Title"]</h2>
-        <div class="row"><div class="col-lg-6 col-sm-12"><input type="hidden" id="languageId" value="@language" />
+<section class="py-5 mb-3 mt-3" id="DangKy">
+    <div class="container">
+        <h2 class="price-title mb-5">@Localizer["Title"]</h2>
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+                <input type="hidden" id="languageId" value="@language" />
                 <form id="formLienHe" method="post">
                     @Html.AntiForgeryToken()
                     <div class="row">
@@ -29,196 +33,38 @@
                         @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ContactFormMsg", language = language, portalId = portalId })
                     </div><div class="mb-2"></div><button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>@Localizer["BtnSend"]</button><input type="hidden" class="Capcha" id="g-recaptcha-response" name="capcha" />
                 </form>
-            </div><div class="col-lg-6 col-sm-12 img">@await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerRegister", language = language, portalId = portalId })</div></div></div>
+            </div><div class="col-lg-6 col-sm-12 img">@await Component.InvokeAsync("ViewModule", new { type = ModuleType.AdvertisingBanner, code = "HomeBannerRegister", language = language, portalId = portalId })</div>
+        </div>
+    </div>
 </section>
 
-
-
-@section Scripts
-{
-}
-
 <script>
-    // Show Thank You Modal
-    function showThankYouModal() {
-        $('#thankYouModal').fadeIn(300);
-        $('body').css('overflow', 'hidden');
-    }
-    // Close Thank You Modal
-    function closeThankYouModal() {
-        $('#thankYouModal').fadeOut(300);
-        $('body').css('overflow', '');
-    }
-    // Close modal when clicking backdrop
-    $(document).on('click', '#thankYouModal', function(e) {
-        if (e.target === this) {
-            closeThankYouModal();
-        }
-    });
-    // Close modal with ESC key
-    $(document).on('keydown', function(e) {
-        if (e.key === 'Escape' && $('#thankYouModal').is(':visible')) {
-            closeThankYouModal();
-        }
-    });
-    $(function () {
-        $('#sanPhamQT').select2({
-               placeholder: "@Localizer["SelectProducts"]",
-               closeOnSelect: false,
-               allowHtml: true,
-               allowClear: true,
-            tags: true
-        });
-      $("#dichVuQT").append('<option value="0">@Localizer["OtherProduct"]</option>');
-      const $form = $('#formLienHe');
-      $form.on('submit', function (e) {
-        e.preventDefault();
-        if(!$form.valid())
-        {
-            return;
-        }
-        // Validate agree terms checkbox
-        var agreeChecked = $('#agreeTerms').is(':checked');
-        var $agreeMsg = $('#agreeTermsError');
-        if (!agreeChecked) {
-          $agreeMsg.text($agreeMsg.attr('data-value'));
-          $agreeMsg.addClass('field-validation-error').removeClass('field-validation-valid');
-          $('#agreeTerms').focus();
-          return;
+    // ⭐ Khởi tạo config object với tất cả giá trị cần thiết
+    window.registerFormConfig = {
+        // URLs
+        urls: {
+            contact: '@Url.Action("Contact", "ContactHome")',
+            flowSelectList: '@Url.Action("FlowSelectList", "ContactHome")'
+        },
+        // Localized strings
+        i18n: {
+            selectProducts: '@Localizer["SelectProducts"]',
+            otherProduct: '@Localizer["OtherProduct"]',
+            msgNotUse: '@Localizer["MsgNotUse"]',
+            noProducts: '@Localizer["NoProducts"]',
+            errorMessage: 'Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!'
+        },
+        // Data
+        language: '@language',
+        portalId: @portalId
+    };
+
+    // ⭐ Gọi function từ site.js khi document ready
+    $(document).ready(function() {
+        if (typeof initRegisterForm === 'function') {
+            initRegisterForm(window.registerFormConfig);
         } else {
-          $agreeMsg.text('');
-          $agreeMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+            console.error('initRegisterForm function not found in site.js');
         }
-        // Validate ServiceId
-        var serviceVal = $('#dichVuQT').val();
-        var $serviceMsg = $('[data-valmsg-for="ServiceId"]');
-        if (!serviceVal || serviceVal.toString().trim() === '') {
-          $serviceMsg.text('Vui lòng chọn dịch vụ.');
-          $serviceMsg.addClass('field-validation-error').removeClass('field-validation-valid');
-          $('#dichVuQT').focus();
-          return;
-        } else {
-          $serviceMsg.text('');
-          $serviceMsg.addClass('field-validation-valid').removeClass('field-validation-error');
-        }
-        // Validate products (select2 -> hidden input #products)
-        var productsVal = $('#products').val();
-        var $prodMsg = $('[data-valmsg-for="Products"]');
-        if (!productsVal || productsVal.toString().trim() === '') {
-          $prodMsg.text('@Localizer["MsgNotUse"]');
-          $prodMsg.addClass('field-validation-error').removeClass('field-validation-valid');
-          $('#sanPhamQT').select2('open');
-          return;
-        } else {
-          $prodMsg.text('');
-          $prodMsg.addClass('field-validation-valid').removeClass('field-validation-error');
-        }
-
-        const token = $form.find('input[name="__RequestVerificationToken"]').val();
-        $.ajax({
-          url: '@Url.Action("Contact", "ContactHome")',
-          type: 'POST',
-          data: $form.serialize(),
-          headers: { 'RequestVerificationToken': token },
-          success: function (res) {
-            if(res.output == 1)
-            {
-                $form[0].reset();
-                $("#products").val("");
-                $("#agreeTerms").prop('checked', false);
-                $('#sanPhamQT').val(null).trigger('change'); // Reset select2
-                hideRecaptchaPopup();
-                if (recaptchaWidgetId !== null) {
-                    grecaptcha.reset(recaptchaWidgetId);
-                }
-                // Show thank you modal
-                showThankYouModal();
-            }
-            else if (res.output == 69) {
-                showRecaptchaPopup("[btnSendLH]");
-                return;
-            }
-            else {
-                // Show error message if any
-                if (res.message) {
-                    alertify.error(res.message);
-                }
-            }
-          },
-          error: function (xhr) {
-            alertify.warning('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
-          }
-        });
-      });
-
-      // Clear error when checkbox is checked
-      $('#agreeTerms').on('change', function() {
-        if ($(this).is(':checked')) {
-          $('#agreeTermsError').text('').addClass('field-validation-valid').removeClass('field-validation-error');
-        }
-      });
-    });
-
-    $("#sanPhamQT").on("change", function () {
-        let selected = $(this).val();
-        if (selected && selected.length > 0) {
-            $("#products").val(selected.join("; "));
-            $('[data-valmsg-for="Products"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
-        } else {
-            $("#products").val("");
-        }
-    });
-
-    $("#dichVuQT").on("change", function () {
-        let serviceId = $(this).val();
-        let language = $("#languageId").val();;
-        let portId = '@portalId';
-        let parentId = serviceId;
-        $("#products").val("");
-        // clear service validation on change
-        if (serviceId && serviceId.toString().trim() !== '') {
-            $('[data-valmsg-for="ServiceId"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
-        }
-        if (!serviceId) {
-            $("#sanPhamQT").empty()
-                .append('<option value="">@Localizer["SelectProducts"]</option>');
-            return;
-        }
-        if(parentId == 0){
-            $("#sanPhamQT").append('<option value="0">@Localizer["OtherProduct"]</option>');
-            return;
-        }
-
-        $.ajax({
-            url: '@Url.Action("FlowSelectList", "ContactHome")',
-            method: "POST",
-            data: {
-                language: language,
-                portId: portId,
-                parrentId: parentId
-            },
-            success: function (res) {
-                if (res.output === 1 || res.output === "1") {
-                    $("#sanPhamQT").empty();
-                    let lst = res.data;
-                    if (lst && lst.length > 0) {
-                        lst.forEach(x => {
-                            $("#sanPhamQT").append(
-                                `<option value="${x.id}">${x.name}</option>`
-                            );
-                        });
-                        $("#sanPhamQT").append('<option value="0">@Localizer["OtherProduct"]</option>');
-                    } else {
-                        $("#sanPhamQT").append('<option value="">@Localizer["NoProducts"]</option>');
-                    }
-                }
-                else {
-                    //alert(res.message || "Không thể tải danh sách!");
-                }
-            },
-            error: function () {
-                //alert("Lỗi kết nối máy chủ.");
-            }
-        });
     });
 </script>

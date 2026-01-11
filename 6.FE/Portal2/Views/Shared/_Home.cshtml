@@ -49,16 +49,12 @@
 			var cssLinkId = linkData?.Id ?? 0;
 			if (cssLinkId >= 0)
 			{
-				// Ensure CSS file exists (create if not)
 				var cssFileCreated = await PT.UI.Helpers.AutoCssHelper.EnsureAutoCssFileAsync(_webHostEnvironment, cssLinkId, language);
 				var cssPath = PT.UI.Helpers.AutoCssHelper.GetAutoCssPath(cssLinkId, language);
-				<!-- Auto-generated CSS for this page -->
 				<link asp-append-version="true" rel="stylesheet" href="@cssPath" data-auto-css="link_@(cssLinkId)_@(language)" />
 			}
 		}
-		catch
-		{
-        }
+		catch {}
 	}
 	<partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
 	<script src="/assets/js/jquery.min.js"></script>
@@ -68,7 +64,6 @@
 
 <body id="Body">
     <input type="hidden" id="linkId" value="@linkData?.Id" />
-	@* <h1>@language</h1> *@
 	<div class="body">
 		<!-- header area -->
 		<section id="Header">
@@ -85,7 +80,6 @@
 		<!-- footer area end -->
 		@await Component.InvokeAsync("ViewModule", new { type = ModuleType.Menu, code = "MenuMobile", language = language, portalId = portalId })
 		<partial name="~/Views/Home/_RegisterSolution.cshtml" model="@(new ContactSolotionModel { })" /> 
-
 		<button class="btn btn-info rounded-circle btn-lg" id="scroll-top"><i class="fa fa-chevron-up" style="color:white;"></i></button><div id="recaptcha-backdrop"></div><div id="recaptcha-wrapper"><button id="recaptcha-close-btn" type="button">&times;</button><div id="recaptcha-loading"><div class="spinner"></div><p>@Localizer["Đang tải xác thực..."]</p></div><div id="recaptcha-container"></div></div>
 	</div>
 	<!-- js -->
@@ -96,10 +90,10 @@
 	<script src="/assets/lib/bootstrap-5.2.2-dist/js/bootstrap.bundle.min.js"></script>
 	<script src="/assets/js/bootstrap.js?v=5.5.9"></script>
 	<script src="/assets/js/owl.carousel.min.js?v=5.5.9"></script>
-	<script asp-append-version="true" src="/assets/js/site.js?v=1.0"></script>
 	<script src="/assets/js/waypoints.min.js"></script>
 	<script src="/assets/js/jquery.counterup.min.js"></script>
 	<script src="/assets/lib/fancybox/dist/jquery.fancybox.min.js"></script>
+	<script asp-append-version="true" src="/assets/js/site.js"></script>
 	<script>
 		var recaptchaSiteKey = '@_authorizeSettings.Value.CapChaDataSitekey';
 		var language = '@language';

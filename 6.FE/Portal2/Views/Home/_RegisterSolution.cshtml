@@ -38,112 +38,31 @@
                         </div><button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH2>@Localizer["BtnSend"]</button>
                     </form>
 </div></div></div></div></div>
-@section Scripts
-{
-}
+
 <script>
+    // ⭐ Khởi tạo config object cho Solution Form
+    window.registerSolutionFormConfig = {
+        // URLs
+        urls: {
+            contact: '@Url.Action("ContactSolution", "ContactHome")'
+        },
+        // Localized strings
+        i18n: {
+            selectProducts: '',  // Empty placeholder for solution form
+            msgNotUse: '@Localizer["MsgNotUse"]',
+            errorMessage: 'Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!'
+        },
+        // Data
+        language: '@language',
+        portalId: @portalId
+    };
 
-       // Show Thank You Modal
-    function showThankYouModal2() {
-        $('#thankYouModal2').fadeIn(300);
-        $('body').css('overflow', 'hidden');
-    }
-
-    // Close Thank You Modal
-    function closeThankYouModal2() {
-        $('#thankYouModal2').fadeOut(300);
-        $('body').css('overflow', '');
-    }
-
-    // Close modal when clicking backdrop
-    $(document).on('click', '#thankYouModal2', function(e) {
-        if (e.target === this) {
-            closeThankYouModal2();
-        }
-    });
-
-    // Close modal with ESC key
-    $(document).on('keydown', function(e) {
-        if (e.key === 'Escape' && $('#thankYouModal2').is(':visible')) {
-            closeThankYouModal();
-        }
-    });
-
-    $(function () {
-            $('#dichVuQT2').select2({
-            placeholder: "",
-            closeOnSelect: false,
-            allowHtml: true,
-            allowClear: true,
-            tags: true
-            });
-      const $form = $('#formLienHe2');
-      $form.on('submit', function (e) {
-        e.preventDefault();
-              
-        // Validate products (select2 -> hidden input #products2)
-        var productsVal = $('#products2').val();
-        var $prodMsg = $('[data-valmsg-for="Products"]');
-
-        if (!productsVal || productsVal.toString().trim() === '') {
-          // show validation message and prevent submit
-          $prodMsg.text('@Localizer["MsgNotUse"]');
-          $prodMsg.addClass('field-validation-error').removeClass('field-validation-valid');
-          $('#dichVuQT2').select2('open');
-          return;
+    // ⭐ Gọi function từ site.js khi document ready
+    $(document).ready(function() {
+        if (typeof initRegisterSolutionForm === 'function') {
+            initRegisterSolutionForm(window.registerSolutionFormConfig);
         } else {
-          // clear previous message
-          $prodMsg.text('');
-          $prodMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+            console.error('initRegisterSolutionForm function not found in site.js');
         }
-
-        if (!$form.valid()) {
-          return;
-        }
-
-        const token = $form.find('input[name="__RequestVerificationToken"]').val();
-        $.ajax({
-          url: '@Url.Action("ContactSolution", "ContactHome")',
-          type: 'POST',
-          data: $form.serialize(),
-          headers: { 'RequestVerificationToken': token },
-          success: function (res) {
-
-            if(res.output == 1)
-            {
-                showThankYouModal2();
-                $form[0].reset();
-                $("#products2").val("");
-                hideRecaptchaPopup();
-                if (recaptchaWidgetId !== null) {
-                    grecaptcha.reset(recaptchaWidgetId);
-                }
-            }
-            else if (res.output == 69) {
-                showRecaptchaPopup("[btnSendLH2]");
-                return;
-            }
-          },
-          error: function (xhr) {
-            alertify.warning('Đã xảy ra lỗi, vui lòng F5 trình duyệt và thử lại!');
-          }
-        });
-      });
     });
-
-    $("#btnClose").on("click", function () {
-        $('#popsolutionmore').modal('hide');
-    });
-        $(document).on("change", "#dichVuQT2", function () {
-            let selected = $(this).val();
-            let $popup = $(this).closest(".modal"); // lấy đúng popup đang mở
-            if (Array.isArray(selected) && selected.length > 0) {
-                $popup.find("#products2").val(selected.join("; "));
-                // clear validation message when user selects
-                $popup.find('[data-valmsg-for="Products"]').text("").addClass('field-validation-valid').removeClass('field-validation-error');
-            }
-            else {
-                $popup.find("#products2").val("");
-            }
-        });
 </script>

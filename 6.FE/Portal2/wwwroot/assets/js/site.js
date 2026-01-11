@@ -43,15 +43,15 @@ $(".formadmin").hover(function(){
     $(this).find('.edit-icon-admin i').hide();
 });
 
+// ========================================
+// ⭐ RECAPTCHA FUNCTIONS
+// ========================================
 var recaptchaWidgetId = null;
 var isRecaptchaShown = false;
 var isRecaptchaScriptLoaded = false;
 var isRecaptchaScriptLoading = false;
 var btnSend = null;
 
-/**
- * ⭐ LAZY LOAD RECAPTCHA SCRIPT - Chỉ load khi cần
- */
 function loadRecaptchaScript(callback) {
 	if (isRecaptchaScriptLoaded) {
 		if (callback) callback();
@@ -76,7 +76,6 @@ function loadRecaptchaScript(callback) {
 	script.defer = true;
 
 	script.onload = function () {
-		// ⭐ FIX: Phải đợi grecaptcha.ready() trước khi gọi render
 		if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
 			grecaptcha.ready(function () {
 				isRecaptchaScriptLoaded = true;
@@ -85,7 +84,6 @@ function loadRecaptchaScript(callback) {
 				if (callback) callback();
 			});
 		} else {
-			// Fallback: đợi 500ms nếu grecaptcha.ready chưa có
 			setTimeout(function () {
 				isRecaptchaScriptLoaded = true;
 				isRecaptchaScriptLoading = false;
@@ -105,7 +103,6 @@ function loadRecaptchaScript(callback) {
 }
 
 function initRecaptcha() {
-	// ⭐ FIX: Kiểm tra kỹ hơn trước khi render
 	if (typeof grecaptcha === 'undefined') {
 		console.error('❌ grecaptcha is undefined');
 		return;
@@ -157,7 +154,6 @@ function showRecaptchaPopup(btnElement) {
 		$("#recaptcha-wrapper").fadeIn(200);
 		isRecaptchaShown = true;
 
-		// ⭐ Lazy load script
 		loadRecaptchaScript(function () {
 			initRecaptcha();
 		});
@@ -173,6 +169,371 @@ function hideRecaptchaPopup() {
 $("#recaptcha-close-btn").on("click", function () {
 	hideRecaptchaPopup();
 });
+
+// ========================================
+// ⭐ REGISTER FORM FUNCTIONS
+// ========================================
+
+/**
+ * Show Thank You Modal
+ */
+function showThankYouModal() {
+    $('#thankYouModal').fadeIn(300);
+    $('body').css('overflow', 'hidden');
+}
+
+/**
+ * Close Thank You Modal
+ */
+function closeThankYouModal() {
+    $('#thankYouModal').fadeOut(300);
+    $('body').css('overflow', '');
+}
+
+/**
+ * ⭐ MAIN FUNCTION - Initialize Register Form
+ * @param {Object} config - Configuration object từ Razor view
+ */
+function initRegisterForm(config) {
+    // Validate config
+    if (!config || !config.urls || !config.i18n) {
+        console.error('❌ Invalid config for register form');
+        return;
+    }
+    // Init Select2
+    $('#sanPhamQT').select2({
+        placeholder: config.i18n.selectProducts,
+        closeOnSelect: false,
+        allowHtml: true,
+        allowClear: true,
+        tags: true
+    });
+    // Add "Other Product" option to service dropdown
+    $("#dichVuQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
+    // ========================================
+    // FORM SUBMIT HANDLER
+    // ========================================
+    const $form = $('#formLienHe');
+    $form.on('submit', function (e) {
+        e.preventDefault();
+
+        if (!$form.valid()) {
+            return;
+        }
+
+        // Validate agree terms checkbox
+        var agreeChecked = $('#agreeTerms').is(':checked');
+        var $agreeMsg = $('#agreeTermsError');
+        if (!agreeChecked) {
+            $agreeMsg.text($agreeMsg.attr('data-value'));
+            $agreeMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+            $('#agreeTerms').focus();
+            return;
+        } else {
+            $agreeMsg.text('');
+            $agreeMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
+        // Validate ServiceId
+        var serviceVal = $('#dichVuQT').val();
+        var $serviceMsg = $('[data-valmsg-for="ServiceId"]');
+        if (!serviceVal || serviceVal.toString().trim() === '') {
+            $serviceMsg.text('Vui lòng chọn dịch vụ.');
+            $serviceMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+            $('#dichVuQT').focus();
+            return;
+        } else {
+            $serviceMsg.text('');
+            $serviceMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
+        // Validate products
+        var productsVal = $('#products').val();
+        var $prodMsg = $('[data-valmsg-for="Products"]');
+        if (!productsVal || productsVal.toString().trim() === '') {
+            $prodMsg.text(config.i18n.msgNotUse);
+            $prodMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+            $('#sanPhamQT').select2('open');
+            return;
+        } else {
+            $prodMsg.text('');
+            $prodMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
+        // Submit form via AJAX
+        const token = $form.find('input[name="__RequestVerificationToken"]').val();
+        $.ajax({
+            url: config.urls.contact,
+            type: 'POST',
+            data: $form.serialize(),
+            headers: { 'RequestVerificationToken': token },
+            success: function (res) {
+                if (res.output == 1) {
+                    // Success
+                    $form[0].reset();
+                    $("#products").val("");
+                    $("#agreeTerms").prop('checked', false);
+                    $('#sanPhamQT').val(null).trigger('change');
+                    hideRecaptchaPopup();
+                    if (recaptchaWidgetId !== null) {
+                        grecaptcha.reset(recaptchaWidgetId);
+                    }
+                    showThankYouModal();
+                }
+                else if (res.output == 69) {
+                    // Need captcha
+                    showRecaptchaPopup("[btnSendLH]");
+                    return;
+                }
+                else {
+                    // Error
+                    if (res.message) {
+                        alertify.error(res.message);
+                    }
+                }
+            },
+            error: function (xhr) {
+                alertify.warning(config.i18n.errorMessage);
+            }
+        });
+    });
+
+    // ========================================
+    // PRODUCTS SELECT HANDLER
+    // ========================================
+    $("#sanPhamQT").on("change", function () {
+        let selected = $(this).val();
+        if (selected && selected.length > 0) {
+            $("#products").val(selected.join("; "));
+            $('[data-valmsg-for="Products"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
+        } else {
+            $("#products").val("");
+        }
+    });
+
+    // ========================================
+    // SERVICE CHANGE HANDLER
+    // ========================================
+    $("#dichVuQT").on("change", function () {
+        let serviceId = $(this).val();
+        let language = $("#languageId").val();
+        let portId = config.portalId;
+        let parentId = serviceId;
+
+        $("#products").val("");
+
+        // Clear validation
+        if (serviceId && serviceId.toString().trim() !== '') {
+            $('[data-valmsg-for="ServiceId"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
+        if (!serviceId) {
+            $("#sanPhamQT").empty().append(`<option value="">${config.i18n.selectProducts}</option>`);
+            return;
+        }
+
+        if (parentId == 0) {
+            $("#sanPhamQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
+            return;
+        }
+
+        // Load products via AJAX
+        $.ajax({
+            url: config.urls.flowSelectList,
+            method: "POST",
+            data: {
+                language: language,
+                portId: portId,
+                parrentId: parentId
+            },
+            success: function (res) {
+                if (res.output === 1 || res.output === "1") {
+                    $("#sanPhamQT").empty();
+                    let lst = res.data;
+                    if (lst && lst.length > 0) {
+                        lst.forEach(x => {
+                            $("#sanPhamQT").append(`<option value="${x.id}">${x.name}</option>`);
+                        });
+                        $("#sanPhamQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
+                    } else {
+                        $("#sanPhamQT").append(`<option value="">${config.i18n.noProducts}</option>`);
+                    }
+                }
+            },
+            error: function () {
+                console.error('Failed to load products');
+            }
+        });
+    });
+
+    // ========================================
+    // AGREE TERMS HANDLER
+    // ========================================
+    $('#agreeTerms').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('#agreeTermsError').text('').addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+    });
+
+    // ========================================
+    // MODAL HANDLERS
+    // ========================================
+    $(document).on('click', '#thankYouModal', function (e) {
+        if (e.target === this) {
+            closeThankYouModal();
+        }
+    });
+
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape' && $('#thankYouModal').is(':visible')) {
+            closeThankYouModal();
+        }
+    });
+}
+
+// ========================================
+// ⭐ REGISTER SOLUTION FORM FUNCTIONS
+// ========================================
+
+/**
+ * Show Thank You Modal 2 (Solution Form)
+ */
+function showThankYouModal2() {
+    $('#thankYouModal2').fadeIn(300);
+    $('body').css('overflow', 'hidden');
+}
+
+/**
+ * Close Thank You Modal 2 (Solution Form)
+ */
+function closeThankYouModal2() {
+    $('#thankYouModal2').fadeOut(300);
+    $('body').css('overflow', '');
+}
+
+/**
+ * ⭐ MAIN FUNCTION - Initialize Register Solution Form
+ * @param {Object} config - Configuration object từ Razor view
+ */
+function initRegisterSolutionForm(config) {
+    // Validate config
+    if (!config || !config.urls || !config.i18n) {
+        console.error('❌ Invalid config for register solution form');
+        return;
+    }
+
+    // Init Select2 cho dichVuQT2
+    $('#dichVuQT2').select2({
+        placeholder: config.i18n.selectProducts,
+        closeOnSelect: false,
+        allowHtml: true,
+        allowClear: true,
+        tags: true
+    });
+
+    // ========================================
+    // FORM SUBMIT HANDLER
+    // ========================================
+    const $form = $('#formLienHe2');
+    $form.on('submit', function (e) {
+        e.preventDefault();
+
+        // Validate products (select2 -> hidden input #products2)
+        var productsVal = $('#products2').val();
+        var $prodMsg = $('[data-valmsg-for="Products"]');
+
+        if (!productsVal || productsVal.toString().trim() === '') {
+            // Show validation message
+            $prodMsg.text(config.i18n.msgNotUse);
+            $prodMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+            $('#dichVuQT2').select2('open');
+            return;
+        } else {
+            // Clear validation message
+            $prodMsg.text('');
+            $prodMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
+        if (!$form.valid()) {
+            return;
+        }
+
+        // Submit form via AJAX
+        const token = $form.find('input[name="__RequestVerificationToken"]').val();
+        $.ajax({
+            url: config.urls.contact,
+            type: 'POST',
+            data: $form.serialize(),
+            headers: { 'RequestVerificationToken': token },
+            success: function (res) {
+                if (res.output == 1) {
+                    // Success
+                    showThankYouModal2();
+                    $form[0].reset();
+                    $("#products2").val("");
+                    $('#dichVuQT2').val(null).trigger('change');
+                    hideRecaptchaPopup();
+                    if (recaptchaWidgetId !== null) {
+                        grecaptcha.reset(recaptchaWidgetId);
+                    }
+                }
+                else if (res.output == 69) {
+                    // Need captcha
+                    showRecaptchaPopup("[btnSendLH2]");
+                    return;
+                }
+                else {
+                    // Error
+                    if (res.message) {
+                        alertify.error(res.message);
+                    }
+                }
+            },
+            error: function (xhr) {
+                alertify.warning(config.i18n.errorMessage);
+            }
+        });
+    });
+
+    // ========================================
+    // PRODUCTS SELECT HANDLER
+    // ========================================
+    $(document).on("change", "#dichVuQT2", function () {
+        let selected = $(this).val();
+        let $popup = $(this).closest(".modal");
+        
+        if (Array.isArray(selected) && selected.length > 0) {
+            $popup.find("#products2").val(selected.join("; "));
+            // Clear validation message when user selects
+            $popup.find('[data-valmsg-for="Products"]').text("").addClass('field-validation-valid').removeClass('field-validation-error');
+        } else {
+            $popup.find("#products2").val("");
+        }
+    });
+
+    // ========================================
+    // MODAL HANDLERS
+    // ========================================
+    $("#btnClose").on("click", function () {
+        $('#popsolutionmore').modal('hide');
+    });
+
+    $(document).on('click', '#thankYouModal2', function (e) {
+        if (e.target === this) {
+            closeThankYouModal2();
+        }
+    });
+
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape' && $('#thankYouModal2').is(':visible')) {
+            closeThankYouModal2();
+        }
+    });
+}
+
+// ========================================
+// ⭐ COMMON FUNCTIONS
+// ========================================
 
 $(document).ready(function () {
 	var noResultsText = (language === 'vi') ? 'Không có kết quả tìm kiếm' : 'No result found';
@@ -202,7 +563,7 @@ $(document).ready(function () {
 			}
 			$.get(url, {
 				key: key,
-				language: '@language'
+                language: language
 			}).done(function (res) {
 				var data = res && res.data ? res.data : res;
 				bindSearchResults(data)
@@ -211,7 +572,7 @@ $(document).ready(function () {
 			})
 		}
 	});
-	let owl = $('#owlur');
+    let owl = $('#owlour');
 	owl.owlCarousel({
 		margin: 0,
 		autoplay: true,
@@ -242,6 +603,7 @@ $(document).ready(function () {
 		time: 1200
 	})
 });
+
 $(function () {
 	let star = '.star',
 		selected = '.selected';
@@ -252,6 +614,7 @@ $(function () {
 		$(this).addClass('selected')
 	})
 });
+
 $(document).ready(function () {
 	$(window).scroll(function () {
 		if ($(this).scrollTop() > 200) {
@@ -312,3 +675,29 @@ $(document).ready(function () {
 		$link.attr('href', newHref)
 	})
 })
+
+$(function () {
+    const $owl2 = $('#manualsct');
+    if (!$owl2.length) return;
+
+    $owl2.owlCarousel({
+        margin: 0,
+        autoplay: true,
+        autoplayTimeout: 3000,
+        nav: false,
+        loop: true,
+        dots: false,
+        dotsData: true,
+        pagination: false,
+        autoHeight: false,
+        responsive: {
+            0: { items: 1 },
+            250: { items: 3 },
+            600: { items: 3 },
+            1000: { items: 6 }
+        },
+        onInitialized: function (event) { prepareManualSlides($(event.target)); },
+        onRefreshed: function (event) { prepareManualSlides($(event.target)); },
+        onChanged: function (event) { prepareManualSlides($(event.target)); }
+    });
+});
