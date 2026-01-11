@@ -45,7 +45,18 @@
 	<noscript>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 	</noscript>
-	<link rel="stylesheet" href="/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css" /><link rel="stylesheet" href="/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css" /><link asp-append-version="true" rel="stylesheet" href="/assets/css/style.css" /><link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" /><link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" /><link rel="stylesheet" href="/plugins/alertifyjs/css/alertify.min.css" /><link href="/plugins/select2/select2.min.css" rel="stylesheet" /><link rel="stylesheet" href="/plugins/alertifyjs/css/themes/default.min.css" /><link asp-append-version="true" rel="stylesheet" href="/assets/css/custom.css" /><link asp-append-version="true" rel="stylesheet" href="/assets/css/custom2.css" /><link href="/assets/lib/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/assets/lib/bootstrap-5.2.2-dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/assets/css/fonts/font-awesome/4.7.0/css/font-awesome.min.css" />
+	<link asp-append-version="true" rel="stylesheet" href="/assets/css/style.css" />
+	<link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" />
+	<link rel="stylesheet" href="/assets/lib/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" />
+	<link rel="stylesheet" href="/plugins/alertifyjs/css/alertify.min.css" />
+	<link href="/plugins/select2/select2.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/plugins/alertifyjs/css/themes/default.min.css" />
+	<link href="/assets/lib/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
+	<link asp-append-version="true" rel="stylesheet" href="/assets/css/custom.css" />
+	<link asp-append-version="true" rel="stylesheet" href="/assets/css/custom2.css" />
+	<link asp-append-version="true" href="~/assets/css/custom3.css" rel="stylesheet" />
 	@{
 		try
 		{
@@ -62,7 +73,6 @@
 	<partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
 	<script src="/assets/js/jquery.min.js"></script>
 	@Html.Raw(bindContentSetting.Head)
-	<link asp-append-version="true" href="~/assets/css/custom3.css" rel="stylesheet" />
 </head>
 
 <body id="Body">

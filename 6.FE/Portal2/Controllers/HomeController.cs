@@ -436,7 +436,8 @@ namespace PT.UI.Controllers
         }
         
         // ⭐ HÀM MỚI: Convert ảnh sang WebP với resize
-        [ResponseCache(Duration = 31536000, Location = ResponseCacheLocation.Any)]
+        // ⭐ FIX: VaryByQueryKeys để cache riêng biệt cho mỗi combination của params
+        [ResponseCache(Duration = 31536000, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "path", "size", "s", "quality" })]
         [Route("data/image-webp")]
         [Route("data2/image-webp")]
         public IActionResult ImageWebP(string path, int? size, bool? s, int? quality)
@@ -455,10 +456,11 @@ namespace PT.UI.Controllers
 
                 // Xây dựng đường dẫn đầy đủ
                 string fullPath = Path.Combine(_baseSetting.Value.DataPath, path.Replace('/', Path.DirectorySeparatorChar));
-                _logger.LogError("ImageWebP {0}", $"Vitual path {fullPath}");
+                
                 if (!System.IO.File.Exists(fullPath))
                 {
-                    return NotFound($"Image not found: {fullPath}");
+                    _logger.LogWarning("ImageWebP: Image not found at {FullPath}", fullPath);
+                    return NotFound($"Image not found: {path}");
                 }
 
                 // Load ảnh bằng ImageSharp (cross-platform)
@@ -511,7 +513,9 @@ namespace PT.UI.Controllers
             }
             catch (Exception ex)
             {
-                // Log error nếu cần
+                // Log error
+                _logger.LogError(ex, "ImageWebP: Error processing image {Path} with size={Size}, s={S}, quality={Quality}", 
+                    path, size, s, quality);
                 return StatusCode(500, $"Error processing image: {ex.Message}");
             }
         }
