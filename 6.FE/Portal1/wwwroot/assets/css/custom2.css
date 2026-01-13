@@ -390,7 +390,7 @@ a.btn.btn-primary.btn-join {
 :root {
     --manual-slide-height-mobile: 140px;
     --manual-slide-height-tablet: 180px;
-    --manual-slide-height-desktop: 220px
+    --manual-slide-height-desktop: 150px
 }
 
 .manual-slide {

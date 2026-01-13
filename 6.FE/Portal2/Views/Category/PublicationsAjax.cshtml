@@ -30,7 +30,7 @@
                     <img class="news-img" onerror="this.onerror=null;this.src='@item.ImageUrl';" src="@(item.ImageUrl ?? "/Data/Banner/news.jpg")" alt="@item.Title">
                 </a>
                 <h3 class="pt-4">
-                    <a href="@url" title="@item.Title" class="news-title">@Html.Raw(item.Title)e</a>
+                    <a href="@url" title="@item.Title" class="news-title">@Html.Raw(item.Title)</a>
                 </h3>
                 <div class="pt-2 pb-4 mb-4">
                     <a href="@url" title="@item.Title" class="show-more">@Localizer["ViewDetails"] <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>

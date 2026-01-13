@@ -61,7 +61,12 @@ namespace PT.UI.Controllers
         public async Task<IActionResult> Index(string linkData, int portalId)
         {
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            ViewData["CacheTime"] = $"[{DateTime.Now:HH:mm:ss}] HomeController.Index được gọi!";
+            return View();
+        }
+
+        public async Task<IActionResult> SearchAll(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View();
         }
 

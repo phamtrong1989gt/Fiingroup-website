@@ -626,7 +626,7 @@ a {
 }
 
 #SliderBanner .carousel-caption {
-    top: 12%;
+    top: 8%;
     text-align:left!important;
     max-height:450px;
 }
@@ -1129,4 +1129,20 @@ a:hover {
     .menu-news, .menu-publications, .narbarstory {
         display: none !important;
     }
+}
+#Find input.form-control {
+    height: 60px;
+    font-size: 21px;
+    padding: 10px 20px;
+}
+
+#Find button.bg-white {
+    height: 100%;
+    border-radius: 0px 5px 5px 0;
+}
+    #Find button.bg-white:hover i {
+        color: var(--primary-color);
+    }
+#manualsct .owl-stage-outer {
+    background: #e1f4fda6;
 }

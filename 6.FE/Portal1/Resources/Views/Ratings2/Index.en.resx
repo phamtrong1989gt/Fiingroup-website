@@ -181,4 +181,7 @@
     <value>Report Name</value>
     <comment>Report Name</comment>
   </data>
+  <data name="StatusRating" xml:space="preserve">
+    <value>Status Rating</value>
+  </data>
 </root>

@@ -34,7 +34,7 @@
 			<td data-label="@Localizer["PublicationDate"]">
 				@if (!string.IsNullOrEmpty(item.Date))
 				{
-					@(Convert.ToDateTime(item.Date).ToString("yyyy/MM/dd"))
+					@(Convert.ToDateTime(item.Date).ToString(language == "en" ? "MM/dd/yyyy" : "dd/MM/yyyy"))
 				}
 			</td>
 			<td data-label="@Localizer["IssuingOrganization"]">

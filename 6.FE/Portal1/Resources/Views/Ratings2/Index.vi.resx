@@ -181,4 +181,7 @@
     <value>Báo cáo</value>
     <comment>Report Name</comment>
   </data>
+  <data name="StatusRating" xml:space="preserve">
+    <value>Trạng thái xếp hạng</value>
+  </data>
 </root>

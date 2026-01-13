@@ -378,6 +378,112 @@ namespace PT.BE.Areas.Base.Controllers
                 await _iLinkReferenceRepository.ReferenceUpdate(model);
             }
         }
+
+        public async Task UpdateLinkByIdAsync(int linkId, bool changeSlug, ESlugType slugType, string language, SeoModel model, string name, string area, string controller, string action)
+        {
+            var _iLinkRepository = (ILinkRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkRepository));
+            var _iLinkReferenceRepository = (ILinkReferenceRepository)AppHttpContext.Current.RequestServices.GetService(typeof(ILinkReferenceRepository));
+            var baseSettings = (IOptions<BaseSettings>)AppHttpContext.Current.RequestServices.GetService(typeof(IOptions<BaseSettings>));
+            var ktLink = await _iLinkRepository.SingleOrDefaultAsync(false, x => x.Id == linkId);
+            if (ktLink == null)
+            {
+                ktLink = new Link
+                {
+                    Slug = model.Slug,
+                    Type = slugType,
+                    Name = name,
+                    Language = language,
+                    IsStatic = false,
+                    Changefreq = model.Changefreq,
+                    Lastmod = model.Lastmod ?? DateTime.Now,
+                    Priority = model.Priority.ConvertToDouble(),
+                    Delete = model.Delete,
+                    Description = model.Description,
+                    FacebookBanner = model.FacebookBanner,
+                    FacebookDescription = model.FacebookDescription,
+                    FocusKeywords = model.FocusKeywords,
+                    GooglePlusDescription = model.GooglePlusDescription,
+                    IncludeSitemap = model.IncludeSitemap,
+                    Keywords = model.Keywords,
+                    MetaRobotsAdvance = model.MetaRobotsAdvance,
+                    MetaRobotsFollow = model.MetaRobotsFollow,
+                    MetaRobotsIndex = model.MetaRobotsIndex,
+                    Redirect301 = model.Redirect301,
+                    Title = model.Title,
+                    Status = model.Status,
+                    Area = area,
+                    Controller = controller,
+                    Acction = action,
+                    PortalId = model.PortalId ?? 0
+                };
+                await _iLinkRepository.AddAsync(ktLink);
+                await _iLinkRepository.CommitAsync();
+            }
+            else if (changeSlug)
+            {
+                // nếu thay đổi slug thì phải tạo 1 link mới với Slug cũ trạng thái xóa và redirect 301 về Slug mới
+                var dlLugOld = new Link
+                {
+                    Slug = ktLink.Slug,
+                    Name = ktLink.Name,
+                    Type = ktLink.Type,
+                    ObjectId = ktLink.ObjectId,
+                    Language = ktLink.Language,
+                    IsStatic = false,
+                    Changefreq = ktLink.Changefreq,
+                    Lastmod = DateTime.Now,
+                    Priority = ktLink.Priority,
+                    Delete = true,
+                    Description = ktLink.Description,
+                    FacebookBanner = ktLink.FacebookBanner,
+                    FacebookDescription = ktLink.FacebookDescription,
+                    FocusKeywords = ktLink.FocusKeywords,
+                    GooglePlusDescription = ktLink.GooglePlusDescription,
+                    IncludeSitemap = ktLink.IncludeSitemap,
+                    Keywords = ktLink.Keywords,
+                    MetaRobotsAdvance = ktLink.MetaRobotsAdvance,
+                    MetaRobotsFollow = ktLink.MetaRobotsFollow,
+                    MetaRobotsIndex = ktLink.MetaRobotsIndex,
+                    Redirect301 = $"/{language}/{model.Slug}.html",
+                    Title = ktLink.Title,
+                    Status = false,
+                    Area = ktLink.Area,
+                    Controller = ktLink.Controller,
+                    Acction = ktLink.Acction,
+                    PortalId = ktLink.PortalId,
+                };
+                await _iLinkRepository.AddAsync(dlLugOld);
+                await _iLinkRepository.CommitAsync();
+                ktLink.Slug = model.Slug;
+            }
+            ktLink.Changefreq = model.Changefreq;
+            ktLink.Lastmod = model.Lastmod ?? DateTime.Now;
+            ktLink.Priority = model.Priority.ConvertToDouble();
+            ktLink.Description = model.Description;
+            ktLink.FacebookBanner = model.FacebookBanner;
+            ktLink.FacebookDescription = model.FacebookDescription;
+            ktLink.FocusKeywords = model.FocusKeywords;
+            ktLink.GooglePlusDescription = model.GooglePlusDescription;
+            ktLink.IncludeSitemap = model.IncludeSitemap;
+            ktLink.Keywords = model.Keywords;
+            ktLink.MetaRobotsAdvance = model.MetaRobotsAdvance;
+            ktLink.MetaRobotsFollow = model.MetaRobotsFollow;
+            ktLink.MetaRobotsIndex = model.MetaRobotsIndex;
+            ktLink.Redirect301 = model.Redirect301;
+            ktLink.Title = model.Title;
+            ktLink.Status = model.Status;
+            ktLink.Name = name;
+            ktLink.Area = area;
+            ktLink.Controller = controller;
+            ktLink.Acction = action;
+            await _iLinkRepository.CommitAsync();
+            if (baseSettings.Value.MultipleLanguage)
+            {
+                model.Language = language;
+                await _iLinkReferenceRepository.ReferenceUpdate(model);
+            }
+        }
+
         /// <summary>
         /// Xóa liên kết SEO của đối tượng
         /// </summary>
