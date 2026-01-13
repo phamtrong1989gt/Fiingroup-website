@@ -1,0 +1,512 @@
+﻿#Find, .loader {
+    position: relative
+}
+
+#NewButton .btn, .time-options input[type=radio] {
+    margin-right: 5px
+}
+
+.find-top, .time-options {
+    gap: 20px;
+    display: flex
+}
+
+#Find {
+    background: url("/Data/FR/ranking_banner2.jpg") center top/cover no-repeat
+}
+
+.box-find-top {
+    text-align: center;
+    padding: 20px 0
+}
+
+.time-options label {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+    font-weight: 700
+}
+
+.find-top input {
+    width: 320px;
+    background-color: #fff
+}
+
+.find-top {
+    flex-wrap: wrap;
+    align-items: center
+}
+
+.find-input {
+    padding: 8px;
+    border: 1px solid #ededed;
+    border-radius: 4px;
+    font-size: 14px;
+    flex: 1;
+    min-width: 150px
+}
+
+.btn-filter, .find-button {
+    border: none;
+    cursor: pointer
+}
+
+.refresh {
+    cursor: pointer;
+    color: red;
+    font-size: 18px;
+    margin-left: 10px;
+    transform: rotate(35deg);
+    transition: transform .3s
+}
+
+    .refresh.spin i {
+        transform: rotate(-360deg);
+        transition: transform .6s
+    }
+
+.find-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 120px;
+    justify-content: center
+}
+
+.btn-filter {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #edf3ff;
+    align-items: center;
+    justify-content: center
+}
+
+.find-button .fas.fa-search {
+    font-size: 14px;
+    color: #fff !important
+}
+
+.find-button:hover {
+    background-color: #0056b3
+}
+
+.clear {
+    clear: both
+}
+
+#TableRank {
+    background: url(/Data/ranking_bgtable.png) 0 0/contain
+}
+
+    #TableRank .head-table th, #TableRank td {
+        padding: 12px;
+        border: 1px solid #eee;
+        background: #fff
+    }
+
+    #TableRank tbody, td, tfoot, th, thead, tr {
+        border-top: 1px !important;
+        border-right: 0px !important;
+        border-left: 0 !important
+    }
+
+    #TableRank th {
+        background-color: #fff;
+        color: #034ea2;
+        font-weight: 600;
+        text-align: left
+    }
+
+    #TableRank .head-table th {
+        background-color: #f7f8f9;
+        border-bottom: 1px solid #eee
+    }
+
+    #TableRank .download-btn {
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 4px;
+        cursor: pointer
+    }
+
+        #TableRank .download-btn:hover {
+            background-color: #218838
+        }
+
+.gmt-text {
+    color: #ccc;
+    font-size: 13px
+}
+
+.phat-hanh-text {
+    text-transform: uppercase;
+    color: #1359a7;
+    text-align: left
+}
+
+.icon-info {
+    float: right;
+    color: #66b7f1;
+    cursor: pointer
+}
+
+    .icon-info i:hover {
+        color: #154a8c
+    }
+
+    .icon-info i[title] {
+        pointer-events: none
+    }
+
+    .icon-info i[data-tooltip]:hover:after {
+        content: attr(data-tooltip);
+        position: absolute;
+        background-color: #6294c9;
+        color: #fff;
+        padding: 5px 12px;
+        border-radius: 3px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 1000;
+        top: 50px;
+        font-family: Arial,"Times New Roman",Roboto,Segoe UI,sans-serif !important
+    }
+
+.type-text {
+    background-color: #eaf4ff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    color: #1f63ad
+}
+
+.icon-down {
+    font-size: 18px;
+    color: #489efb;
+    cursor: pointer
+}
+
+.page-table {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    font-size: 16px
+}
+
+.lang-option, .language-switch, .pagination {
+    align-items: center;
+    display: flex
+}
+
+.numberpage {
+    margin-right: 20px
+}
+
+.pagination {
+    gap: 0px !important;
+    cursor: pointer
+}
+
+    .pagination .active {
+        padding: 5px 14px;
+        border: 1px solid #4d94dc;
+        border-radius: 5px;
+        background: #fff;
+        cursor: pointer;
+        color: #1f78d3
+    }
+
+.btn-download {
+    background: 0 0;
+    border: none;
+    cursor: pointer;
+    color: #2e90fa;
+    border-left: 1px solid #e1f4fd
+}
+
+    .btn-download:hover {
+        background: #007bff00;
+        border-radius: 5px;
+        color: #000;
+        box-shadow: 0 4px 10px #007bff33
+    }
+
+.language-switch {
+    gap: 25px;
+    color: #1a1a1a
+}
+
+.lang-option {
+    gap: 8px;
+    cursor: pointer;
+    user-select: none
+}
+
+    .lang-option .radio {
+        width: 16px;
+        height: 16px;
+        position: relative;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#034ea2,#53dfff);
+        padding: 1px;
+        transition: .3s
+    }
+
+        .lang-option .radio::before {
+            content: "";
+            position: absolute;
+            inset: 1px;
+            background: #fff;
+            border-radius: 50%
+        }
+
+    .lang-option input[type=radio] {
+        display: none
+    }
+
+        .lang-option input[type=radio]:checked + .radio::after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#034ea2,#53dfff);
+            box-shadow: 0 0 5px rgba(83,223,255,.6);
+            transition: .2s
+        }
+
+    .lang-option:hover .radio {
+        box-shadow: 0 0 5px rgba(83,223,255,.5)
+    }
+
+#NewButton .btn {
+    margin-left: 5px
+}
+
+#NewButton {
+    align-items: center;
+    justify-content: center;
+    margin: -37px 0 0;
+    z-index: 99999
+}
+
+.btn-active, .btn-noactive {
+    display: flex;
+    padding: 12px 40px;
+    gap: 40px;
+    width: 302px;
+    height: 72px;
+    border-radius: 12px;
+    font-size: 24px;
+    font-weight: 500
+}
+
+.btn-active {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    color: #093461
+}
+
+    .btn-active:hover {
+        background: #f6f6f6
+    }
+
+.btn-noactive {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #06c;
+    box-shadow: 0 8px 20px rgba(0,102,204,.12),0 -8px 20px rgba(255,255,255,.2);
+    color: #fff
+}
+
+.loader {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: 1s linear infinite spin;
+    display: inline-block
+}
+
+/* Skeleton Loading Animation */
+.skeleton {
+    background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0
+    }
+
+    100% {
+        background-position: -200% 0
+    }
+}
+
+.skeleton-row {
+    height: 60px
+}
+
+.skeleton-cell {
+    height: 20px;
+    border-radius: 4px;
+    margin: 5px 0
+}
+
+.TableRank td, .TableRank th, .btn-download, .language-switch, .phat-hanh-text, .type-text {
+    font-size: 14px
+}
+
+.TableRank {
+    width: 100%
+}
+
+@media (max-width: 768px) {
+    .btn-filter {
+        display: flex !important
+    }
+
+    .custom-dropdown-select, .refresh {
+        display: none
+    }
+
+        .custom-dropdown-select.show, .refresh.show {
+            display: block !important
+        }
+}
+
+.rating-info-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s;
+}
+
+.rating-info-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    animation: slideDown 0.3s;
+}
+
+.rating-info-header {
+    background: linear-gradient(135deg, #034ea2, #53dfff);
+    color: white;
+    padding: 20px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+    .rating-info-header h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+.rating-header-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.rating-current-score {
+    background: rgba(255,255,255,0.2);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.rating-info-close {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+    .rating-info-close:hover {
+        background: rgba(255,255,255,0.2);
+    }
+
+.rating-info-body {
+    padding: 20px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.numberpage {
+    font-size: 14px;
+}
+
+.TableRank {
+    border-top: 1px solid #eee;
+}
+
+#Banner img {
+    aspect-ratio: inherit;
+}

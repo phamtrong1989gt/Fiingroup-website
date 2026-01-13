@@ -24,6 +24,12 @@
 		var item = Model.Data.Items[i];
 		string url = $"/{language}/ratings-fr/{Functions.ToUrlSlug(item.Issuer)}-id{Model.Data.Items[i].OrganizationId}.html";
 		var radioName = $"language_{i}";
+		
+		// Xử lý RatingType an toàn
+		var ratingTypeParts = item.RatingType?.Split('-') ?? Array.Empty<string>();
+		var statusRating = ratingTypeParts.Length > 0 ? ratingTypeParts[0] : "";
+		var opinionType = ratingTypeParts.Length > 1 ? ratingTypeParts[1] : "";
+		
 		<tr>
 			<td data-label="@Localizer["PublicationDate"]">
 				@if (!string.IsNullOrEmpty(item.Date))
@@ -34,11 +40,9 @@
 			<td data-label="@Localizer["IssuingOrganization"]">
 				<a href="@url" class="phat-hanh-text">@item.Issuer</a>
 			</td>
-			<td>
-				<span>@(item.BondCode ?? "---")</span>
-			</td>
 			<td data-label="@Localizer["Industry"]">@item.Industry</td>
-			<td data-label="@Localizer["OpinionType"]">@item.RatingType</td>
+			<td data-label="@Localizer["StatusRating"]">@statusRating</td>
+			<td data-label="@Localizer["OpinionType"]">@opinionType</td>
 			<td data-label="@Localizer["RatingScore"]">
 				@item.Rating
 				@if (!string.IsNullOrEmpty(item.Rating))
@@ -58,6 +62,11 @@
 					<span class="type-text">@item.Outlook</span>
 				}
 			</td>
+
+			<td>
+				<span>@(item.BondCode ?? "---")</span>
+			</td>
+
 			<td data-label="@Localizer["Report"]">
 				<div class="language-switch">
 					@if(item.Announcement  != null && !string.IsNullOrEmpty(item.Announcement.Vi))
