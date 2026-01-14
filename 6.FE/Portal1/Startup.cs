@@ -38,6 +38,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WebMarkupMin.AspNetCoreLatest;
 
 namespace PT.UI
 {
@@ -222,27 +223,65 @@ namespace PT.UI
             //Gzip - Tối ưu hóa
             services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Fastest);
 
+            // ✅ HTML MINIFICATION - Nén HTML xuống 1 dòng (loại bỏ whitespace, comment)
+            services.AddWebMarkupMin(options =>
+            {
+                options.AllowMinificationInDevelopmentEnvironment = true; // Bật minify trong dev
+                options.AllowCompressionInDevelopmentEnvironment = true;
+                options.DisablePoweredByHttpHeaders = true; // Ẩn header "X-Powered-By"
+            })
+            .AddHtmlMinification(options =>
+            {
+                // Loại bỏ whitespace
+                options.MinificationSettings.WhitespaceMinificationMode = WebMarkupMin.Core.WhitespaceMinificationMode.Aggressive;
+
+                // Loại bỏ tất cả comments (trừ conditional comments)
+                options.MinificationSettings.RemoveHtmlComments = true;
+                options.MinificationSettings.RemoveHtmlCommentsFromScriptsAndStyles = true;
+
+                // Loại bỏ CDATA sections không cần thiết
+                options.MinificationSettings.RemoveCdataSectionsFromScriptsAndStyles = true;
+
+                // Loại bỏ optional end tags
+                options.MinificationSettings.RemoveOptionalEndTags = false; // Giữ lại để tránh break layout
+
+                // Collapse whitespace trong attributes
+                options.MinificationSettings.CollapseBooleanAttributes = true;
+
+                // Loại bỏ quotes không cần thiết trong attributes
+                options.MinificationSettings.RemoveRedundantAttributes = true;
+
+                // Loại bỏ empty attributes
+                options.MinificationSettings.RemoveEmptyAttributes = true;
+
+                // Minify inline CSS
+                options.MinificationSettings.MinifyInlineCssCode = true;
+
+                // Minify inline JavaScript
+                options.MinificationSettings.MinifyInlineJsCode = true;
+            });
+
             services.AddResponseCompression(options =>
             {
                 options.EnableForHttps = true; // Bật compression cho HTTPS
                 options.Providers.Add<GzipCompressionProvider>();
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
                 {
-       "text/plain",
-              "text/css",
- "application/javascript",
-            "text/html",
-        "application/xml",
-          "text/xml",
-             "application/json",
-            "text/json",
-      "image/svg+xml",
-                 "application/atom+xml",
-     "font/woff",
-     "font/woff2",
-  "application/font-woff",
-  "application/font-woff2"
-     });
+                       "text/plain",
+                              "text/css",
+                 "application/javascript",
+                            "text/html",
+                        "application/xml",
+                          "text/xml",
+                             "application/json",
+                            "text/json",
+                      "image/svg+xml",
+                                 "application/atom+xml",
+                     "font/woff",
+                     "font/woff2",
+                  "application/font-woff",
+                  "application/font-woff2"
+                     });
             });
 
             //Content/Admin/plugins/signalr
@@ -313,7 +352,8 @@ namespace PT.UI
             }
 
             AppHttpContext.Services = app.ApplicationServices;
-
+            // 1.5. HTML Minification - Nén HTML (đặt sau compression)
+            app.UseWebMarkupMin();
             // Response Compression phải đặt trước Static Files
             app.UseResponseCompression();
             // THÊM middleware cache mới
