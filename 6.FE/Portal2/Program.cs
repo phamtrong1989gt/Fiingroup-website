@@ -18,6 +18,7 @@ namespace PT.UI
                     config.AddJsonFile("appsettings.Base.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("appsettings.Authorize.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("appsettings.Log.json", optional: true, reloadOnChange: true);
+                    config.AddJsonFile("appsettings.Misa.json", optional: true, reloadOnChange: true);
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {

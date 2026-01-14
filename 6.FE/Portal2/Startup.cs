@@ -4,21 +4,16 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.OutputCaching;
-using Microsoft.AspNetCore.ResponseCaching;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -26,20 +21,18 @@ using Newtonsoft.Json.Serialization;
 using PT.Base;
 using PT.Base.Services;
 using PT.Domain.Model;
+using PT.Domain.Model.Common;
 using PT.Infrastructure;
 using PT.Infrastructure.Interfaces;
 using PT.Infrastructure.Repositories;
 using PT.Shared;
-using PT.UI.SignalR;
 using Serilog;
 using Serilog.Events;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using WebMarkupMin.AspNetCoreLatest;
 
@@ -231,6 +224,7 @@ namespace PT.UI
             services.Configure<BaseSettings>(Configuration.GetSection("BaseSettings"));
             services.Configure<LogSettings>(Configuration.GetSection("LogSettings"));
             services.Configure<AuthorizeSettings>(Configuration.GetSection("AuthorizeSettings"));
+            services.Configure<MisaSettings>(Configuration.GetSection("MisaSettings"));
 
             // ✅ APPLICATION COOKIE - Cấu hình cookie authentication
             services.ConfigureApplicationCookie(options =>
@@ -333,6 +327,7 @@ namespace PT.UI
             services.AddScoped<IEmailSettingRepository, EmailSettingRepository>();
             services.AddScoped<IAPILoggerService, APILoggerService>();
             services.AddScoped<INewsAPIService, NewsAPIService>();
+            services.AddScoped<IMisaAPIService, MisaAPIService>();
             services.AddScoped<IParameterRepository, ParameterRepository>();
 
             // Services

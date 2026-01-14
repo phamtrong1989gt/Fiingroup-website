@@ -3,14 +3,16 @@
 @inject IOptions<BaseSettings> _baseSettings;
 @inject IViewLocalizer Localizer;
 @model PT.UI.Models.ContactHomeModel;
+@inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
+@inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
 @{
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var listLanguage = PT.Shared.ListData.ListLanguage;
-    @inject Microsoft.Extensions.Options.IOptions<PT.Domain.Model.AuthorizeSettings> _authorizeSettings;
-    @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
+  
     var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
     var portalId = _baseSettings.Value.PortalId;
     var listServies = await _iContactRepository.ServiesList(language, portalId);
+    var listProducts = await _iContactRepository.ProductList(language, portalId);
 }
 
 <section class="py-5 mb-3 mt-3" id="DangKy">
@@ -28,7 +30,14 @@
                         <div class="col-sm-6 mb-2"><label class="form-label" asp-for="ConpanyName"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="ConpanyName" placeholder=""><span class="validate-style" asp-validation-for="ConpanyName"></span></div>
                         <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Position"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="Position" placeholder=""><span class="validate-style" asp-validation-for="Position"></span></div>
                         <div class="col-sm-12 mb-2"><label class="form-label" for="dichVuQT" asp-for="ServiceId"></label> <strong class="error">*</strong><select asp-for="ServiceId" asp-items="listServies" class="form-select" id="dichVuQT"><option value="">@Localizer["SelectServiceId"]</option></select><span asp-validation-for="ServiceId" class="validate-style"></span></div>
-                        <div class="col-sm-12 mb-2"><label class="form-label" asp-for="Products" for="sanPhamQT"></label> <strong class="error">*</strong><select class="form-select" id="sanPhamQT" multiple="multiple"></select><span class="validate-style" asp-validation-for="Products"></span></div>
+                       
+                        <div class="col-sm-12 mb-2">
+                            <label class="form-label" asp-for="Products" for="sanPhamQT"></label> 
+                            <strong class="error">*</strong>
+                            <select class="form-select" id="sanPhamQT" asp-items="listProducts" multiple="multiple"></select>
+                            <span class="validate-style" asp-validation-for="Products"></span>
+                        </div>
+
                         <div class="col-sm-12 mb-2"><label class="form-label" for="yeuCauCT" asp-for="Content"></label><textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="@Localizer["ContentPlaceholder"]"></textarea><span class="validate-style" asp-validation-for="Content"></span><input type="hidden" class="form-control" id="products" asp-for="Products"></div>
                         @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ContactFormMsg", language = language, portalId = portalId })
                     </div><div class="mb-2"></div><button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>@Localizer["BtnSend"]</button><input type="hidden" class="Capcha" id="g-recaptcha-response" name="capcha" />

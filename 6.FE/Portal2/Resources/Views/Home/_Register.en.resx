@@ -155,15 +155,15 @@
     <value>Products &amp; Services</value>
   </data>
   <data name="SelectProducts" xml:space="preserve">
-    <value>Select product &amp; Service</value>
+    <value>Select Product &amp; Service</value>
   </data>
   <data name="SelectServiceId" xml:space="preserve">
-    <value>Select industry / Sector</value>
+    <value>Select Industry / Sector</value>
   </data>
   <data name="ServiceId" xml:space="preserve">
     <value>Industry / Sector</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Register now to &lt;span style="color: #0066CC;"&gt;receive a consultation!&lt;/span&gt;</value>
+    <value>Register now to &lt;span style="color: #0066CC;"&gt;receive a consultation&lt;/span&gt;</value>
   </data>
 </root>

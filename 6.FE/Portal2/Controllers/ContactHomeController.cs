@@ -1,15 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PT.Base.Services;
 using PT.Domain.Model;
+using PT.Domain.Model.Common;
 using PT.Infrastructure.Interfaces;
 using PT.Shared;
 using PT.UI.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PT.UI.Controllers
 {
@@ -27,6 +31,8 @@ namespace PT.UI.Controllers
         private readonly IUserRepository _iUserRepository;
         private readonly IOptions<AuthorizeSettings> _authorizeSettings;
         private readonly ILogger<ContactHomeController> _logger;
+        private readonly IMisaAPIService _misaAPIService;
+        private readonly IOptions<MisaSettings> _misaSettings;
 
         public ContactHomeController(
             IContactRepository iContactRepository,
@@ -39,7 +45,9 @@ namespace PT.UI.Controllers
             ICountryRepository iCountryRepository,
             IUserRepository iUserRepository,
             IOptions<AuthorizeSettings> authorizeSettings,
-            ILogger<ContactHomeController> logger
+            ILogger<ContactHomeController> logger,
+            IMisaAPIService misaAPIService,
+            IOptions<MisaSettings> misaSettings
         )
         {
             _iContactRepository = iContactRepository;
@@ -53,6 +61,8 @@ namespace PT.UI.Controllers
             _iUserRepository = iUserRepository;
             _authorizeSettings = authorizeSettings;
             _logger = logger;
+            _misaAPIService = misaAPIService;
+            _misaSettings = misaSettings;
         }
 
         // Localization helper: key-based messages for vi (default) and en
@@ -97,7 +107,7 @@ namespace PT.UI.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    await _iContactRepository.AddAsync(new Contact
+                    var dlAdd = new Contact
                     {
                         FullName = Functions.SContent(use.FullName),
                         Content = Functions.SContent(use.Content),
@@ -113,13 +123,49 @@ namespace PT.UI.Controllers
                         CreatedDate = DateTime.Now,
                         PortalId = _baseSettings.Value.PortalId,
                         Language = language
-                    });
+                    };
+                    await _iContactRepository.AddAsync(dlAdd);
                     await _iContactRepository.CommitAsync();
-
-                    if (!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
+                    string serviceName = "";
+                    string productNames = "";
+                    if (use.ServiceId <= 0)
                     {
-                        // optional email logic...
+                        serviceName = language == "vi" ? "Lựa chọn khác" : "Others";
                     }
+                    else
+                    {
+                        var service = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == dlAdd.ServiceId);
+                        if(service != null)
+                        {
+                            serviceName = service.Name;
+                        }
+                    }
+
+                    var producids = dlAdd.Products.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToList();
+                    var producs = await _iContentPageRepository.SearchAsync(true, 0, 0, x =>  producids.Contains(x.Id));
+                    productNames = string.Join(";", producs.Select(x => x.Name));
+                    if (producids.Any(x=> x == 0))
+                    {
+                        productNames += language == "vi" ? "Lựa chọn khác;" : "Others;";
+                    }    
+
+                    await _misaAPIService.CreateContactAsync(new Domain.Model.Misa.MisaContactRequest
+                    {
+                        DateOfBirth = null,
+                        ContactCode = $"DKNTV{dlAdd.Id:D6}",
+                        ContactName = dlAdd.FullName,
+                        Department = _misaSettings.Value.Department,
+                        Gender = null,
+                        FirstName = null,
+                        LastName = null,
+                        FormLayout = _misaSettings.Value.FormLayout,
+                        CustomerSinceDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        Mobile = dlAdd.Phone,
+                        OfficeEmail = dlAdd.Email,
+                        OfficeTel = dlAdd.Phone,
+                        Title = _misaSettings.Value.TitleSolution,
+                        Description = $"Cty: [{use.ConpanyName}], Vị trí: [{use.Position}], Nhóm ngành: [{serviceName}], Sản phẩm & dịch vụ quan tâm: [{productNames}], Mô tả chi tiết: [{dlAdd.Content}]"
+                    });
                     return new ResponseModel() { Output = 1, Message = Localize("SuccessRegister", language), Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
                 return new ResponseModel() { Output = 0, Message = Localize("MissingFields", language), Type = ResponseTypeMessage.Warning };
@@ -181,7 +227,7 @@ namespace PT.UI.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    await _iContactRepository.AddAsync(new Contact
+                    var dlAdd = new Contact
                     {
                         FullName = Functions.SContent(use.FullName),
                         Delete = false,
@@ -195,13 +241,34 @@ namespace PT.UI.Controllers
                         Language = language,
                         ConpanyName = use.ConpanyName,
                         Position = use.Position,
-                    });
+                    };
+
+                    await _iContactRepository.AddAsync(dlAdd);
                     await _iContactRepository.CommitAsync();
 
-                    if (!string.IsNullOrEmpty(_baseSettings.Value.ToEmail))
+                    string productNames = "";
+
+                    var producids = use.Products.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToList();
+                    var producs = await _iContentPageRepository.SearchAsync(true, 0, 0, x => producids.Contains(x.Id));
+                    productNames = string.Join(";", producs.Select(x => x.Name));
+                    await _misaAPIService.CreateContactAsync(new Domain.Model.Misa.MisaContactRequest
                     {
-                        // optional email logic...
-                    }
+                        DateOfBirth = null,
+                        ContactCode = $"DKNTN{dlAdd.Id:D6}",
+                        ContactName = dlAdd.FullName,
+                        Department = _misaSettings.Value.DepartmentSolution,
+                        Gender = null,
+                        FirstName = null,
+                        LastName = null,
+                        FormLayout = _misaSettings.Value.FormLayoutSolution,
+                        CustomerSinceDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        Mobile = dlAdd.Phone,
+                        OfficeEmail = dlAdd.Email,
+                        OfficeTel = dlAdd.Phone,
+                        Title = _misaSettings.Value.TitleSolution,
+                        Description = $"Cty: [{use.ConpanyName}], Vị trí: [{use.Position}], Nhận tin tức liên quan đến lĩnh vực: [{productNames}], Mô tả chi tiết: [{dlAdd.Content}]"
+                    });
+
                     return new ResponseModel() { Output = 1, Message = Localize("SuccessSubscribe", language), Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
                 return new ResponseModel() { Output = 0, Message = Localize("MissingFields", language), Type = ResponseTypeMessage.Warning };
@@ -211,31 +278,6 @@ namespace PT.UI.Controllers
                 _logger?.LogError(ex, "Error in ContactSolutionPost: {Message}", ex.Message);
             }
             return new ResponseModel() { Output = -1, Message = Localize("GenericError", language), Type = ResponseTypeMessage.Danger, Status = false };
-        }
-
-
-        private async void SendEmail(EmailSettings emailSettings, string toEmail, string title, string content)
-        {
-            await _iEmailSenderRepository.SendEmailAsync(emailSettings, null, title, content, toEmail);
-        }
-
-        private void SetRequest(string type)
-        {
-            HttpContext.Session.SetString(type, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
-        }
-        private bool IsCheckRequest(string type)
-        {
-            var getData = HttpContext.Session.GetString(type);
-            if (getData == null)
-            {
-                return true;
-            }
-            var dt = Convert.ToDateTime(getData);
-            if (dt.AddSeconds(_baseSettings.Value.TimeOutSendRequest) >= DateTime.Now)
-            {
-                return false;
-            }
-            return true;
         }
     }
 }
