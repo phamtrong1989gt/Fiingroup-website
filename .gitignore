@@ -52,3 +52,12 @@
 /6.FE/Portal2/wwwroot/Data/Data.rar
 /6.FE/Portal1/Properties/PublishProfiles/FolderProfile.pubxml.user
 /6.FE/Portal1/PT.UI.csproj.user
+# Bỏ qua các file nén phổ biến
+*.zip
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.gz
+*.bz2

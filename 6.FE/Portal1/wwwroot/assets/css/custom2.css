@@ -281,15 +281,15 @@ a.btn.btn-primary.btn-join {
 }
 .pagination .page-item {
     padding: 0;
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     border: 1px solid #0066CC;
-    border-radius: 24px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 2px;
-    font-size: 16px;
+    font-size: 14px;
 }
 .field-validation-error {
     font-size: 12px;
@@ -390,7 +390,7 @@ a.btn.btn-primary.btn-join {
 :root {
     --manual-slide-height-mobile: 140px;
     --manual-slide-height-tablet: 180px;
-    --manual-slide-height-desktop: 220px
+    --manual-slide-height-desktop: 150px
 }
 
 .manual-slide {

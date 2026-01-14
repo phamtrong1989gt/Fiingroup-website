@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CompanyNamePlaceholder" xml:space="preserve">
-    <value>Tên công ty</value>
+    <value>Tên doanh nghiệp</value>
   </data>
   <data name="AllIndustries" xml:space="preserve">
     <value>Ngành</value>
@@ -178,7 +178,10 @@
     <value>Báo cáo không có sẵn</value>
   </data>
   <data name="ReportName" xml:space="preserve">
-    <value>Tên báo cáo</value>
+    <value>Báo cáo</value>
     <comment>Report Name</comment>
+  </data>
+  <data name="StatusRating" xml:space="preserve">
+    <value>Trạng thái xếp hạng</value>
   </data>
 </root>

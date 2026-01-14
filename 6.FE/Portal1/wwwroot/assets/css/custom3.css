@@ -101,11 +101,6 @@
         background: #d32f2f;
     }
 
-:root {
-    --manual-slide-height-mobile: 140px;
-    --manual-slide-height-tablet: 180px;
-    --manual-slide-height-desktop: 220px;
-}
 
 .manual-slide {
     display: flex;
@@ -521,6 +516,7 @@
 
     #btn-modal-login {
         min-width: 120px;
+        color:#fff;
     }
 
     .testimonial-card .align-items-stretch {
@@ -934,4 +930,35 @@
     object-position: center;
     border-radius: 12px;
     border: 1px solid #eee;
+}
+#btn-modal-login
+{
+    color:#fff;
+}
+.btn-search {
+    color: #fff;
+}
+.phat-hanh-text {
+    text-transform: inherit !important;
+}
+.why-desc {
+    padding-right: 0 !important;
+}
+
+button.btn.btn-primary.btn-join {
+    color: #fff;    
+}
+
+a.btn.btn-primary.btn-join {
+    color: #fff;
+}
+.btn-yeucau {
+    color: #fff;
+}
+
+#manualsct_ab .owl-stage-outer {
+    background: #e1f4fda6;
+}
+.price-title {
+     margin-bottom: 20px !important;
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
@@ -24,6 +25,7 @@ namespace PT.Component
         private readonly IBannerRepository _iBannerRepository;
         private readonly IStaticInformationRepository _iStaticInformationRepository;
         private readonly IOptions<BaseSettings> _baseSettings;
+        
         public ViewModuleComponent(IWebHostEnvironment hostingEnvironment, IMemoryCache iMemoryCache, IMenuRepository iMenuRepository, IMenuItemRepository iMenuItemRepository, IBannerRepository iBannerRepository, IStaticInformationRepository iStaticInformationRepository, IOptions<BaseSettings> baseSettings)
         {
             _hostingEnvironment = hostingEnvironment;
@@ -43,10 +45,14 @@ namespace PT.Component
                     // Cache key duy nhất cho module (bao gồm type, code, language, portalId)
                     string cacheKey = $"ModuleHtml::{type}::{code}::{language}::{portalId}";
 
-                    // Thử lấy từ cache trước
-                    if (_iMemoryCache.TryGetValue(cacheKey, out string cachedHtml) && !string.IsNullOrEmpty(cachedHtml))
+                    // Bỏ qua cache nếu đang ở môi trường Development
+                    if (!_hostingEnvironment.IsDevelopment())
                     {
-                        return new HtmlContentViewComponentResult(new HtmlString(cachedHtml));
+                        // Thử lấy từ cache trước
+                        if (_iMemoryCache.TryGetValue(cacheKey, out string cachedHtml) && !string.IsNullOrEmpty(cachedHtml))
+                        {
+                            return new HtmlContentViewComponentResult(new HtmlString(cachedHtml));
+                        }
                     }
 
                     string url = "";
@@ -105,16 +111,18 @@ namespace PT.Component
                         newKyTu = Functions.ZipStringHTML(data);
                     }
 
-                    // Lưu rendered HTML vào cache trong 24 giờ
-                    var cacheOptions = new MemoryCacheEntryOptions
+                    // Lưu rendered HTML vào cache trong môi trường Production
+                    if (!_hostingEnvironment.IsDevelopment())
                     {
-                        //AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24),
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_baseSettings.Value.TimeCache),
-                        Priority = CacheItemPriority.Normal,
-                        Size = 1 // Thêm Size để tránh lỗi khi SizeLimit được set
-                    };
+                        var cacheOptions = new MemoryCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_baseSettings.Value.TimeCache),
+                            Priority = CacheItemPriority.Normal,
+                            Size = 1 // Thêm Size để tránh lỗi khi SizeLimit được set
+                        };
 
-                    _iMemoryCache.Set(cacheKey, newKyTu, cacheOptions);
+                        _iMemoryCache.Set(cacheKey, newKyTu, cacheOptions);
+                    }
 
                     return new HtmlContentViewComponentResult(new HtmlString(newKyTu ?? string.Empty));
                 }

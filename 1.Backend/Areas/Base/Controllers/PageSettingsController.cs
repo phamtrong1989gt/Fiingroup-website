@@ -88,7 +88,7 @@ namespace PT.BE.Areas.Setting.Controllers
                 limit ?? 10,
                     m =>
                         (m.Language == language) &&
-                        (m.Slug.Contains(key) || m.Title.Contains(key) || m.Description.Contains(key) || m.Keywords.Contains(key) || m.FocusKeywords.Contains(key) || key == null) &&
+                        (m.Slug.Contains(key) || m.Name.Contains(key) ||  m.Title.Contains(key) || m.Description.Contains(key) || m.Keywords.Contains(key) || m.FocusKeywords.Contains(key) || key == null) &&
                         m.Status &&
                         (m.Type == type || type == null) &&
                         (m.Status == status || status == null) &&
@@ -177,7 +177,7 @@ namespace PT.BE.Areas.Setting.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    await UpdateLinkAsync(use.ChangeSlug, dl.Type, dl.ObjectId, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, dl.Area, dl.Controller, dl.Acction);
+                    await UpdateLinkByIdAsync(dl.Id, use.ChangeSlug, dl.Type, dl.Language, MapModel<SeoModel>.Go(use), dl.Name, dl.Area, dl.Controller, dl.Acction);
                     await AddLog(new LogModel
                     {
                         ObjectId = dl.Id,

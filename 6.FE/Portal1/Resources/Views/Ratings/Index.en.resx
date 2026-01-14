@@ -151,18 +151,21 @@
     <value>Opinion Type</value>
   </data>
   <data name="RatingScore" xml:space="preserve">
-    <value>Rating Score</value>
+    <value>Rating</value>
   </data>
   <data name="Outlook" xml:space="preserve">
     <value>Outlook</value>
   </data>
   <data name="CreditRatingReport" xml:space="preserve">
-    <value>Credit Rating Report</value>
+    <value>Rating Report</value>
   </data>
   <data name="ErrorLoadingData" xml:space="preserve">
     <value>Unable to load data. Please try again later.</value>
   </data>
   <data name="ReportNotAvailable" xml:space="preserve">
     <value>Report not available</value>
+  </data>
+  <data name="StatusRating" xml:space="preserve">
+    <value>Status Rating</value>
   </data>
 </root>
