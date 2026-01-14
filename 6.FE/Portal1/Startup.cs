@@ -24,6 +24,7 @@ using Newtonsoft.Json.Serialization;
 using PT.Base;
 using PT.Base.Services;
 using PT.Domain.Model;
+using PT.Domain.Model.Common;
 using PT.Infrastructure;
 using PT.Infrastructure.Interfaces;
 using PT.Infrastructure.Repositories;
@@ -111,6 +112,8 @@ namespace PT.UI
             services.Configure<BaseSettings>(Configuration.GetSection("BaseSettings"));
             services.Configure<LogSettings>(Configuration.GetSection("LogSettings"));
             services.Configure<AuthorizeSettings>(Configuration.GetSection("AuthorizeSettings"));
+            services.Configure<MisaSettings>(Configuration.GetSection("MisaSettings"));
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
@@ -216,6 +219,7 @@ namespace PT.UI
             // ✅ Đăng ký NewsAPIService (phải sau AddHttpClient())
             services.AddScoped<IAPILoggerService, APILoggerService>();
             services.AddScoped<INewsAPIService, NewsAPIService>();
+            services.AddScoped<IMisaAPIService, MisaAPIService>();
 
             // Đăng ký DI cho repository tổng quát
             services.AddScoped(typeof(IGenericRepository<>), typeof(BaseRepository<>));
@@ -352,13 +356,13 @@ namespace PT.UI
             }
 
             AppHttpContext.Services = app.ApplicationServices;
-            // 1.5. HTML Minification - Nén HTML (đặt sau compression)
-            app.UseWebMarkupMin();
+
             // Response Compression phải đặt trước Static Files
             app.UseResponseCompression();
             // THÊM middleware cache mới
             //app.UseMiddleware<ResponseCacheMiddleware>();
-
+            // 1.5. HTML Minification - Nén HTML (đặt sau compression)
+            app.UseWebMarkupMin();
             // Response Caching Middleware
             //app.UseResponseCaching();
 
