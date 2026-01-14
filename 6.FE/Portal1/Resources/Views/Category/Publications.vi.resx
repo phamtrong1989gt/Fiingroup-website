@@ -135,4 +135,13 @@
   <data name="NoEvent" xml:space="preserve">
     <value>Hiện không có sự kiện nào</value>
   </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="FilterButton" xml:space="preserve">
+    <value>Xóa lọc</value>
+  </data>
+  <data name="SearchHere" xml:space="preserve">
+    <value>Nhập từ khóa</value>
+  </data>
 </root>

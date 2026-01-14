@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BtnSend" xml:space="preserve">
+    <value>Gửi yêu cầu</value>
+  </data>
+  <data name="ConpanyName" xml:space="preserve">
+    <value>Tên công ty</value>
+  </data>
   <data name="Content" xml:space="preserve">
-    <value>Lời nhắn của bạn</value>
+    <value>Mô tả chi tiết</value>
+  </data>
+  <data name="ContentPlaceholder" xml:space="preserve">
+    <value>Chia sẻ với chúng tôi về nhu cầu của bạn</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
@@ -126,10 +135,35 @@
   <data name="FullName" xml:space="preserve">
     <value>Họ và tên</value>
   </data>
-  <data name="The Email field is not a valid e-mail address." xml:space="preserve">
-    <value>Trường Email không phải là địa chỉ email hợp lệ.</value>
+  <data name="MsgNotUse" xml:space="preserve">
+    <value>Vui lòng chọn ít nhất 1 mục.</value>
+    <comment>Vui lòng chọn ít nhất 1 mục.</comment>
   </data>
-  <data name="The {0} field is required" xml:space="preserve">
-    <value>Thông tin {0} là bắt buộc</value>
+  <data name="NoProducts" xml:space="preserve">
+    <value>Không có sản phẩm nào</value>
+  </data>
+  <data name="OtherProduct" xml:space="preserve">
+    <value>Lựa chọn khác</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Số điện thoại</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Chức danh công việc</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Sản phẩm &amp; dịch vụ quan tâm</value>
+  </data>
+  <data name="SelectProducts" xml:space="preserve">
+    <value>Chọn Sản phẩm &amp; dịch vụ quan tâm</value>
+  </data>
+  <data name="SelectServiceId" xml:space="preserve">
+    <value>Chọn nhóm ngành</value>
+  </data>
+  <data name="ServiceId" xml:space="preserve">
+    <value>Nhóm ngành</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Đăng ký ngay để &lt;span style="color: #0066CC;"&gt;nhận tư vấn&lt;/span&gt;</value>
   </data>
 </root>

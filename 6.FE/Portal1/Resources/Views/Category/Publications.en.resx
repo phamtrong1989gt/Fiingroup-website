@@ -135,4 +135,13 @@
   <data name="NoEvent" xml:space="preserve">
     <value>There are currently no new events</value>
   </data>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="FilterButton" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="SearchHere" xml:space="preserve">
+    <value>Search here</value>
+  </data>
 </root>
