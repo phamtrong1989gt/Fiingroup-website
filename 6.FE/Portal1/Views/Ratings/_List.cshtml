@@ -1,0 +1,218 @@
+﻿@using PT.UI.Models
+@inject IViewLocalizer Localizer
+@model ListRatingsModel
+<style>
+    .thinks-grid {
+        display: grid;
+        grid-template-columns: 0.8fr 1.1fr;
+        gap: 30px;
+    }
+
+    .thinks-featured {
+        border-radius: 12px;
+        overflow: hidden;
+        /* box-shadow: 0 4px 12px rgba(0, 76, 152, 0.08); */
+        transition: transform 0.3s ease;
+    }
+
+        .thinks-featured:hover {
+            transform: translateY(-3px);
+        }
+
+        .thinks-featured .thinks-img {
+            width: 100%;
+            /* height: 230px; */
+            object-fit: cover;
+        }
+
+    .thinks-info {
+        padding: 18px 0;
+    }
+
+    .thinks-tags {
+        display: flex;
+        gap: 10px;
+        font-size: 13px;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+        .thinks-tags .tag {
+            background: #eaf4ff;
+            color: #0066cc;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .thinks-tags .date {
+            color: #777;
+            font-size: 15px;
+        }
+
+    .thinks-title {
+        color: #093461;
+        font-weight: 700;
+        font-size: 28px;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+
+    .thinks-desc {
+        color: #093461;
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    /* thinks nhỏ */
+    .thinks-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .thinks-item {
+        display: flex;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+        .thinks-item:not(:first-child) {
+            border-top: 1px solid #ccc;
+            padding: 20px 0;
+        }
+
+        .thinks-item img {
+            width: 280px;
+            height: 140px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+    .thinks-content p {
+        color: #093461;
+        font-size: 18px;
+        margin: 0;
+        font-weight: 500;
+        line-height: 1.5;
+    }
+
+    /* Nút dưới cùng */
+    .think-now {
+        background-color: #0066cc;
+        color: #ffffff;
+        padding: 8px 40px;
+        border-radius: 25px;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+        margin: 40px auto 0;
+        transition: all 0.3s ease;
+    }
+
+        .think-now:hover {
+            background-color: #004c9b;
+        }
+
+    .think-now-wrapper {
+        text-align: center;
+    }
+
+    .news-img {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+        border: 1px solid #eee;
+    }
+
+    .news-title {
+        color: #1d2939;
+        font-size: 20px;
+        line-height: 30px;
+        word-break: break-word;
+        font-weight: 600;
+    }
+
+</style>
+
+<section id="Find">
+    <div class="container">
+        <div class="box-find-top">
+            <div class="find-top">
+                <input type="text" id="companyName" name="companyName" placeholder="@Localizer["CompanyNamePlaceholder"]" class="find-input">
+
+                <button class="btn-filter" type="button">
+                    <i class="fa fa-sliders-h"></i>
+                </button>
+
+                <select id="industryTypeId" name="industryTypeId" class="find-input custom-dropdown-select" asp-items="ViewBag.Industries">
+                    <option value="">@Localizer["AllIndustries"]</option>
+                </select>
+
+                <select id="scoreId" name="scoreId" class="find-input custom-dropdown-select" asp-items="ViewBag.Scores">
+                    <option value="">@Localizer["AllScores"]</option>
+                </select>
+
+                <select id="prospectsId" name="prospectsId" class="find-input custom-dropdown-select" asp-items="ViewBag.Outlooks">
+                    <option value="">@Localizer["AllOutlooks"]</option>
+                </select>
+
+                <span class="refresh" title="@Localizer["RefreshTitle"]"><i class="fa fa-undo"></i></span>
+
+                <button class="find-button" id="btn-search" type="button">
+                    <i id="icon-search" class="fa fa-search"></i>
+                    <span id="rating-loading" class="loader d-none"></span>
+                    @Localizer["SearchButton"]
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="TableRank" class="pt-4">
+    <div class="container">
+        <div class="table-responsive">
+            <table class="TableRank">
+                <thead class="head-table">
+                    <tr>
+                        <th style="width: 120px;">@Localizer["PublicationDate"]</th>
+                        <th>@Localizer["IssuingOrganization"]</th>
+                        <th>@Localizer["Industry"]</th>
+                        <th>@Localizer["StatusRating"]</th>
+                        <th>@Localizer["OpinionType"]</th>
+                        <th>@Localizer["RatingScore"]</th>
+                        <th>@Localizer["Outlook"]</th>
+                        <th>@Localizer["BondCode"]</th>
+                        <th style="width: 235px;">@Localizer["CreditRatingReport"]</th>
+                    </tr>
+                </thead>
+                <tbody class="body-table" id="content-bind">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Rating Info Modal -->
+<div id="ratingInfoModal" class="rating-info-modal">
+    <div class="rating-info-content">
+        <div class="rating-info-header">
+            <div class="rating-header-info">
+                <span class="rating-current-score" id="modal-rating"></span>
+                <h3 id="modal-issuer"></h3>
+            </div>
+            <button class="rating-info-close" onclick="closeRatingInfoPopup()">&times;</button>
+        </div>
+        <div class="rating-info-body">
+            <!-- Paste your HTML module content here -->
+            <div id="rating-html-content">
+                @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleTNDai", language = Model.Language, portalId = Model.PortalId })
+            </div>
+        </div>
+    </div>
+</div>

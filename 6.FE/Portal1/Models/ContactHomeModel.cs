@@ -84,4 +84,10 @@ namespace PT.UI.Models
         public string Position { get; set; }
     }
 
+    public class ListRatingsModel
+    {
+        public string Language { get; set; }
+        public int PortalId { get; set; }
+    }
+
 }

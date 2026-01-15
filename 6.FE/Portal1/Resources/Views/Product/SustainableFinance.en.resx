@@ -117,53 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BtnSend" xml:space="preserve">
-    <value>Gửi yêu cầu</value>
+  <data name="CompanyNamePlaceholder" xml:space="preserve">
+    <value>Company Name</value>
   </data>
-  <data name="ConpanyName" xml:space="preserve">
-    <value>Tên công ty</value>
+  <data name="AllIndustries" xml:space="preserve">
+    <value>All Industries</value>
   </data>
-  <data name="Content" xml:space="preserve">
-    <value>Mô tả chi tiết</value>
+  <data name="AllScores" xml:space="preserve">
+    <value>All Scores</value>
   </data>
-  <data name="ContentPlaceholder" xml:space="preserve">
-    <value>Chia sẻ với chúng tôi về nhu cầu của bạn</value>
+  <data name="AllOutlooks" xml:space="preserve">
+    <value>All Outlooks</value>
   </data>
-  <data name="Email" xml:space="preserve">
-    <value>Email</value>
+  <data name="RefreshTitle" xml:space="preserve">
+    <value>Refresh</value>
   </data>
-  <data name="FullName" xml:space="preserve">
-    <value>Họ và tên</value>
+  <data name="SearchButton" xml:space="preserve">
+    <value>Search</value>
   </data>
-  <data name="MsgNotUse" xml:space="preserve">
-    <value>Vui lòng chọn ít nhất 1 mục.</value>
-    <comment>Vui lòng chọn ít nhất 1 mục.</comment>
+  <data name="PublicationDate" xml:space="preserve">
+    <value>Publication Date</value>
   </data>
-  <data name="NoProducts" xml:space="preserve">
-    <value>Không có sản phẩm nào</value>
+  <data name="IssuingOrganization" xml:space="preserve">
+    <value>Issuing Organization</value>
   </data>
-  <data name="OtherProduct" xml:space="preserve">
-    <value>Lựa chọn khác</value>
+  <data name="BondCode" xml:space="preserve">
+    <value>Bond Code</value>
   </data>
-  <data name="Phone" xml:space="preserve">
-    <value>Số điện thoại</value>
+  <data name="Industry" xml:space="preserve">
+    <value>Industry</value>
   </data>
-  <data name="Position" xml:space="preserve">
-    <value>Chức danh công việc</value>
+  <data name="OpinionType" xml:space="preserve">
+    <value>Opinion Type</value>
   </data>
-  <data name="Products" xml:space="preserve">
-    <value>Sản phẩm &amp; dịch vụ quan tâm</value>
+  <data name="RatingScore" xml:space="preserve">
+    <value>Rating</value>
   </data>
-  <data name="SelectProducts" xml:space="preserve">
-    <value>Chọn Sản phẩm &amp; dịch vụ quan tâm</value>
+  <data name="Outlook" xml:space="preserve">
+    <value>Outlook</value>
   </data>
-  <data name="SelectServiceId" xml:space="preserve">
-    <value>Chọn nhóm ngành</value>
+  <data name="CreditRatingReport" xml:space="preserve">
+    <value>Rating Report</value>
   </data>
-  <data name="ServiceId" xml:space="preserve">
-    <value>Nhóm ngành</value>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Unable to load data. Please try again later.</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Liên hệ FiinRatings để được  &lt;span style="color: #0066CC;"&gt;hỗ trợ&lt;/span&gt;</value>
+  <data name="ReportNotAvailable" xml:space="preserve">
+    <value>Report not available</value>
+  </data>
+  <data name="StatusRating" xml:space="preserve">
+    <value>Status Rating</value>
   </data>
 </root>
