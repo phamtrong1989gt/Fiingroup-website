@@ -186,6 +186,7 @@ function initRegisterForm(config) {
     });
 
     $("#dichVuQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
+    $("#sanPhamQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
 
     const $form = $('#formLienHe');
     $form.on('submit', function (e) {
@@ -273,56 +274,6 @@ function initRegisterForm(config) {
         } else {
             $("#products").val("");
         }
-    });
-
-    $("#dichVuQT").on("change", function () {
-        let serviceId = $(this).val();
-        let language = $("#languageId").val();
-        let portId = config.portalId;
-        let parentId = serviceId;
-
-        $("#products").val("");
-
-        if (serviceId && serviceId.toString().trim() !== '') {
-            $('[data-valmsg-for="ServiceId"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
-        }
-
-        if (!serviceId) {
-            $("#sanPhamQT").empty().append(`<option value="">${config.i18n.selectProducts}</option>`);
-            return;
-        }
-
-        if (parentId == 0) {
-            $("#sanPhamQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
-            return;
-        }
-
-        $.ajax({
-            url: config.urls.flowSelectList,
-            method: "POST",
-            data: {
-                language: language,
-                portId: portId,
-                parrentId: parentId
-            },
-            success: function (res) {
-                if (res.output === 1 || res.output === "1") {
-                    $("#sanPhamQT").empty();
-                    let lst = res.data;
-                    if (lst && lst.length > 0) {
-                        lst.forEach(x => {
-                            $("#sanPhamQT").append(`<option value="${x.id}">${x.name}</option>`);
-                        });
-                        $("#sanPhamQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
-                    } else {
-                        $("#sanPhamQT").append(`<option value="">${config.i18n.noProducts}</option>`);
-                    }
-                }
-            },
-            error: function () {
-                console.error('Failed to load products');
-            }
-        });
     });
 
     $('#agreeTerms').on('change', function () {

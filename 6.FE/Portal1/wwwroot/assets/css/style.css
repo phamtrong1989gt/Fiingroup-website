@@ -626,7 +626,7 @@ a {
 }
 
 #SliderBanner .carousel-caption {
-    top: 8%;
+    top: 11%;
     text-align:left!important;
     max-height:450px;
 }
@@ -1143,6 +1143,6 @@ a:hover {
     #Find button.bg-white:hover i {
         color: var(--primary-color);
     }
-#manualsct .owl-stage-outer {
+/*#manualsct .owl-stage-outer {
     background: #e1f4fda6;
-}
+}*/

@@ -96,16 +96,14 @@ namespace PT.Infrastructure.Repositories
 
         public async Task<SelectList> ServiesList(string language, int portalId, int? parrentId = null)
         {
-            IQueryable<ContentPage> query = _context.ContentPages.Where(x => x.Status == true && (x.CategoryType == ECategoryType.ContentPage_Solution) && x.Language == language && x.PortalId == portalId).AsQueryable();
-            query = query
-                .GroupJoin(_context.Links.Where(x => x.Type == ESlugType.ContentPage && !x.Delete).AsQueryable(), x => x.Id, y => y.ObjectId, (x, y) => new { data = x, links = y })
-                .SelectMany(x => x.links.DefaultIfEmpty(), (x, y) => new ContentPage
-                {
-                    Link = y,
-                    Id = x.data.Id,
-                    Name = x.data.Name
-                }).AsQueryable();
+            var query = _context.ContentPages.Where(x => x.Status == true && (x.CategoryType == ECategoryType.ContentPage_Solution) && x.Language == language && x.PortalId == portalId).AsQueryable();
+            var lstData = new SelectList(query, "Id", "Name");
+            return lstData;
+        }
 
+        public async Task<SelectList> ProductList(string language, int portalId)
+        {
+            var query = _context.ContentPages.Where(x => x.Status == true && (x.CategoryType == ECategoryType.ContentPage_FlowItems) && x.Language == language && x.PortalId == portalId).AsQueryable();
             var lstData = new SelectList(query, "Id", "Name");
             return lstData;
         }

@@ -78,86 +78,30 @@
 </style>
 <section class="py-5 mb-3 mt-3" id="DangKy">
     <div class="container">
-        <h2 class="price-title mb-5">
-            @if (language == "vi") 
-            { 
-                <text>Đăng ký ngay để <span style="color: #0066CC;">nhận tư vấn</span></text> 
-            } 
-            else 
-            { 
-                <text>Register now to <span style="color: #0066CC;">receive consultation</span></text> 
-            }
-        </h2>
+        <h2 class="price-title mb-5">@Localizer["Title"]</h2>
         <div class="row">
             <div class="col-lg-6 col-sm-12">
                 <input type="hidden" id="languageId" value="@language" />
                 <form id="formLienHe" method="post">
                     @Html.AntiForgeryToken()
                     <div class="row">
+                        <div class="col-sm-12 mb-2"><label class="form-label" asp-for="FullName"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="FullName" placeholder=""><span class="validate-style" asp-validation-for="FullName"></span></div>
+                        <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Phone"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="Phone" placeholder=""><span class="validate-style" asp-validation-for="Phone"></span></div>
+                        <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Email"></label> <strong class="error">*</strong><input type="email" class="form-control" asp-for="Email" placeholder=""><span class="validate-style" asp-validation-for="Email"></span></div>
+                        <div class="col-sm-6 mb-2"><label class="form-label" asp-for="ConpanyName"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="ConpanyName" placeholder=""><span class="validate-style" asp-validation-for="ConpanyName"></span></div>
+                        <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Position"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="Position" placeholder=""><span class="validate-style" asp-validation-for="Position"></span></div>
+                        <div class="col-sm-12 mb-2"><label class="form-label" for="dichVuQT" asp-for="ServiceId"></label> <strong class="error">*</strong><select asp-for="ServiceId" asp-items="sectorExpertiseList" class="form-select" id="dichVuQT"><option value="">@Localizer["SelectServiceId"]</option></select><span asp-validation-for="ServiceId" class="validate-style"></span></div>
+
                         <div class="col-sm-12 mb-2">
-                            <label for="hoTen" class="form-label">
-                                @(language == "vi" ? "Họ và tên" : "Full Name") <span class="error">*</span>
-                            </label>
-                            <input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder="@(language == "vi" ? "Nhập họ và tên" : "Enter full name")">
-                            <span class="validate-style" asp-validation-for="FullName"></span>
+                            <label class="form-label" asp-for="Products" for="sanPhamQT"></label>
+                            <strong class="error">*</strong>
+                            <select class="form-select" id="sanPhamQT" asp-items="productsServicesList" multiple="multiple"></select>
+                            <span class="validate-style" asp-validation-for="Products"></span>
                         </div>
-                        <div class="col-sm-6 mb-2">
-                            <label for="soDienThoai" class="form-label">
-                                @(language == "vi" ? "Số điện thoại" : "Phone") <span class="error">*</span>
-                            </label>
-                            <input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder="@(language == "vi" ? "Nhập số điện thoại" : "Enter phone number")">
-                            <span class="validate-style" asp-validation-for="Phone"></span>
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <label for="email" class="form-label">Email <span class="error">*</span></label>
-                            <input type="email" class="form-control" id="email" asp-for="Email" placeholder="@(language == "vi" ? "Nhập email" : "Enter email")">
-                            <span class="validate-style" asp-validation-for="Email"></span>
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <label for="tenCongTy" class="form-label">
-                                @(language == "vi" ? "Tên công ty" : "Company Name") <span class="error">*</span>
-                            </label>
-                            <input type="text" class="form-control" id="tenCongTy" asp-for="ConpanyName" placeholder="@(language == "vi" ? "Nhập công ty" : "Enter company name")">
-                            <span class="validate-style" asp-validation-for="ConpanyName"></span>
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <label for="chucDanhCV" class="form-label">
-                                @(language == "vi" ? "Chức danh công việc" : "Job Title") <span class="error">*</span>
-                            </label>
-                            <input type="text" class="form-control" id="chucDanhCV" asp-for="Position" placeholder="@(language == "vi" ? "Nhập chức danh công việc" : "Enter job title")">
-                            <span class="validate-style" asp-validation-for="Position"></span>
-                        </div>
-                        <div class="col-sm-12 mb-2">
-                            <label for="dichVuQT" class="form-label">
-                                @(language == "vi" ? "Nhóm ngành" : "Sector Expertise") <span class="error">*</span>
-                            </label>
-                            <select asp-for="ServiceId" asp-items="sectorExpertiseList" class="form-select" id="dichVuQT">
-                                <option value="">@(language == "vi" ? "Chọn nhóm ngành" : "Select sector")</option>
-                            </select>
-                            <span asp-validation-for="ServiceId" class="validate-style"></span>
-                        </div>
-                        <div class="col-sm-12 mb-2">
-                            <label for="sanPhamQT" class="form-label">
-                                @(language == "vi" ? "Sản phẩm & dịch vụ quan tâm" : "Products & Services of Interest")
-                            </label>
-                            <select class="form-select" id="sanPhamQT" asp-items="productsServicesList" multiple="multiple">
-                            </select>
-                        </div>
-                        <div class="col-sm-12 mb-2">
-                            <label for="yeuCauCT" class="form-label">
-                                @(language == "vi" ? "Mô tả chi tiết" : "Description") <span class="error">*</span>
-                            </label>
-                            <textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="@(language == "vi" ? "Nhập mô tả chi tiết" : "Enter description")"></textarea>
-                            <span class="validate-style" asp-validation-for="Content"></span>
-                            <input type="hidden" class="form-control" id="type" asp-for="Type" value="@contactType">
-                            <input type="hidden" class="form-control" id="products" asp-for="Products">
-                        </div>
-                    </div>
-                    <div class="mb-2"></div>
-                    <button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>
-                        @(language == "vi" ? "Gửi yêu cầu" : "Submit")
-                    </button>
-                    <input type="hidden" class="Capcha" id="g-recaptcha-response" name="capcha" />
+
+                        <div class="col-sm-12 mb-2"><label class="form-label" for="yeuCauCT" asp-for="Content"></label><textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="@Localizer["ContentPlaceholder"]"></textarea><span class="validate-style" asp-validation-for="Content"></span><input type="hidden" class="form-control" id="products" asp-for="Products"></div>
+                        @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ContactFormMsg", language = language, portalId = portalId })
+                    </div><div class="mb-2"></div><button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>@Localizer["BtnSend"]</button><input type="hidden" class="Capcha" id="g-recaptcha-response" name="capcha" />
                 </form>
             </div>
             <div class="col-lg-6 col-sm-12 img">

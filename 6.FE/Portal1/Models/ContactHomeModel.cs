@@ -11,46 +11,46 @@ namespace PT.UI.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "Họ và tên")]
-        [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(50, MinimumLength =10)]
+        [Display(Name = "FullName")]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "ValidateStringLength")]
         public string FullName { get; set; }
 
-        [Display(Name = "Số điện thoại")]
-        [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(20, MinimumLength = 10)]
+        [Display(Name = "Phone")]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(20, MinimumLength = 10, ErrorMessage = "ValidateStringLength")]
         public string Phone { get; set; }
 
         [Display(Name = "Email")]
-        [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(100, MinimumLength = 10)]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(100, MinimumLength = 10, ErrorMessage = "ValidateStringLength")]
         public string Email { get; set; }
 
-        [Display(Name = "Tên công ty")]
-        [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(100, MinimumLength = 1)]
+        [Display(Name = "ConpanyName")]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(100, MinimumLength = 1, ErrorMessage = "ValidateStringLength")]
         public string ConpanyName { get; set; }
 
-        [Display(Name = "Chức danh công việc")]
-        [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(100, MinimumLength = 1)]
+        [Display(Name = "Position")]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(100, MinimumLength = 1, ErrorMessage = "ValidateStringLength")]
         public string Position { get; set; }
 
-        [Display(Name = "Mô tả chi tiết")]
-        [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(100, MinimumLength = 10)]
+        [Display(Name = "Content")]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(100, MinimumLength = 10, ErrorMessage = "ValidateStringLength")]
         public string Content { get; set; }
         public string Language { get; set; }
         public string Capcha { get; set; }
 
-        [Display(Name = "Nhóm ngành")]
-        [Required(ErrorMessage = "{0} không được để trống")]
+        [Display(Name = "ServiceId")]
+        [Required(ErrorMessage = "ValidateRequired")]
         public int? ServiceId { get; set; }
 
-        [Display(Name = "Sản phẩm & dịch vụ quan tâm")]
+        [Display(Name = "Products")]
         public string Products { get; set; }
 
-        [Display(Name = "Loại liên hệ")]
+        [Display(Name = "Type")]
         public int Type { get; set; }
         public SelectList CountrySelectlist { get;  set; }
     }
@@ -58,27 +58,29 @@ namespace PT.UI.Models
     public class ContactSolotionModel
     {
         public int Id { get; set; }
-        [Display(Name = "Họ và tên")]
-        [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(50, MinimumLength = 10)]
+        [Display(Name = "FullName")]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "ValidateStringLength")]
         public string FullName { get; set; }
-        [Display(Name = "Số điện thoại")]
-        [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(20, MinimumLength = 10)]
+        [Display(Name = "Phone")]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(20, MinimumLength = 10, ErrorMessage = "ValidateStringLength")]
         public string Phone { get; set; }
 
         [Display(Name = "Email")]
-        [Required(ErrorMessage = "{0}  không được để trống")]
-        [StringLength(100, MinimumLength = 10)]
+        [Required(ErrorMessage = "ValidateRequired")]
+        [StringLength(100, MinimumLength = 10, ErrorMessage = "ValidateStringLength")]
         public string Email { get; set; }
         public string Language { get; set; }
         public string Capcha { get; set; }
-        [Display(Name = "Nhận tin tức liên quan đến lĩnh vực")]
+        [Display(Name = "Products")]
         public string Products { get; set; }
-        [Display(Name = "Loại liên hệ")]
+        [Display(Name = "Type")]
         public int Type { get; set; }
 
+        [Display(Name = "ConpanyName")]
         public string ConpanyName { get; set; }
+        [Display(Name = "Position")]
         public string Position { get; set; }
     }
 

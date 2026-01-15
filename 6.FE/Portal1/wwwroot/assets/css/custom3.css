@@ -962,3 +962,20 @@ a.btn.btn-primary.btn-join {
 .price-title {
      margin-bottom: 20px !important;
 }
+.btn-active {
+    background: #06c !important;
+    color: #fff !important;
+}
+
+.btn-noactive {
+    background: #fff !important;
+    color: #06c !important;
+}
+#NewButton .btn
+{
+    font-size:20px;
+}
+.social-icon img {
+    width: 30px !important;
+    margin: 5px !important;
+}

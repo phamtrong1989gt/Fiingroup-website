@@ -133,9 +133,4 @@
     <ProjectReference Include="..\..\5.Base\PT.Base\PT.Base.csproj" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="wwwroot\auto-css\" />
-  </ItemGroup>
-
 </Project>
