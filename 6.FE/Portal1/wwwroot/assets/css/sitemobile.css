@@ -22,11 +22,12 @@
     .whylastest .why .why-title {
         font-size: 20px !important
     }
-    button.btn.btn-primary.btn-join{
+    #WhyLastest .btn-join {
         font-size: 20px !important;
     }
+
     #Testimonials .testimonials-grid .testimonial-item .testimonial-inner {
-        display: block;
+        display: block !important;
     }
         #Testimonials .testimonials-grid .testimonial-item .testimonial-inner .testimonial-left .pt-5 {
             padding: 0 !important
