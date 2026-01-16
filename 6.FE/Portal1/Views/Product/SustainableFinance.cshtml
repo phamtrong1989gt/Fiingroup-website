@@ -14,26 +14,23 @@
 	string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
 	var portalId = _baseSettings.Value.PortalId;
 }
-<link asp-append-version="true" href="~/assets/css/views/ratings.index.css" rel="stylesheet" />
-
+<link asp-append-version="true" href="~/assets/css/views/ratings2.index.css" rel="stylesheet" />
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRFinanceBanner", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRFinanceTongQuan", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRFinanceCacConSo", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRFinanceFiinRatings ", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRFinancePhuongPhap", language = language, portalId = portalId })
+<div class="container">
+    <partial name="~/Views/Ratings2/_List.cshtml" model="new ListRatingsModel() { Language = language, PortalId = portalId }" />
+</div>
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "PRProductKhachHang3", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRServicesTeams2", language = language, portalId = portalId })
-<div class="container">
-    <partial name="~/Views/Ratings/_List.cshtml" model="new ListRatingsModel() { Language = language, PortalId = portalId }" />
-</div>
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsLienHe3", language = language, portalId = portalId })
-
-
 @section Scripts {
-    <script asp-append-version="true" src="~/assets/css/views/ratings.index.js"></script>
+    <script asp-append-version="true" src="~/assets/css/views/ratings2.index.js"></script>
     <script>
-        var rakingsAjaxUrl = '@Url.Action("IndexAjax", "Ratings", new { language = language, portalId = portalId })';
+        var rakingsAjaxUrl = '@Url.Action("IndexAjax", "Ratings2", new { language = language })';
         var currentLanguage = '@language';
         var filterOpen = false;
         var errorLoadingDataMsg = '@Localizer["ErrorLoadingData"]';

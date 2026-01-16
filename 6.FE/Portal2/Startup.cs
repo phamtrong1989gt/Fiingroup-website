@@ -589,34 +589,37 @@ namespace PT.UI
             {
                 // Đọc DataPath từ cấu hình BaseSettings
                 var configuredDataPath = Configuration["BaseSettings:DataPath"];
+                if (!string.IsNullOrEmpty(configuredDataPath))
+                {
 
-                string dataPath;
-                if (string.IsNullOrWhiteSpace(configuredDataPath))
-                {
-                    // fallback to ContentRootPath/SharedData/Data
-                    dataPath = Path.Combine(env.ContentRootPath, "SharedData", "Data");
-                }
-                else
-                {
-                    // Nếu là đường dẫn tương đối, kết hợp với ContentRootPath
-                    dataPath = Path.IsPathRooted(configuredDataPath) ? configuredDataPath : Path.GetFullPath(Path.Combine(env.ContentRootPath, configuredDataPath));
-                }
-
-                // Kiểm tra và tạo thư mục nếu chưa tồn tại
-                if (!Directory.Exists(dataPath))
-                {
-                    Directory.CreateDirectory(dataPath);
-                }
-
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    FileProvider = new PhysicalFileProvider(dataPath),
-                    RequestPath = "/Data",
-                    OnPrepareResponse = ctx =>
+                    string dataPath;
+                    if (string.IsNullOrWhiteSpace(configuredDataPath))
                     {
-                        ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800 * 58}");
+                        // fallback to ContentRootPath/SharedData/Data
+                        dataPath = Path.Combine(env.ContentRootPath, "SharedData", "Data");
                     }
-                });
+                    else
+                    {
+                        // Nếu là đường dẫn tương đối, kết hợp với ContentRootPath
+                        dataPath = Path.IsPathRooted(configuredDataPath) ? configuredDataPath : Path.GetFullPath(Path.Combine(env.ContentRootPath, configuredDataPath));
+                    }
+
+                    // Kiểm tra và tạo thư mục nếu chưa tồn tại
+                    if (!Directory.Exists(dataPath))
+                    {
+                        Directory.CreateDirectory(dataPath);
+                    }
+
+                    app.UseStaticFiles(new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(dataPath),
+                        RequestPath = "/Data",
+                        OnPrepareResponse = ctx =>
+                        {
+                            ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800 * 58}");
+                        }
+                    });
+                }
             }
             catch (Exception ex)
             {
