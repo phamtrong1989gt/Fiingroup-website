@@ -1,0 +1,66 @@
+@media (max-width: 767px) {
+    .whylastest .why-item {
+        margin-bottom: 2rem !important
+    }
+
+    .whylastest .price-title {
+        margin-bottom: 2rem !important
+    }
+
+    .whylastest .why-header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 15px
+    }
+
+    .whylastest .why .icon-box img {
+        width: 45px;
+        height: 45px
+    }
+
+    .whylastest .why .why-title {
+        font-size: 20px !important
+    }
+    #WhyLastest .btn-join {
+        font-size: 20px !important;
+    }
+
+    #Testimonials .testimonials-grid .testimonial-item .testimonial-inner {
+        display: block !important;
+    }
+        #Testimonials .testimonials-grid .testimonial-item .testimonial-inner .testimonial-left .pt-5 {
+            padding: 0 !important
+        }
+        #Testimonials .testimonials-grid .testimonial-item .testimonial-inner .testimonial-left .testimonial-content p {
+            height:auto !important;
+        }
+    #Testimonials .testimonials-grid .testimonial-item .testimonial-inner .testimonial-right {
+        padding: 30px 0;
+        align-items: center;
+    }
+    .thinks-item img {
+        width: 120px !important;
+        height: 100px !important;
+    }
+    .news-title, .thinks-title, .news-title a {
+        font-size: 14px !important;
+        line-height: 24px !important;
+    }
+}
+@media (max-width: 1000px) {
+    #Imprint .number {
+        font-size: 34px !important;
+    }
+
+    #Imprint .desc {
+        font-size: 14px !important;
+    }
+    .why-title {
+        font-size: 22px !important;
+    }
+    .thinks-grid {
+        grid-template-columns: auto !important;
+    }
+}
+
