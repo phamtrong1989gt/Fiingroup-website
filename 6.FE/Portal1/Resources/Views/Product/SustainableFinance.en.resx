@@ -117,34 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Location" xml:space="preserve">
-    <value>Location</value>
+  <data name="CompanyNamePlaceholder" xml:space="preserve">
+    <value>Company Name</value>
   </data>
-  <data name="EventTime" xml:space="preserve">
-    <value>Event Time</value>
+  <data name="AllIndustries" xml:space="preserve">
+    <value>All Industries</value>
   </data>
-  <data name="EventDate" xml:space="preserve">
-    <value>Event Date</value>
+  <data name="AllScores" xml:space="preserve">
+    <value>All Scores</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Discover the Latest News, Events, and Updates from FiinRatings</value>
+  <data name="AllOutlooks" xml:space="preserve">
+    <value>All Outlooks</value>
   </data>
-  <data name="ViewDetails" xml:space="preserve">
-    <value>View Details</value>
-  </data>
-  <data name="NoEvent" xml:space="preserve">
-    <value>There are currently no new events</value>
-  </data>
-  <data name="DownloadDocument" xml:space="preserve">
-    <value>Event documents</value>
+  <data name="RefreshTitle" xml:space="preserve">
+    <value>Refresh</value>
   </data>
   <data name="SearchButton" xml:space="preserve">
     <value>Search</value>
   </data>
-  <data name="FilterButton" xml:space="preserve">
-    <value>Filter</value>
+  <data name="PublicationDate" xml:space="preserve">
+    <value>Publication Date</value>
   </data>
-  <data name="SearchHere" xml:space="preserve">
-    <value>Search here</value>
+  <data name="IssuingOrganization" xml:space="preserve">
+    <value>Issuing Organization</value>
+  </data>
+  <data name="BondCode" xml:space="preserve">
+    <value>Bond Code</value>
+  </data>
+  <data name="Industry" xml:space="preserve">
+    <value>Industry</value>
+  </data>
+  <data name="OpinionType" xml:space="preserve">
+    <value>Opinion Type</value>
+  </data>
+  <data name="RatingScore" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="Outlook" xml:space="preserve">
+    <value>Outlook</value>
+  </data>
+  <data name="CreditRatingReport" xml:space="preserve">
+    <value>Rating Report</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Unable to load data. Please try again later.</value>
+  </data>
+  <data name="ReportNotAvailable" xml:space="preserve">
+    <value>Report not available</value>
+  </data>
+  <data name="StatusRating" xml:space="preserve">
+    <value>Status Rating</value>
   </data>
 </root>

@@ -326,6 +326,9 @@ namespace PT.Domain.Model
         [JsonProperty("ratingType")]
         public string RatingType { get; set; }
 
+        [JsonProperty("opinionTypeName")]
+        public string OpinionTypeName { get; set; }
+
         [JsonProperty("rating")]
         public string Rating { get; set; }
 

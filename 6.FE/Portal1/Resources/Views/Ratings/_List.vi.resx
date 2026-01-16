@@ -117,34 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Location" xml:space="preserve">
-    <value>Location</value>
+  <data name="CompanyNamePlaceholder" xml:space="preserve">
+    <value>Tên doanh nghiệp</value>
   </data>
-  <data name="EventTime" xml:space="preserve">
-    <value>Event Time</value>
+  <data name="AllIndustries" xml:space="preserve">
+    <value>Tất cả ngành</value>
   </data>
-  <data name="EventDate" xml:space="preserve">
-    <value>Event Date</value>
+  <data name="AllScores" xml:space="preserve">
+    <value>Tất cả điểm</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Discover the Latest News, Events, and Updates from FiinRatings</value>
+  <data name="AllOutlooks" xml:space="preserve">
+    <value>Tất cả triển vọng</value>
   </data>
-  <data name="ViewDetails" xml:space="preserve">
-    <value>View Details</value>
-  </data>
-  <data name="NoEvent" xml:space="preserve">
-    <value>There are currently no new events</value>
-  </data>
-  <data name="DownloadDocument" xml:space="preserve">
-    <value>Event documents</value>
+  <data name="RefreshTitle" xml:space="preserve">
+    <value>Làm mới</value>
   </data>
   <data name="SearchButton" xml:space="preserve">
-    <value>Search</value>
+    <value>Tìm kiếm</value>
   </data>
-  <data name="FilterButton" xml:space="preserve">
-    <value>Filter</value>
+  <data name="PublicationDate" xml:space="preserve">
+    <value>Ngày công bố</value>
   </data>
-  <data name="SearchHere" xml:space="preserve">
-    <value>Search here</value>
+  <data name="IssuingOrganization" xml:space="preserve">
+    <value>Tổ chức phát hành</value>
+  </data>
+  <data name="BondCode" xml:space="preserve">
+    <value>Mã trái phiếu</value>
+  </data>
+  <data name="Industry" xml:space="preserve">
+    <value>Ngành</value>
+  </data>
+  <data name="OpinionType" xml:space="preserve">
+    <value>Loại ý kiến</value>
+  </data>
+  <data name="RatingScore" xml:space="preserve">
+    <value>Kết quả xếp hạng</value>
+  </data>
+  <data name="Outlook" xml:space="preserve">
+    <value>Triển vọng</value>
+  </data>
+  <data name="CreditRatingReport" xml:space="preserve">
+    <value>Báo cáo chi tiết</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Không thể tải dữ liệu. Vui lòng thử lại sau.</value>
+  </data>
+  <data name="ReportNotAvailable" xml:space="preserve">
+    <value>Báo cáo không khả dụng</value>
+  </data>
+  <data name="StatusRating" xml:space="preserve">
+    <value>Trạng thái xếp hạng</value>
   </data>
 </root>

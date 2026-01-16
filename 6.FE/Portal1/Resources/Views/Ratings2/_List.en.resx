@@ -117,34 +117,71 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Location" xml:space="preserve">
-    <value>Location</value>
+  <data name="CompanyNamePlaceholder" xml:space="preserve">
+    <value>Company Name</value>
   </data>
-  <data name="EventTime" xml:space="preserve">
-    <value>Event Time</value>
+  <data name="AllIndustries" xml:space="preserve">
+    <value>Industry</value>
   </data>
-  <data name="EventDate" xml:space="preserve">
-    <value>Event Date</value>
+  <data name="AllSustainableLevels" xml:space="preserve">
+    <value>Applicable Standards</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Discover the Latest News, Events, and Updates from FiinRatings</value>
-  </data>
-  <data name="ViewDetails" xml:space="preserve">
-    <value>View Details</value>
-  </data>
-  <data name="NoEvent" xml:space="preserve">
-    <value>There are currently no new events</value>
-  </data>
-  <data name="DownloadDocument" xml:space="preserve">
-    <value>Event documents</value>
+  <data name="RefreshTitle" xml:space="preserve">
+    <value>Refresh</value>
   </data>
   <data name="SearchButton" xml:space="preserve">
     <value>Search</value>
   </data>
-  <data name="FilterButton" xml:space="preserve">
-    <value>Filter</value>
+  <data name="PublicationDate" xml:space="preserve">
+    <value>Publication Date</value>
   </data>
-  <data name="SearchHere" xml:space="preserve">
-    <value>Search here</value>
+  <data name="Publisher" xml:space="preserve">
+    <value>Publisher</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Industry" xml:space="preserve">
+    <value>Industry</value>
+  </data>
+  <data name="SustainabilityLevel" xml:space="preserve">
+    <value>Applicable Standards</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Detailed Report</value>
+  </data>
+  <data name="Showing" xml:space="preserve">
+    <value>Showing</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="Records" xml:space="preserve">
+    <value>records</value>
+  </data>
+  <data name="DownloadReport" xml:space="preserve">
+    <value>Download report</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="NoData" xml:space="preserve">
+    <value>No data</value>
+  </data>
+  <data name="NoRatingResults" xml:space="preserve">
+    <value>No results found</value>
+  </data>
+  <data name="ErrorLoadingData" xml:space="preserve">
+    <value>Error loading data. Please try again.</value>
+  </data>
+  <data name="ReportNotAvailable" xml:space="preserve">
+    <value>Report not available</value>
+  </data>
+  <data name="ReportName" xml:space="preserve">
+    <value>Report Name</value>
+    <comment>Report Name</comment>
+  </data>
+  <data name="StatusRating" xml:space="preserve">
+    <value>Status Rating</value>
   </data>
 </root>
