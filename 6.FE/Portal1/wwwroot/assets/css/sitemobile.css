@@ -47,14 +47,59 @@
         font-size: 14px !important;
         line-height: 24px !important;
     }
-    .timeline-content{display:block !important; width:100%;}
-        .timeline-content .timeline-img {
-            width: 100%;
-        }
     #SliderBanner .carousel-caption{top:9% !important;}
-    #carouselFiin h1{font-size:20px;margin: 0 !important}
+    #carouselFiin h1 {
+        margin: 0 !important;
+        font-size: 20px;
+    }
+
+    #SliderBanner .carousel-caption {
+        top: 9% !important;
+    }
+    .narbartrust {
+        display: block !important;
+        padding: 10px 0 40px !important;
+    }
+        .narbartrust a {
+            flex: 0 0 auto !important;
+            padding: 10px !important;
+            text-align: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 16px !important;
+            border-bottom: 3px solid transparent;
+            transition: .3s;
+            min-width: 45% !important;
+        }
+    .method-grid-2 {
+        grid-template-columns: repeat(1, minmax(350px, 1fr)) !important;
+    }
+    #rakingSliderBanner #Banner img{min-height:100px;}
+    #rakingSliderBanner h1 {
+        margin: 0 !important;
+        font-size: 20px;
+    }
+    .policy-table .col-policy {
+        width: 30% !important;
+    }
+    .narbarmodel {
+        display: block !important;
+        padding: 10px 0 40px !important;
+    }
+
+        .narbarmodel a {
+            flex: 0 0 auto !important;
+            padding: 10px !important;
+            text-align: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 16px !important;
+            border-bottom: 3px solid transparent;
+            transition: .3s;
+            min-width: 45% !important;
+        }
 }
-@media (max-width: 1000px) {
+@media (min-width: 768px) {
     #Imprint .number {
         font-size: 34px !important;
     }
@@ -73,6 +118,28 @@
     }
     .thinks-grid {
         grid-template-columns: auto !important;
+    }
+    .timeline-content {
+        display: block !important;
+        width: 100%;
+    }
+
+        .timeline-content .timeline-img {
+            width: 100%;
+        }
+    .owl-nav{display:none;}
+    #carouselFiin h1 {
+        margin: 0 !important;
+        font-size: 45px;
+        text-align: center;
+    }
+    #SliderBanner .carousel-caption {
+        top: 12% !important;
+    }
+    .timeline-box{height:320px !important;}
+    .narbarmodel{padding:10px 0 40px !important;}
+    .narbarmodel a {
+        font-size: 13px !important;
     }
 }
 
