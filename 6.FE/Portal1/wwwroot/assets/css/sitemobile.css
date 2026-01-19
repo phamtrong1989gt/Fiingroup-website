@@ -172,5 +172,9 @@
     #menumore {
         z-index: 99999;
     }
+        #menumore .modal-dialog {
+            margin: 11% 0 0 !important;
+            max-width: 100% !important;
+        }
 }
 
