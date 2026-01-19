@@ -76,8 +76,8 @@
     }
     #rakingSliderBanner #Banner img{min-height:100px;}
     #rakingSliderBanner h1 {
-        margin: 0 !important;
-        font-size: 20px;
+        margin: -20% 0 0 0 !important;
+        font-size: 14px !important;
     }
     .policy-table .col-policy {
         width: 30% !important;
@@ -98,6 +98,30 @@
             transition: .3s;
             min-width: 45% !important;
         }
+    #Banner img {
+        min-height: 150px;
+    }
+    .btn-active, .btn-noactive {
+        width: 160px !important;
+        padding: 12px !important;
+        height: 60px !important;
+    }
+    #Deliver .container {
+        background-size: cover !important;
+    }
+    .deliver {
+        padding: 40px 15px !important;
+    }
+    .deliver .price-title {
+        font-size: 20px !important;
+    }
+    button.btn.btn-primary.btn-join {
+        font-size: 14px !important;
+    }
+    #NewButton .btn {
+        font-size: 14px !important;
+    }
+    #menumore{z-index:99999;}
 }
 @media (min-width: 768px) {
     #Imprint .number {
@@ -141,5 +165,16 @@
     .narbarmodel a {
         font-size: 13px !important;
     }
+    #Banner img{min-height:150px;}
+    #rakingSliderBanner h1 {
+        font-size: 40px !important;
+    }
+    #menumore {
+        z-index: 99999;
+    }
+        #menumore .modal-dialog {
+            margin: 11% 0 0 !important;
+            max-width: 100% !important;
+        }
 }
 
