@@ -123,7 +123,8 @@
     }
     #menumore{z-index:99999;}
 }
-@media (min-width: 768px) {
+
+@media (max-width: 768px) {
     #Imprint .number {
         font-size: 34px !important;
     }
