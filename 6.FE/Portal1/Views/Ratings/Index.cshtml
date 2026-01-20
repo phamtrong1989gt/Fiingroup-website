@@ -15,9 +15,10 @@
     var portalId = _baseSettings.Value.PortalId;
 }
 <link asp-append-version="true" href="~/assets/css/views/ratings.index.css" rel="stylesheet" />
+
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.PhotoSlide, code = "FRRakingSliderBanner", language = language, portalId = portalId })
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRRakingMenuButton", language = language, portalId = portalId })
-<div class="pt-5"></div>
+<div class="pt-5 pt-mobile"></div>
 <partial name="_List" model="new ListRatingsModel() { Language = language, PortalId = portalId }" />
 <partial name="~/Views/Home/_Register.cshtml" model="@(new ContactHomeModel { })" />
 @section Scripts {

@@ -168,4 +168,10 @@
   <data name="StatusRating" xml:space="preserve">
     <value>Status Rating</value>
   </data>
+  <data name="AllIssuerTypes" xml:space="preserve">
+    <value>All Issuer Type</value>
+  </data>
+  <data name="AllOpinionTypes" xml:space="preserve">
+    <value>All Opinion Type</value>
+  </data>
 </root>

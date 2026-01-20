@@ -42,6 +42,8 @@ namespace PT.Domain.Model
         API_Category = 202,
         [Display(Name = "Error")]
         Error = 203,
+        API_GetIssuerTypes = 204,
+        API_GetOpinionTypes = 205,
     }
   
     public class Log : IAggregateRoot

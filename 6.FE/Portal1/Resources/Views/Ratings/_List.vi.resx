@@ -168,4 +168,10 @@
   <data name="StatusRating" xml:space="preserve">
     <value>Trạng thái xếp hạng</value>
   </data>
+  <data name="AllIssuerTypes" xml:space="preserve">
+    <value>Tất cả loại ý kiến</value>
+  </data>
+  <data name="AllOpinionTypes" xml:space="preserve">
+    <value>Tất cả trạng thái xếp hạng</value>
+  </data>
 </root>
