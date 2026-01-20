@@ -5,6 +5,7 @@ using PT.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace PT.UI.Areas.Manager.Controllers
         private static readonly HashSet<string> EditableExtensions = new(StringComparer.OrdinalIgnoreCase)
         {
             ".txt", ".css", ".html", ".htm", ".js", ".json", ".xml", 
-            ".razor", ".cshtml", ".cs", ".config", ".md", ".sql"
+            ".razor", ".cshtml", ".cs", ".config", ".md", ".sql", ".log"
         };
 
         public FileManagerController(IWebHostEnvironment webHostEnvironment)
@@ -253,6 +254,54 @@ namespace PT.UI.Areas.Manager.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Download folder as ZIP
+        /// GET: /Manager/FileManager/DownloadFolder?path=C:\Projects\MyFolder
+        /// </summary>
+        [HttpGet]
+        public IActionResult DownloadFolder(string path)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
+                {
+                    return NotFound("Folder not found");
+                }
+
+                var folderName = new DirectoryInfo(path).Name;
+                var tempFileName = $"{folderName}_{DateTime.Now:yyyyMMddHHmmss}.zip";
+                var tempPath = Path.Combine(Path.GetTempPath(), tempFileName);
+
+                try
+                {
+                    // Create ZIP file
+                    ZipFile.CreateFromDirectory(path, tempPath, CompressionLevel.Optimal, true);
+
+                    // Read the ZIP file
+                    var fileBytes = System.IO.File.ReadAllBytes(tempPath);
+
+                    // Delete temp file after reading
+                    System.IO.File.Delete(tempPath);
+
+                    // Return ZIP file
+                    return File(fileBytes, "application/zip", tempFileName);
+                }
+                catch (Exception ex)
+                {
+                    // Clean up temp file if exists
+                    if (System.IO.File.Exists(tempPath))
+                    {
+                        try { System.IO.File.Delete(tempPath); } catch { }
+                    }
+                    throw new Exception($"Error creating ZIP file: {ex.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -724,6 +725,7 @@ namespace PT.BE.Areas.User.Controllers
         /// </summary>
         [HttpPost]
         [AuthorizePermission("Index")]
+        [Authorize]
         public async Task<List<TreeRoleModel>> TreeDCCategory(int id, string language = "vi")
         {
             try

@@ -279,9 +279,10 @@ namespace PT.BE.Areas.Base.Controllers
                 string pathSave = Path.Combine(_webRootPath, path, file.FileName);
 
 
-                if (_allowedPhoteExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
+                if (_allowedPhoteExtensions.Contains(Path.GetExtension(file.FileName).ToLower()) && Path.GetExtension(file.FileName).ToLower() != ".webp")
                 {
                     int zip = dataSize;
+                    // nếu định dạng .webp thì không nén
                     using var image = System.Drawing.Image.FromStream(file.OpenReadStream());
                     int BaseWidth = image.Width;
                     if (BaseWidth > zip && zip > 0)

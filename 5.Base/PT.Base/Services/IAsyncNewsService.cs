@@ -428,8 +428,7 @@ namespace PT.Base.Services
                     Entities = [],
                     Tags = convertTags,
                     ICBs = [],
-                    VSICs = [],
-
+                    VSICs = []
                 };
 
                  _logger.LogInformation("[CreateAsync] Request payload prepared - Title: {Title}, StatusId: {StatusId}, SourceId: {SourceId}", 
@@ -687,7 +686,7 @@ namespace PT.Base.Services
                     ImageUrl = $"{contentPage.Banner}",
                     SourceUrl = contentPage.FullPath,
                     Author = contentPage.Author,
-                    UpdateBy = null,
+                    UpdateBy = updateBy,
                     Categories = categoryIds,
                     TypeIds = [],
                     SourceIds = [sourceId],
@@ -702,7 +701,7 @@ namespace PT.Base.Services
                  _logger.LogInformation("[UpdateAsync] Request payload prepared - Title: {Title}, NewsId: {NewsId}, StatusId: {StatusId}", 
                     cmd.Title, cmd.NewsId, cmd.StatusId);
 
-                async Task<HttpResponseMessage> PutWithTokenAsync(string bearerToken, string endpoint)
+                async Task<HttpResponseMessage> PostWithTokenAsync(string bearerToken, string endpoint)
                 {
                     using var client = _httpClientFactory.CreateClient();
                     if (!string.IsNullOrWhiteSpace(bearerToken))
@@ -716,7 +715,7 @@ namespace PT.Base.Services
                     using var content = new StringContent(json, Encoding.UTF8, "application/json");
                     
                     var apiStopwatch = Stopwatch.StartNew();
-                    var result = await client.PutAsync(endpoint, content);
+                    var result = await client.PostAsync(endpoint, content);
                     apiStopwatch.Stop();
                     
                      _logger.LogInformation("[UpdateAsync] API call completed - Status: {StatusCode}, Duration: {Duration}ms", 
@@ -730,7 +729,7 @@ namespace PT.Base.Services
                 tokenStopwatch.Stop();
                  _logger.LogInformation("[UpdateAsync] Token retrieved - Duration: {Duration}ms", tokenStopwatch.ElapsedMilliseconds);
 
-                var response = await PutWithTokenAsync(token, url);
+                var response = await PostWithTokenAsync(token, url);
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
@@ -742,7 +741,7 @@ namespace PT.Base.Services
                     retryTokenStopwatch.Stop();
                      _logger.LogInformation("[UpdateAsync] New token retrieved - Duration: {Duration}ms", retryTokenStopwatch.ElapsedMilliseconds);
                     
-                    response = await PutWithTokenAsync(token, url);
+                    response = await PostWithTokenAsync(token, url);
                 }
 
                 var responseContent = await response.Content.ReadAsStringAsync();
