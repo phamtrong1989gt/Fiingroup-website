@@ -1,0 +1,181 @@
+@media (max-width: 767px) {
+    .whylastest .why-item {
+        margin-bottom: 2rem !important
+    }
+
+    .whylastest .price-title {
+        margin-bottom: 2rem !important
+    }
+
+    .whylastest .why-header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 15px
+    }
+
+    .whylastest .why .icon-box img {
+        width: 45px;
+        height: 45px
+    }
+
+    .whylastest .why .why-title {
+        font-size: 20px !important
+    }
+    #WhyLastest .btn-join {
+        font-size: 20px !important;
+    }
+
+    #Testimonials .testimonials-grid .testimonial-item .testimonial-inner {
+        display: block !important;
+    }
+        #Testimonials .testimonials-grid .testimonial-item .testimonial-inner .testimonial-left .pt-5 {
+            padding: 0 !important
+        }
+        #Testimonials .testimonials-grid .testimonial-item .testimonial-inner .testimonial-left .testimonial-content p {
+            height:auto !important;
+        }
+    #Testimonials .testimonials-grid .testimonial-item .testimonial-inner .testimonial-right {
+        padding: 30px 0;
+        align-items: center;
+    }
+    .thinks-item img {
+        width: 120px !important;
+        height: 100px !important;
+    }
+    .news-title, .thinks-title, .news-title a {
+        font-size: 14px !important;
+        line-height: 24px !important;
+    }
+    #SliderBanner .carousel-caption{top:9% !important;}
+    #carouselFiin h1 {
+        margin: 0 !important;
+        font-size: 20px;
+    }
+
+    #SliderBanner .carousel-caption {
+        top: 9% !important;
+    }
+    .narbartrust {
+        display: block !important;
+        padding: 10px 0 40px !important;
+    }
+        .narbartrust a {
+            flex: 0 0 auto !important;
+            padding: 10px !important;
+            text-align: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 16px !important;
+            border-bottom: 3px solid transparent;
+            transition: .3s;
+            min-width: 45% !important;
+        }
+    .method-grid-2 {
+        grid-template-columns: repeat(1, minmax(350px, 1fr)) !important;
+    }
+    #rakingSliderBanner #Banner img{min-height:100px;}
+    #rakingSliderBanner h1 {
+        margin: -20% 0 0 0 !important;
+        font-size: 14px !important;
+    }
+    .policy-table .col-policy {
+        width: 30% !important;
+    }
+    .narbarmodel {
+        display: block !important;
+        padding: 10px 0 40px !important;
+    }
+
+        .narbarmodel a {
+            flex: 0 0 auto !important;
+            padding: 10px !important;
+            text-align: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 16px !important;
+            border-bottom: 3px solid transparent;
+            transition: .3s;
+            min-width: 45% !important;
+        }
+    #Banner img {
+        min-height: 150px;
+    }
+    .btn-active, .btn-noactive {
+        width: 160px !important;
+        padding: 12px !important;
+        height: 60px !important;
+    }
+    #Deliver .container {
+        background-size: cover !important;
+    }
+    .deliver {
+        padding: 40px 15px !important;
+    }
+    .deliver .price-title {
+        font-size: 20px !important;
+    }
+    button.btn.btn-primary.btn-join {
+        font-size: 14px !important;
+    }
+    #NewButton .btn {
+        font-size: 14px !important;
+    }
+    #menumore{z-index:99999;}
+}
+
+@media (max-width: 768px) {
+    #Imprint .number {
+        font-size: 34px !important;
+    }
+        #Imprint .number .counter{
+            font-size: 34px !important;
+        }
+    #Imprint .number  span{
+        font-size: 20px !important;
+    }
+
+    #Imprint .desc {
+        font-size: 14px !important;
+    }
+    .why-title {
+        font-size: 22px !important;
+    }
+    .thinks-grid {
+        grid-template-columns: auto !important;
+    }
+    .timeline-content {
+        display: block !important;
+        width: 100%;
+    }
+
+        .timeline-content .timeline-img {
+            width: 100%;
+        }
+    .owl-nav{display:none;}
+    #carouselFiin h1 {
+        margin: 0 !important;
+        font-size: 45px;
+        text-align: center;
+    }
+    #SliderBanner .carousel-caption {
+        top: 12% !important;
+    }
+    .timeline-box{height:320px !important;}
+    .narbarmodel{padding:10px 0 40px !important;}
+    .narbarmodel a {
+        font-size: 13px !important;
+    }
+    #Banner img{min-height:150px;}
+    #rakingSliderBanner h1 {
+        font-size: 40px !important;
+    }
+    #menumore {
+        z-index: 99999;
+    }
+        #menumore .modal-dialog {
+            margin: 11% 0 0 !important;
+            max-width: 100% !important;
+        }
+}
+
