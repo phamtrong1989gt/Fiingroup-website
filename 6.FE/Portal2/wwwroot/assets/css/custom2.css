@@ -185,7 +185,7 @@ a.btn.btn-primary.btn-join {
 
 .nav-dropdown-content a {
     display: flex;
-    padding: 10px 10px 10px 15px !important;
+    padding: 5px 10px 10px 15px !important;
 }
 
     .nav-dropdown-content a:hover {
@@ -196,7 +196,7 @@ a.btn.btn-primary.btn-join {
 .menu-bar .mn-group .mn-group-items img {
     padding-left: 15px;
     max-height: 11px;
-    margin-top: 17px;
+    margin-top: 11px;
 }
 
 .menu-bar .mn-group .mn-group-items .gr-item {
