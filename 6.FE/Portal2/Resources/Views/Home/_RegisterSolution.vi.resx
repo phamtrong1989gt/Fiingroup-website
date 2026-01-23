@@ -140,7 +140,7 @@
     <value>Không có sản phẩm nào</value>
   </data>
   <data name="OtherProduct" xml:space="preserve">
-    <value>Lựa chọn khác</value>
+    <value>Cần tư vấn thêm</value>
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Số điện thoại</value>
@@ -152,7 +152,7 @@
     <value>Sản phẩm &amp; dịch vụ quan tâm</value>
   </data>
   <data name="SelectProducts" xml:space="preserve">
-    <value> Chọn Sản phẩm &amp; dịch vụ quan tâm</value>
+    <value>Chọn nhóm ngành trước khi chọn Sản phẩm &amp; dịch vụ quan tâm</value>
   </data>
   <data name="SelectServiceId" xml:space="preserve">
     <value>Chọn nhóm ngành</value>

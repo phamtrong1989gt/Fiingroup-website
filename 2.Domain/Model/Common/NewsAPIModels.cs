@@ -377,6 +377,9 @@ namespace PT.Domain.Model
         public string FromDate { get; set; }
         public string ToDate { get; set; }
 
+        public int? OpinionTypesId { get; set; }
+        public int? IssuerTypesId { get; set; }
+
         public string ToQueryString()
         {
             var queryParams = new List<string>();
@@ -404,6 +407,16 @@ namespace PT.Domain.Model
             if (OrganizationId.HasValue)
             {
                 queryParams.Add($"organizationId={OrganizationId.Value}");
+            }
+
+            if (OpinionTypesId.HasValue)
+            {
+                queryParams.Add($"opinionTypeId={OpinionTypesId.Value}");
+            }
+
+            if (IssuerTypesId.HasValue)
+            {
+                queryParams.Add($"issuerTypeId={IssuerTypesId.Value}");
             }
 
             if (Page.HasValue)

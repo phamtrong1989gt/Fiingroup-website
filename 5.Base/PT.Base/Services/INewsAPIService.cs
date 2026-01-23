@@ -29,6 +29,10 @@ namespace PT.Base.Services
         // ============ NEW SUSTAINABLE FINANCE API METHODS ============
         Task<SustainableIndustriesResponse> GetSustainableIndustriesAsync(string language = "vi", int portalId = 1);
         Task<SustainableStandardsResponse> GetSustainableStandardsAsync(string language = "vi", int portalId = 1);
+
+        // ============ ADDED: Issuer types & Opinion types ==========
+        Task<IssuerTypesResponse> GetIssuerTypesAsync(string language = "vi", int portalId = 1);
+        Task<OpinionTypesResponse> GetOpinionTypesAsync(string language = "vi", int portalId = 1);
     }
 
     public class NewsAPIService : INewsAPIService
@@ -819,6 +823,80 @@ namespace PT.Base.Services
                     {
                         return null;
                     }
+                },
+                language,
+                null,
+                portalId
+            );
+        }
+
+        /// <summary>
+        /// ADDED: Lấy danh sách Issuer Types
+        /// </summary>
+        public async Task<IssuerTypesResponse> GetIssuerTypesAsync(string language = "vi", int portalId = 1)
+        {
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetIssuerTypes,
+                _baseSettings.Value.RatingAPI.IssuerTypeEndpoint ?? "N/A",
+                "GET",
+                async () =>
+                {
+                    var endpoint = _baseSettings.Value.RatingAPI.IssuerTypeEndpoint;
+                    if (string.IsNullOrWhiteSpace(endpoint)) return null;
+
+                    var url = $"{endpoint}?lang={language}";
+
+                    string token;
+                    try { token = await GetAccessTokenAsync(false, portalId, true); }
+                    catch { return null; }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<IssuerTypesResponse>(url, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try { token = await GetAccessTokenAsync(true, portalId, true); return await CallRatingAPIAsync<IssuerTypesResponse>(url, token); }
+                        catch { return null; }
+                    }
+                    catch { return null; }
+                },
+                language,
+                null,
+                portalId
+            );
+        }
+
+        /// <summary>
+        /// ADDED: Lấy danh sách Opinion Types
+        /// </summary>
+        public async Task<OpinionTypesResponse> GetOpinionTypesAsync(string language = "vi", int portalId = 1)
+        {
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetOpinionTypes,
+                _baseSettings.Value.RatingAPI.OpinionTypesEndpoint ?? "N/A",
+                "GET",
+                async () =>
+                {
+                    var endpoint = _baseSettings.Value.RatingAPI.OpinionTypesEndpoint;
+                    if (string.IsNullOrWhiteSpace(endpoint)) return null;
+
+                    var url = $"{endpoint}?lang={language}";
+
+                    string token;
+                    try { token = await GetAccessTokenAsync(false, portalId, true); }
+                    catch { return null; }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<OpinionTypesResponse>(url, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try { token = await GetAccessTokenAsync(true, portalId, true); return await CallRatingAPIAsync<OpinionTypesResponse>(url, token); }
+                        catch { return null; }
+                    }
+                    catch { return null; }
                 },
                 language,
                 null,

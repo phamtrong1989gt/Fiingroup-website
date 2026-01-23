@@ -74,6 +74,8 @@ namespace PT.Domain.Model
 
         [Display(Name = "Sustainable Standards Endpoint")]
         public string SustainableStandardsEndpoint { get; set; }
+        public string IssuerTypeEndpoint { get; set; }
+        public string OpinionTypesEndpoint { get; set; }
     }
 
 

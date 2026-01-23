@@ -162,6 +162,13 @@
                     <option value="">@Localizer["AllOutlooks"]</option>
                 </select>
 
+                <select id="opinionTypesId" name="opinionTypesId" class="find-input custom-dropdown-select" asp-items="ViewBag.opinionTypes">
+                    <option value="">@Localizer["AllOpinionTypes"]</option>
+                </select>
+                <select id="issuerTypesId" name="issuerTypesId" class="find-input custom-dropdown-select" asp-items="ViewBag.issuerTypes">
+                    <option value="">@Localizer["AllIssuerTypes"]</option>
+                </select>
+
                 <span class="refresh" title="@Localizer["RefreshTitle"]"><i class="fa fa-undo"></i></span>
 
                 <button class="find-button" id="btn-search" type="button">

@@ -7,6 +7,8 @@
 			industryTypeId: $('#industryTypeId').val() || '',
 			scoreId: $('#scoreId').val() || '',
 			prospectsId: $('#prospectsId').val() || '',
+			opinionTypesId: $('#opinionTypesId').val() || '',
+			issuerTypesId: $('#issuerTypesId').val() || '',
 			page: page || 1,
 			pageSize: 10,
 			lang: currentLanguage
@@ -80,6 +82,8 @@
 			$('#industryTypeId').val('');
 			$('#scoreId').val('');
 			$('#prospectsId').val('');
+			$('#opinionTypesId').val('');
+			$('#issuerTypesId').val('');
 			$(this).addClass('spin');
 			setTimeout(() => $(this).removeClass('spin'), 600);
 			getRakingsAjax(1);

@@ -14,6 +14,8 @@ namespace PT.Base.Services
     {
         Task LogAPICallAsync(APILogModel model);
         Task<T> TrackAPICallAsync<T>(LogType logType, string endpoint, string method, Func<Task<T>> apiCall, string language = null, string requestParams = null, int portalId = 1);
+        //Task<IssuerTypesResponse> TrackAPICallAsync(object aPI_GetIssuerTypes, object value1, string v, Func<Task<IssuerTypesResponse>> value2, string language, object value3, int portalId);
+        //Task<OpinionTypesResponse> TrackAPICallAsync(LogType aPI_GetOpinionTypes, object value1, string v, Func<Task<OpinionTypesResponse>> value2, string language, object value3, int portalId);
     }
 
     public class APILoggerService : IAPILoggerService

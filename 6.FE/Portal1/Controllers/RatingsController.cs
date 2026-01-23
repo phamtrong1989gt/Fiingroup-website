@@ -48,6 +48,22 @@ namespace PT.UI.Controllers
                 Value = x.ProspectsId,
                 Text = x.Prospects
             }).ToList();
+
+            // Get opinion types
+            var opinionTypes = await _newsAPIService.GetOpinionTypesAsync(language, _baseSettings.Value.PortalId);
+            ViewBag.OpinionTypes = opinionTypes?.data?.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+            {
+                Value = x.opinionTypeId.ToString(),
+                Text = x.opinionTypeName
+            }).ToList();
+
+            var issuerTypes = await _newsAPIService.GetIssuerTypesAsync(language, _baseSettings.Value.PortalId);
+            ViewBag.IssuerTypes = issuerTypes?.data?.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+            {
+                Value = x.issuerTypeId.ToString(),
+                Text = x.issuerTypeName
+            }).ToList();
+
             return View("Index");
         }
 
