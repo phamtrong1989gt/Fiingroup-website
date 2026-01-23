@@ -34,6 +34,29 @@ function initMap() {
         styles: nopoi
     });
 
+    // Show loading when user starts interacting with the map and refresh data on idle
+    try {
+        map.addListener('dragstart', function () {
+            try { bindLoading('#map'); } catch (e) { }
+        });
+        // idle fires after the map becomes still following user interactions (pan/zoom)
+        map.addListener('idle', function () {
+            try { bindLoading('#map'); } catch (e) { }
+            // Refresh station data and markers
+            getDataStation(function (data) {
+                if (data && data.status == true) {
+                    // remove existing markers then add new ones
+                    try { clearMarkers(); } catch (e) { }
+                    bindMenuLeft(data.data);
+                    addMarker(data.data);
+                }
+                try { $('#map').waitMe('hide'); } catch (e) { }
+            });
+        });
+    } catch (e) {
+        console.warn('Map listeners registration failed', e);
+    }
+
     iconStationOpen = {
         url: "/Content/Admin/images/icon-station-on.png",
         scaledSize: new google.maps.Size(30, 30),
@@ -55,11 +78,32 @@ function initMap() {
         }
     });
 }
+
+// Clear existing markers array and remove from map
+function clearMarkers() {
+    if (!markers || markers.length === 0) return;
+    for (var i = 0; i < markers.length; i++) {
+        try { markers[i].setMap(null); } catch (e) { }
+    }
+    markers = [];
+}
+
 function getDataStation(callBack) {
-    $.get("/Home/Stations", function (data) {
-        stations = data.data;
-        callBack(data);
-    });
+    try {
+        // show loading on map container while fetching data
+        try { bindLoading('#map'); } catch (e) { /* ignore if waitMe not available */ }
+
+        $.get("/Home/Stations", function (data) {
+            stations = data.data;
+            callBack(data);
+        }).always(function () {
+            try { $('#map').waitMe('hide'); } catch (e) { }
+        });
+    }
+    catch (ex) {
+        try { $('#map').waitMe('hide'); } catch (e) { }
+        console.error(ex);
+    }
 }
 
 setInterval(function () {

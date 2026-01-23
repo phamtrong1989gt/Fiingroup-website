@@ -902,8 +902,16 @@ $.fn.toRickText = function (setting, callback) {
             });
         });
         CKEDITOR.instances[strName].on('change', function () {
-            $("[seo-page-content]").trigger("change");
+            //$("[seo-page-content]").trigger("change");
         });
+
+        //CKEDITOR.on('paste', function (evt) {
+        //    let data = evt.data.dataValue;
+        //    data = data.replace(/&nbsp;/g, ' ');
+        //    data = data.replace(/\u200B/g, '');
+        //    evt.data.dataValue = data;
+        //    console.log('paste event:', evt)
+        //});
     });
 }
 
