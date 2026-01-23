@@ -106,7 +106,9 @@
 					Industry = firstItem.Industry ?? "---",
 					Rating = firstItem.Outlook ?? "---", // Triển vọng
 					OpinionType = firstItem.RatingType ?? "---",
-					PublicationDate = !string.IsNullOrEmpty(firstItem.Date) ? Convert.ToDateTime(firstItem.Date).ToString("dd/MM/yyyy") : "---"
+					OpinionTypeName = firstItem.OpinionTypeName ?? "---",
+					PublicationDate = !string.IsNullOrEmpty(firstItem.Date) ? Convert.ToDateTime(firstItem.Date).ToString("dd/MM/yyyy") : "---",
+					BondCode = firstItem.BondCode ?? "---",
 				};
 
 				var jsonData = JsonConvert.SerializeObject(detailData);

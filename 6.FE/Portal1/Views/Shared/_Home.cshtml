@@ -50,6 +50,15 @@
 
     <partial name="_HomeHead" model="@(new Tuple<HomeModel, Link>(homeModel, linkData))" />
     <script src="/assets/js/jquery.min.js"></script>
+    <style>
+        @@media (max-width: 768px) {
+            .page-table {
+                display: table !important;
+                position: absolute;
+                left: 28vw;
+            }
+        }
+    </style>
     @Html.Raw(bindContentSetting.Head)
 </head>
 

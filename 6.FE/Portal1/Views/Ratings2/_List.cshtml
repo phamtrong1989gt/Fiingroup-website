@@ -16,11 +16,11 @@
             <div class="find-top">
                 <input type="text" id="companyName" name="companyName" placeholder="@Localizer["CompanyNamePlaceholder"]" class="find-input">
 
-                <input type="text" id="title" name="title" placeholder="@Localizer["ReportName"]" class="find-input">
-
                 <button class="btn-filter" type="button">
-                    <i class="fa fa-sliders-h"></i>
+                    <i class="fa fa-expand"></i>
                 </button>
+
+                <input type="text" class="find-input custom-dropdown-select" id="title" name="title" placeholder="@Localizer["ReportName"]">
 
                 <select id="industryId" name="industryId" class="find-input custom-dropdown-select" asp-items="ViewBag.Industries">
                     <option value="">@Localizer["AllIndustries"]</option>

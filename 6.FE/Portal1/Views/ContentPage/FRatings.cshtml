@@ -5,7 +5,7 @@
 @inject ICategoryRepository _iCategoryRepository;
 @inject IContentPageReferenceRepository _iContentPageReferenceRepository;
 @inject IOptions<BaseSettings> _baseSettings;
-@inject IViewLocalizer  Localizer
+@inject IViewLocalizer Localizer
 @{
     Layout = "~/Views/Shared/_Home.cshtml";
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
@@ -15,69 +15,501 @@
 
 <section id="CompanyOverview" class="pt-5">
     <style>
-       .news-tab.active,.value.status{background:#e1f4fd}#CompanyOverview{padding:60px 0;color:#093461}.company-grid{display:grid;grid-template-columns:2fr 1fr;gap:60px;align-items:start}.company-title{font-size:40px;font-weight:700;color:#093461;margin-bottom:15px;line-height:1.3}.company-desc{font-size:16px;line-height:1.7;color:#093461;margin-bottom:25px}.company-info-box{border:1px solid transparent;border-radius:12px;padding:25px 30px;background-image:linear-gradient(#fff,#fff),linear-gradient(to right,#0018a8,#166bf2,#3b7eee);background-origin:border-box;background-clip:padding-box,border-box}.info-row{display:flex;justify-content:space-between;gap:30px;margin-bottom:18px}.info-item{flex:1}#CompanyOverview .label{font-size:14px;margin-bottom:3px;font-weight:700}#CompanyOverview .value{font-size:18px;font-weight:600;color:#06c}.value.highlight{color:#034ea2;font-size:18px}.value.status{padding:3px 15px;border-radius:20px;display:inline-block;font-weight:unset!important}.value.date{color:#06c;text-decoration:underline}.news-title{font-size:28px;font-weight:700;color:#093461;margin-bottom:15px}.news-tab{color:#034ea2;font-weight:600;border:none;padding:8px 32px;border-radius:8px;margin-bottom:30px;font-size:16px}.news-list{display:flex;flex-direction:column;gap:15px}.news-item{display:flex;gap:20px;align-items:flex-start}.news-item:not(:first-child){border-top:1px solid #ccc;padding:20px 0}.news-thumb{width:140px;height:75px;border-radius:6px;object-fit:cover;flex-shrink:0}.news-text{font-size:15px;line-height:1.4;color:#093461;font-weight:500}
-      .ranking-table td,.ranking-table th{font-size:14px;border-bottom:1px solid #e1e8f5}.ranking-grid{display:grid;grid-template-columns:2fr 1fr;gap:50px;align-items:start}.ranking-block{margin-bottom:40px}.ranking-title{font-size:26px;font-weight:700;color:#093461;margin-bottom:20px}.ranking-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden}.ranking-table td{padding:8px 12px;text-align:left}.ranking-table th{padding:15px 10px;color:#034ea2;font-weight:600;background:#f7f8f9}.ranking-table td.rank{color:#034ea2;font-weight:700}.status{background:#e1f4fd;color:#06c;padding:5px 12px;border-radius:20px}.btn-download,.ranking-right{background:0 0}.language-switch{display:flex;align-items:center;gap:25px;font-size:12px;color:#1a1a1a}.lang-option{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}.lang-option input[type=radio]{display:none}.lang-option .radio{width:16px;height:16px;position:relative;border-radius:50%;background:linear-gradient(135deg,#034ea2,#53dfff);padding:1px;transition:.3s}.lang-option .radio::before{content:"";position:absolute;inset:1px;background:#fff;border-radius:50%}.lang-option input[type=radio]:checked+.radio::after{content:"";position:absolute;top:3.5px;left:3px;width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#034ea2,#53dfff);box-shadow:0 0 5px rgba(83,223,255,.6);transition:.2s}.lang-option:hover .radio{box-shadow:0 0 5px rgba(83,223,255,.5)}.btn-download{border:none;cursor:pointer;color:#2e90fa!important;border-left:1px solid #e1f4fd}.btn-download:hover{background:#007bff00;border-radius:5px;color:#000;box-shadow:0 4px 10px #007bff33}.no-data{text-align:center!important;color:#000;font-style:italic;padding:15px!important;font-size:12px!important;border:none!important}.points-title{font-size:30px;font-weight:700;margin-bottom:15px}.points-tab{color:#034ea2;font-weight:600;border:none;padding:8px 32px;border-radius:8px;margin-bottom:30px;font-size:16px}.points-tab.active{background:#e1f4fd}.points-list{display:flex;flex-direction:column;gap:5px;font-weight:500;font-size:17px}.points-item{border-top:1px solid #ccc;padding-top:30px}.points-item:first-child{border-top:none;padding-top:0}
-      #RatingCharts{background:#fff;color:#093461}.rating-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}.chart-box{background:#fff;border-radius:12px;padding:20px 25px}.chart-title{font-size:20px;font-weight:700;margin-bottom:15px}.chart-filters{display:flex;gap:15px;margin-bottom:15px}.filter-date,.filter-select{border:1px solid #d5e4ff;border-radius:6px;padding:6px 10px;font-size:14px;color:#093461;outline:0;width:50%}.filter-date:focus,.filter-select:focus{border-color:#06c}.chart-legend{display:flex;justify-content:center;gap:20px;margin-top:10px;font-size:14px;color:#093461;flex-wrap:wrap}.legend-square{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px}.legend-square.blue{background-color:#06c}.legend-square.dark{background-color:#002d72}.chart-img{padding:20px 0}
-        /* Skeleton Loading Animation */
-        .skeleton {
-            background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: skeleton-loading 1.5s ease-in-out infinite
+        /* Trạng thái hoạt động và Status */
+        .news-tab.active,
+        .value.status {
+            background: #e1f4fd;
         }
 
-        /* Skeleton text inline style */
+        /* Company Overview Section */
+        #CompanyOverview {
+            padding: 60px 0;
+            color: #093461;
+        }
+
+        .company-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .company-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #093461;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .company-desc {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #093461;
+            margin-bottom: 25px;
+        }
+
+        .company-info-box {
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 25px 30px;
+            background-image: linear-gradient(#fff, #fff), linear-gradient(to right, #0018a8, #166bf2, #3b7eee);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 18px;
+        }
+
+        .info-item {
+            flex: 1;
+        }
+
+        #CompanyOverview .label {
+            font-size: 14px;
+            margin-bottom: 7px;
+            font-weight: 700;
+        }
+
+        #CompanyOverview .value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #06c;
+        }
+
+        .value.highlight {
+            color: #034ea2;
+            font-size: 18px;
+        }
+
+        .value.status {
+            padding: 3px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: unset !important;
+        }
+
+        .value.date {
+            color: #06c;
+            text-decoration: underline;
+        }
+
+        /* News Section */
+        .news-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #093461;
+            margin-bottom: 15px;
+        }
+
+        .news-tab {
+            color: #034ea2;
+            font-weight: 600;
+            border: none;
+            padding: 8px 32px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+            .news-item:not(:first-child) {
+                border-top: 1px solid #ccc;
+                padding: 20px 0;
+            }
+
+        .news-thumb {
+            width: 140px;
+            height: 75px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .news-text {
+            font-size: 15px;
+            line-height: 1.4;
+            color: #093461;
+            font-weight: 500;
+        }
+
+        /* Ranking Section */
+        .ranking-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        .ranking-block {
+            margin-bottom: 40px;
+        }
+
+        .ranking-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #093461;
+            margin-bottom: 20px;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+            .ranking-table th,
+            .ranking-table td {
+                font-size: 14px;
+                border-bottom: 1px solid #e1e8f5;
+                padding: 8px 12px;
+                text-align: left;
+            }
+
+            .ranking-table th {
+                padding: 15px 10px;
+                color: #034ea2;
+                font-weight: 600;
+                background: #f7f8f9;
+            }
+
+            .ranking-table td.rank {
+                color: #034ea2;
+                font-weight: 700;
+            }
+
+        .status {
+            background: #e1f4fd;
+            color: #06c;
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        /* Language Switch */
+        .language-switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #1a1a1a;
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+            .lang-option input[type="radio"] {
+                display: none;
+            }
+
+            .lang-option .radio {
+                width: 16px;
+                height: 16px;
+                position: relative;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #034ea2, #53dfff);
+                padding: 1px;
+                transition: 0.3s;
+            }
+
+                .lang-option .radio::before {
+                    content: "";
+                    position: absolute;
+                    inset: 1px;
+                    background: #fff;
+                    border-radius: 50%;
+                }
+
+            .lang-option input[type="radio"]:checked + .radio::after {
+                content: "";
+                position: absolute;
+                top: 3.5px;
+                left: 3px;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #034ea2, #53dfff);
+                box-shadow: 0 0 5px rgba(83, 223, 255, 0.6);
+                transition: 0.2s;
+            }
+
+            .lang-option:hover .radio {
+                box-shadow: 0 0 5px rgba(83, 223, 255, 0.5);
+            }
+
+        /* Buttons */
+        .btn-download {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #2e90fa !important;
+            border-left: 1px solid #e1f4fd;
+            font-size: 14px;
+        }
+
+            .btn-download:hover {
+                background: rgba(0, 123, 255, 0);
+                border-radius: 5px;
+                color: #000;
+                box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+            }
+
+        /* Charts Section */
+        #RatingCharts {
+            background: #fff;
+            color: #093461;
+        }
+
+        .rating-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .chart-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px 25px;
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .chart-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-date,
+        .filter-select {
+            border: 1px solid #d5e4ff;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 14px;
+            color: #093461;
+            outline: 0;
+            width: 50%;
+        }
+
+            .filter-date:focus,
+            .filter-select:focus {
+                border-color: #06c;
+            }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #093461;
+            flex-wrap: wrap;
+        }
+
+        .legend-square {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+            .legend-square.blue {
+                background-color: #06c;
+            }
+
+            .legend-square.dark {
+                background-color: #002d72;
+            }
+
+        /* Skeleton Loading */
+        .skeleton,
         .skeleton-text {
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
             animation: skeleton-loading 1.5s ease-in-out infinite;
+        }
+
+        .skeleton-text {
             border-radius: 4px;
             display: inline-block;
         }
 
         @@keyframes skeleton-loading {
             0% {
-                background-position: 200% 0
+                background-position: 200% 0;
             }
 
             100% {
-                background-position: -200% 0
+                background-position: -200% 0;
             }
         }
 
-        .skeleton-row {
-            height: 60px
+        /* Modal Section */
+        .rating-info-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
         }
 
-        .skeleton-cell {
-            height: 20px;
-            border-radius: 4px;
-            margin: 5px 0
+        .rating-info-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 60vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            animation: slideDown 0.3s;
         }
 
-        .TableRank td, .TableRank th, .btn-download, .language-switch, .phat-hanh-text, .type-text {
-            font-size: 14px
+        .rating-info-header {
+            background: linear-gradient(135deg, #034ea2, #53dfff);
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
-        .TableRank {
-            width: 100%
+        .rating-info-close {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
         }
 
-        /* Mobile responsive */
+            .rating-info-close:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+        /* Utilities & Animations */
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .highlight-update {
+            animation: highlightPulse 1s ease-in-out;
+        }
+
+        @@keyframes highlightPulse {
+            0%, 100% {
+                background-color: transparent;
+            }
+
+            50% {
+                background-color: #fffacd;
+            }
+        }
+
+        /* Responsive */
         @@media (max-width: 768px) {
             .btn-filter {
-                display: flex !important
+                display: flex !important;
             }
 
-            .custom-dropdown-select, .refresh {
-                display: none
+            .custom-dropdown-select,
+            .refresh {
+                display: none;
             }
 
-                .custom-dropdown-select.show, .refresh.show {
-                    display: block !important
+                .custom-dropdown-select.show,
+                .refresh.show {
+                    display: block !important;
                 }
         }
 
-        /* Rating Info Popup */
+        .icon-info {
+            color: #66b7f1;
+            cursor: pointer
+        }
+
+            .icon-info i:hover {
+                color: #154a8c
+            }
+
+            .icon-info i[title] {
+                pointer-events: none
+            }
+
+            .icon-info i[data-tooltip]:hover:after {
+                content: attr(data-tooltip);
+                position: absolute;
+                background-color: #6294c9;
+                color: #fff;
+                padding: 5px 12px;
+                border-radius: 3px;
+                font-size: 12px;
+                white-space: nowrap;
+                z-index: 1000;
+                top: 50px;
+                font-family: Arial,"Times New Roman",Roboto,Segoe UI,sans-serif !important
+            }
+
         .rating-info-modal {
             display: none;
             position: fixed;
@@ -162,70 +594,6 @@
             padding: 20px;
         }
 
-        /* Your custom HTML module will go here */
-        #rating-html-content {
-            /* You can add custom styles for your module here if needed */
-        }
-
-        @@keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @@keyframes slideDown {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .numberpage {
-            font-size: 14px;
-        }
-
-        .TableRank {
-            border-top: 1px solid #eee;
-        }
-
-        /* Highlight animation for updated values */
-        .highlight-update {
-            animation: highlightPulse 1s ease-in-out;
-        }
-
-        @@keyframes highlightPulse {
-            0%, 100% {
-                background-color: transparent;
-            }
-            50% {
-                background-color: #fffacd;
-            }
-        }
-
-        /* Fade in animation for content */
-        .fade-in-content {
-            animation: fadeInContent 0.5s ease-in-out;
-        }
-
-        @@keyframes fadeInContent {
-            from {
-                opacity: 0;
-                transform: translateY(-5px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
     </style>
     <div class="container">
         <div class="company-grid">
@@ -234,17 +602,17 @@
                 <h2 class="company-title" id="detail_IssuingOrganization">
                     <span class="skeleton-text" style="display:inline-block;width:300px;height:40px;"></span>
                 </h2>
-            
+
                 <div class="company-info-box">
                     <div class="info-row">
                         <div class="info-item">
-                            <p class="label">Loại hình</p>
-                            <p class="value" id="detail_OrganizationType">
+                            <p class="label">@Localizer["StatusRating"]</p>
+                            <p class="value" id="detail_OpinionType">
                                 <span class="skeleton-text" style="display:inline-block;width:120px;height:20px;"></span>
                             </p>
                         </div>
                         <div class="info-item">
-                            <p class="label">Kết quả xếp hạng</p>
+                            <p class="label">@Localizer["RatingScore"]</p>
                             <p class="value" id="detail_RatingScore">
                                 <span class="skeleton-text" style="display:inline-block;width:80px;height:20px;"></span>
                             </p>
@@ -253,14 +621,14 @@
 
                     <div class="info-row">
                         <div class="info-item">
-                            <p class="label">Ngành</p>
+                            <p class="label">@Localizer["Industry"]</p>
                             <p class="value" id="detail_Industry">
                                 <span class="skeleton-text" style="display:inline-block;width:150px;height:20px;"></span>
                             </p>
                         </div>
 
                         <div class="info-item">
-                            <p class="label">Triển vọng</p>
+                            <p class="label">@Localizer["Outlook"]</p>
                             <p class="value status" id="detail_Rating">
                                 <span class="skeleton-text" style="display:inline-block;width:100px;height:20px;"></span>
                             </p>
@@ -269,16 +637,27 @@
 
                     <div class="info-row">
                         <div class="info-item">
-                            <p class="label">Loại ý kiến</p>
-                            <p class="value" id="detail_OpinionType">
+                            <p class="label">@Localizer["OpinionType"]</p>
+                            <p class="value" id="detail_OpinionType_lyk">
                                 <span class="skeleton-text" style="display:inline-block;width:140px;height:20px;"></span>
                             </p>
                         </div>
                         <div class="info-item">
-                            <p class="label">Ngày công bố</p>
+                            <p class="label">@Localizer["PublicationDate"]</p>
                             <p class="value" id="detail_PublicationDate">
                                 <span class="skeleton-text" style="display:inline-block;width:100px;height:20px;"></span>
                             </p>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-item mb-0">
+                            <p class="label">@Localizer["BondCode"]</p>
+                            <p class="value" id="detail_BondCode">
+                                <span class="skeleton-text" style="display:inline-block;width:140px;height:20px;"></span>
+                            </p>
+                        </div>
+                        <div class="info-item">
                         </div>
                     </div>
                 </div>
@@ -290,7 +669,7 @@
 </section>
 <section id="RankingSection" class="pb-5">
     <style>
-       
+
     </style>
 
     <div class="container ranking-grid">
@@ -298,15 +677,15 @@
         <div class="ranking-left">
             <!-- Xếp hạng tổ chức phát hành -->
             <div class="ranking-block">
-                <h2 class="ranking-title">Xếp hạng Tổ chức Phát hành</h2>
+                <h2 class="ranking-title">@Localizer["RankingOfIssuingOrganizations"]</h2>
                 <table class="ranking-table">
                     <thead>
                         <tr>
-                            <th style="width: 165px;">Loại ý kiến</th>
-                            <th>Ngày</th>
-                            <th>Kết quả xếp hạng</th>
-                            <th>Triển vọng</th>
-                            <th>Báo cáo Xếp hạng Tín nhiệm</th>
+                            <th style="width: 189px;">@Localizer["OpinionType"]</th>
+                            <th>@Localizer["PublicationDate"]</th>
+                            <th>@Localizer["RatingScore"]</th>
+                            <th>@Localizer["Outlook"]</th>
+                            <th>@Localizer["Report"]</th>
                         </tr>
                     </thead>
                     <tbody id="bindTTPH"></tbody>
@@ -315,15 +694,15 @@
 
             <!-- Xếp hạng công cụ nợ -->
             <div class="ranking-block">
-                <h2 class="ranking-title">Xếp hạng Công cụ nợ</h2>
+                <h2 class="ranking-title">@Localizer["RankingOfDebtInstruments"]</h2>
                 <table class="ranking-table">
                     <thead>
                         <tr>
-                            <th>Mã trái phiếu</th>
-                            <th style="width: 165px;">Loại ý kiến</th>
-                            <th style="width: 100px;">Ngày</th>
-                            <th>Kết quả xếp hạng</th>
-                            <th>Báo cáo Xếp hạng Tín nhiệm</th>
+                            <th>@Localizer["BondCode"]</th>
+                            <th>@Localizer["OpinionType"]</th>
+                            <th>@Localizer["PublicationDate"]</th>
+                            <th>@Localizer["RatingScore"]</th>
+                            <th>@Localizer["Report"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -355,12 +734,12 @@
         </div>
         <div id="topNewsContainer1">
         </div>
-       
+
     </div>
 </section>
 <section id="RatingCharts" class="py-5">
     <style>
-      
+
     </style>
     <div class="container">
         <div class="rating-grid">
@@ -414,212 +793,262 @@
 
 
 <script>
+        function showRatingInfoPopup(element) {
+        var rating = $(element).data('rating');
+        var issuer = $(element).data('issuer');
 
-function loadTopNews(containerId, url) {
-    $(containerId).html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
-    $.ajax({
-        url: url,
-        type: 'GET',
-        dataType: 'html',
-        success: function (response) {
-            console.log('Response received successfully');
-            $(containerId).html(response);
-        },
-        error: function (xhr, status, error) {
-            console.error('Error details:', {
-                status: xhr.status,
-                statusText: xhr.statusText,
-                responseText: xhr.responseText,
-                error: error
-            });
-            $(containerId).html('<div class="alert alert-danger">Không thể tải tin tức. Status: ' + xhr.status + '</div>');
-        }
-    });
-}
+        // Update modal header with company name and rating
+        $('#modal-issuer').text(issuer);
+        $('#modal-rating').text(rating);
 
-// ============================================
-// BIND DETAIL DATA TO COMPANY INFO BOX
-// ============================================
-window.bindDetail = function(data) {
-    try {
-        if (!data) {
-            console.warn('[bindDetail] No data provided');
-            return;
-        }
+        // Show modal
+        $('#ratingInfoModal').fadeIn(300);
+    }
 
-        console.log('[bindDetail] Received data:', data);
+    function loadTopNews(containerId, url) {
+        $(containerId).html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'html',
+            success: function (response) {
+                console.log('Response received successfully');
+                $(containerId).html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error details:', {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    responseText: xhr.responseText,
+                    error: error
+                });
+                $(containerId).html('<div class="alert alert-danger">Không thể tải tin tức. Status: ' + xhr.status + '</div>');
+            }
+        });
+    }
 
-        // Map fields to DOM elements
-        const mappings = {
-            'detail_IssuingOrganization': data.IssuingOrganization || data.issuingOrganization || '---',
-            'detail_OrganizationType': '---', // Placeholder - add actual field if available
-            'detail_RatingScore': data.RatingScore || data.ratingScore || '---',
-            'detail_Industry': data.Industry || data.industry || '---',
-            'detail_Rating': data.Rating || data.rating || data.Prospects || data.prospects || '---',
-            'detail_OpinionType': data.OpinionType || data.opinionType || '---',
-            'detail_PublicationDate': data.PublicationDate || data.publicationDate || '---'
-        };
+    // ============================================
+    // BIND DETAIL DATA TO COMPANY INFO BOX
+    // ============================================
+    window.bindDetail = function(data) {
+        try {
+            if (!data) {
+                console.warn('[bindDetail] No data provided');
+                return;
+            }
 
-        // Bind data to elements with animation
-        Object.keys(mappings).forEach(function(id) {
-            const $element = $('#' + id);
-            const value = mappings[id];
-            
-            if ($element.length) {
-                // ✅ FADE OUT skeleton, then FADE IN content
-                const $skeleton = $element.find('.skeleton-text');
-                
-                if ($skeleton.length) {
-                    // Fade out skeleton
-                    $skeleton.fadeOut(200, function() {
-                        $skeleton.remove();
-                        
-                        // Set text content
+            console.log('[bindDetail] Received data:', data);
+
+            // Map fields to DOM elements
+            const mappings = {
+                'detail_IssuingOrganization': data.IssuingOrganization || data.issuingOrganization || '---',
+                'detail_OrganizationType': '---', // Placeholder - add actual field if available
+                'detail_RatingScore': data.RatingScore || data.ratingScore || '---',
+                'detail_Industry': data.Industry || data.industry || '---',
+                'detail_Rating': data.Rating || data.rating || data.Prospects || data.prospects || '---',
+                'detail_OpinionType': data.OpinionType || data.opinionType || '---',
+                'detail_PublicationDate': data.PublicationDate || data.publicationDate || '---',
+                'detail_OpinionType_lyk': data.OpinionTypeName || data.opinionTypeName || '---',
+                'detail_BondCode': data.BondCode || data.bondCode || '---'
+            };
+
+            // Bind data to elements with animation
+            Object.keys(mappings).forEach(function(id) {
+                const $element = $('#' + id);
+                const value = mappings[id];
+
+                if ($element.length) {
+                    // ✅ FADE OUT skeleton, then FADE IN content
+                    const $skeleton = $element.find('.skeleton-text');
+
+                    if ($skeleton.length) {
+                        // Fade out skeleton
+                        $skeleton.fadeOut(200, function() {
+                            $skeleton.remove();
+
+                            // Set text content
+                            if (id.includes('Date') && value !== '---') {
+                                const formattedDate = formatDate(value);
+                                $element.text(formattedDate);
+                            } else {
+                                $element.text(value);
+                            }
+
+                            // Add fade-in + highlight animation
+                            $element.addClass('fade-in-content highlight-update');
+
+                            setTimeout(function() {
+                                $element.removeClass('highlight-update');
+                            }, 1000);
+
+                            setTimeout(function() {
+                                $element.removeClass('fade-in-content');
+                            }, 500);
+                        });
+                    } else {
+                        // No skeleton, just update text
                         if (id.includes('Date') && value !== '---') {
                             const formattedDate = formatDate(value);
                             $element.text(formattedDate);
                         } else {
                             $element.text(value);
                         }
-                        
-                        // Add fade-in + highlight animation
-                        $element.addClass('fade-in-content highlight-update');
-                        
-                        setTimeout(function() {
-                            $element.removeClass('highlight-update');
-                        }, 1000);
-                        
-                        setTimeout(function() {
-                            $element.removeClass('fade-in-content');
-                        }, 500);
-                    });
+                    }
                 } else {
-                    // No skeleton, just update text
-                    if (id.includes('Date') && value !== '---') {
-                        const formattedDate = formatDate(value);
-                        $element.text(formattedDate);
+                    console.warn('[bindDetail] Element not found:', id);
+                }
+            });
+
+            console.log('[bindDetail] Data binding completed');
+        } catch (error) {
+            console.error('[bindDetail] Error:', error);
+        }
+    };
+
+    // Helper function to format date
+    function formatDate(dateString) {
+        if (!dateString || dateString === '---') return '---';
+
+        try {
+            // Try to parse date
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+
+            // Format as DD/MM/YYYY
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            return `${day}/${month}/${year}`;
+        } catch (error) {
+            console.error('[formatDate] Error:', error);
+            return dateString;
+        }
+    }
+
+    $(document).ready(function() {
+         loadTopNews('#topNewsContainer','/@(language)/ContentPage/TopNewsAjax?parameter=RatingDetail_TopNews&view=TopNewsAjax&pageSize=3');
+         loadTopNews('#topNewsContainer1','/@(language)/ContentPage/TopNewsAjax?parameter=RatingDetail_TopNews_DiemXHTN&view=TopNews1Ajax&pageSize=3');
+    });
+
+            function downloadRatingReport(viUrl, enUrl, radioName) {
+                    var selectedLang = $('input[name="' + radioName + '"]:checked').val();
+                    var reportUrl = selectedLang === 'en' ? enUrl : viUrl;
+
+                    if (reportUrl && reportUrl !== '' && reportUrl !== 'null') {
+                        window.open(reportUrl, '_blank');
                     } else {
-                        $element.text(value);
+                        alert(reportNotAvailableMsg);
                     }
                 }
-            } else {
-                console.warn('[bindDetail] Element not found:', id);
-            }
-        });
 
-        console.log('[bindDetail] Data binding completed');
-    } catch (error) {
-        console.error('[bindDetail] Error:', error);
-    }
-};
+    this.getRakingsAjax();
+    this.getSustainableFinanceAjax();
 
-// Helper function to format date
-function formatDate(dateString) {
-    if (!dateString || dateString === '---') return '---';
-    
-    try {
-        // Try to parse date
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return dateString;
-        
-        // Format as DD/MM/YYYY
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        
-        return `${day}/${month}/${year}`;
-    } catch (error) {
-        console.error('[formatDate] Error:', error);
-        return dateString;
-    }
-}
+        function getRakingsAjax() {
+                     var rakingsAjaxUrl = '/@(language)/Ratings/RatingsAjax';
+                     var params = { organizationId: '@ViewBag.Id'};
+                                  $('#bindTTPH').html(`
+                                        ${Array(3).fill().map(() => `
+                                                    <tr class="skeleton-row">
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                    </tr>
+                                                `).join('')}
+                        `);
 
-$(document).ready(function() {
-     loadTopNews('#topNewsContainer','/@(language)/ContentPage/TopNewsAjax?parameter=RatingDetail_TopNews&view=TopNewsAjax&pageSize=3');
-     loadTopNews('#topNewsContainer1','/@(language)/ContentPage/TopNewsAjax?parameter=RatingDetail_TopNews_DiemXHTN&view=TopNews1Ajax&pageSize=3');
-});
+                        $.get(rakingsAjaxUrl, params)
+                            .done(function(html) {
+                                    $('#bindTTPH').html(html);
+                            })
+                            .fail(function() {
+                                    $('#bindTTPH').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">Không thể tải dữ liệu</p></div></td></tr>');
+                            })
+                            .always(function() {
+                            });
+                    };
 
-        function downloadRatingReport(viUrl, enUrl, radioName) {
-                var selectedLang = $('input[name="' + radioName + '"]:checked').val();
-                var reportUrl = selectedLang === 'en' ? enUrl : viUrl;
+        // ============================================
+        // LOAD SUSTAINABLE FINANCE DATA
+        // ============================================
+        function getSustainableFinanceAjax() {
+            var sustainableAjaxUrl = '/@(language)/Ratings2/RatingsAjax';
+            var params = {
+                organizationId: '@ViewBag.Id',
+                lang: '@language'
+            };
 
-                if (reportUrl && reportUrl !== '' && reportUrl !== 'null') {
-                    window.open(reportUrl, '_blank');
-                } else {
-                    alert(reportNotAvailableMsg);
-                }
-            }
-
-this.getRakingsAjax();
-this.getSustainableFinanceAjax();
-
-    function getRakingsAjax() {
-                 var rakingsAjaxUrl = '/@(language)/Ratings/RatingsAjax';
-                 var params = { organizationId: '@ViewBag.Id'};
-                              $('#bindTTPH').html(`
-                                    ${Array(3).fill().map(() => `
-                                                <tr class="skeleton-row">
-                                                    <td><div class="skeleton skeleton-cell"></div></td>
-                                                    <td><div class="skeleton skeleton-cell"></div></td>
-                                                    <td><div class="skeleton skeleton-cell"></div></td>
-                                                    <td><div class="skeleton skeleton-cell"></div></td>
-                                                    <td><div class="skeleton skeleton-cell"></div></td>
-                                                </tr>
-                                            `).join('')}
-                    `);
-
-                    $.get(rakingsAjaxUrl, params)
-                        .done(function(html) {
-                                $('#bindTTPH').html(html);
-                        })
-                        .fail(function() {
-                                $('#bindTTPH').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">Không thể tải dữ liệu</p></div></td></tr>');
-                        })
-                        .always(function() {
-                        });
-                };
-
-    // ============================================
-    // LOAD SUSTAINABLE FINANCE DATA
-    // ============================================
-    function getSustainableFinanceAjax() {
-        var sustainableAjaxUrl = '/@(language)/Ratings2/RatingsAjax';
-        var params = { 
-            organizationId: '@ViewBag.Id',
-            lang: '@language'
-        };
-        
-        // Show skeleton loading
-        $('#bindSustainableFinance').html(`
-            ${Array(3).fill().map(() => `
-                <tr class="skeleton-row">
-                    <td><div class="skeleton skeleton-cell"></div></td>
-                    <td><div class="skeleton skeleton-cell"></div></td>
-                    <td><div class="skeleton skeleton-cell"></div></td>
-                    <td><div class="skeleton skeleton-cell"></div></td>
-                    <td><div class="skeleton skeleton-cell"></div></td>
-                    <td><div class="skeleton skeleton-cell"></div></td>
-                </tr>
-            `).join('')}
-        `);
-
-        $.get(sustainableAjaxUrl, params)
-            .done(function(html) {
-                console.log('[Sustainable Finance] Data loaded successfully');
-                $('#bindSustainableFinance').html(html);
-            })
-            .fail(function(xhr, status, error) {
-                console.error('[Sustainable Finance] Error:', {
-                    status: xhr.status,
-                    error: error
-                });
-                $('#bindSustainableFinance').html(`
-                    <tr>
-                        <td colspan="6" class="no-data">
-                            Hiện tại tổ chức phát hành chưa thực hiện xác nhận tài chính bền vững
-                        </td>
+            // Show skeleton loading
+            $('#bindSustainableFinance').html(`
+                ${Array(3).fill().map(() => `
+                    <tr class="skeleton-row">
+                        <td><div class="skeleton skeleton-cell"></div></td>
+                        <td><div class="skeleton skeleton-cell"></div></td>
+                        <td><div class="skeleton skeleton-cell"></div></td>
+                        <td><div class="skeleton skeleton-cell"></div></td>
+                        <td><div class="skeleton skeleton-cell"></div></td>
+                        <td><div class="skeleton skeleton-cell"></div></td>
                     </tr>
-                `);
-            });
+                `).join('')}
+            `);
+
+            $.get(sustainableAjaxUrl, params)
+                .done(function(html) {
+                    console.log('[Sustainable Finance] Data loaded successfully');
+                    $('#bindSustainableFinance').html(html);
+                })
+                .fail(function(xhr, status, error) {
+                    console.error('[Sustainable Finance] Error:', {
+                        status: xhr.status,
+                        error: error
+                    });
+                    $('#bindSustainableFinance').html(`
+                        <tr>
+                            <td colspan="6" class="no-data">
+                                Hiện tại tổ chức phát hành chưa thực hiện xác nhận tài chính bền vững
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+
+    function closeRatingInfoPopup() {
+        $('#ratingInfoModal').fadeOut(300);
     }
-    </script>
+
+    // Close modal when clicking outside
+    $(document).on('click', function (e) {
+        if ($(e.target).is('#ratingInfoModal')) {
+            closeRatingInfoPopup();
+        }
+    });
+
+    // Close modal with ESC key
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeRatingInfoPopup();
+        }
+    });
+</script>
+
+<!-- Rating Info Modal -->
+<div id="ratingInfoModal" class="rating-info-modal">
+    <div class="rating-info-content">
+        <div class="rating-info-header">
+            <div class="rating-header-info">
+                <span class="rating-current-score" id="modal-rating"></span>
+                <h3 id="modal-issuer"></h3>
+            </div>
+            <button class="rating-info-close" onclick="closeRatingInfoPopup()">&times;</button>
+        </div>
+        <div class="rating-info-body">
+            <!-- Paste your HTML module content here -->
+            <div id="rating-html-content">
+                @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleTNDai", language = language, portalId = portalId })
+            </div>
+        </div>
+    </div>
+</div>
