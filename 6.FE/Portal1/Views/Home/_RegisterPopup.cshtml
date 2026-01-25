@@ -73,54 +73,64 @@
     }
 }
 <style>
+        .select2-container:has(#select2-sanPhamQT3-results) {
+            z-index: 9999 !important;
+        }
 
 </style>
-<section class="py-5 mb-3 mt-3" id="DangKy">
-    <div class="container">
-        <h2 class="price-title mb-5">@Localizer["Title"]</h2>
-        <div class="row">
-            <div class="col-lg-6 col-sm-12">
-                <input type="hidden" id="languageId" value="@language" />
-                <form id="formLienHe" method="post">
-                    @Html.AntiForgeryToken()
-                    <div class="row">
-                        <div class="col-sm-12 mb-2"><label class="form-label" asp-for="FullName"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="FullName" placeholder=""><span class="validate-style" asp-validation-for="FullName"></span></div>
-                        <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Phone"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="Phone" placeholder=""><span class="validate-style" asp-validation-for="Phone"></span></div>
-                        <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Email"></label> <strong class="error">*</strong><input type="email" class="form-control" asp-for="Email" placeholder=""><span class="validate-style" asp-validation-for="Email"></span></div>
-                        <div class="col-sm-6 mb-2"><label class="form-label" asp-for="ConpanyName"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="ConpanyName" placeholder=""><span class="validate-style" asp-validation-for="ConpanyName"></span></div>
-                        <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Position"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="Position" placeholder=""><span class="validate-style" asp-validation-for="Position"></span></div>
-                        <div class="col-sm-12 mb-2"><label class="form-label" for="dichVuQT" asp-for="ServiceId"></label> <strong class="error">*</strong><select asp-for="ServiceId" asp-items="sectorExpertiseList" class="form-select" id="dichVuQT"><option value="">@Localizer["SelectServiceId"]</option></select><span asp-validation-for="ServiceId" class="validate-style"></span></div>
 
-                        <div class="col-sm-12 mb-2">
-                            <label class="form-label" asp-for="Products" for="sanPhamQT"></label>
-                            <strong class="error">*</strong>
-                            <select class="form-select" id="sanPhamQT" asp-items="productsServicesList" multiple="multiple"></select>
-                            <span class="validate-style" asp-validation-for="Products"></span>
-                        </div>
+<div class="modal" tabindex="-1" role="dialog" id="popRegister">
+    <div class="modal-dialog" role="document" style="margin-top:10%;width: 800px;max-width: 800px;">
+        <div class="modal-content" style="background:#fff;">
+            <button type="button" id="btnClose" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-body" id="formLienHe">
+                <div class="col-lg-12 col-sm-12">
+                    <input type="hidden" id="languageId" value="@language" />
+                    <h2 style="font-size: 26px;margin-bottom: 20px !important;" class="price-title mb-5">
+                        @Localizer["Title"]
+                    </h2>
+                    <form id="formLienHe3" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-sm-12 mb-2"><label class="form-label" asp-for="FullName"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="FullName" placeholder=""><span class="validate-style" asp-validation-for="FullName"></span></div>
+                            <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Phone"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="Phone" placeholder=""><span class="validate-style" asp-validation-for="Phone"></span></div>
+                            <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Email"></label> <strong class="error">*</strong><input type="email" class="form-control" asp-for="Email" placeholder=""><span class="validate-style" asp-validation-for="Email"></span></div>
+                            <div class="col-sm-6 mb-2"><label class="form-label" asp-for="ConpanyName"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="ConpanyName" placeholder=""><span class="validate-style" asp-validation-for="ConpanyName"></span></div>
+                            <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Position"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="Position" placeholder=""><span class="validate-style" asp-validation-for="Position"></span></div>
+                            <div class="col-sm-12 mb-2"><label class="form-label" for="dichVuQT3" asp-for="ServiceId"></label> <strong class="error">*</strong>
+                            <select asp-for="ServiceId" asp-items="sectorExpertiseList" class="form-select" id="dichVuQT3" style="width: 100%;">
+                                <option value="">@Localizer["SelectServiceId"]</option>
+                            </select>
+                            <span asp-validation-for="ServiceId" class="validate-style"></span>
+                            </div>
 
-                        <div class="col-sm-12 mb-2"><label class="form-label" for="yeuCauCT" asp-for="Content"></label><textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT" placeholder="@Localizer["ContentPlaceholder"]"></textarea><span class="validate-style" asp-validation-for="Content"></span><input type="hidden" class="form-control" id="products" asp-for="Products"></div>
-                        @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ContactFormMsg", language = language, portalId = portalId })
-                    </div><div class="mb-2"></div><button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH>@Localizer["BtnSend"]</button><input type="hidden" class="Capcha" id="g-recaptcha-response" name="capcha" />
-                </form>
-            </div>
-            <div class="col-lg-6 col-sm-12 img">
-                @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRHomeBannerRegister", language = language, portalId = portalId })
+                            <div class="col-sm-12 mb-2">
+                                <label class="form-label" asp-for="Products" for="sanPhamQT3"></label>
+                                <strong class="error">*</strong>
+                                <select class="form-select" id="sanPhamQT3" style="width:100%;" asp-items="productsServicesList" multiple="multiple"></select>
+                                <span class="validate-style" asp-validation-for="Products"></span>
+                            </div>
+
+                            <div class="col-sm-12 mb-2"><label class="form-label" for="yeuCauCT3" asp-for="Content"></label><textarea type="text" maxlength="1000" asp-for="Content" class="form-control txt-area" id="yeuCauCT3" placeholder="@Localizer["ContentPlaceholder"]"></textarea><span class="validate-style" asp-validation-for="Content"></span><input type="hidden" class="form-control" id="products3" asp-for="Products"></div>
+                            @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "ContactFormMsg", language = language, portalId = portalId })
+                        </div><div class="mb-2"></div><button type="submit" class="btn btn-primary col-sm-12 btn-yeucau" btnSendLH3>@Localizer["BtnSend"]</button><input type="hidden" class="Capcha" id="g-recaptcha-response" name="capcha" />
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</section>
+</div>
+
 @section Scripts
 {
 }
 
 <script>
-    window.registerFormConfig = {
-        // URLs
+    window.registerPopupFormConfig = {
         urls: {
             contact: '@Url.Action("Contact", "ContactHome")',
             flowSelectList: '@Url.Action("FlowSelectList", "ContactHome")'
         },
-        // Localized strings
         i18n: {
             selectProducts: '@Localizer["SelectProducts"]',
             otherProduct: '@Localizer["OtherProduct"]',
@@ -130,12 +140,12 @@
         },
         language: '@language',
         portalId: '@portalId',
-        parrentTag: '#DangKy'
+        parrentTag: '#popRegister'
     };
 
     $(document).ready(function() {
-        if (typeof initRegisterForm === 'function') {
-            initRegisterForm(window.registerFormConfig);
+        if (typeof initRegisterPopupForm === 'function') {
+            initRegisterPopupForm(window.registerPopupFormConfig);
         } else {
             console.error('initRegisterForm function not found in site.js');
         }

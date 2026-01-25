@@ -963,3 +963,43 @@ a.btn.btn-primary.btn-join {
     width: 30px !important;
     margin: 5px !important;
 }
+#WhatWe {
+    height: auto !important;
+}
+
+.custom-caption {
+    position: absolute;
+    bottom: 20px; /* cách mép dưới 20px, bạn có thể chỉnh */
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
+}
+/*#SliderBanner .carousel-caption
+{
+    top: inherit !important;
+}
+#carouselFiin h1
+{
+    margin-top:0 !important;
+}*/
+.price-title.text-center {
+    margin-bottom: 3rem !important;
+}
+.method-box > .method-title {
+    font-size: 15px !important;
+    margin: 0;
+    margin-bottom: 10px !important;
+}
+@media (max-width: 767px) {
+    #NewButton .btn {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    #Banner {
+       height: auto !important;
+    }
+    #Deliver>.container {
+        background-size: 100% 100% !important;
+    }
+}

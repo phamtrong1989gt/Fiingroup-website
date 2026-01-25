@@ -626,9 +626,7 @@ a {
 }
 
 #SliderBanner .carousel-caption {
-    top: 11%;
     text-align:left!important;
-    max-height:450px;
 }
 
 #SliderBanner .btn-request {
@@ -918,7 +916,6 @@ a:hover {
 }
 #carouselFiin h1 {
     font-size: 56px;
-    margin:2% 0 0 0;
 }
 #carouselFiin .hero-text {
     font-size: 18px;
@@ -1146,3 +1143,13 @@ a:hover {
 /*#manualsct .owl-stage-outer {
     background: #e1f4fda6;
 }*/
+#carouselFiin {
+    position: relative;
+}
+    #carouselFiin > .bg-banner > .carousel-caption {
+        max-height: inherit !important;
+    }
+    #carouselFiin > .bg-banner > .carousel-caption {
+        top: 0 !important;
+        bottom: 0 !important;
+    }

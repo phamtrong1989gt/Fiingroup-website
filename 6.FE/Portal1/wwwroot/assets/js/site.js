@@ -171,13 +171,17 @@ function closeThankYouModal() {
     $('body').css('overflow', '');
 }
 
-function initRegisterForm(config) {
-    if (!config || !config.urls || !config.i18n) {
+function initRegisterPopupForm(config) {
+
+    if (!config || !config.urls || !config.i18n || !config.parrentTag) {
         console.error('Invalid config for register form');
         return;
     }
 
-    $('#sanPhamQT').select2({
+    const p = config.parrentTag;
+    const $p = $(p);
+
+    $p.find('#sanPhamQT3').select2({
         placeholder: config.i18n.selectProducts,
         closeOnSelect: false,
         allowHtml: true,
@@ -185,47 +189,47 @@ function initRegisterForm(config) {
         tags: true
     });
 
-    $("#dichVuQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
-    $("#sanPhamQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
+    $p.find("#dichVuQT3").append(`<option value="0">${config.i18n.otherProduct}</option>`);
+    $p.find("#sanPhamQT3").append(`<option value="0">${config.i18n.otherProduct}</option>`);
 
-    const $form = $('#formLienHe');
+    const $form = $p.find('#formLienHe3');
     $form.on('submit', function (e) {
         e.preventDefault();
 
         if (!$form.valid()) {
             return;
         }
-
-        var agreeChecked = $('#agreeTerms').is(':checked');
-        var $agreeMsg = $('#agreeTermsError');
+        debugger;
+        var agreeChecked = $p.find('#agreeTerms').is(':checked');
+        var $agreeMsg = $p.find('#agreeTermsError');
         if (!agreeChecked) {
             $agreeMsg.text($agreeMsg.attr('data-value'));
             $agreeMsg.addClass('field-validation-error').removeClass('field-validation-valid');
-            $('#agreeTerms').focus();
+            $p.find('#agreeTerms').focus();
             return;
         } else {
             $agreeMsg.text('');
             $agreeMsg.addClass('field-validation-valid').removeClass('field-validation-error');
         }
 
-        var serviceVal = $('#dichVuQT').val();
-        var $serviceMsg = $('[data-valmsg-for="ServiceId"]');
+        var serviceVal = $p.find('#dichVuQT3').val();
+        var $serviceMsg = $p.find('[data-valmsg-for="ServiceId"]');
         if (!serviceVal || serviceVal.toString().trim() === '') {
             $serviceMsg.text('Vui lòng chọn dịch vụ.');
             $serviceMsg.addClass('field-validation-error').removeClass('field-validation-valid');
-            $('#dichVuQT').focus();
+            $p.find('#dichVuQT3').focus();
             return;
         } else {
             $serviceMsg.text('');
             $serviceMsg.addClass('field-validation-valid').removeClass('field-validation-error');
         }
 
-        var productsVal = $('#products').val();
-        var $prodMsg = $('[data-valmsg-for="Products"]');
+        var productsVal = $p.find('#products3').val();
+        var $prodMsg = $p.find('[data-valmsg-for="Products3"]');
         if (!productsVal || productsVal.toString().trim() === '') {
             $prodMsg.text(config.i18n.msgNotUse);
             $prodMsg.addClass('field-validation-error').removeClass('field-validation-valid');
-            $('#sanPhamQT').select2('open');
+            $p.find('#sanPhamQT3').select2('open');
             return;
         } else {
             $prodMsg.text('');
@@ -241,9 +245,137 @@ function initRegisterForm(config) {
             success: function (res) {
                 if (res.output == 1) {
                     $form[0].reset();
-                    $("#products").val("");
-                    $("#agreeTerms").prop('checked', false);
-                    $('#sanPhamQT').val(null).trigger('change');
+                    $p.find("#products3").val("");
+                    $p.find("#agreeTerms").prop('checked', false);
+                    $p.find('#sanPhamQT3').val(null).trigger('change');
+                    hideRecaptchaPopup();
+                    if (recaptchaWidgetId !== null) {
+                        grecaptcha.reset(recaptchaWidgetId);
+                    }
+                    showThankYouModal();
+                }
+                else if (res.output == 69) {
+                    showRecaptchaPopup("[btnSendLH3]");
+                    return;
+                }
+                else {
+                    if (res.message) {
+                        alertify.error(res.message);
+                    }
+                }
+            },
+            error: function (xhr) {
+                alertify.warning(config.i18n.errorMessage);
+            }
+        });
+    });
+
+    $p.find("#sanPhamQT3").on("change", function () {
+        let selected = $(this).val();
+        if (selected && selected.length > 0) {
+            $p.find("#products3").val(selected.join("; "));
+            $p.find('[data-valmsg-for="Products3"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
+        } else {
+            $p.find("#products3").val("");
+        }
+    });
+
+    $p.find('#agreeTerms').on('change', function () {
+        if ($(this).is(':checked')) {
+            $p.find('#agreeTermsError').text('').addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+    });
+
+    $(document).on('click', '#thankYouModal', function (e) {
+        if (e.target === this) {
+            closeThankYouModal();
+        }
+    });
+
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape' && $('#thankYouModal').is(':visible')) {
+            closeThankYouModal();
+        }
+    });
+
+}
+
+function initRegisterForm(config) {
+    if (!config || !config.urls || !config.i18n || !config.parrentTag) {
+        console.error('Invalid config for register form');
+        return;
+    }
+
+    const p = config.parrentTag;
+    const $p = $(p);
+
+    $p.find('#sanPhamQT').select2({
+        placeholder: config.i18n.selectProducts,
+        closeOnSelect: false,
+        allowHtml: true,
+        allowClear: true,
+        tags: true
+    });
+
+    $p.find("#dichVuQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
+    $p.find("#sanPhamQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
+
+    const $form = $p.find('#formLienHe');
+    $form.on('submit', function (e) {
+        e.preventDefault();
+
+        if (!$form.valid()) {
+            return;
+        }
+
+        var agreeChecked = $p.find('#agreeTerms').is(':checked');
+        var $agreeMsg = $p.find('#agreeTermsError');
+        if (!agreeChecked) {
+            $agreeMsg.text($agreeMsg.attr('data-value'));
+            $agreeMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+            $p.find('#agreeTerms').focus();
+            return;
+        } else {
+            $agreeMsg.text('');
+            $agreeMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
+        var serviceVal = $p.find('#dichVuQT').val();
+        var $serviceMsg = $p.find('[data-valmsg-for="ServiceId"]');
+        if (!serviceVal || serviceVal.toString().trim() === '') {
+            $serviceMsg.text('Vui lòng chọn dịch vụ.');
+            $serviceMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+            $p.find('#dichVuQT').focus();
+            return;
+        } else {
+            $serviceMsg.text('');
+            $serviceMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
+        var productsVal = $p.find('#products').val();
+        var $prodMsg = $p.find('[data-valmsg-for="Products"]');
+        if (!productsVal || productsVal.toString().trim() === '') {
+            $prodMsg.text(config.i18n.msgNotUse);
+            $prodMsg.addClass('field-validation-error').removeClass('field-validation-valid');
+            $p.find('#sanPhamQT').select2('open');
+            return;
+        } else {
+            $prodMsg.text('');
+            $prodMsg.addClass('field-validation-valid').removeClass('field-validation-error');
+        }
+
+        const token = $form.find('input[name="__RequestVerificationToken"]').val();
+        $.ajax({
+            url: config.urls.contact,
+            type: 'POST',
+            data: $form.serialize(),
+            headers: { 'RequestVerificationToken': token },
+            success: function (res) {
+                if (res.output == 1) {
+                    $form[0].reset();
+                    $p.find("#products").val("");
+                    $p.find("#agreeTerms").prop('checked', false);
+                    $p.find('#sanPhamQT').val(null).trigger('change');
                     hideRecaptchaPopup();
                     if (recaptchaWidgetId !== null) {
                         grecaptcha.reset(recaptchaWidgetId);
@@ -266,69 +398,19 @@ function initRegisterForm(config) {
         });
     });
 
-    $("#sanPhamQT").on("change", function () {
+    $p.find("#sanPhamQT").on("change", function () {
         let selected = $(this).val();
         if (selected && selected.length > 0) {
-            $("#products").val(selected.join("; "));
-            $('[data-valmsg-for="Products"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
+            $p.find("#products").val(selected.join("; "));
+            $p.find('[data-valmsg-for="Products"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
         } else {
-            $("#products").val("");
+            $p.find("#products").val("");
         }
     });
 
-    //$("#dichVuQT").on("change", function () {
-    //    let serviceId = $(this).val();
-    //    let language = $("#languageId").val();
-    //    let portId = config.portalId;
-    //    let parentId = serviceId;
-
-    //    $("#products").val("");
-
-    //    if (serviceId && serviceId.toString().trim() !== '') {
-    //        $('[data-valmsg-for="ServiceId"]').text('').addClass('field-validation-valid').removeClass('field-validation-error');
-    //    }
-
-    //    if (!serviceId) {
-    //        $("#sanPhamQT").empty().append(`<option value="">${config.i18n.selectProducts}</option>`);
-    //        return;
-    //    }
-
-    //    if (parentId == 0) {
-    //        $("#sanPhamQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
-    //        return;
-    //    }
-
-    //    $.ajax({
-    //        url: config.urls.flowSelectList,
-    //        method: "POST",
-    //        data: {
-    //            language: language,
-    //            portId: portId,
-    //            parrentId: parentId
-    //        },
-    //        success: function (res) {
-    //            if (res.output === 1 || res.output === "1") {
-    //                $("#sanPhamQT").empty();
-    //                let lst = res.data;
-    //                if (lst && lst.length > 0) {
-    //                    lst.forEach(x => {
-    //                        $("#sanPhamQT").append(`<option value="${x.id}">${x.name}</option>`);
-    //                    });
-    //                    $("#sanPhamQT").append(`<option value="0">${config.i18n.otherProduct}</option>`);
-    //                } else {
-    //                    $("#sanPhamQT").append(`<option value="">${config.i18n.noProducts}</option>`);
-    //                }
-    //            }
-    //        },
-    //        error: function () {
-    //            console.error('Failed to load products');
-    //        }
-    //    });
-    //});
-
-    $('#agreeTerms').on('change', function () {
+    $p.find('#agreeTerms').on('change', function () {
         if ($(this).is(':checked')) {
-            $('#agreeTermsError').text('').addClass('field-validation-valid').removeClass('field-validation-error');
+            $p.find('#agreeTermsError').text('').addClass('field-validation-valid').removeClass('field-validation-error');
         }
     });
 
@@ -437,6 +519,11 @@ function initRegisterSolutionForm(config) {
 
     $("#btnClose").on("click", function () {
         $('#popsolutionmore').modal('hide');
+        $('#popRegister').modal('hide');
+    });
+
+    $(".close").on("click", function () {
+        $('#popRegister').modal('hide');
     });
 
     $(document).on('click', '#thankYouModal2', function (e) {

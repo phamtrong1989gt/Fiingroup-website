@@ -17,4 +17,675 @@
     // var listFlow = await _iContentPageRepository.FlowGetsAsync(language, portalId);
     // int flowi = 0;
 }
-<h1>Trang tìm kiếm</h1>
+
+<style>
+    #Banner {
+        background: url(/Data/Banner/news-bg.jpg) no-repeat top;
+        background-size: cover;
+        height: 350px;
+    }
+
+        #Banner h1 {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 50px;
+            /* line-height: 190%; */
+            text-align: center;
+            padding: 100px;
+        }
+
+
+    #search #search-input {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px;
+        gap: 10px;
+        height: 38px;
+        background: #FFFFFF;
+        border: 1px solid #034EA2;
+        border-radius: 4px;
+    }
+
+    #search {
+        position: relative;
+        font-size: 18px;
+        width: 90%;
+    }
+
+        #search label {
+            position: absolute;
+            right: 8px;
+            top: 6px;
+            color: #034EA2;
+        }
+
+
+    .mr-2 {
+        margin: 0 1rem 0 0;
+    }
+
+    .btn-search {
+        width: 120px;
+        height: 40px;
+        background: #0066CC;
+        border-radius: 200px;
+    }
+
+
+    @@media (max-width: 768px) {
+        #Banner {
+            height: 200px;
+        }
+
+            #Banner h1 {
+                font-size: 24px;
+                padding: 50px;
+            }
+
+        .btn-search {
+            width: auto;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .narbartrust {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 15px 5px;
+            scrollbar-width: none;
+        }
+
+            .narbartrust::-webkit-scrollbar {
+                display: none;
+            }
+
+            .narbartrust a {
+                flex: 0 0 auto;
+                white-space: nowrap;
+                font-size: 15px;
+                padding: 8px 10px;
+                border-bottom-width: 2px;
+            }
+
+        .page-table {
+            flex-direction: column;
+            row-gap: 18px;
+        }
+
+            .page-table .numberpage {
+                line-height: 20px;
+            }
+    }
+</style>
+
+<section id="Banner">
+    <div class="container">
+        <div class="row">
+            <h1 class="text-white mb-5 mt-5">
+                Kết quả tìm kiếm
+            </h1>
+        </div>
+    </div>
+</section>
+<section id="Result">
+    <style>
+        .rating-card {
+            border-radius: 14px;
+            padding: 22px 0;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            background-image: linear-gradient(#fff, #fff), linear-gradient(to right, #0018A8, #166BF2, #3B7EEE);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .rating-left {
+            width: 55%;
+        }
+
+        .rating-right {
+            width: 45%;
+        }
+
+        .rating-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .rating-badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            font-size: 22px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rating-a {
+            background: #F5F9FF;
+            color: #0066cc;
+            border: 1px solid #0066cc;
+        }
+
+        .rating-b {
+            background: #F3FBF8;
+            color: #12B76A;
+            border: 1px solid #12B76A;
+        }
+
+        .rating-top-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .rating-date {
+            background: #E9F4FF;
+            color: #0B66C3;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        .rating-company {
+            font-size: 18px;
+            font-weight: 600;
+            color: #093461;
+        }
+
+        .rating-info {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .info-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #093461;
+        }
+
+        .info-value {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0066CC;
+        }
+
+        .status-tag {
+            background: #E7F3FF;
+            color: #0066CC;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .btn-report {
+            margin-top: 16px;
+            background: #0A6CDE;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            float: right;
+        }
+
+
+        .narbartrust {
+            padding: 50px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+            .narbartrust a {
+                color: #093461;
+                text-decoration: none;
+                font-size: 18px;
+                padding: 8px 10px;
+                display: flex;
+                justify-content: center;
+                min-width: 20%;
+                transition: color 0.3s, border-bottom 0.3s;
+                cursor: pointer;
+                border-bottom: 3px solid transparent;
+            }
+
+                .narbartrust a.active,
+                .narbartrust a:hover {
+                    color: #0066CC;
+                    border-bottom: 3px solid #093461;
+                }
+
+
+        .news-title {
+            font-weight: 700;
+            font-size: 20px;
+            height: 102px;
+            line-height: 120%;
+            display: flex;
+            align-items: center;
+            color: #1D2939;
+            flex: none;
+            order: 0;
+            align-self: stretch;
+            flex-grow: 0;
+            overflow: hidden;
+        }
+
+
+
+        .page-table {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .numberpage {
+            margin-right: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            cursor: pointer;
+        }
+
+            .pagination .active {
+                padding: 5px 14px;
+                border: 1px solid #4d94dc;
+                border-radius: 5px;
+                background: #fff;
+                cursor: pointer;
+                color: #1f78d3;
+            }
+
+        @@media (max-width: 768px) {
+
+            .rating-card {
+                padding: 18px;
+                display: block;
+            }
+
+            .rating-left,
+            .rating-right {
+                width: 100% !important;
+            }
+
+            .rating-header {
+                flex-direction: row;
+                align-items: center;
+                gap: 14px;
+            }
+
+            .rating-badge {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .rating-top-info .rating-company {
+                font-size: 16px;
+            }
+
+            .rating-top-info .rating-date {
+                font-size: 13px;
+                padding: 5px 12px;
+            }
+
+            .rating-info {
+                flex-direction: column;
+                gap: 14px;
+                margin-top: 14px;
+            }
+            /* Button */
+            .btn-report {
+                float: none;
+                display: inline-block;
+                margin-top: 18px;
+                font-size: 14px;
+                padding: 10px 20px;
+                border-radius: 22px;
+                align-self: flex-end;
+            }
+
+            .rating-right {
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+    <div class="container">
+        <div class="d-flex justify-content-between mt-5">
+            <section id="search" class="mr-2">
+                <input id="search-input" class="form-control input-lg" placeholder="Search icons" autocomplete="off" spellcheck="false" autocorrect="off" tabindex="1">
+                <label for="search-input"><i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">Search icons</span></label>
+            </section>
+            <button type="submit" class="btn btn-primary btn-search">Tìm kiếm</button>
+        </div>
+
+        <div class="narbartrust">
+            <a href="#" class="active">Kết quả xếp hạng tín nhiệm</a>
+            <a href="#" class="">Ấn phẩm &amp; Báo cáo</a>
+            <a href="#" class="">Tin tức &amp; Sự kiện</a>
+        </div>
+
+        <h2 class="price-title mb-4">Kết quả xếp hạng tín nhiệm</h2>
+        <p>Hiển thị XXX kết quả cho từ khóa “F88”</p>
+
+        <div class="row rating-card">
+            <div class="rating-left">
+                <div class="rating-header">
+                    <div class="rating-badge rating-a">A</div>
+
+                    <div class="rating-top-info">
+                        <div class="rating-date">11/12/2025</div>
+                        <div class="rating-company">Công ty Cổ phần F88</div>
+                    </div>
+                </div>
+
+                <div class="rating-info">
+                    <div>
+                        <span class="info-label">Loại ý kiến</span>
+                        <span class="info-value">Tổ chức phát hành</span>
+                    </div>
+                    <div>
+                        <span class="info-label">Tổ chức phát hành</span>
+                        <span class="info-value">Ngân hàng Thương mại (NHTM)</span>
+                    </div>
+                    <div>
+                        <span class="info-label">Triển vọng</span>
+                        <span class="status-tag">Ổn định</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rating-right">
+                <a href="#" class="btn-report">Xem báo cáo</a>
+            </div>
+        </div>
+
+        <div class="row rating-card">
+            <div class="rating-left">
+                <div class="rating-header">
+                    <div class="rating-badge rating-a">A+</div>
+
+                    <div class="rating-top-info">
+                        <div class="rating-date">11/12/2025</div>
+                        <div class="rating-company">Công ty Cổ phần F88</div>
+                    </div>
+                </div>
+
+                <div class="rating-info">
+                    <div>
+                        <span class="info-label">Loại ý kiến</span>
+                        <span class="info-value">Tổ chức phát hành</span>
+                    </div>
+                    <div>
+                        <span class="info-label">Tổ chức phát hành</span>
+                        <span class="info-value">Ngân hàng Thương mại (NHTM)</span>
+                    </div>
+                    <div>
+                        <span class="info-label">Triển vọng</span>
+                        <span class="status-tag">Ổn định</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rating-right">
+                <a href="#" class="btn-report">Xem báo cáo</a>
+            </div>
+        </div>
+
+
+        <div class="row rating-card">
+            <div class="rating-left">
+                <div class="rating-header">
+                    <div class="rating-badge rating-b">B</div>
+
+                    <div class="rating-top-info">
+                        <div class="rating-date">11/12/2025</div>
+                        <div class="rating-company">Công ty Cổ phần F88</div>
+                    </div>
+                </div>
+
+                <div class="rating-info">
+                    <div>
+                        <span class="info-label">Loại ý kiến</span>
+                        <span class="info-value">Tổ chức phát hành</span>
+                    </div>
+                    <div>
+                        <span class="info-label">Tổ chức phát hành</span>
+                        <span class="info-value">Ngân hàng Thương mại (NHTM)</span>
+                    </div>
+                    <div>
+                        <span class="info-label">Triển vọng</span>
+                        <span class="status-tag">Ổn định</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rating-right">
+                <a href="#" class="btn-report">Xem báo cáo</a>
+            </div>
+        </div>
+
+
+        <div class="page-table">
+            <div class="numberpage">
+                <div>Hiển thị <span> 1 <span> - <span>10</span> của <span> 16 </span> bản ghi</span></span></div>
+            </div>
+            <div class="pagination">
+                <span class="chevron-left"><i class="fas fa-chevron-left"></i></span>
+                <div>1</div>
+                <div class="active">2</div>
+                <div>3</div>
+                <div>4</div>
+                <span class="chevron-right"><i class="fas fa-chevron-right"></i></span>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('.narbartrust a');
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                });
+            });
+        });
+        document.querySelectorAll('.pagination div').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.pagination div').forEach(div => div.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+
+        // Xử lý chevron
+        let currentPage = 2; // Bắt đầu với trang 2 (do có class active mặc định)
+
+        document.querySelector('.chevron-left').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updateActivePage();
+            }
+        });
+
+        document.querySelector('.chevron-right').addEventListener('click', () => {
+            if (currentPage < 4) { // Giả sử có 4 trang
+                currentPage++;
+                updateActivePage();
+            }
+        });
+
+        function updateActivePage() {
+            document.querySelectorAll('.pagination div').forEach((div, index) => {
+                div.classList.remove('active');
+                if (parseInt(div.textContent) === currentPage) {
+                    div.classList.add('active');
+                }
+            });
+        }
+    </script>
+</section>
+
+<section id="Issuer" class="pt-5">
+    <style>
+        .issuer-card {
+            border-radius: 14px;
+            padding: 22px 0;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            background-image: linear-gradient(#fff, #fff), linear-gradient(to right, #0018A8, #166BF2, #3B7EEE);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .issuer-left {
+            width: 55%;
+        }
+
+        .issuer-right {
+            width: 45%;
+        }
+
+        .issuer-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .issuer-badge {
+            border-radius: 10px;
+            font-size: 22px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .issuer-a {
+            background: #F5F9FF;
+            color: #0066cc;
+            border: 1px solid #0066cc;
+        }
+
+        .issuer-b {
+            background: #F3FBF8;
+            color: #12B76A;
+            border: 1px solid #12B76A;
+        }
+
+        .issuer-top-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .issuer-date {
+            background: #E9F4FF;
+            color: #0B66C3;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        .issuer-company {
+            font-size: 18px;
+            font-weight: 600;
+            color: #093461;
+        }
+
+        .issuer-info {
+            font-size: 14px;
+            color: #093461;
+        }
+
+        @@media (max-width: 768px) {
+
+            .issuer-card {
+                padding: 18px;
+                display: block;
+            }
+
+            .issuer-left,
+            .issuer-right {
+                width: 100% !important;
+            }
+
+            .issuer-header {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+
+            .issuer-badge img {
+                width: 50px;
+                height: 50px;
+                object-fit: contain;
+            }
+
+            .issuer-top-info .issuer-company {
+                font-size: 16px;
+            }
+
+            .issuer-top-info .issuer-date {
+                font-size: 13px;
+                padding: 5px 12px;
+            }
+
+            .issuer-info {
+                font-size: 13px;
+            }
+
+            .issuer-right {
+                margin-top: 16px;
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+    <div class="container">
+        <h2 class="price-title mb-4">Tổ chức phát hành</h2>
+        <div class="row issuer-card">
+            <div class="issuer-left">
+                <div class="issuer-header">
+                    <div class="issuer-badge">
+                        <img src="/Data/F88.png" alt="f88">
+                    </div>
+
+                    <div class="issuer-top-info">
+                        <div class="issuer-date">11/12/2025</div>
+                        <div class="issuer-company">Công ty Cổ phần F88</div>
+                        <div class="issuer-info">Công ty Cổ phần (CTCP)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issuer-right">
+                <a href="#" class="btn-report">Xem chi tiết</a>
+            </div>
+        </div>
+    </div>
+</section>

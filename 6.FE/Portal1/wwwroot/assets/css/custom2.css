@@ -277,7 +277,7 @@ a.btn.btn-primary.btn-join {
     border-color: #ddd !important;
 }
 .select2-container {
-    z-index: 9999;
+    z-index: 999;
 }
 .pagination .page-item {
     padding: 0;
