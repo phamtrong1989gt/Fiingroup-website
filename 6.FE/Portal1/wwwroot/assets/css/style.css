@@ -1136,6 +1136,7 @@ a:hover {
 #Find button.bg-white {
     height: 100%;
     border-radius: 0px 5px 5px 0;
+    width: 57px;
 }
     #Find button.bg-white:hover i {
         color: var(--primary-color);
