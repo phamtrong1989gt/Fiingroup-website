@@ -1,219 +1,218 @@
-# ?? Database Query Management Tool
+﻿# Database Query Management Tool
 
-## ?? T?ng quan
-Database Query Management Tool l� c�ng c? chuy�n nghi?p cho ph�p Super Admin th?c thi c�c c�u l?nh SQL tr?c ti?p tr�n database production m� kh�ng c?n remote v�o server.
+## Tổng quan
+Database Query Management Tool là công cụ chuyên nghiệp cho phép Super Admin thực thi các câu lệnh SQL trực tiếp trên database production mà không cần remote vào server.
 
-## ? T�nh n?ng ch�nh
+## Tính năng chính
 
-### ?? B?o m?t
-- **X�c th?c 2 l?p**: Y�u c?u PIN code tr??c khi s? d?ng (PIN c? ??nh trong code)
-- **Ph�n quy?n**: Ch? d�nh cho Super Admin (`[IsSupperAdminAuthorizePermission]`)
-- **Timeout session**: PIN h?t h?n sau 2 gi?
-- **Log ??y ??**: Ghi l?i m?i thao t�c v� ng??i th?c hi?n
-- **Ch?n l?nh nguy hi?m**: T? ??ng ch?n DROP DATABASE, TRUNCATE, sp_, xp_
+### Bảo mật
+- **Xác thực 2 lớp**: Yêu cầu PIN code trước khi sử dụng (PIN cài định trong code)
+- **Phân quyền**: Chỉ dành cho Super Admin (`[IsSupperAdminAuthorizePermission]`)
+- **Timeout session**: PIN hết hạn sau 2 giờ
+- **Log đầy đủ**: Ghi lại mọi thao tác và người thực hiện
+- **Chặn lệnh nguy hiểm**: Tự động chặn `DROP DATABASE`, `TRUNCATE`, `sp_*`, `xp_*`
 
-### ?? Giao di?n
-- **Editor SQL** v?i syntax highlighting
-- **Sidebar Tables**: Hi?n th? danh s�ch b?ng v� s? d�ng
-- **L?ch s? Query**: Xem v� t�i s? d?ng c�c query ?� th?c thi
-- **K?t qu? d?ng b?ng**: Hi?n th? d? li?u d? ??c
-- **Export CSV**: Xu?t k?t qu? ra file CSV
+### Giao diện
+- **Editor SQL** với syntax highlighting
+- **Sidebar Tables**: Hiển thị danh sách bảng và số dòng
+- **Lịch sử Query**: Xem và tái sử dụng các query đã thực thi
+- **Kết quả dạng bảng**: Hiển thị dữ liệu được truy vấn
+- **Export CSV**: Xuất kết quả ra file CSV
 
-### ? Hi?u n?ng
-- **Timeout t�y ch?nh**: T? 5s ??n 300s (m?c ??nh 30s)
-- **Gi?i h?n k?t qu?**: T?i ?a 5,000 d�ng ?? tr�nh qu� t?i
-- **Th?i gian th?c thi**: Hi?n th? th?i gian ch?y query
+### Hiệu năng
+- **Timeout tùy chỉnh**: Từ 5s đến 300s (mặc định 30s)
+- **Giới hạn kết quả**: Tối đa 5.000 dòng để tránh quá tải
+- **Thời gian thực thi**: Hiển thị thời gian chạy query
 
-## ?? C�ch s? d?ng
+## Cách sử dụng
 
-### 1. Truy c?p
-- ??ng nh?p v?i t�i kho?n **Super Admin**
-- V�o menu: **SUPPER ADMIN** ? **Database Query Tool**
+### 1. Truy cập
+- Đăng nhập với tài khoản **Super Admin**
+- Vào menu: **SUPPER ADMIN** → **Database Query Tool**
 
-### 2. X�c th?c PIN
-- Nh?p PIN code (m?c ??nh: `DB_ADMIN_2025`)
-- PIN c� hi?u l?c 2 gi?
+### 2. Xác thực PIN
+- Nhập PIN code (mặc định: `DB_ADMIN_2025`)
+- PIN có hiệu lực 2 giờ
 
-### 3. Th?c thi Query
+### 3. Thực thi Query
 ```sql
--- V� d?: Xem danh s�ch users
+-- Ví dụ: Xem danh sách users
 SELECT * FROM [adm].[User] WHERE Status = 1
 
--- V� d?: Th�m user m?i
+-- Ví dụ: Thêm user mới
 INSERT INTO [adm].[User] (UserName, Email, CreatedDate)
 VALUES ('newuser', 'email@example.com', GETDATE())
 
--- V� d?: Update d? li?u
-UPDATE [dbo].[ContentPage] 
-SET Status = 1 
+-- Ví dụ: Update dữ liệu
+UPDATE [dbo].[ContentPage]
+SET Status = 1
 WHERE Id = 123
 
--- V� d?: X�a d? li?u
+-- Ví dụ: Xóa dữ liệu
 DELETE FROM [dbo].[Contact] WHERE Id = 456
 ```
 
-### 4. C�c thao t�c
-- **F5** ho?c n�t **Th?c thi**: Ch?y query
-- **X�a**: X�a n?i dung editor
-- **Format**: T? ??ng format SQL
-- **Export CSV**: Xu?t k?t qu? ra file
-- **Click v�o Table**: T? ??ng t?o SELECT query
+### 4. Các thao tác
+- **F5** hoặc nút **Thực thi**: Chạy query
+- **Xóa**: Xóa nội dung editor
+- **Format**: Tự động format SQL
+- **Export CSV**: Xuất kết quả ra file
+- **Click vào Table**: Tự động tạo SELECT query
 
-## ??? B?o m?t & Best Practices
+## Bảo mật & Best Practices
 
-### ?? C?nh b�o
-- **LU�N LU�N** ki?m tra k? query tr??c khi th?c thi
-- **BACKUP** database tr??c khi ch?y UPDATE/DELETE l?n
-- **S? D?NG WHERE** clause ?? tr�nh ?nh h??ng to�n b? table
-- **TEST** tr�n m�i tr??ng dev tr??c
+### Cảnh báo
+- **LUÔN LUÔN** kiểm tra kỹ query trước khi thực thi
+- **BACKUP** database trước khi chạy UPDATE/DELETE lớn
+- **SỬ DỤNG WHERE** clause để tránh ảnh hưởng toàn bộ table
+- **TEST** trên môi trường dev trước
 
-### ? C�c l?nh an to�n
-- `SELECT` - ??c d? li?u
-- `INSERT` - Th�m d? li?u m?i
-- `UPDATE` v?i WHERE c? th?
-- `DELETE` v?i WHERE c? th?
+### Các lệnh an toàn
+- `SELECT` - đọc dữ liệu
+- `INSERT` - thêm dữ liệu mới
+- `UPDATE` với WHERE cụ thể
+- `DELETE` với WHERE cụ thể
 
-### ? C�c l?nh B? CH?N
-- `DROP DATABASE` - X�a database
-- `DROP SCHEMA` - X�a schema
-- `TRUNCATE` - X�a to�n b? table
+### Các lệnh BỊ CHẶN
+- `DROP DATABASE` - Xóa database
+- `DROP SCHEMA` - Xóa schema
+- `TRUNCATE` - Xóa toàn bộ table
 - `sp_*` - System stored procedures
 - `xp_*` - Extended stored procedures
 
-## ?? C?u h�nh
+## Cấu hình
 
 ### PIN Code
-PIN ???c c? ??nh trong code t?i `DatabaseQueryController.cs`:
+PIN được cài định trong code tại `DatabaseQueryController.cs`:
 ```csharp
 private const string DEFAULT_PIN = "DB_ADMIN_2025";
 ```
 
-**?? thay ??i PIN**:
-1. M? file `1.Backend\Areas\Base\Controllers\DatabaseQueryController.cs`
-2. T�m d�ng `private const string DEFAULT_PIN = "DB_ADMIN_2025";`
-3. Thay ??i gi� tr?
-4. **Build l?i ?ng d?ng**
+**Để thay đổi PIN**:
+1. Mở file `1.Backend\\Areas\\Base\\Controllers\\DatabaseQueryController.cs`
+2. Tìm dòng `private const string DEFAULT_PIN = "DB_ADMIN_2025";`
+3. Thay đổi giá trị
+4. **Build lại ứng dụng**
 
-### Gi?i h?n
-C�c h?ng s? c� th? t�y ch?nh trong controller:
+### Giới hạn
+Các hằng số có thể tùy chỉnh trong controller:
 ```csharp
-private const int MAX_QUERY_TIMEOUT = 300; // 5 ph�t
-private const int MAX_ROWS_RETURN = 5000;  // Gi?i h?n s? d�ng
+private const int MAX_QUERY_TIMEOUT = 300; // 5 phút
+private const int MAX_ROWS_RETURN = 5000;  // Giới hạn số dòng
 ```
 
-### Ph�n quy?n
-S? d?ng attribute `[IsSupperAdminAuthorizePermission]` - t? ??ng ki?m tra:
-- User ph?i ??ng nh?p
-- User ph?i c� `IsSuperAdmin = true`
-- T? ??ng redirect n?u kh�ng c� quy?n
+### Phân quyền
+Sử dụng attribute `[IsSupperAdminAuthorizePermission]` - tự động kiểm tra:
+- User phải đăng nhập
+- User phải có `IsSuperAdmin = true`
+- Tự động redirect nếu không có quyền
 
-## ?? Log v� Audit
+## Log và Audit
 
-M?i thao t�c ??u ???c ghi log v�o b?ng `[adm].[Log]`:
-- Th?i gian th?c thi
-- User th?c hi?n
-- C�u l?nh SQL
-- K?t qu? (th�nh c�ng/l?i)
+Mọi thao tác đều được ghi log vào bảng `[adm].[Log]`:
+- Thời gian thực thi
+- User thực hiện
+- Câu lệnh SQL
+- Kết quả (thành công/lỗi)
 
 ### Xem log
 ```sql
-SELECT * FROM [adm].[Log] 
+SELECT * FROM [adm].[Log]
 WHERE ObjectType = 'DatabaseQuery'
 ORDER BY ActionTime DESC
 ```
 
-## ?? Troubleshooting
+## Troubleshooting
 
-### L?i: "PIN kh�ng ch�nh x�c"
-- PIN m?c ??nh: `DB_ADMIN_2025`
-- N?u ?� thay ??i, ki?m tra l?i trong code
-- Ph?i build l?i ?ng d?ng sau khi thay ??i
+### Lỗi: "PIN không chính xác"
+- PIN mặc định: `DB_ADMIN_2025`
+- Nếu đã thay đổi, kiểm tra lại trong code
+- Phải build lại ứng dụng sau khi thay đổi
 
-### L?i: "Timeout"
-- T?ng gi� tr? Timeout (5-300s)
-- T?i ?u query (th�m index, WHERE clause)
+### Lỗi: "Timeout"
+- Tăng giá trị Timeout (5-300s)
+- Tối ưu query (thêm index, WHERE clause)
 
-### L?i: "Vui l�ng x�c th?c PIN tr??c"
-- PIN ?� h?t h?n (2 gi?)
-- Nh?n **??ng xu?t** v� x�c th?c l?i
+### Lỗi: "Vui lòng xác thực PIN trước"
+- PIN đã hết hạn (2 giờ)
+- Đăng xuất và xác thực lại
 
-### L?i: "C�u l?nh ch?a t? kh�a nguy hi?m"
-- H? th?ng ch?n c�c l?nh c� nguy c? cao
-- Li�n h? Database Administrator n?u th?c s? c?n thi?t
+### Lỗi: "Câu lệnh chứa từ khóa nguy hiểm"
+- Hệ thống chặn các lệnh nguy cơ cao
+- Liên hệ DBA nếu thực sự cần thiết
 
-### Kh�ng th?y menu
-- Ki?m tra user c� `IsSuperAdmin = true` kh�ng
-- Ch? Super Admin m?i th?y menu n�y
+### Không thấy menu
+- Kiểm tra user có `IsSuperAdmin = true` hay không
+- Chỉ Super Admin mới thấy menu
 
-## ?? Use Cases
+## Use Cases
 
-### 1. S?a l?i d? li?u kh?n c?p
+### 1. Sửa lỗi dữ liệu khẩn cấp
 ```sql
--- Kh�ch h�ng b�o email sai
-UPDATE [dbo].[Customer] 
-SET Email = 'correct@email.com' 
+-- Khách hàng báo email sai
+UPDATE [dbo].[Customer]
+SET Email = 'correct@email.com'
 WHERE Id = 789
 ```
 
-### 2. Th�m c?u h�nh m?i
+### 2. Thêm cấu hình mới
 ```sql
--- Th�m setting m?i
+-- Thêm setting mới
 INSERT INTO [dbo].[Parameter] (Id, Name, Value, PortalId, Language)
 VALUES (NEWID(), 'NewFeature', 'Enabled', 1, 'vi')
 ```
 
-### 3. Ki?m tra d? li?u
+### 3. Kiểm tra dữ liệu
 ```sql
--- ??m s? b�i vi?t theo tr?ng th�i
+-- Đếm số bài viết theo trạng thái
 SELECT Status, COUNT(*) as Total
 FROM [dbo].[ContentPage]
 GROUP BY Status
 ```
 
-### 4. D?n d?p d? li?u test
+### 4. Dọn dẹp dữ liệu test
 ```sql
--- X�a contact test
-DELETE FROM [dbo].[Contact] 
-WHERE Email LIKE '%test%' 
+-- Xóa contact test
+DELETE FROM [dbo].[Contact]
+WHERE Email LIKE '%test%'
 AND CreatedDate < DATEADD(day, -7, GETDATE())
 ```
 
-## ?? L?i �ch
+## Lợi ích
 
-### ? Cho Developer
-- Kh�ng c?n remote v�o server
-- S?a l?i nhanh ch�ng
-- Debug d? d�ng
-- Export d? li?u ?? ph�n t�ch
+### Cho Developer
+- Không cần remote vào server
+- Sửa lỗi nhanh chóng
+- Debug dễ dàng
+- Export dữ liệu để phân tích
 
-### ? Cho Kh�ch h�ng
-- Gi?i quy?t v?n ?? nhanh
-- Downtime t?i thi?u
-- Kh�ng c?n ch? ??i
+### Cho Khách hàng
+- Giải quyết vấn đề nhanh
+- Downtime tối thiểu
+- Không cần chờ deploy
 
-### ? Cho H? th?ng
-- Log ??y ?? cho audit
-- B?o m?t cao v?i attribute ph�n quy?n
-- Ki?m so�t ???c r?i ro
-- Kh�ng c?n c?u h�nh external
+### Cho Hệ thống
+- Log đầy đủ cho audit
+- Bảo mật cao với attribute phân quyền
+- Kiểm soát rủi ro
 
-## ??? Ki?n tr�c
+## Kiến trúc
 
-### Attribute B?o m?t
+### Attribute Bảo mật
 ```csharp
 [IsSupperAdminAuthorizePermission]
 ```
-T? ??ng ki?m tra:
-- Authentication (?� ??ng nh?p)
+Tự động kiểm tra:
+- Authentication (đã đăng nhập)
 - Authorization (IsSuperAdmin = true)
-- Account status (kh�ng b? lock)
-- Auto redirect n?u fail
+- Account status (không bị lock)
+- Auto redirect nếu fail
 
 ### PIN Authentication
-- Layer b?o m?t th? 2
+- Layer bảo mật thứ 2
 - Stored in memory cache
-- Timeout: 2 gi?
-- M?i user c� PIN session ri�ng
+- Timeout: 2 giờ
+- Mỗi user có session PIN riêng
 
 ### Query Validation
 - Keyword blacklist
@@ -221,22 +220,21 @@ T? ??ng ki?m tra:
 - Timeout protection
 - Result size limit
 
-## ?? H? tr?
+## Hỗ trợ
 
-N?u g?p v?n ??, vui l�ng:
-1. Ki?m tra log trong Database Query Tool
-2. Xem log h? th?ng: `logs/error_*.log`
-3. Ki?m tra quy?n Super Admin
-4. Li�n h? Team Leader ho?c Database Administrator
+Nếu gặp vấn đề, vui lòng:
+1. Kiểm tra log trong Database Query Tool
+2. Xem log hệ thống: `logs/error_*.log`
+3. Kiểm tra quyền Super Admin
+4. Liên hệ Team Leader hoặc Database Administrator
 
 ---
 
-**?? L?U � QUAN TR?NG**: 
-C�ng c? n�y r?t m?nh m? nh?ng c?ng r?t nguy hi?m n?u s? d?ng sai. 
-Lu�n th?n tr?ng khi th?c thi UPDATE/DELETE tr�n production database!
+**LƯU Ý QUAN TRỌNG**:
+Công cụ này rất mạnh mẽ nhưng cũng rất nguy hiểm nếu sử dụng sai. Luôn thận trọng khi thực thi UPDATE/DELETE trên production database!
 
-**Ph�t tri?n b?i**: PT Development Team  
-**Phi�n b?n**: 1.0.0  
-**Ng�y c?p nh?t**: 2025  
-**PIN m?c ??nh**: `DB_ADMIN_2025` (c? ??nh trong code)  
-**Ph�n quy?n**: `[IsSupperAdminAuthorizePermission]`
+**Phát triển bởi**: PT Development Team  
+**Phiên bản**: 1.0.0  
+**Ngày cập nhật**: 2025  
+**PIN mặc định**: `DB_ADMIN_2025` (cài định trong code)  
+**Phân quyền**: `[IsSupperAdminAuthorizePermission]`

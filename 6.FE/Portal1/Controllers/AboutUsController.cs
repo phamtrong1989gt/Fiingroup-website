@@ -72,5 +72,11 @@ namespace PT.UI.Controllers
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             return View("Scorescale");
         }
+
+        public IActionResult EventsOfDefault(string linkData, int portalId)
+        {
+            ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
+            return View("EventsOfDefault");
+        }
     }
 }

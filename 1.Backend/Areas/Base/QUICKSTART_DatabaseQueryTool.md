@@ -1,162 +1,129 @@
-# ?? Quick Start Guide - Database Query Tool
+﻿# Quick Start Guide - Database Query Tool
 
-## ? ?� c�i ??t s?n
+## Đã cài đặt sẵn
 
-C�c file sau ?� ???c t?o v� s?n s�ng s? d?ng:
+Các file sau đã được tạo và sẵn sàng sử dụng:
 
 ### 1. Controller
-?? `1.Backend\Areas\Base\Controllers\DatabaseQueryController.cs`
-- X? l� t?t c? logic cho Database Query Tool
-- B?o m?t v?i PIN authentication (PIN c? ??nh: `DB_ADMIN_2025`)
-- S? d?ng `[IsSupperAdminAuthorizePermission]` - ch? Super Admin m?i truy c?p
-- Log t?t c? c�c thao t�c
+- `1.Backend/Areas/Base/Controllers/DatabaseQueryController.cs`
+  - Xử lý toàn bộ logic cho Database Query Tool
+  - Bảo mật với PIN authentication (PIN mặc định: `DB_ADMIN_2025`)
+  - Sử dụng `[IsSupperAdminAuthorizePermission]` — chỉ Super Admin mới truy cập
+  - Ghi log mọi thao tác
 
 ### 2. View
-?? `1.Backend\Areas\Base\Views\DatabaseQuery\Index.cshtml`
-- Giao di?n ng??i d�ng hi?n ??i
-- SQL Editor v?i syntax highlighting
-- Sidebar hi?n th? tables v� l?ch s?
+- `1.Backend/Areas/Base/Views/DatabaseQuery/Index.cshtml`
+  - Giao diện editor SQL với syntax highlighting
+  - Sidebar hiển thị bảng và lịch sử query
 
 ### 3. Menu Admin
-?? `1.Backend\Views\Shared\_MenuAdmin.cshtml`
-- ?� th�m link v�o menu SUPPER ADMIN
-- Ch? hi?n th? cho Super Admin
+- `1.Backend/Views/Shared/_MenuAdmin.cshtml`
+  - Đã thêm link vào menu SUPPER ADMIN
+  - Chỉ hiển thị cho Super Admin
 
-## ?? C�ch s? d?ng ngay
+## Cách sử dụng ngay
 
-### B??c 1: Ch?y ?ng d?ng
+### Bước 1: Chạy ứng dụng
 ```bash
-dotnet run --project 1.Backend\PT.UI.csproj
+dotnet run --project 1.Backend/PT.UI.csproj
 ```
 
-### B??c 2: ??ng nh?p
-- ??ng nh?p v?i t�i kho?n **Super Admin**
-- T�m menu: **SUPPER ADMIN** ? **Database Query Tool**
+### Bước 2: Đăng nhập
+- Đăng nhập bằng tài khoản **Super Admin**
+- Vào: **SUPPER ADMIN** → **Database Query Tool**
 
-### B??c 3: X�c th?c PIN
-- Nh?p PIN: `DB_ADMIN_2025`
-- Click **X�c th?c**
+### Bước 3: Xác thực PIN
+- Nhập PIN: `DB_ADMIN_2025` (mặc định)
+- Nhấn **Xác thực**
 
-### B??c 4: Th?c thi query
+### Bước 4: Thực thi query
 ```sql
--- Xem danh s�ch users
-SELECT * FROM [adm].[User] WHERE Status = 1
+-- Ví dụ: Xem users
+SELECT * FROM [adm].[User] WHERE Status = 1;
 
--- Th�m d? li?u
+-- Ví dụ: Thêm contact
 INSERT INTO [dbo].[Contact] (Name, Email, CreatedDate)
-VALUES ('Test User', 'test@example.com', GETDATE())
+VALUES ('Test User', 'test@example.com', GETDATE());
 
--- C?p nh?t d? li?u
-UPDATE [dbo].[ContentPage] 
-SET Status = 1 
-WHERE Id = 123
+-- Ví dụ: Cập nhật
+UPDATE [dbo].[ContentPage]
+SET Status = 1
+WHERE Id = 123;
 
--- X�a d? li?u
-DELETE FROM [dbo].[Contact] WHERE Id = 456
+-- Ví dụ: Xóa
+DELETE FROM [dbo].[Contact] WHERE Id = 456;
 ```
 
-## ?? T�y ch?nh
+## Tùy chỉnh
 
-### ??i PIN
-PIN ???c c? ??nh trong code t?i file `DatabaseQueryController.cs`:
+### Đổi PIN
+PIN được định nghĩa trong `DatabaseQueryController.cs`:
 ```csharp
-private const string DEFAULT_PIN = "DB_ADMIN_2025"; // Thay ??i gi� tr? n�y
+private const string DEFAULT_PIN = "DB_ADMIN_2025"; // Thay giá trị này
 ```
+Sau khi đổi PIN cần build lại ứng dụng.
 
-**L?u �**: Sau khi ??i PIN, c?n **build l?i ?ng d?ng**.
-
-### Thay ??i gi?i h?n
-C�c h?ng s? c� th? t�y ch?nh trong controller:
+### Giới hạn
+Các hằng số có thể tùy chỉnh trong controller:
 ```csharp
-private const int MAX_QUERY_TIMEOUT = 300; // Timeout t?i ?a (gi�y)
-private const int MAX_ROWS_RETURN = 5000;  // S? d�ng t?i ?a
+private const int MAX_QUERY_TIMEOUT = 300; // giây (5 phút)
+private const int MAX_ROWS_RETURN = 5000;  // số dòng tối đa
 ```
 
-## ??? B?o m?t
+## Bảo mật
+- Xác thực 2 lớp: Login Super Admin + PIN
+- Attribute bảo mật: `[IsSupperAdminAuthorizePermission]`
+- Hệ thống chặn các lệnh nguy hiểm: `DROP DATABASE`, `TRUNCATE`, `sp_*`, `xp_*`
+- Log đầy đủ cho audit
+- PIN session timeout: 2 giờ
+- Giới hạn kết quả trả về: mặc định 5.000 dòng
 
-### ? ?� c�
-- **X�c th?c 2 l?p** (Login Super Admin + PIN)
-- **Attribute b?o m?t** (`[IsSupperAdminAuthorizePermission]`)
-- **Ch?n l?nh nguy hi?m** (DROP, TRUNCATE, sp_, xp_)
-- **Log t?t c? thao t�c**
-- **Timeout session** (2 gi?)
-- **Gi?i h?n k?t qu?** (5,000 rows)
+### Lưu ý an toàn
+- Không chia sẻ PIN
+- Luôn kiểm tra kỹ query trước khi thực thi
+- Backup database trước khi chạy các lệnh thay đổi lớn
+- Test trên môi trường dev/trial trước
 
-### ?? L?u �
-- **Kh�ng chia s? PIN** v?i ng??i kh�ng c� quy?n
-- **Lu�n ki?m tra query** tr??c khi th?c thi
-- **Backup database** tr??c khi ch?y UPDATE/DELETE l?n
-- **S? d?ng WHERE clause** ?? tr�nh ?nh h??ng to�n b? table
+## Tính năng chính
+- Editor SQL với syntax highlighting
+- Sidebar tables và row count
+- Lịch sử query để tái sử dụng
+- Hiển thị thời gian thực thi và kết quả dạng bảng
+- Export kết quả sang CSV
+- Chặn lệnh nguy hiểm và giới hạn kích thước kết quả
 
-## ?? T�nh n?ng ch�nh
-
-| T�nh n?ng | M� t? |
-|-----------|-------|
-| ?? PIN Authentication | X�c th?c 2 l?p v?i PIN code c? ??nh |
-| ?? Super Admin Only | Ch? Super Admin truy c?p (attribute `[IsSupperAdminAuthorizePermission]`) |
-| ?? SQL Editor | Editor v?i syntax highlighting |
-| ?? Tables Sidebar | Danh s�ch t?t c? tables v� row count |
-| ?? Execution Time | Hi?n th? th?i gian th?c thi |
-| ?? Result Table | Hi?n th? k?t qu? d?ng b?ng |
-| ?? Export CSV | Xu?t k?t qu? ra file CSV |
-| ?? Query History | Xem v� t�i s? d?ng query c? |
-| ??? Security | Ch?n l?nh nguy hi?m |
-| ?? Logging | Ghi log t?t c? thao t�c |
-
-## ?? V� d? s? d?ng th?c t?
-
-### 1. S?a l?i d? li?u kh?n c?p
+## Ví dụ sử dụng thực tế
 ```sql
--- Kh�ch h�ng b�o email sai
-UPDATE [dbo].[Customer] 
-SET Email = 'correct@email.com' 
-WHERE Id = 789
-```
+-- Sửa lỗi dữ liệu khẩn cấp
+UPDATE [dbo].[Customer]
+SET Email = 'correct@email.com'
+WHERE Id = 789;
 
-### 2. Th�m c?u h�nh m?i
-```sql
--- Th�m setting m?i
+-- Thêm cấu hình
 INSERT INTO [dbo].[Parameter] (Id, Name, Value, PortalId, Language)
-VALUES (NEWID(), 'NewFeature', 'Enabled', 1, 'vi')
-```
+VALUES (NEWID(), 'NewFeature', 'Enabled', 1, 'vi');
 
-### 3. Ki?m tra d? li?u
-```sql
--- ??m s? b�i vi?t theo tr?ng th�i
-SELECT Status, COUNT(*) as Total
+-- Kiểm tra dữ liệu
+SELECT Status, COUNT(*) AS Total
 FROM [dbo].[ContentPage]
-GROUP BY Status
+GROUP BY Status;
+
+-- Dọn dẹp test
+DELETE FROM [dbo].[Contact]
+WHERE Email LIKE '%test%'
+AND CreatedDate < DATEADD(day, -7, GETDATE());
 ```
 
-### 4. D?n d?p d? li?u test
-```sql
--- X�a contact test
-DELETE FROM [dbo].[Contact] 
-WHERE Email LIKE '%test%' 
-AND CreatedDate < DATEADD(day, -7, GETDATE())
-```
-
-## ?? T�i li?u ??y ??
-
-Xem file: `1.Backend\Areas\Base\DatabaseQueryTool_README.md`
-
-## ? Troubleshooting
-
-| V?n ?? | Gi?i ph�p |
-|--------|-----------|
-| Kh�ng th?y menu | Ki?m tra role, ph?i l� SuperAdmin |
-| PIN sai | PIN c? ??nh: `DB_ADMIN_2025` - ki?m tra l?i ho?c li�n h? dev ?? thay ??i |
-| Timeout | T?ng gi� tr? Timeout (5-300s) ho?c t?i ?u query |
-| L?i k?t n?i | Ki?m tra connection string trong `appsettings.json` |
-
-## ?? Ho�n t?t!
-
-Ch�c b?n s? d?ng Database Query Tool hi?u qu?! 
-
-**L?u �**: C�ng c? n�y r?t m?nh m?, h�y s? d?ng c?n th?n! ??
+## Troubleshooting
+| Vấn đề | Giải pháp |
+|---|---|
+| Không thấy menu | Kiểm tra user có thuộc Super Admin không |
+| PIN sai | Kiểm tra PIN trong code (`DEFAULT_PIN`) và build lại |
+| Timeout | Tăng giá trị timeout (5–300s) hoặc tối ưu query |
+| Không kết nối DB | Kiểm tra connection string trong `appsettings.json` |
 
 ---
-?? **H? tr?**: Li�n h? Team Leader n?u c?n h? tr?  
-?? **B?o m?t**: Kh�ng chia s? PIN v?i ng??i kh�c  
-?? **Backup**: Lu�n backup tr??c khi thao t�c quan tr?ng  
-?? **PIN m?c ??nh**: `DB_ADMIN_2025` (c? ??nh trong code)
+
+**LƯU Ý QUAN TRỌNG**: Công cụ này rất mạnh, hãy thận trọng khi thực thi các lệnh thay đổi trên production.
+
+**Hỗ trợ**: Liên hệ Team Leader hoặc Database Administrator nếu cần trợ giúp.

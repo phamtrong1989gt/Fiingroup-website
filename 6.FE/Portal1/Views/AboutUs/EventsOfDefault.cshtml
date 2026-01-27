@@ -15,12 +15,9 @@
 	var portalId = _baseSettings.Value.PortalId;
 }
 
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleBanner", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleTongQuan", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleTNDai", language = language, portalId = portalId })
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleTNNgan", language = language, portalId = portalId })
-@* @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleEvent", language = language, portalId = portalId }) *@
-@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsLienHe", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FREventsOfDefaultBanner", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRScorescaleEvent", language = language, portalId = portalId })
+@await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FREventsOfDefaultLienHe", language = language, portalId = portalId })
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
