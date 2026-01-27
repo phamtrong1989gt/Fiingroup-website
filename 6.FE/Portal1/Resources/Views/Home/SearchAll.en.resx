@@ -117,76 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CompanyNamePlaceholder" xml:space="preserve">
-    <value>Company Name</value>
+  <data name="SearchResultsTitle" xml:space="preserve">
+    <value>Search results</value>
   </data>
-  <data name="AllIndustries" xml:space="preserve">
-    <value>All Industries</value>
-  </data>
-  <data name="AllScores" xml:space="preserve">
-    <value>All Scores</value>
-  </data>
-  <data name="AllOutlooks" xml:space="preserve">
-    <value>All Outlooks</value>
-  </data>
-  <data name="RefreshTitle" xml:space="preserve">
-    <value>Refresh</value>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Search</value>
   </data>
   <data name="SearchButton" xml:space="preserve">
     <value>Search</value>
   </data>
-  <data name="PublicationDate" xml:space="preserve">
-    <value>Publication Date</value>
+  <data name="Nav_Ratings" xml:space="preserve">
+    <value>Ratings results</value>
   </data>
-  <data name="IssuingOrganization" xml:space="preserve">
-    <value>Issuing Organization</value>
+  <data name="Nav_PublicationsReports" xml:space="preserve">
+    <value>Publications &amp; Reports</value>
   </data>
-  <data name="BondCode" xml:space="preserve">
-    <value>Bond Code</value>
+  <data name="Nav_NewsEvents" xml:space="preserve">
+    <value>News &amp; Events</value>
   </data>
-  <data name="Industry" xml:space="preserve">
-    <value>Industry</value>
+  <data name="RatingsHeading" xml:space="preserve">
+    <value>Ratings results</value>
   </data>
-  <data name="OpinionType" xml:space="preserve">
-    <value>Opinion Type</value>
-  </data>
-  <data name="RatingScore" xml:space="preserve">
-    <value>Rating</value>
-  </data>
-  <data name="Outlook" xml:space="preserve">
-    <value>Outlook</value>
-  </data>
-  <data name="CreditRatingReport" xml:space="preserve">
-    <value>Rating Report</value>
+  <data name="IssuerHeading" xml:space="preserve">
+    <value>Issuing organizations</value>
   </data>
   <data name="ErrorLoadingData" xml:space="preserve">
-    <value>Unable to load data. Please try again later.</value>
+    <value>Error loading data</value>
   </data>
   <data name="ReportNotAvailable" xml:space="preserve">
     <value>Report not available</value>
   </data>
-  <data name="StatusRating" xml:space="preserve">
-    <value>Status Rating</value>
-  </data>
-  <data name="AllIssuerTypes" xml:space="preserve">
-    <value>All Issuer Type</value>
-  </data>
-  <data name="AllOpinionTypes" xml:space="preserve">
-    <value>All Opinion Type</value>
-  </data>
-  <data name="RankingOfIssuingOrganizations" xml:space="preserve">
-    <value>Issuer Credit Ratings</value>
-  </data>
-  <data name="RankingOfDebtInstruments" xml:space="preserve">
-    <value>Debt Instrument Ratings</value>
-  </data>
-  <data name="Report" xml:space="preserve">
-    <value>Rating Report</value>
-  </data>
-  <data name="SustainableFinanceConfirmation" xml:space="preserve">
-    <value>Sustainable Finance Assessment</value>
-  </data>
-  <data name="SustainabilityLevel" xml:space="preserve">
-    <value>Applicable Standards</value>
+  <data name="DisplayingResultsFor" xml:space="preserve">
+    <value>Showing results for "{0}"</value>
   </data>
 </root>

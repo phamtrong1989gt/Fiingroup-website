@@ -1,0 +1,146 @@
+﻿@model PT.Domain.Model.RatingResultsResponse
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using PT.Domain.Model
+@using PT.Shared
+@using Newtonsoft.Json
+
+@{
+	Layout = null;
+	var stPage = Context.Request.Query["page"].ToString();
+	var pageIndex = 1;
+	if (!string.IsNullOrEmpty(stPage))
+	{
+		pageIndex = int.TryParse(stPage, out var result) ? result : 1;
+	}
+    string language = ViewBag.Language ?? "vi";
+	
+}
+
+@if (Model != null && Model.Success && Model.Data != null && Model.Data.Items != null && Model.Data.Items.Any())
+{
+	@* ============================================ *@
+	@* BIND DETAIL DATA FROM FIRST ITEM *@
+	@* ============================================ *@
+	
+
+	@for (int i = 0; i < Model.Data.Items.Count; i++)
+	{
+		var item = Model.Data.Items[i];
+		string url = $"/{language}/ratings-fr/{Functions.ToUrlSlug(item.Issuer)}-id{Model.Data.Items[i].OrganizationId}.html";
+		var radioName = $"language_{i}";
+		<tr>
+			<td data-label="@Localizer["BondCode"]">@item.BondCode</td>
+			<td data-label="@Localizer["OpinionType"]">@item.RatingType</td>
+			<td data-label="@Localizer["PublicationDate"]">
+				@if (!string.IsNullOrEmpty(item.Date))
+				{
+					@(Convert.ToDateTime(item.Date).ToString(language == "en" ? "MM/dd/yyyy" : "dd/MM/yyyy"))
+				}
+			</td>
+
+			<td data-label="@Localizer["RatingScore"]">
+				@item.Rating
+				@if (!string.IsNullOrEmpty(item.Rating))
+				{
+					<span class="icon-info">
+						<i class="fa fa-info-circle"
+						   data-rating="@item.Rating"
+						   data-issuer="@item.Issuer"
+						   onclick="showRatingInfoPopup(this)"
+						   style="cursor: pointer;"></i>
+					</span>
+				}
+			</td>
+		
+			<td data-label="@Localizer["Report"]">
+				<div class="language-switch">
+					@if(item.Announcement  != null && !string.IsNullOrEmpty(item.Announcement.Vi))
+					{
+						<label class="lang-option">
+							<input type="radio" name="@radioName" value="vi" checked>
+							<span class="radio"></span>
+							VN
+						</label>
+					}
+					@if (item.Announcement != null && !string.IsNullOrEmpty(item.Announcement.En))
+					{
+						<label class="lang-option">
+							<input type="radio" name="@radioName" value="en">
+							<span class="radio"></span>
+							EN
+						</label>
+					}
+
+					@if((item.Announcement != null) && (!string.IsNullOrEmpty(item.Announcement.Vi) || !string.IsNullOrEmpty(item.Announcement.En)))
+					{
+						<button class="btn-download"
+								onclick="downloadRatingReport('@(item.Announcement?.Vi)', '@(item.Announcement?.En)', '@radioName')"
+								title="@Localizer["DownloadReport"]">
+							<i class="fa fa-download"></i> @Localizer["Download"]
+						</button>
+                    }
+				</div>
+			</td>
+		</tr>
+	}
+	<tr style="display:none;">
+		<td colspan="1000">
+			@if (Model.Data.Items.Count > 0)
+			{
+				var firstItem = Model.Data.Items[0];
+
+				// Create DTO object for binding
+				var detailData = new
+				{
+					IssuingOrganization = firstItem.Issuer ?? "---",
+					RatingScore = firstItem.Rating ?? "---",
+					Industry = firstItem.Industry ?? "---",
+					Rating = firstItem.Outlook ?? "---", // Triển vọng
+					OpinionType = firstItem.RatingType ?? "---",
+					OpinionTypeName = firstItem.OpinionTypeName ?? "---",
+					PublicationDate = !string.IsNullOrEmpty(firstItem.Date) ? Convert.ToDateTime(firstItem.Date).ToString("dd/MM/yyyy") : "---",
+					BondCode = firstItem.BondCode ?? "---",
+				};
+
+				var jsonData = JsonConvert.SerializeObject(detailData);
+
+				<script>
+					// Call bindDetail when this partial is loaded
+					(function() {
+						try {
+							var detailData = @Html.Raw(jsonData);
+							console.log('[RatingsAjax] Calling bindDetail with:', detailData);
+
+							if (typeof window.bindDetail === 'function') {
+								window.bindDetail(detailData);
+							} else {
+								console.warn('[RatingsAjax] bindDetail function not found, retrying...');
+								// Retry after 500ms if function not ready
+								setTimeout(function() {
+									if (typeof window.bindDetail === 'function') {
+										window.bindDetail(detailData);
+									} else {
+										console.error('[RatingsAjax] bindDetail function still not available');
+									}
+								}, 500);
+							}
+						} catch (error) {
+							console.error('[RatingsAjax] Error calling bindDetail:', error);
+						}
+					})();
+				</script>
+			}
+		</td>
+	</tr>
+}
+else
+{
+	<tr>
+		<td colspan="10" class="no-data">
+			Hiện tại tổ chức phát hành chưa thực hiện xếp hạng tín nhiệm
+		</td>
+	</tr>
+}
+

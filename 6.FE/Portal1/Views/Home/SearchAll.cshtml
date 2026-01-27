@@ -356,7 +356,7 @@
 
     .issuer-card {
         border-radius: 14px;
-        padding: 22px 0;
+        padding: 20px;
         margin-bottom: 20px;
         border: 1px solid transparent;
         background-image: linear-gradient(#fff, #fff), linear-gradient(to right, #0018A8, #166BF2, #3B7EEE);
@@ -365,17 +365,14 @@
     }
 
     .issuer-left {
-        width: 55%;
+        width: 100%;
     }
-
-    .issuer-right {
-        width: 45%;
-    }
-
+  
     .issuer-header {
         display: flex;
         align-items: center;
         gap: 20px;
+        justify-content: space-between;
     }
 
     .issuer-badge {
@@ -469,13 +466,45 @@
             justify-content: flex-end;
         }
     }
+
+    .news-title {
+        display: block;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #1d2939;
+        font-size: 20px;
+        line-height: 30px;
+        max-height: calc(30px * 3);
+        word-break: break-word;
+        font-weight: 600;
+    }
+    .news-img {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+        border: 1px solid #eee;
+    }
+
+    .show-more {
+        color: #034ea2;
+    }
+
+    .show-more {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
 </style>
 
 <section id="Banner">
     <div class="container">
         <div class="row">
             <h1 class="text-white mb-5 mt-5">
-                Kết quả tìm kiếm
+                @Localizer["SearchResultsTitle"]
             </h1>
         </div>
     </div>
@@ -485,42 +514,52 @@
     <div class="container">
         <div class="d-flex justify-content-between mt-5">
             <section id="search" class="mr-2">
-                <input id="search-input" class="form-control input-lg" placeholder="Search icons" autocomplete="off" spellcheck="false" autocorrect="off" tabindex="1">
-                <label for="search-input"><i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">Search icons</span></label>
+                <input id="search-input" class="form-control input-lg" placeholder="@Localizer["SearchPlaceholder"]" autocomplete="off" spellcheck="false" autocorrect="off" tabindex="1">
+                <label for="search-input"><i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">@Localizer["SearchPlaceholder"]</span></label>
             </section>
-            <button type="button" onclick="onSearch()" class="btn btn-primary btn-search">Tìm kiếm</button>
+            <button type="button" onclick="onSearch()" class="btn btn-primary btn-search">@Localizer["SearchButton"]</button>
         </div>
 
         <div class="narbartrust">
-            <a href="#" class="active">Kết quả xếp hạng tín nhiệm</a>
-            <a href="#" class="">Ấn phẩm & Báo cáo</a>
-            <a href="#" class="">Tin tức & Sự kiện</a>
+            <a href="#Nav_Ratings" class="active">@Localizer["Nav_Ratings"]</a>
+            <a href="#Nav_PublicationsReports" class="">@Localizer["Nav_PublicationsReports"]</a>
+            <a href="#Nav_NewsEvents" class="">@Localizer["Nav_NewsEvents"]</a>
         </div>
-
-        <p id="search-info"></p>
-        <h2 class="price-title mb-4">Kết quả xếp hạng tín nhiệm</h2>
-        <div id="bindRatingContent">
+        <div id="Nav_Ratings">
+            @* <p id="search-info"></p> *@
+            <h2 class="price-title mb-4">@Localizer["RatingsHeading"]</h2>
+            <div id="bindRatingContent"></div>
+            <div class="pb-5"></div>
+            <h2 class="price-title mb-4">@Localizer["IssuerHeading"]</h2>
+            <div id="bindIssuerContent"></div>
+        </div>
+        <div id="Nav_PublicationsReports">
+            <div id="PublicationsReports_content-bind"></div>
+        </div>
+        <div id="Nav_NewsEvents">
+            <div id="NewsEvents_content-bind"></div>
         </div>
     </div>
 </section>
 
-<section id="Issuer" class="pt-5">
-    <div class="container">
-        <h2 class="price-title mb-4">Tổ chức phát hành</h2>
-        <div id="bindIssuerContent"></div>
-    </div>
-</section>
+<div class="pb-5"></div>
 
 @section Scripts {
     <script>
         var rakingsAjaxUrl = '@Url.Action("SearchAjax", "Ratings", new { language = language })';
         var issuerOrgansUrl = '/@language/Ratings/IssuerOrgansAsync';
+        var publicationsAjaxUrl = '@Url.Action("SearchPublicationsAjax", "Category", new { language = language })';
+        var newsAndEventAjaxUrl = '@Url.Action("NewsAndEventAjax", "Category", new { language = language })';
+
         var currentLanguage = '@language';
         var filterOpen = false;
-        var errorLoadingDataMsg = '@Localizer["ErrorLoadingData"]';
-        var reportNotAvailableMsg = '@Localizer["ReportNotAvailable"]';
+        var errorLoadingDataMsg = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["ErrorLoadingData"].Value));
+        var reportNotAvailableMsg = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["ReportNotAvailable"].Value));
         var initialKey = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(queryKey));
+        var displayingResultsForFormat = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["DisplayingResultsFor"].Value));
 
+
+        
         function buildParams(page) {
             var keyVal = ($('#search-input').val() || '').trim();
             if (!keyVal && initialKey) keyVal = initialKey;
@@ -558,7 +597,6 @@
             $('.btn-search').prop('disabled', false);
         }
 
-        // Show loading cards in content area using the rating-card template
         function showContentLoading() {
             var skeleton = Array(3).fill().map(function () {
                 return `
@@ -598,7 +636,6 @@
             $('#bindRatingContent').html(skeleton);
         }
 
-        // Load issuer organs (organizations)
         function showIssuerLoading() {
             var skeleton = Array(2).fill().map(function () {
                 return `
@@ -612,14 +649,46 @@
                                     <div class="issuer-info skeleton-text">&nbsp;</div>
                                 </div>
                             </div>
-                        </div>
                         <div class="issuer-right">
                             <a href="#" class="btn-report disabled">&nbsp;</a>
                         </div>
+                        </div>
+
                     </div>
                 `;
             }).join('');
             $('#bindIssuerContent').html(skeleton);
+        }
+
+        function showPublicationsLoading() {
+            var skeleton = Array(1).fill().map(function () {
+                return `
+                    <div class="row mb-3">
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="news-img skeleton-text" style="height:80px; background:#f3f3f3"></div>
+                        </div>
+                                 <div class="col-lg-4 col-sm-6">
+                            <div class="news-img skeleton-text" style="height:80px; background:#f3f3f3"></div>
+                        </div>
+                                 <div class="col-lg-4 col-sm-6">
+                            <div class="news-img skeleton-text" style="height:80px; background:#f3f3f3"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            $('#PublicationsReports_content-bind').html(skeleton);
+        }
+
+        function showNewsLoading() {
+            var skeleton = Array(3).fill().map(function () {
+                return `
+                    <div class="col-lg-4 col-sm-6 mb-3">
+                        <div class="news-img" style="height:140px;background:#f3f3f3;border-radius:12px;"></div>
+                        <h3 class="pt-3"><div style="height:18px;width:70%;background:#eee;border-radius:4px;"></div></h3>
+                    </div>
+                `;
+            }).join('');
+            $('#NewsEvents_content-bind').html('<div class="row">' + skeleton + '</div>');
         }
 
         window.getIssuerOrgansAjax = function (page) {
@@ -638,7 +707,6 @@
                 });
         };
 
-        // Load ratings data
         window.getRakingsAjax = function (page) {
             page = page || 1;
             var params = buildParams(page);
@@ -652,18 +720,51 @@
 
                     var key = params.companyName || '';
                     if (key && key.length) {
-                        $('#search-info').text('Hiển thị kết quả cho từ khóa “' + key + '”');
+                        // format: contains {0}
+                        var msg = displayingResultsForFormat.replace('{0}', key);
+                        $('#search-info').text(msg);
                     } else {
                         $('#search-info').text('');
                     }
-
-                    // after ratings loaded, also load issuer list
-                    getIssuerOrgansAjax(1);
                 })
                 .fail(function () {
                     $('#bindRatingContent').html('<div class="text-center py-5 text-danger">' + errorLoadingDataMsg + '</div>');
-                    // still try to load issuer list
-                    getIssuerOrgansAjax(1);
+                })
+                .always(function () {
+                    hideLoading();
+                });
+        };
+
+        window.publicationsAjax = function(page) {
+            page = page || 1;
+             var keyword = ($('#search-input').val() || '').trim();
+            if (!keyword && initialKey) keyword = initialKey;
+            // show publications loading
+            showPublicationsLoading();
+            $.get(publicationsAjaxUrl, { page: page, language: currentLanguage, keyword: keyword, bindContentTag: "#publicationsAjax"})
+                .done(function (html) {
+                    $('#PublicationsReports_content-bind').html(html);
+                    })
+                    .fail(function () {
+                        $('#PublicationsReports_content-bind').html('<div class="no-data-messege">No data</div>');
+                    })
+                    .always(function () {
+                        hideLoading();
+                });
+        };
+
+        window.newsAndEventAjax = function(page) {
+            page = page || 1;
+            var keyword = ($('#search-input').val() || '').trim();
+            if (!keyword && initialKey) keyword = initialKey;
+            // show loading skeleton
+            showNewsLoading();
+            $.get(newsAndEventAjaxUrl, { page: page, language: currentLanguage, keyword: keyword, bindContentTag: "newsAndEventAjax", skeleton: 0 })
+                .done(function (html) {
+                    $('#NewsEvents_content-bind').html(html);
+                })
+                .fail(function () {
+                    $('#NewsEvents_content-bind').html('<div class="no-data-messege">No data</div>');
                 })
                 .always(function () {
                     hideLoading();
@@ -671,14 +772,34 @@
         };
 
         function onSearch() {
-            getRakingsAjax(1);
-        }
+            // Call loader according to currently selected tab
+            var activeLink = document.querySelector('.narbartrust a.active');
+            var href = activeLink ? activeLink.getAttribute('href') : '#Nav_Ratings';
+            var targetId = href && href.startsWith('#') ? href.substring(1) : 'Nav_Ratings';
 
-        // Initialize input from query string and trigger initial search if present
+            switch (targetId) {
+                case 'Nav_Ratings':
+                    getRakingsAjax(1);
+                    // also update issuer list together
+                    getIssuerOrgansAjax(1);
+                    break;
+                case 'Nav_PublicationsReports':
+                    publicationsAjax(1);
+                    break;
+                case 'Nav_NewsEvents':
+                    newsAndEventAjax(1);
+                    break;
+                default:
+                    getRakingsAjax(1);
+                    getIssuerOrgansAjax(1);
+            }
+         }
+
         $(function () {
             if (initialKey && initialKey.length) {
                 $('#search-input').val(initialKey);
-                $('#search-info').text('Hiển thị kết quả cho từ khóa “' + initialKey + '”');
+                var msg = displayingResultsForFormat.replace('{0}', initialKey);
+                $('#search-info').text(msg);
                 getRakingsAjax(1);
             }
         });
@@ -688,12 +809,52 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const links = document.querySelectorAll('.narbartrust a');
+        const sectionIds = ['Nav_Ratings', 'Nav_PublicationsReports', 'Nav_NewsEvents'];
+
+        function showSection(id) {
+            sectionIds.forEach(sid => {
+                const $el = $('#' + sid);
+                if ($el.length) {
+                    if (sid === id) $el.show(); else $el.hide();
+                }
+            });
+        }
+
         links.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 links.forEach(l => l.classList.remove('active'));
                 link.classList.add('active');
+
+                const href = link.getAttribute('href') || '';
+                const targetId = href.startsWith('#') ? href.substring(1) : 'Nav_Ratings';
+                showSection(targetId);
+
+                // trigger load for specific tabs
+                if (targetId === 'Nav_Ratings') {
+                    // load ratings + issuers
+                    getRakingsAjax(1);
+                }
+                else if (targetId === 'Nav_PublicationsReports') {
+                    publicationsAjax(1);
+                }
+                else if (targetId === 'Nav_NewsEvents') {
+                    newsAndEventAjax(1);
+                }
             });
         });
+
+        // Initialize: show only the active tab's section
+        const activeLink = document.querySelector('.narbartrust a.active');
+        const initialTarget = (activeLink && activeLink.getAttribute('href') && activeLink.getAttribute('href').startsWith('#')) ? activeLink.getAttribute('href').substring(1) : 'Nav_Ratings';
+        showSection(initialTarget);
+
+        // If ratings is the initial tab and we have a search key or want to load default, trigger it
+        if (initialTarget === 'Nav_Ratings') {
+            // If initialKey exists we already call getRakingsAjax on page init; ensure content loads if not
+            if (!initialKey || !initialKey.length) {
+                getRakingsAjax(1);
+            }
+        }
     });
 </script>

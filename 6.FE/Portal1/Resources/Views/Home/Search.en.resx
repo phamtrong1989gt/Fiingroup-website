@@ -180,4 +180,7 @@
   <data name="Search results for" xml:space="preserve">
     <value>Search results for</value>
   </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
 </root>

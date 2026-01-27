@@ -596,7 +596,7 @@
 
     </style>
     <div class="container">
-        <div class="company-grid">
+        <div class="company-grid  d-none">
             <!-- CỘT TRÁI -->
             <div class="company-left">
                 <h2 class="company-title" id="detail_IssuingOrganization">
@@ -705,36 +705,28 @@
                             <th>@Localizer["Report"]</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="5" class="no-data">
-                                Hiện tại tổ chức phát hành chưa thực hiện xếp hạng
-                                tín nhiệm đối với công cụ nợ
-                            </td>
-                        </tr>
+                    <tbody id="bindTTPHDebit">
                     </tbody>
                 </table>
             </div>
 
             <!-- Xác nhận tài chính bền vững -->
             <div class="ranking-block">
-                <h2 class="ranking-title">Xác nhận Tài chính Bền vững</h2>
+                <h2 class="ranking-title">@Localizer["SustainableFinanceConfirmation"]</h2>
                 <table class="ranking-table">
                     <thead>
                         <tr>
-                            <th>Loại ý kiến</th>
-                            <th>Ngày</th>
-                            <th>Chuẩn mực áp dụng</th>
-                            <th>Báo cáo chi tiết</th>
+                            <th>@Localizer["OpinionType"]</th>
+                            <th>@Localizer["PublicationDate"]</th>
+                            <th>@Localizer["SustainabilityLevel"]</th>
+                            <th>@Localizer["Report"]</th>
                         </tr>
                     </thead>
                     <tbody id="bindSustainableFinance"></tbody>
                 </table>
             </div>
         </div>
-        <div id="topNewsContainer1">
-        </div>
-
+        <div id="topNewsContainer1"></div>
     </div>
 </section>
 <section id="RatingCharts" class="py-5">
@@ -796,11 +788,9 @@
         function showRatingInfoPopup(element) {
         var rating = $(element).data('rating');
         var issuer = $(element).data('issuer');
-
         // Update modal header with company name and rating
         $('#modal-issuer').text(issuer);
         $('#modal-rating').text(rating);
-
         // Show modal
         $('#ratingInfoModal').fadeIn(300);
     }
@@ -834,10 +824,13 @@
         try {
             if (!data) {
                 console.warn('[bindDetail] No data provided');
+                $(".company-grid").addClass('d-none');
                 return;
             }
-
-            console.log('[bindDetail] Received data:', data);
+            else
+            {
+                $(".company-grid").removeClass('d-none');
+            }
 
             // Map fields to DOM elements
             const mappings = {
@@ -944,7 +937,7 @@
 
     this.getRakingsAjax();
     this.getSustainableFinanceAjax();
-
+      this.getDebitAjax();
         function getRakingsAjax() {
                      var rakingsAjaxUrl = '/@(language)/Ratings/RatingsAjax';
                      var params = { organizationId: '@ViewBag.Id'};
@@ -969,7 +962,33 @@
                             })
                             .always(function() {
                             });
-                    };
+         };
+
+             function getDebitAjax() {
+                     var debitAjaxUrl = '/@(language)/Ratings/DebitAjax';
+                     var params = { organizationId: '@ViewBag.Id'};
+                         $('#bindTTPHDebit').html(`
+                                        ${Array(3).fill().map(() => `
+                                                    <tr class="skeleton-row">
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                        <td><div class="skeleton skeleton-cell"></div></td>
+                                                    </tr>
+                                                `).join('')}
+                        `);
+
+                        $.get(debitAjaxUrl, params)
+                            .done(function(html) {
+                                    $('#bindTTPHDebit').html(html);
+                            })
+                            .fail(function() {
+                                    $('#bindTTPHDebit').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">Không thể tải dữ liệu</p></div></td></tr>');
+                            })
+                            .always(function() {
+                            });
+         };
 
         // ============================================
         // LOAD SUSTAINABLE FINANCE DATA
@@ -985,8 +1004,6 @@
             $('#bindSustainableFinance').html(`
                 ${Array(3).fill().map(() => `
                     <tr class="skeleton-row">
-                        <td><div class="skeleton skeleton-cell"></div></td>
-                        <td><div class="skeleton skeleton-cell"></div></td>
                         <td><div class="skeleton skeleton-cell"></div></td>
                         <td><div class="skeleton skeleton-cell"></div></td>
                         <td><div class="skeleton skeleton-cell"></div></td>

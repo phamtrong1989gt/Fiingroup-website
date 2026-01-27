@@ -183,4 +183,10 @@
   <data name="Report" xml:space="preserve">
     <value>Báo cáo chi tiết</value>
   </data>
+  <data name="SustainableFinanceConfirmation" xml:space="preserve">
+    <value>Xác nhận Tài chính Bền vững</value>
+  </data>
+  <data name="SustainabilityLevel" xml:space="preserve">
+    <value>Chuẩn mực áp dụng</value>
+  </data>
 </root>

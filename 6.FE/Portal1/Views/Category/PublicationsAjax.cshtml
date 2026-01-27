@@ -12,6 +12,7 @@
     Layout = null;
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var stPage = Context.Request.Query["page"].ToString();
+    var bindContentTag = Context.Request.Query["bindContentTag"].ToString();
     // Lấy pageIndex từ query string nếu có, mặc định =1
     var pageIndex = 1;
     if (stPage != null)
@@ -40,7 +41,7 @@
         <div class="pagination-area mt-2 mb-3">
             <div aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
-                    @Html.Raw(PT.Shared.Functions.GenPageListAjax2("", pageIndex, Model.Total, 9, $"&key={Context.Request.Query["key"]}" + $"&startDate={Context.Request.Query["startDate"]}" + $"&endDate={Context.Request.Query["endDate"]}", "page-active", null, "getNewsAjax"))
+                    @Html.Raw(PT.Shared.Functions.GenPageListAjax2("", pageIndex, Model.Total, 9, $"&key={Context.Request.Query["key"]}" + $"&startDate={Context.Request.Query["startDate"]}" + $"&endDate={Context.Request.Query["endDate"]}", "page-active", null, bindContentTag ?? "getNewsAjax"))
                 </ul>
             </div>
         </div>

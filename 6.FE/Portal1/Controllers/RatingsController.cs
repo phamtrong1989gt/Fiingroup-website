@@ -97,15 +97,15 @@ namespace PT.UI.Controllers
             return View("SearchAjax", data);
         }
 
-        [Route("{language}/Ratings/RatingsDebtAjax")]
-        public async Task<IActionResult> RatingsDebtAjax([FromQuery] RatingResultsQueryParameters parameters)
+        [Route("{language}/Ratings/DebitAjax")]
+        public async Task<IActionResult> DebitAjax([FromQuery] RatingResultsQueryParameters parameters)
         {
             parameters.FromDate = "2000-01-01";
             parameters.ToDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
-            parameters.IndustryTypeId = 2; // Set a default industry type ID
+            parameters.IssuerTypesId = 2; // Set a default industry type ID
             var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
             ViewBag.Language = parameters.Lang;
-            return View("RatingsDebtAjax", data);
+            return View("DebitAjax", data);
         }
 
         [Route("{language}/Ratings/IssuerOrgansAsync")]

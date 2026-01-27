@@ -51,6 +51,31 @@ namespace PT.UI.Controllers
         }
 
         [HttpGet]
+        [Route("{language}/Category/NewsAndEventAjax")]
+        public async Task<ActionResult> NewsAndEventAjax([FromQuery] NewsQueryParameters prs)
+        {
+            string categoryIds = prs.CategoryIds ?? "0";
+            var newCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.ParentId == 0 && x.CategoryType == ECategoryType.ContentPage_Blog);
+            if (newCategory != null)
+            {
+                categoryIds = newCategory.ExCategoryIds;
+            }
+
+            var eventCategory = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.ParentId == 0 && x.CategoryType == ECategoryType.ContentPage_Event);
+            if (eventCategory != null)
+            {
+                categoryIds += $",{eventCategory.ExCategoryIds}";
+            }
+
+            prs.PageSize = 9;
+            prs.Page = prs.Page <= 0 ? 1 : prs.Page;
+            prs.StatusIds = "1";
+            prs.CategoryIds = categoryIds;
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
+            return View("NewsAjax", listNew);
+        }
+
+        [HttpGet]
         [Route("{language}/Category/EventAjax")]
         public async Task<ActionResult> EventAjax([FromQuery] NewsQueryParameters prs)
         {
@@ -94,6 +119,23 @@ namespace PT.UI.Controllers
             prs.Page = prs.Page <= 0 ? 1 : prs.Page;
             prs.StatusIds = "1";
             prs.CategoryIds = prs.CategoryIds ?? "0";
+            var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
+            return View("PublicationsAjax", listNew);
+        }
+
+        [HttpGet]
+        [Route("{language}/Category/SearchPublicationsAjax")]
+        public async Task<ActionResult> SearchPublicationsAjax([FromQuery] NewsQueryParameters prs)
+        {
+            var category = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Language == prs.Language && x.ParentId == 0 && x.CategoryType == ECategoryType.ContentPage_Publications);
+            if(category == null)
+            {
+                return View("PublicationsAjax", new NewsListResponse() { Items = new List<NewsItem>() });
+            }
+            prs.PageSize = 9;
+            prs.Page = prs.Page <= 0 ? 1 : prs.Page;
+            prs.StatusIds = "1";
+            prs.CategoryIds = category?.ExCategoryIds;
             var listNew = await _iNewsAPIService.GetNewsAsync(prs, prs.Language ?? "vi", _baseSettings.Value.PortalId);
             return View("PublicationsAjax", listNew);
         }
