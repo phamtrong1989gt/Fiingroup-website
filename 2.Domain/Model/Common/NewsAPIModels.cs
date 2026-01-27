@@ -363,6 +363,36 @@ namespace PT.Domain.Model
         public string BondCode { get; set; }
     }
 
+    public class IssuerOrgansQueryParameters
+    {
+        public string Keyword { get; set; }
+        public int? Page { get; set; }
+        public int? PageSize { get; set; }
+        public string Lang { get; set; }
+        public string ToQueryString()
+        {
+            var queryParams = new List<string>();
+            if (!string.IsNullOrWhiteSpace(Keyword))
+            {
+                queryParams.Add($"keyword={Uri.EscapeDataString(Keyword)}");
+            }
+            if (Page.HasValue)
+            {
+                queryParams.Add($"page={Page.Value}");
+            }
+            if (PageSize.HasValue)
+            {
+                queryParams.Add($"pageSize={PageSize.Value}");
+            }
+            if (!string.IsNullOrWhiteSpace(Lang))
+            {
+                queryParams.Add($"lang={Lang}");
+            }
+            return string.Join("&", queryParams);
+        }
+    } 
+  
+             
     // Query Parameters for Rating Results
     public class RatingResultsQueryParameters
     {

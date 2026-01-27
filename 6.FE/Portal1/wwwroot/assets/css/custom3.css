@@ -1002,4 +1002,26 @@ a.btn.btn-primary.btn-join {
     #Deliver>.container {
         background-size: 100% 100% !important;
     }
+    .thinks-grid {
+        display: block !important;
+    }
+    .thinks-item {
+        display: block !important;
+    }
+        .thinks-item img {
+            width: 100% !important;
+            height: auto !important;
+        }
+    .thinks-title {
+        font-size: 20px !important;
+        line-height: 30px !important;
+        font-weight: 600 !important;
+    }
+    .thinks-item
+    {
+        border-top:none !important;
+    }
+    #topNewsContainer .text-center.mt-5 {
+        margin-top: 1rem !important;
+    }
 }

@@ -70,7 +70,7 @@ namespace PT.UI.Controllers
         [Route("{language}/Ratings/IndexAjax")]
         public async Task<IActionResult> IndexAjax([FromQuery] RatingResultsQueryParameters parameters)
         {
-            parameters.FromDate = "2020-01-01";
+            parameters.FromDate = "2000-01-01";
             parameters.ToDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
             var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
             ViewBag.Language = parameters.Lang;
@@ -80,22 +80,40 @@ namespace PT.UI.Controllers
         [Route("{language}/Ratings/RatingsAjax")]
         public async Task<IActionResult> RatingsAjax([FromQuery] RatingResultsQueryParameters parameters)
         {
-            parameters.FromDate = "2020-01-01";
+            parameters.FromDate = "2000-01-01";
             parameters.ToDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
             var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
             ViewBag.Language = parameters.Lang;
             return View("RatingsAjax", data);
         }
 
+        [Route("{language}/Ratings/SearchAjax")]
+        public async Task<IActionResult> SearchAjax([FromQuery] RatingResultsQueryParameters parameters)
+        {
+            parameters.FromDate = "2000-01-01";
+            parameters.ToDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+            var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
+            ViewBag.Language = parameters.Lang;
+            return View("SearchAjax", data);
+        }
+
         [Route("{language}/Ratings/RatingsDebtAjax")]
         public async Task<IActionResult> RatingsDebtAjax([FromQuery] RatingResultsQueryParameters parameters)
         {
-            parameters.FromDate = "2020-01-01";
+            parameters.FromDate = "2000-01-01";
             parameters.ToDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
             parameters.IndustryTypeId = 2; // Set a default industry type ID
             var data = await _newsAPIService.GetRatingResultsAsync(parameters, _baseSettings.Value.PortalId);
             ViewBag.Language = parameters.Lang;
             return View("RatingsDebtAjax", data);
+        }
+
+        [Route("{language}/Ratings/IssuerOrgansAsync")]
+        public async Task<IActionResult> IssuerOrgansAsync([FromQuery] IssuerOrgansQueryParameters parameters)
+        {
+            var data = await _newsAPIService.GetIssuerOrgansAsync(parameters.Keyword, parameters.Lang, _baseSettings.Value.PortalId);
+            ViewBag.Language = parameters.Lang;
+            return View("IssuerOrgansAsync", data);
         }
     }
 }

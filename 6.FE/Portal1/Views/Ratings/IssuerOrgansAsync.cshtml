@@ -1,0 +1,57 @@
+﻿@model PT.Domain.Model.IssuerOrgansResponse
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using PT.Domain.Model
+@using PT.Shared
+
+@{
+    var isAjax = string.Equals(Context.Request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
+    Layout = isAjax ? null : "~/Views/Shared/_Home.cshtml";
+    string language = ViewBag.Language ?? "vi";
+}
+
+@if (Model != null && Model.Success && Model.Data != null && Model.Data.Items != null && Model.Data.Items.Any())
+{
+    <div class="issuer-list">
+        @foreach (var item in Model.Data.Items)
+        {
+            var url = $"/{language}/ratings-fr/{Functions.ToUrlSlug(item.OrganizationName)}-id{item.OrganizationId}.html";
+            <div class="issuer-card">
+                <div class="issuer-left">
+                    <div class="issuer-header">
+                        <div class="issuer-top-info">
+                            <div class="issuer-company">@item.OrganizationName</div>
+                            <div class="issuer-info">@item.IndustryTypeName</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="issuer-right">
+                    <a href="@url" class="btn-report">@Localizer["ViewDetails"]</a>
+                </div>
+            </div>
+        }
+
+        <div class="page-table">
+            <div class="numberpage">
+                <div>
+                    @Localizer["Showing"]
+                    <span>1</span> -
+                    <span>@Math.Min(Model.Data.PageSize, Model.Data.TotalRecords)</span>
+                    @Localizer["Of"] <span>@Model.Data.TotalRecords</span> @Localizer["Records"]
+                </div>
+            </div>
+            <div class="pagination">
+                @* If server provides paging links, render them here. For now pagination can be handled client-side *@
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="no-data text-center py-5">
+        <img src="/Data/Banner/no-data.jpg" alt="@Localizer["NoData"]" style="max-width: 300px;" />
+        <p class="no-data-messege my-5">@Localizer["NoData"]</p>
+    </div>
+}
+

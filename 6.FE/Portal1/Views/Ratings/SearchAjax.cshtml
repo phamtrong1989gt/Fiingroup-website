@@ -1,0 +1,130 @@
+﻿@model PT.Domain.Model.RatingResultsResponse
+@addTagHelper *, PT.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@using PT.Domain.Model
+@using PT.Shared
+
+@{
+    var isAjax = string.Equals(Context.Request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
+    Layout = isAjax ? null : "~/Views/Shared/_Home.cshtml";
+    var stPage = Context.Request.Query["page"].ToString();
+    var pageIndex = 1;
+    if (!string.IsNullOrEmpty(stPage))
+    {
+        pageIndex = int.TryParse(stPage, out var result) ? result : 1;
+    }
+    string language = ViewBag.Language ?? "vi";
+}
+
+@if (Model != null && Model.Success && Model.Data != null && Model.Data.Items != null && Model.Data.Items.Any())
+{
+    <div class="ratings-list">
+        @for (int i = 0; i < Model.Data.Items.Count; i++)
+        {
+            var item = Model.Data.Items[i];
+            string url = $"/{language}/ratings-fr/{Functions.ToUrlSlug(item.Issuer)}-id{Model.Data.Items[i].OrganizationId}.html";
+            <div class="rating-card">
+                <div class="rating-left">
+                    <div class="rating-header">
+                        <div class="rating-badge @(string.IsNullOrEmpty(item.Rating) ? "rating-a" : (item.Rating.StartsWith("A") ? "rating-a" : "rating-b"))">@item.Rating</div>
+                        <div class="rating-top-info">
+                            <div class="rating-date">
+                                @if (!string.IsNullOrEmpty(item.Date))
+                                {
+                                    @(Convert.ToDateTime(item.Date).ToString(language == "en" ? "MM/dd/yyyy" : "dd/MM/yyyy"))
+                                }
+                            </div>
+                            <div class="rating-company">@item.Issuer</div>
+                        </div>
+                    </div>
+
+                    <div class="rating-info">
+                        <div>
+                            <span class="info-label">@Localizer["OpinionType"]</span>
+                            <span class="info-value">@item.OpinionTypeName</span>
+                        </div>
+                        <div>
+                            <span class="info-label">@Localizer["Industry"]</span>
+                            <span class="info-value">@item.Industry</span>
+                        </div>
+                        <div>
+                            <span class="info-label">@Localizer["Outlook"]</span>
+                            <span class="status-tag">@item.Outlook</span>
+                        </div>
+                        <div>
+                            <a href="@url" class="btn-report">@Localizer["ViewReport"]</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="page-table">
+            <div class="numberpage">
+                <div>
+                    @Localizer["Showing"]
+                    <span>@((pageIndex - 1) * Model.Data.PageSize + 1)</span> -
+                    <span>@Math.Min(pageIndex * Model.Data.PageSize, Model.Data.TotalRecords)</span>
+                    @Localizer["Of"] <span>@Model.Data.TotalRecords</span> @Localizer["Records"]
+                </div>
+            </div>
+            <div class="pagination">
+                @Html.Raw(PT.Shared.Functions.GenPageListAjax2("",
+                            pageIndex,
+                            Model.Data.TotalRecords,
+                            Model.Data.PageSize,
+                            $"&companyName={Context.Request.Query["companyName"]}" +
+                            $"&industryTypeId={Context.Request.Query["industryTypeId"]}" +
+                            $"&scoreId={Context.Request.Query["scoreId"]}" +
+                            $"&prospectsId={Context.Request.Query["prospectsId"]}",
+                            "page-active",
+                            null,
+                            "getRakingsAjax"
+                ))
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="no-data text-center py-5">
+        <img src="/Data/Banner/no-data.jpg" alt="@Localizer["NoData"]" style="max-width: 300px;" />
+        <p class="no-data-messege my-5">@Localizer["NoRatingResults"]</p>
+    </div>
+}
+
+<div id="bindIssuerContent"></div>
+
+@section Scripts {
+    <script>
+        var issuerOrgansUrl = '@Url.Action("IssuerOrgansAsync", "Ratings", new { language = language })';
+        // Load issuer organs (organizations) HTML from server and inject into #bindIssuerContent
+        window.getIssuerOrgansAjax = function (page) {
+            page = page || 1;
+            var keyword = ($('#search-input').val() || '').trim();
+
+            // simple loading placeholder
+            $('#bindIssuerContent').html('<div class="text-center py-5">@Localizer["Loading"]...</div>');
+
+            $.get(issuerOrgansUrl, { keyword: keyword, page: page, lang: language })
+                .done(function (html) {
+                    $('#bindIssuerContent').html(html);
+                })
+                .fail(function () {
+                    $('#bindIssuerContent').html('<div class="text-center py-5 text-danger">' + '@Localizer["ErrorLoadingData"]' + '</div>');
+                });
+        };
+
+        // Optionally initialize issuer list when this partial is loaded if a keyword exists
+        $(function () {
+            try {
+                var key = (window.initialKey || $('#search-input').val() || '').trim();
+                if (key && key.length) {
+                    getIssuerOrgansAjax(1);
+                }
+            } catch (e) { /* ignore */ }
+        });
+    </script>
+}
+

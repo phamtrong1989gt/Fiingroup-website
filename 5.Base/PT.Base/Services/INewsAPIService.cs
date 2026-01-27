@@ -33,6 +33,7 @@ namespace PT.Base.Services
         // ============ ADDED: Issuer types & Opinion types ==========
         Task<IssuerTypesResponse> GetIssuerTypesAsync(string language = "vi", int portalId = 1);
         Task<OpinionTypesResponse> GetOpinionTypesAsync(string language = "vi", int portalId = 1);
+        Task<IssuerOrgansResponse> GetIssuerOrgansAsync(string keyword = "", string language = "vi", int portalId = 1);
     }
 
     public class NewsAPIService : INewsAPIService
@@ -900,6 +901,43 @@ namespace PT.Base.Services
                 },
                 language,
                 null,
+                portalId
+            );
+        }
+
+        /// <summary>
+        /// ADDED: Lấy danh sách Issuer Organs (tổ chức/phát hành) từ Rating API theo keyword
+        /// </summary>
+        public async Task<IssuerOrgansResponse> GetIssuerOrgansAsync(string keyword = "", string language = "vi", int portalId = 1)
+        {
+            return await _apiLogger.TrackAPICallAsync(
+                LogType.API_GetIssuerTypes,
+                _baseSettings.Value.RatingAPI.IssuerOrgansEndpoint ?? "N/A",
+                "GET",
+                async () =>
+                {
+                    var endpoint = _baseSettings.Value.RatingAPI.IssuerOrgansEndpoint;
+                    if (string.IsNullOrWhiteSpace(endpoint)) return null;
+
+                    var url = string.IsNullOrEmpty(keyword) ? $"{endpoint}?lang={language}" : $"{endpoint}?lang={language}&keyword={Uri.EscapeDataString(keyword)}";
+
+                    string token;
+                    try { token = await GetAccessTokenAsync(false, portalId, true); }
+                    catch { return null; }
+
+                    try
+                    {
+                        return await CallRatingAPIAsync<IssuerOrgansResponse>(url, token);
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        try { token = await GetAccessTokenAsync(true, portalId, true); return await CallRatingAPIAsync<IssuerOrgansResponse>(url, token); }
+                        catch { return null; }
+                    }
+                    catch { return null; }
+                },
+                language,
+                $"keyword={keyword}",
                 portalId
             );
         }

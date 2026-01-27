@@ -76,6 +76,7 @@ namespace PT.Domain.Model
         public string SustainableStandardsEndpoint { get; set; }
         public string IssuerTypeEndpoint { get; set; }
         public string OpinionTypesEndpoint { get; set; }
+        public string IssuerOrgansEndpoint { get; set; }
     }
 
 
