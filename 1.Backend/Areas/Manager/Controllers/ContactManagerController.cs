@@ -79,31 +79,89 @@ namespace PT.BE.Areas.Manager.Controllers
             var producs = await _iContentPageRepository.SearchAsync(true, 0, 0, x=>x.CategoryType == ECategoryType.ContentPage_FlowItems);
             foreach (var item in data.Data)
             {
-                // Do something with each item
-                item.Solution = listCates.FirstOrDefault(x=>x.Id == item.ServiceId);
-                if(string.IsNullOrEmpty(item.Products))
+                // Determine effective portal id: prefer filter param if present otherwise use item's PortalId
+                var effectivePortalId = portalId ?? item.PortalId;
+
+                // Set Solution depending on portal: portal 2 uses DB content pages, others use Functions list
+                if (effectivePortalId == 2)
+                {
+                    item.Solution = listCates.FirstOrDefault(x => x.Id == item.ServiceId);
+                }
+                else
+                {
+                    try
+                    {
+                        var serviceDef = Functions.GetSectorExpertiseList(item.Language).FirstOrDefault(x => x.Id == item.ServiceId);
+                        if (serviceDef != null)
+                        {
+                            item.Solution = new ContentPage { Id = serviceDef.Id, Name = serviceDef.Text };
+                        }
+                        else
+                        {
+                            item.Solution = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger?.LogError(ex, "Error getting service definition for contact id {ContactId}", item.Id);
+                        item.Solution = null;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(item.Products))
                     continue;
+
                 try
                 {
                     var producids = item.Products.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToList();
-                    item.ProductsList = producs.Where(x => producids.Contains(x.Id)).ToList();
-                    
-                    // Add "Other" option if id = 0 is present
-                    if (producids.Contains(0))
+
+                    if (effectivePortalId == 2)
                     {
-                        if (item.ProductsList == null)
+                        // For portal 2: map to ContentPage objects from repository (existing behavior)
+                        item.ProductsList = producs.Where(x => producids.Contains(x.Id)).ToList();
+
+                        // Add "Other" option if id = 0 is present
+                        if (producids.Contains(0))
                         {
-                            item.ProductsList = new List<ContentPage>();
+                            if (item.ProductsList == null)
+                            {
+                                item.ProductsList = new List<ContentPage>();
+                            }
+                            item.ProductsList.Add(new ContentPage
+                            {
+                                Id = 0,
+                                Name = item.Language == "en" ? "Other" : "Lựa chọn khác"
+                            });
                         }
-                        item.ProductsList.Add(new ContentPage
+                    }
+                    else
+                    {
+                        // For portal 1 (and others): use the Functions helper (same as ContactPost)
+                        var productDefs = Functions.GetProductsServicesList(item.Language);
+
+                        // Create ContentPage-like objects from productDefs so the view can render them similarly
+                        item.ProductsList = productDefs
+                            .Where(p => producids.Contains(p.Id))
+                            .Select(p => new ContentPage { Id = p.Id, Name = p.Text })
+                            .ToList();
+
+                        if (producids.Contains(0))
                         {
-                            Id = 0,
-                            Name = item.Language == "en" ? "Other" : "Lựa chọn khác"
-                        });
+                            if (item.ProductsList == null)
+                            {
+                                item.ProductsList = new List<ContentPage>();
+                            }
+                            item.ProductsList.Add(new ContentPage
+                            {
+                                Id = 0,
+                                Name = item.Language == "en" ? "Other" : "Lựa chọn khác"
+                            });
+                        }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _logger?.LogError(ex, "Error parsing products for contact id {ContactId}", item.Id);
                 }
              
             }
@@ -365,7 +423,5 @@ namespace PT.BE.Areas.Manager.Controllers
             }
         }
         #endregion
-
-
     }
 }

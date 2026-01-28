@@ -124,8 +124,7 @@ namespace PT.UI.Controllers
                         PortalId = _baseSettings.Value.PortalId,
                         Language = language
                     };
-                    await _iContactRepository.AddAsync(dlAdd);
-                    await _iContactRepository.CommitAsync();
+                
                     string serviceName = "";
                     string productNames = "";
                     if (use.ServiceId <= 0)
@@ -134,20 +133,25 @@ namespace PT.UI.Controllers
                     }
                     else
                     {
-                        var service = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == dlAdd.ServiceId);
+                        var service = Functions.GetSectorExpertiseList(language).FirstOrDefault(x => x.Id == dlAdd.ServiceId);
                         if (service != null)
                         {
-                            serviceName = service.Name;
+                            serviceName = service.Text;
                         }
                     }
 
                     var producids = dlAdd.Products.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id)).ToList();
-                    var producs = await _iContentPageRepository.SearchAsync(true, 0, 0, x => producids.Contains(x.Id));
-                    productNames = string.Join(";", producs.Select(x => x.Name));
+                    var products = Functions.GetProductsServicesList(language);
+                    var producs = products.Where(x => producids.Contains(x.Id));
+                    productNames = string.Join(";", producs.Select(x => x.Text));
+
                     if (producids.Any(x => x == 0))
                     {
                         productNames += language == "vi" ? "Lựa chọn khác;" : "Others;";
                     }
+                    dlAdd.Note = $"Cty: [{use.ConpanyName}], Vị trí: [{use.Position}], Nhóm ngành: [{serviceName}], Sản phẩm & dịch vụ quan tâm: [{productNames}], Mô tả chi tiết: [{dlAdd.Content}]";
+                    await _iContactRepository.AddAsync(dlAdd);
+                    await _iContactRepository.CommitAsync();
 
                     await _misaAPIService.CreateContactAsync(new Domain.Model.Misa.MisaContactRequest
                     {
@@ -164,7 +168,7 @@ namespace PT.UI.Controllers
                         OfficeEmail = dlAdd.Email,
                         OfficeTel = dlAdd.Phone,
                         Title = _misaSettings.Value.TitleSolution,
-                        Description = $"Cty: [{use.ConpanyName}], Vị trí: [{use.Position}], Nhóm ngành: [{serviceName}], Sản phẩm & dịch vụ quan tâm: [{productNames}], Mô tả chi tiết: [{dlAdd.Content}]"
+                        Description = dlAdd.Note
                     });
                     return new ResponseModel() { Output = 1, Message = Localize("SuccessRegister", language), Type = ResponseTypeMessage.Success, IsClosePopup = true };
                 }
