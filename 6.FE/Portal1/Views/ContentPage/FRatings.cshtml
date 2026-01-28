@@ -731,12 +731,11 @@
                                     <input type="text" name="dhStartDate" class="dhStartDate form-control form-control-sm" placeholder="@Localizer["StartDate_Placeholder"]">
                                     <input type="text" name="dhEndDate" class="dhEndDate form-control form-control-sm" placeholder="@Localizer["EndDate_Placeholder"]">
                                 </div>
-                                <img src="/Data/FR/chart-long.png" class="chart-img d-block w-100" alt="@Localizer["Img_Alt_Long"]">
-                                <!-- <div id="longTermChart"></div> -->
+                                <canvas id="longTermChart" class="chart-img d-block w-100" aria-label="@Localizer["Img_Alt_Long"]" role="img"></canvas>
 
                                 <div class="chart-legend">
                                     <span><i class="legend-square blue"></i> @Localizer["Legend_Issuer"]</span>
-                                    <span><i class="legend-square dark"></i> @Localizer["Legend_DebtInstrument"]</span>
+                                    <span><i class="legend-square.dark"></i> @Localizer["Legend_DebtInstrument"]</span>
                                 </div>
                             </div>
                         </div>
@@ -754,13 +753,11 @@
                                     <input type="text" name="nhStartDate" class="nhStartDate form-control form-control-sm" placeholder="@Localizer["StartDate_Placeholder"]">
                                     <input type="text" name="nhEndDate" class="nhEndDate form-control form-control-sm" placeholder="@Localizer["EndDate_Placeholder"]">
                                 </div>
-                                <img src="/Data/FR/chart-short.png" class="chart-img d-block w-100" alt="@Localizer["Img_Alt_Short"]">
-
-                                <!-- <div id="shortTermChart"></div> -->
+                                <canvas id="shortTermChart" class="chart-img d-block w-100" aria-label="@Localizer["Img_Alt_Short"]" role="img"></canvas>
 
                                 <div class="chart-legend">
                                     <span><i class="legend-square blue"></i> @Localizer["Legend_Issuer"]</span>
-                                    <span><i class="legend-square dark"></i> @Localizer["Legend_DebtInstrument"]</span>
+                                    <span><i class="legend-square.dark"></i> @Localizer["Legend_DebtInstrument"]</span>
                                 </div>
                             </div>
                         </div>
@@ -776,302 +773,306 @@
 </section>
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsLienHe", language = language, portalId = portalId })
-<script src="~/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-<link href="~/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
-<script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-au.min.js"></script>
-<script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js"></script>
-<script>
-    $(function(){
-            var lang = '@language';
-            $('.dhStartDate').datepicker({
-                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
-                language: lang,
-                todayHighlight: true
-            });
-
-            $('.dhEndDate').datepicker({
-                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
-                language: lang,
-                todayHighlight: true
-            });
-
-            $('.nhStartDate').datepicker({
-                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
-                language: lang,
-                todayHighlight: true
-            });
-
-            $('.nhEndDate').datepicker({
-                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
-                language: lang,
-                todayHighlight: true
-            });
-    });
-    function showRatingInfoPopup(element) {
-        var rating = $(element).data('rating');
-        var issuer = $(element).data('issuer');
-        // Update modal header with company name and rating
-        $('#modal-issuer').text(issuer);
-        $('#modal-rating').text(rating);
-        // Show modal
-        $('#ratingInfoModal').fadeIn(300);
-    }
-
-    function loadTopNews(containerId, url) {
-        $(containerId).html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
-        $.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'html',
-            success: function (response) {
-                console.log('Response received successfully');
-                $(containerId).html(response);
-            },
-            error: function (xhr, status, error) {
-                console.error('Error details:', {
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    responseText: xhr.responseText,
-                    error: error
+@section Scripts {
+    <script src="~/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <link href="~/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-au.min.js"></script>
+    <script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js"></script>
+    <script src="~/plugins/chart.umd.min.js"></script>
+    <script>
+        $(function(){
+                var lang = '@language';
+                $('.dhStartDate').datepicker({
+                    format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                    language: lang,
+                    todayHighlight: true
                 });
-                $(containerId).html('<div class="alert alert-danger">Không thể tải tin tức. Status: ' + xhr.status + '</div>');
-            }
+
+                $('.dhEndDate').datepicker({
+                    format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                    language: lang,
+                    todayHighlight: true
+                });
+
+                $('.nhStartDate').datepicker({
+                    format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                    language: lang,
+                    todayHighlight: true
+                });
+
+                $('.nhEndDate').datepicker({
+                    format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                    language: lang,
+                    todayHighlight: true
+                });
         });
-    }
-     $(".company-title").html('@cname');
-    // ============================================
-    // BIND DETAIL DATA TO COMPANY INFO BOX
-    // ============================================
-    window.bindDetail = function(data) {
-        try {
-            if (!data) {
-                $(".company-info-box").addClass('d-none');
-                $(".company-title").html('@cname');
-                return;
-            }
-            else
-            {
-                $(".company-info-box").removeClass('d-none');
-            }
+        function showRatingInfoPopup(element) {
+            var rating = $(element).data('rating');
+            var issuer = $(element).data('issuer');
+            // Update modal header with company name and rating
+            $('#modal-issuer').text(issuer);
+            $('#modal-rating').text(rating);
+            // Show modal
+            $('#ratingInfoModal').fadeIn(300);
+        }
 
-            // Map fields to DOM elements
-            const mappings = {
-                'detail_IssuingOrganization': data.IssuingOrganization || data.issuingOrganization || '---',
-                'detail_OrganizationType': '---', // Placeholder - add actual field if available
-                'detail_RatingScore': data.RatingScore || data.ratingScore || '---',
-                'detail_Industry': data.Industry || data.industry || '---',
-                'detail_Rating': data.Rating || data.rating || data.Prospects || data.prospects || '---',
-                'detail_OpinionType': data.OpinionType || data.opinionType || '---',
-                'detail_PublicationDate': data.PublicationDate || data.publicationDate || '---',
-                'detail_OpinionType_lyk': data.OpinionTypeName || data.opinionTypeName || '---',
-                'detail_BondCode': data.BondCode || data.bondCode || '---'
-            };
+        function loadTopNews(containerId, url) {
+            $(containerId).html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'html',
+                success: function (response) {
+                    console.log('Response received successfully');
+                    $(containerId).html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error details:', {
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        responseText: xhr.responseText,
+                        error: error
+                    });
+                    $(containerId).html('<div class="alert alert-danger">Không thể tải tin tức. Status: ' + xhr.status + '</div>');
+                }
+            });
+        }
+         $(".company-title").html('@cname');
+        // ============================================
+        // BIND DETAIL DATA TO COMPANY INFO BOX
+        // ============================================
+        window.bindDetail = function(data) {
+            try {
+                if (!data) {
+                    $(".company-info-box").addClass('d-none');
+                    $(".company-title").html('@cname');
+                    return;
+                }
+                else
+                {
+                    $(".company-info-box").removeClass('d-none');
+                }
 
-            // Bind data to elements with animation
-            Object.keys(mappings).forEach(function(id) {
-                const $element = $('#' + id);
-                const value = mappings[id];
+                // Map fields to DOM elements
+                const mappings = {
+                    'detail_IssuingOrganization': data.IssuingOrganization || data.issuingOrganization || '---',
+                    'detail_OrganizationType': '---', // Placeholder - add actual field if available
+                    'detail_RatingScore': data.RatingScore || data.ratingScore || '---',
+                    'detail_Industry': data.Industry || data.industry || '---',
+                    'detail_Rating': data.Rating || data.rating || data.Prospects || data.prospects || '---',
+                    'detail_OpinionType': data.OpinionType || data.opinionType || '---',
+                    'detail_PublicationDate': data.PublicationDate || data.publicationDate || '---',
+                    'detail_OpinionType_lyk': data.OpinionTypeName || data.opinionTypeName || '---',
+                    'detail_BondCode': data.BondCode || data.bondCode || '---'
+                };
 
-                if ($element.length) {
-                    // ✅ FADE OUT skeleton, then FADE IN content
-                    const $skeleton = $element.find('.skeleton-text');
+                // Bind data to elements with animation
+                Object.keys(mappings).forEach(function(id) {
+                    const $element = $('#' + id);
+                    const value = mappings[id];
 
-                    if ($skeleton.length) {
-                        // Fade out skeleton
-                        $skeleton.fadeOut(200, function() {
-                            $skeleton.remove();
+                    if ($element.length) {
+                        // ✅ FADE OUT skeleton, then FADE IN content
+                        const $skeleton = $element.find('.skeleton-text');
 
-                            // Set text content
+                        if ($skeleton.length) {
+                            // Fade out skeleton
+                            $skeleton.fadeOut(200, function() {
+                                $skeleton.remove();
+
+                                // Set text content
+                                if (id.includes('Date') && value !== '---') {
+                                    const formattedDate = formatDate(value);
+                                    $element.text(formattedDate);
+                                } else {
+                                    $element.text(value);
+                                }
+
+                                // Add fade-in + highlight animation
+                                $element.addClass('fade-in-content highlight-update');
+
+                                setTimeout(function() {
+                                    $element.removeClass('highlight-update');
+                                }, 1000);
+
+                                setTimeout(function() {
+                                    $element.removeClass('fade-in-content');
+                                }, 500);
+                            });
+                        } else {
+                            // No skeleton, just update text
                             if (id.includes('Date') && value !== '---') {
                                 const formattedDate = formatDate(value);
                                 $element.text(formattedDate);
                             } else {
                                 $element.text(value);
                             }
-
-                            // Add fade-in + highlight animation
-                            $element.addClass('fade-in-content highlight-update');
-
-                            setTimeout(function() {
-                                $element.removeClass('highlight-update');
-                            }, 1000);
-
-                            setTimeout(function() {
-                                $element.removeClass('fade-in-content');
-                            }, 500);
-                        });
+                        }
                     } else {
-                        // No skeleton, just update text
-                        if (id.includes('Date') && value !== '---') {
-                            const formattedDate = formatDate(value);
-                            $element.text(formattedDate);
+                        console.warn('[bindDetail] Element not found:', id);
+                    }
+                });
+
+                console.log('[bindDetail] Data binding completed');
+            } catch (error) {
+                console.error('[bindDetail] Error:', error);
+            }
+        };
+
+        // Helper function to format date
+        function formatDate(dateString) {
+            if (!dateString || dateString === '---') return '---';
+
+            try {
+                // Try to parse date
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return dateString;
+
+                // Format as DD/MM/YYYY
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+
+                return `${day}/${month}/${year}`;
+            } catch (error) {
+                console.error('[formatDate] Error:', error);
+                return dateString;
+            }
+        }
+
+        $(document).ready(function() {
+             loadTopNews('#topNewsContainer','/@(language)/ContentPage/TopNewsAjax?parameter=RatingDetail_TopNews&view=TopNewsAjax&pageSize=3');
+             loadTopNews('#topNewsContainer1','/@(language)/ContentPage/TopNewsAjax?parameter=RatingDetail_TopNews_DiemXHTN&view=TopNews1Ajax&pageSize=3');
+        });
+
+                function downloadRatingReport(viUrl, enUrl, radioName) {
+                        var selectedLang = $('input[name="' + radioName + '"]:checked').val();
+                        var reportUrl = selectedLang === 'en' ? enUrl : viUrl;
+
+                        if (reportUrl && reportUrl !== '' && reportUrl !== 'null') {
+                            window.open(reportUrl, '_blank');
                         } else {
-                            $element.text(value);
+                            alert(reportNotAvailableMsg);
                         }
                     }
-                } else {
-                    console.warn('[bindDetail] Element not found:', id);
-                }
-            });
 
-            console.log('[bindDetail] Data binding completed');
-        } catch (error) {
-            console.error('[bindDetail] Error:', error);
-        }
-    };
+        this.getRakingsAjax();
+        this.getSustainableFinanceAjax();
+          this.getDebitAjax();
+            function getRakingsAjax() {
+                         var rakingsAjaxUrl = '/@(language)/Ratings/RatingsAjax';
+                         var params = { organizationId: '@ViewBag.Id'};
+                                      $('#bindTTPH').html(`
+                                            ${Array(3).fill().map(() => `
+                                                        <tr class="skeleton-row">
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                        </tr>
+                                                    `).join('')}
+                            `);
 
-    // Helper function to format date
-    function formatDate(dateString) {
-        if (!dateString || dateString === '---') return '---';
+                            $.get(rakingsAjaxUrl, params)
+                                .done(function(html) {
+                                        $('#bindTTPH').html(html);
+                                })
+                                .fail(function() {
+                                        $('#bindTTPH').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">Không thể tải dữ liệu</p></div></td></tr>');
+                                })
+                                .always(function() {
+                                });
+             };
 
-        try {
-            // Try to parse date
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
+                 function getDebitAjax() {
+                         var debitAjaxUrl = '/@(language)/Ratings/DebitAjax';
+                         var params = { organizationId: '@ViewBag.Id'};
+                             $('#bindTTPHDebit').html(`
+                                            ${Array(3).fill().map(() => `
+                                                        <tr class="skeleton-row">
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                            <td><div class="skeleton skeleton-cell"></div></td>
+                                                        </tr>
+                                                    `).join('')}
+                            `);
 
-            // Format as DD/MM/YYYY
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
+                            $.get(debitAjaxUrl, params)
+                                .done(function(html) {
+                                        $('#bindTTPHDebit').html(html);
+                                })
+                                .fail(function() {
+                                        $('#bindTTPHDebit').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">Không thể tải dữ liệu</p></div></td></tr>');
+                                })
+                                .always(function() {
+                                });
+             };
 
-            return `${day}/${month}/${year}`;
-        } catch (error) {
-            console.error('[formatDate] Error:', error);
-            return dateString;
-        }
-    }
+            // ============================================
+            // LOAD SUSTAINABLE FINANCE DATA
+            // ============================================
+            function getSustainableFinanceAjax() {
+                var sustainableAjaxUrl = '/@(language)/Ratings2/RatingsAjax';
+                var params = {
+                    organizationId: '@ViewBag.Id',
+                    lang: '@language'
+                };
 
-    $(document).ready(function() {
-         loadTopNews('#topNewsContainer','/@(language)/ContentPage/TopNewsAjax?parameter=RatingDetail_TopNews&view=TopNewsAjax&pageSize=3');
-         loadTopNews('#topNewsContainer1','/@(language)/ContentPage/TopNewsAjax?parameter=RatingDetail_TopNews_DiemXHTN&view=TopNews1Ajax&pageSize=3');
-    });
-
-            function downloadRatingReport(viUrl, enUrl, radioName) {
-                    var selectedLang = $('input[name="' + radioName + '"]:checked').val();
-                    var reportUrl = selectedLang === 'en' ? enUrl : viUrl;
-
-                    if (reportUrl && reportUrl !== '' && reportUrl !== 'null') {
-                        window.open(reportUrl, '_blank');
-                    } else {
-                        alert(reportNotAvailableMsg);
-                    }
-                }
-
-    this.getRakingsAjax();
-    this.getSustainableFinanceAjax();
-      this.getDebitAjax();
-        function getRakingsAjax() {
-                     var rakingsAjaxUrl = '/@(language)/Ratings/RatingsAjax';
-                     var params = { organizationId: '@ViewBag.Id'};
-                                  $('#bindTTPH').html(`
-                                        ${Array(3).fill().map(() => `
-                                                    <tr class="skeleton-row">
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                    </tr>
-                                                `).join('')}
-                        `);
-
-                        $.get(rakingsAjaxUrl, params)
-                            .done(function(html) {
-                                    $('#bindTTPH').html(html);
-                            })
-                            .fail(function() {
-                                    $('#bindTTPH').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">Không thể tải dữ liệu</p></div></td></tr>');
-                            })
-                            .always(function() {
-                            });
-         };
-
-             function getDebitAjax() {
-                     var debitAjaxUrl = '/@(language)/Ratings/DebitAjax';
-                     var params = { organizationId: '@ViewBag.Id'};
-                         $('#bindTTPHDebit').html(`
-                                        ${Array(3).fill().map(() => `
-                                                    <tr class="skeleton-row">
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                        <td><div class="skeleton skeleton-cell"></div></td>
-                                                    </tr>
-                                                `).join('')}
-                        `);
-
-                        $.get(debitAjaxUrl, params)
-                            .done(function(html) {
-                                    $('#bindTTPHDebit').html(html);
-                            })
-                            .fail(function() {
-                                    $('#bindTTPHDebit').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">Không thể tải dữ liệu</p></div></td></tr>');
-                            })
-                            .always(function() {
-                            });
-         };
-
-        // ============================================
-        // LOAD SUSTAINABLE FINANCE DATA
-        // ============================================
-        function getSustainableFinanceAjax() {
-            var sustainableAjaxUrl = '/@(language)/Ratings2/RatingsAjax';
-            var params = {
-                organizationId: '@ViewBag.Id',
-                lang: '@language'
-            };
-
-            // Show skeleton loading
-            $('#bindSustainableFinance').html(`
-                ${Array(3).fill().map(() => `
-                    <tr class="skeleton-row">
-                        <td><div class="skeleton skeleton-cell"></div></td>
-                        <td><div class="skeleton skeleton-cell"></div></td>
-                        <td><div class="skeleton skeleton-cell"></div></td>
-                        <td><div class="skeleton skeleton-cell"></div></td>
-                    </tr>
-                `).join('')}
-            `);
-
-            $.get(sustainableAjaxUrl, params)
-                .done(function(html) {
-                    console.log('[Sustainable Finance] Data loaded successfully');
-                    $('#bindSustainableFinance').html(html);
-                })
-                .fail(function(xhr, status, error) {
-                    console.error('[Sustainable Finance] Error:', {
-                        status: xhr.status,
-                        error: error
-                    });
-                    $('#bindSustainableFinance').html(`
-                        <tr>
-                            <td colspan="6" class="no-data">
-                                Hiện tại tổ chức phát hành chưa thực hiện xác nhận tài chính bền vững
-                            </td>
+                // Show skeleton loading
+                $('#bindSustainableFinance').html(`
+                    ${Array(3).fill().map(() => `
+                        <tr class="skeleton-row">
+                            <td><div class="skeleton skeleton-cell"></div></td>
+                            <td><div class="skeleton skeleton-cell"></div></td>
+                            <td><div class="skeleton skeleton-cell"></div></td>
+                            <td><div class="skeleton skeleton-cell"></div></td>
                         </tr>
-                    `);
-                });
+                    `).join('')}
+                `);
+
+                $.get(sustainableAjaxUrl, params)
+                    .done(function(html) {
+                        console.log('[Sustainable Finance] Data loaded successfully');
+                        $('#bindSustainableFinance').html(html);
+                    })
+                    .fail(function(xhr, status, error) {
+                        console.error('[Sustainable Finance] Error:', {
+                            status: xhr.status,
+                            error: error
+                        });
+                        $('#bindSustainableFinance').html(`
+                            <tr>
+                                <td colspan="6" class="no-data">
+                                    Hiện tại tổ chức phát hành chưa thực hiện xác nhận tài chính bền vững
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }
+
+        function closeRatingInfoPopup() {
+            $('#ratingInfoModal').fadeOut(300);
+        }
+
+        // Close modal when clicking outside
+        $(document).on('click', function (e) {
+            if ($(e.target).is('#ratingInfoModal')) {
+                closeRatingInfoPopup();
             }
+        });
 
-    function closeRatingInfoPopup() {
-        $('#ratingInfoModal').fadeOut(300);
-    }
+        // Close modal with ESC key
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeRatingInfoPopup();
+            }
+        });
+    </script>
+}
 
-    // Close modal when clicking outside
-    $(document).on('click', function (e) {
-        if ($(e.target).is('#ratingInfoModal')) {
-            closeRatingInfoPopup();
-        }
-    });
-
-    // Close modal with ESC key
-    $(document).on('keydown', function (e) {
-        if (e.key === 'Escape') {
-            closeRatingInfoPopup();
-        }
-    });
-</script>
 
 <!-- Rating Info Modal -->
 <div id="ratingInfoModal" class="rating-info-modal">
