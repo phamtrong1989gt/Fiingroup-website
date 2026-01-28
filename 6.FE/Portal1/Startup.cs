@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -365,6 +366,49 @@ namespace PT.UI
             app.UseWebMarkupMin();
             // Response Caching Middleware
             //app.UseResponseCaching();
+
+            // Ánh xạ thư mục vật lý dùng chung cho Data (/Data)
+            try
+            {
+                // Đọc DataPath từ cấu hình BaseSettings
+                var configuredDataPath = Configuration["BaseSettings:DataPath"];
+                if (!string.IsNullOrEmpty(configuredDataPath))
+                {
+
+                    string dataPath;
+                    if (string.IsNullOrWhiteSpace(configuredDataPath))
+                    {
+                        // fallback to ContentRootPath/SharedData/Data
+                        dataPath = Path.Combine(env.ContentRootPath, "SharedData", "Data");
+                    }
+                    else
+                    {
+                        // Nếu là đường dẫn tương đối, kết hợp với ContentRootPath
+                        dataPath = Path.IsPathRooted(configuredDataPath) ? configuredDataPath : Path.GetFullPath(Path.Combine(env.ContentRootPath, configuredDataPath));
+                    }
+
+                    // Kiểm tra và tạo thư mục nếu chưa tồn tại
+                    if (!Directory.Exists(dataPath))
+                    {
+                        Directory.CreateDirectory(dataPath);
+                    }
+
+                    app.UseStaticFiles(new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(dataPath),
+                        RequestPath = "/Data",
+                        OnPrepareResponse = ctx =>
+                        {
+                            ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800 * 58}");
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Ghi log nhưng tiếp tục; không làm ứng dụng lỗi khi ánh xạ thất bại
+                Serilog.Log.Error(ex, "Failed to configure shared Data static file mapping");
+            }
 
             app.UseStaticFiles(new StaticFileOptions
             {
