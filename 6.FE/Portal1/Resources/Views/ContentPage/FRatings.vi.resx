@@ -189,4 +189,40 @@
   <data name="SustainabilityLevel" xml:space="preserve">
     <value>Chuẩn mực áp dụng</value>
   </data>
+
+  <!-- Chart and filter resource strings for FRatings -->
+  <data name="ChartLong_Title" xml:space="preserve">
+    <value>Xếp hạng dài hạn</value>
+  </data>
+  <data name="ChartShort_Title" xml:space="preserve">
+    <value>Xếp hạng ngắn hạn</value>
+  </data>
+  <data name="Filter_SelectDefault" xml:space="preserve">
+    <value>Loại xếp hạng</value>
+  </data>
+  <data name="Filter_TypeIssuer" xml:space="preserve">
+    <value>Tổ chức phát hành</value>
+  </data>
+  <data name="Filter_TypeDebtInstrument" xml:space="preserve">
+    <value>Công cụ nợ</value>
+  </data>
+  <data name="StartDate_Placeholder" xml:space="preserve">
+    <value>Ngày bắt đầu</value>
+  </data>
+  <data name="EndDate_Placeholder" xml:space="preserve">
+    <value>Ngày kết thúc</value>
+  </data>
+  <data name="Img_Alt_Long" xml:space="preserve">
+    <value>biểu đồ dài hạn</value>
+  </data>
+  <data name="Img_Alt_Short" xml:space="preserve">
+    <value>biểu đồ ngắn hạn</value>
+  </data>
+  <data name="Legend_Issuer" xml:space="preserve">
+    <value>Xếp hạng Tổ chức phát hành</value>
+  </data>
+  <data name="Legend_DebtInstrument" xml:space="preserve">
+    <value>Xếp hạng Công cụ nợ</value>
+  </data>
+
 </root>

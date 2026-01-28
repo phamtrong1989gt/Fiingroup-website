@@ -11,781 +11,803 @@
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     //var listLinkRefe = await _iContentPageReferenceRepository.SearchAsync(true, 0, 0, x => x.ContentPageId == Model.Id);
     var portalId = _baseSettings.Value.PortalId;
+    string cname = Context.Request.Query["cname"].ToString();
 }
+<style>
+    /* Trạng thái hoạt động và Status */
+    .news-tab.active,
+    .value.status {
+        background: #e1f4fd;
+    }
 
-<section id="CompanyOverview" class="pt-5">
-    <style>
-        /* Trạng thái hoạt động và Status */
-        .news-tab.active,
-        .value.status {
-            background: #e1f4fd;
+    /* Company Overview Section */
+    #CompanyOverview {
+        padding: 60px 0;
+        color: #093461;
+    }
+
+    .company-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 60px;
+        align-items: start;
+    }
+
+    .company-title {
+        font-size: 40px;
+        font-weight: 700;
+        color: #093461;
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .company-desc {
+        font-size: 16px;
+        line-height: 1.7;
+        color: #093461;
+        margin-bottom: 25px;
+    }
+
+    .company-info-box {
+        border: 1px solid transparent;
+        border-radius: 12px;
+        padding: 25px 30px;
+        background-image: linear-gradient(#fff, #fff), linear-gradient(to right, #0018a8, #166bf2, #3b7eee);
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        margin-bottom: 18px;
+    }
+
+    .info-item {
+        flex: 1;
+    }
+
+    #CompanyOverview .label {
+        font-size: 14px;
+        margin-bottom: 7px;
+        font-weight: 700;
+    }
+
+    #CompanyOverview .value {
+        font-size: 15px;
+        font-weight: 600;
+        color: #06c;
+    }
+
+    .value.highlight {
+        color: #034ea2;
+        font-size: 18px;
+    }
+
+    .value.status {
+        padding: 3px 15px;
+        border-radius: 20px;
+        display: inline-block;
+        font-weight: unset !important;
+    }
+
+    .value.date {
+        color: #06c;
+        text-decoration: underline;
+    }
+
+    /* News Section */
+    .news-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #093461;
+        margin-bottom: 15px;
+    }
+
+    .news-tab {
+        color: #034ea2;
+        font-weight: 600;
+        border: none;
+        padding: 8px 32px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        font-size: 16px;
+    }
+
+    .news-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .news-item {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+        .news-item:not(:first-child) {
+            border-top: 1px solid #ccc;
+            padding: 20px 0;
         }
 
-        /* Company Overview Section */
-        #CompanyOverview {
-            padding: 60px 0;
-            color: #093461;
-        }
+    .news-thumb {
+        width: 140px;
+        height: 75px;
+        border-radius: 6px;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
 
-        .company-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 60px;
-            align-items: start;
-        }
+    .news-text {
+        font-size: 15px;
+        line-height: 1.4;
+        color: #093461;
+        font-weight: 500;
+    }
 
-        .company-title {
-            font-size: 40px;
-            font-weight: 700;
-            color: #093461;
-            margin-bottom: 15px;
-            line-height: 1.3;
-        }
+    .ranking-block {
+        margin-bottom: 40px;
+    }
 
-        .company-desc {
-            font-size: 16px;
-            line-height: 1.7;
-            color: #093461;
-            margin-bottom: 25px;
-        }
+    .ranking-title {
+        font-size: 26px;
+        font-weight: 700;
+        color: #093461;
+        margin-bottom: 20px;
+    }
 
-        .company-info-box {
-            border: 1px solid transparent;
-            border-radius: 12px;
-            padding: 25px 30px;
-            background-image: linear-gradient(#fff, #fff), linear-gradient(to right, #0018a8, #166bf2, #3b7eee);
-            background-origin: border-box;
-            background-clip: padding-box, border-box;
-        }
+    .ranking-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 30px;
-            margin-bottom: 18px;
-        }
-
-        .info-item {
-            flex: 1;
-        }
-
-        #CompanyOverview .label {
+        .ranking-table th,
+        .ranking-table td {
             font-size: 14px;
-            margin-bottom: 7px;
-            font-weight: 700;
+            border-bottom: 1px solid #e1e8f5;
+            padding: 8px 12px;
+            text-align: left;
         }
 
-        #CompanyOverview .value {
-            font-size: 15px;
-            font-weight: 600;
-            color: #06c;
-        }
-
-        .value.highlight {
-            color: #034ea2;
-            font-size: 18px;
-        }
-
-        .value.status {
-            padding: 3px 15px;
-            border-radius: 20px;
-            display: inline-block;
-            font-weight: unset !important;
-        }
-
-        .value.date {
-            color: #06c;
-            text-decoration: underline;
-        }
-
-        /* News Section */
-        .news-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #093461;
-            margin-bottom: 15px;
-        }
-
-        .news-tab {
+        .ranking-table th {
+            padding: 15px 10px;
             color: #034ea2;
             font-weight: 600;
-            border: none;
-            padding: 8px 32px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            font-size: 16px;
+            background: #f7f8f9;
         }
 
-        .news-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .news-item {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-            .news-item:not(:first-child) {
-                border-top: 1px solid #ccc;
-                padding: 20px 0;
-            }
-
-        .news-thumb {
-            width: 140px;
-            height: 75px;
-            border-radius: 6px;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-
-        .news-text {
-            font-size: 15px;
-            line-height: 1.4;
-            color: #093461;
-            font-weight: 500;
-        }
-
-        /* Ranking Section */
-        .ranking-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 50px;
-            align-items: start;
-        }
-
-        .ranking-block {
-            margin-bottom: 40px;
-        }
-
-        .ranking-title {
-            font-size: 26px;
+        .ranking-table td.rank {
+            color: #034ea2;
             font-weight: 700;
-            color: #093461;
-            margin-bottom: 20px;
         }
 
-        .ranking-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 10px;
-            overflow: hidden;
+    .status {
+        background: #e1f4fd;
+        color: #06c;
+        padding: 5px 12px;
+        border-radius: 20px;
+    }
+
+    /* Language Switch */
+    .language-switch {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        color: #1a1a1a;
+    }
+
+    .lang-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+        .lang-option input[type="radio"] {
+            display: none;
         }
 
-            .ranking-table th,
-            .ranking-table td {
-                font-size: 14px;
-                border-bottom: 1px solid #e1e8f5;
-                padding: 8px 12px;
-                text-align: left;
-            }
-
-            .ranking-table th {
-                padding: 15px 10px;
-                color: #034ea2;
-                font-weight: 600;
-                background: #f7f8f9;
-            }
-
-            .ranking-table td.rank {
-                color: #034ea2;
-                font-weight: 700;
-            }
-
-        .status {
-            background: #e1f4fd;
-            color: #06c;
-            padding: 5px 12px;
-            border-radius: 20px;
+        .lang-option .radio {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #034ea2, #53dfff);
+            padding: 1px;
+            transition: 0.3s;
         }
 
-        /* Language Switch */
-        .language-switch {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            color: #1a1a1a;
-        }
-
-        .lang-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-            .lang-option input[type="radio"] {
-                display: none;
-            }
-
-            .lang-option .radio {
-                width: 16px;
-                height: 16px;
-                position: relative;
-                border-radius: 50%;
-                background: linear-gradient(135deg, #034ea2, #53dfff);
-                padding: 1px;
-                transition: 0.3s;
-            }
-
-                .lang-option .radio::before {
-                    content: "";
-                    position: absolute;
-                    inset: 1px;
-                    background: #fff;
-                    border-radius: 50%;
-                }
-
-            .lang-option input[type="radio"]:checked + .radio::after {
+            .lang-option .radio::before {
                 content: "";
                 position: absolute;
-                top: 3.5px;
-                left: 3px;
-                width: 10px;
-                height: 10px;
+                inset: 1px;
+                background: #fff;
                 border-radius: 50%;
-                background: linear-gradient(135deg, #034ea2, #53dfff);
-                box-shadow: 0 0 5px rgba(83, 223, 255, 0.6);
-                transition: 0.2s;
             }
 
-            .lang-option:hover .radio {
-                box-shadow: 0 0 5px rgba(83, 223, 255, 0.5);
+        .lang-option input[type="radio"]:checked + .radio::after {
+            content: "";
+            position: absolute;
+            top: 3.5px;
+            left: 3px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #034ea2, #53dfff);
+            box-shadow: 0 0 5px rgba(83, 223, 255, 0.6);
+            transition: 0.2s;
+        }
+
+        .lang-option:hover .radio {
+            box-shadow: 0 0 5px rgba(83, 223, 255, 0.5);
+        }
+
+    /* Buttons */
+    .btn-download {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #2e90fa !important;
+        border-left: 1px solid #e1f4fd;
+        font-size: 14px;
+    }
+
+        .btn-download:hover {
+            background: rgba(0, 123, 255, 0);
+            border-radius: 5px;
+            color: #000;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+    /* Charts Section */
+    #RatingCharts {
+        background: #fff;
+        color: #093461;
+    }
+
+    .chart-box {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px 25px;
+    }
+
+    .chart-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .chart-filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .filter-date,
+    .filter-select {
+        border: 1px solid #d5e4ff;
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 14px;
+        color: #093461;
+        outline: 0;
+        width: 50%;
+    }
+
+        .filter-date:focus,
+        .filter-select:focus {
+            border-color: #06c;
+        }
+
+    .chart-legend {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #093461;
+        flex-wrap: wrap;
+    }
+
+    .legend-square {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+        .legend-square.blue {
+            background-color: #06c;
+        }
+
+        .legend-square.dark {
+            background-color: #002d72;
+        }
+
+    /* Skeleton Loading */
+    .skeleton,
+    .skeleton-text {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s ease-in-out infinite;
+    }
+
+    .skeleton-text {
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    @@keyframes skeleton-loading {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    /* Modal Section */
+    .rating-info-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s;
+    }
+
+    .rating-info-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 0;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 900px;
+        max-height: 60vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        animation: slideDown 0.3s;
+    }
+
+    .rating-info-header {
+        background: linear-gradient(135deg, #034ea2, #53dfff);
+        color: #fff;
+        padding: 20px;
+        border-radius: 8px 8px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .rating-info-close {
+        color: #fff;
+        font-size: 28px;
+        font-weight: 700;
+        cursor: pointer;
+        background: none;
+        border: none;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.3s;
+    }
+
+        .rating-info-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+    /* Utilities & Animations */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes slideDown {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .highlight-update {
+        animation: highlightPulse 1s ease-in-out;
+    }
+
+    @@keyframes highlightPulse {
+        0%, 100% {
+            background-color: transparent;
+        }
+
+        50% {
+            background-color: #fffacd;
+        }
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .btn-filter {
+            display: flex !important;
+        }
+
+        .custom-dropdown-select,
+        .refresh {
+            display: none;
+        }
+
+            .custom-dropdown-select.show,
+            .refresh.show {
+                display: block !important;
             }
+    }
 
-        /* Buttons */
-        .btn-download {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            color: #2e90fa !important;
-            border-left: 1px solid #e1f4fd;
-            font-size: 14px;
+    .icon-info {
+        color: #66b7f1;
+        cursor: pointer
+    }
+
+        .icon-info i:hover {
+            color: #154a8c
         }
 
-            .btn-download:hover {
-                background: rgba(0, 123, 255, 0);
-                border-radius: 5px;
-                color: #000;
-                box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-            }
-
-        /* Charts Section */
-        #RatingCharts {
-            background: #fff;
-            color: #093461;
+        .icon-info i[title] {
+            pointer-events: none
         }
 
-        .rating-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-
-        .chart-box {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px 25px;
-        }
-
-        .chart-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .chart-filters {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .filter-date,
-        .filter-select {
-            border: 1px solid #d5e4ff;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 14px;
-            color: #093461;
-            outline: 0;
-            width: 50%;
-        }
-
-            .filter-date:focus,
-            .filter-select:focus {
-                border-color: #06c;
-            }
-
-        .chart-legend {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 10px;
-            font-size: 14px;
-            color: #093461;
-            flex-wrap: wrap;
-        }
-
-        .legend-square {
-            width: 14px;
-            height: 14px;
+        .icon-info i[data-tooltip]:hover:after {
+            content: attr(data-tooltip);
+            position: absolute;
+            background-color: #6294c9;
+            color: #fff;
+            padding: 5px 12px;
             border-radius: 3px;
-            display: inline-block;
-            margin-right: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+            top: 50px;
+            font-family: Arial,"Times New Roman",Roboto,Segoe UI,sans-serif !important
         }
 
-            .legend-square.blue {
-                background-color: #06c;
-            }
+    .rating-info-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        animation: fadeIn 0.3s;
+    }
 
-            .legend-square.dark {
-                background-color: #002d72;
-            }
+    .rating-info-content {
+        background-color: #fff;
+        margin: 5% auto;
+        padding: 0;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 900px;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        animation: slideDown 0.3s;
+    }
 
-        /* Skeleton Loading */
-        .skeleton,
-        .skeleton-text {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: skeleton-loading 1.5s ease-in-out infinite;
+    .rating-info-header {
+        background: linear-gradient(135deg, #034ea2, #53dfff);
+        color: white;
+        padding: 20px;
+        border-radius: 8px 8px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+        .rating-info-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
         }
 
-        .skeleton-text {
-            border-radius: 4px;
-            display: inline-block;
-        }
+    .rating-header-info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
 
-        @@keyframes skeleton-loading {
-            0% {
-                background-position: 200% 0;
-            }
+    .rating-current-score {
+        background: rgba(255,255,255,0.2);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 20px;
+        font-weight: bold;
+    }
 
-            100% {
-                background-position: -200% 0;
-            }
-        }
+    .rating-info-close {
+        color: white;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        line-height: 1;
+        background: none;
+        border: none;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.3s;
+    }
 
-        /* Modal Section */
-        .rating-info-modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.3s;
-        }
-
-        .rating-info-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 0;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 900px;
-            max-height: 60vh;
-            overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            animation: slideDown 0.3s;
-        }
-
-        .rating-info-header {
-            background: linear-gradient(135deg, #034ea2, #53dfff);
-            color: #fff;
-            padding: 20px;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .rating-info-close {
-            color: #fff;
-            font-size: 28px;
-            font-weight: 700;
-            cursor: pointer;
-            background: none;
-            border: none;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.3s;
-        }
-
-            .rating-info-close:hover {
-                background: rgba(255, 255, 255, 0.2);
-            }
-
-        /* Utilities & Animations */
-        @@keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @@keyframes slideDown {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .highlight-update {
-            animation: highlightPulse 1s ease-in-out;
-        }
-
-        @@keyframes highlightPulse {
-            0%, 100% {
-                background-color: transparent;
-            }
-
-            50% {
-                background-color: #fffacd;
-            }
-        }
-
-        /* Responsive */
-        @@media (max-width: 768px) {
-            .btn-filter {
-                display: flex !important;
-            }
-
-            .custom-dropdown-select,
-            .refresh {
-                display: none;
-            }
-
-                .custom-dropdown-select.show,
-                .refresh.show {
-                    display: block !important;
-                }
-        }
-
-        .icon-info {
-            color: #66b7f1;
-            cursor: pointer
-        }
-
-            .icon-info i:hover {
-                color: #154a8c
-            }
-
-            .icon-info i[title] {
-                pointer-events: none
-            }
-
-            .icon-info i[data-tooltip]:hover:after {
-                content: attr(data-tooltip);
-                position: absolute;
-                background-color: #6294c9;
-                color: #fff;
-                padding: 5px 12px;
-                border-radius: 3px;
-                font-size: 12px;
-                white-space: nowrap;
-                z-index: 1000;
-                top: 50px;
-                font-family: Arial,"Times New Roman",Roboto,Segoe UI,sans-serif !important
-            }
-
-        .rating-info-modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            animation: fadeIn 0.3s;
-        }
-
-        .rating-info-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 0;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 900px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            animation: slideDown 0.3s;
-        }
-
-        .rating-info-header {
-            background: linear-gradient(135deg, #034ea2, #53dfff);
-            color: white;
-            padding: 20px;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-            .rating-info-header h3 {
-                margin: 0;
-                font-size: 18px;
-                font-weight: 600;
-            }
-
-        .rating-header-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .rating-current-score {
+        .rating-info-close:hover {
             background: rgba(255,255,255,0.2);
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 20px;
-            font-weight: bold;
         }
 
-        .rating-info-close {
-            color: white;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            line-height: 1;
-            background: none;
-            border: none;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.3s;
-        }
+    .rating-info-body {
+        padding: 20px;
+    }
 
-            .rating-info-close:hover {
-                background: rgba(255,255,255,0.2);
-            }
+</style>
 
-        .rating-info-body {
-            padding: 20px;
-        }
-
-    </style>
+<section id="CompanyOverview" class="pt-5">
     <div class="container">
-        <div class="company-grid  d-none">
-            <!-- CỘT TRÁI -->
-            <div class="company-left">
-                <h2 class="company-title" id="detail_IssuingOrganization">
-                    <span class="skeleton-text" style="display:inline-block;width:300px;height:40px;"></span>
-                </h2>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="company-left">
+                    <h2 class="company-title" id="detail_IssuingOrganization">
+                        <span class="skeleton-text" style="display:inline-block;width:300px;height:40px;"></span>
+                    </h2>
 
-                <div class="company-info-box">
-                    <div class="info-row">
-                        <div class="info-item">
-                            <p class="label">@Localizer["StatusRating"]</p>
-                            <p class="value" id="detail_OpinionType">
-                                <span class="skeleton-text" style="display:inline-block;width:120px;height:20px;"></span>
-                            </p>
+                    <div class="company-info-box d-none">
+                        <div class="info-row">
+                            <div class="info-item">
+                                <p class="label">@Localizer["StatusRating"]</p>
+                                <p class="value" id="detail_OpinionType">
+                                    <span class="skeleton-text" style="display:inline-block;width:120px;height:20px;"></span>
+                                </p>
+                            </div>
+                            <div class="info-item">
+                                <p class="label">@Localizer["RatingScore"]</p>
+                                <p class="value" id="detail_RatingScore">
+                                    <span class="skeleton-text" style="display:inline-block;width:80px;height:20px;"></span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="info-item">
-                            <p class="label">@Localizer["RatingScore"]</p>
-                            <p class="value" id="detail_RatingScore">
-                                <span class="skeleton-text" style="display:inline-block;width:80px;height:20px;"></span>
-                            </p>
+
+                        <div class="info-row">
+                            <div class="info-item">
+                                <p class="label">@Localizer["Industry"]</p>
+                                <p class="value" id="detail_Industry">
+                                    <span class="skeleton-text" style="display:inline-block;width:150px;height:20px;"></span>
+                                </p>
+                            </div>
+
+                            <div class="info-item">
+                                <p class="label">@Localizer["Outlook"]</p>
+                                <p class="value status" id="detail_Rating">
+                                    <span class="skeleton-text" style="display:inline-block;width:100px;height:20px;"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-item">
+                                <p class="label">@Localizer["OpinionType"]</p>
+                                <p class="value" id="detail_OpinionType_lyk">
+                                    <span class="skeleton-text" style="display:inline-block;width:140px;height:20px;"></span>
+                                </p>
+                            </div>
+                            <div class="info-item">
+                                <p class="label">@Localizer["PublicationDate"]</p>
+                                <p class="value" id="detail_PublicationDate">
+                                    <span class="skeleton-text" style="display:inline-block;width:100px;height:20px;"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-item mb-0">
+                                <p class="label">@Localizer["BondCode"]</p>
+                                <p class="value" id="detail_BondCode">
+                                    <span class="skeleton-text" style="display:inline-block;width:140px;height:20px;"></span>
+                                </p>
+                            </div>
+                            <div class="info-item">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ranking-grid mt-5">
+                    <!-- CỘT TRÁI -->
+                    <div class="ranking-left">
+                        <!-- Xếp hạng tổ chức phát hành -->
+                        <div class="ranking-block">
+                            <h2 class="ranking-title">@Localizer["RankingOfIssuingOrganizations"]</h2>
+                            <div class="table-responsive">
+                                <table class="ranking-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 189px;">@Localizer["OpinionType"]</th>
+                                            <th>@Localizer["PublicationDate"]</th>
+                                            <th>@Localizer["RatingScore"]</th>
+                                            <th>@Localizer["Outlook"]</th>
+                                            <th>@Localizer["Report"]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bindTTPH"></tbody>
+                                </table>
+                            </div>
+                         
+
+                        </div>
+
+                        <!-- Xếp hạng công cụ nợ -->
+                        <div class="ranking-block">
+                            <h2 class="ranking-title">@Localizer["RankingOfDebtInstruments"]</h2>
+                            <div class="table-responsive">
+                                <table class="ranking-table">
+                                    <thead>
+                                        <tr>
+                                            <th>@Localizer["BondCode"]</th>
+                                            <th>@Localizer["OpinionType"]</th>
+                                            <th>@Localizer["PublicationDate"]</th>
+                                            <th>@Localizer["RatingScore"]</th>
+                                            <th>@Localizer["Report"]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bindTTPHDebit">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Xác nhận tài chính bền vững -->
+                        <div class="ranking-block">
+                            <h2 class="ranking-title">@Localizer["SustainableFinanceConfirmation"]</h2>
+                            <div class="table-responsive">
+                                <table class="ranking-table">
+                                    <thead>
+                                        <tr>
+                                            <th>@Localizer["OpinionType"]</th>
+                                            <th>@Localizer["PublicationDate"]</th>
+                                            <th>@Localizer["SustainabilityLevel"]</th>
+                                            <th>@Localizer["Report"]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bindSustainableFinance"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="info-row">
-                        <div class="info-item">
-                            <p class="label">@Localizer["Industry"]</p>
-                            <p class="value" id="detail_Industry">
-                                <span class="skeleton-text" style="display:inline-block;width:150px;height:20px;"></span>
-                            </p>
-                        </div>
+                </div>
 
-                        <div class="info-item">
-                            <p class="label">@Localizer["Outlook"]</p>
-                            <p class="value status" id="detail_Rating">
-                                <span class="skeleton-text" style="display:inline-block;width:100px;height:20px;"></span>
-                            </p>
+                <div class="rating-grid mt-5 mb-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Xếp hạng dài hạn -->
+                            <div class="chart-box">
+                                <h3 class="chart-title">@Localizer["ChartLong_Title"]</h3>
+
+                                <div class="chart-filters">
+                                    <select class="filter-select">
+                                        <option>@Localizer["Filter_SelectDefault"]</option>
+                                        <option value="1">@Localizer["Filter_TypeIssuer"]</option>
+                                        <option value="2">@Localizer["Filter_TypeDebtInstrument"]</option>
+                                    </select>
+                                    <input type="text" name="dhStartDate" class="dhStartDate form-control form-control-sm" placeholder="@Localizer["StartDate_Placeholder"]">
+                                    <input type="text" name="dhEndDate" class="dhEndDate form-control form-control-sm" placeholder="@Localizer["EndDate_Placeholder"]">
+                                </div>
+                                <img src="/Data/FR/chart-long.png" class="chart-img d-block w-100" alt="@Localizer["Img_Alt_Long"]">
+                                <!-- <div id="longTermChart"></div> -->
+
+                                <div class="chart-legend">
+                                    <span><i class="legend-square blue"></i> @Localizer["Legend_Issuer"]</span>
+                                    <span><i class="legend-square dark"></i> @Localizer["Legend_DebtInstrument"]</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Xếp hạng ngắn hạn -->
+                            <div class="chart-box">
+                                <h3 class="chart-title">@Localizer["ChartShort_Title"]</h3>
+
+                                <div class="chart-filters">
+                                    <select class="filter-select">
+                                        <option>@Localizer["Filter_SelectDefault"]</option>
+                                        <option value="1">@Localizer["Filter_TypeIssuer"]</option>
+                                        <option value="2">@Localizer["Filter_TypeDebtInstrument"]</option>
+                                    </select>
+                                    <input type="text" name="nhStartDate" class="nhStartDate form-control form-control-sm" placeholder="@Localizer["StartDate_Placeholder"]">
+                                    <input type="text" name="nhEndDate" class="nhEndDate form-control form-control-sm" placeholder="@Localizer["EndDate_Placeholder"]">
+                                </div>
+                                <img src="/Data/FR/chart-short.png" class="chart-img d-block w-100" alt="@Localizer["Img_Alt_Short"]">
+
+                                <!-- <div id="shortTermChart"></div> -->
+
+                                <div class="chart-legend">
+                                    <span><i class="legend-square blue"></i> @Localizer["Legend_Issuer"]</span>
+                                    <span><i class="legend-square dark"></i> @Localizer["Legend_DebtInstrument"]</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="info-row">
-                        <div class="info-item">
-                            <p class="label">@Localizer["OpinionType"]</p>
-                            <p class="value" id="detail_OpinionType_lyk">
-                                <span class="skeleton-text" style="display:inline-block;width:140px;height:20px;"></span>
-                            </p>
-                        </div>
-                        <div class="info-item">
-                            <p class="label">@Localizer["PublicationDate"]</p>
-                            <p class="value" id="detail_PublicationDate">
-                                <span class="skeleton-text" style="display:inline-block;width:100px;height:20px;"></span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="info-row">
-                        <div class="info-item mb-0">
-                            <p class="label">@Localizer["BondCode"]</p>
-                            <p class="value" id="detail_BondCode">
-                                <span class="skeleton-text" style="display:inline-block;width:140px;height:20px;"></span>
-                            </p>
-                        </div>
-                        <div class="info-item">
-                        </div>
-                    </div>
                 </div>
             </div>
-            <div id="topNewsContainer">
-            </div>
-        </div>
-    </div>
-</section>
-<section id="RankingSection" class="pb-5">
-    <style>
-
-    </style>
-
-    <div class="container ranking-grid">
-        <!-- CỘT TRÁI -->
-        <div class="ranking-left">
-            <!-- Xếp hạng tổ chức phát hành -->
-            <div class="ranking-block">
-                <h2 class="ranking-title">@Localizer["RankingOfIssuingOrganizations"]</h2>
-                <table class="ranking-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 189px;">@Localizer["OpinionType"]</th>
-                            <th>@Localizer["PublicationDate"]</th>
-                            <th>@Localizer["RatingScore"]</th>
-                            <th>@Localizer["Outlook"]</th>
-                            <th>@Localizer["Report"]</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bindTTPH"></tbody>
-                </table>
-            </div>
-
-            <!-- Xếp hạng công cụ nợ -->
-            <div class="ranking-block">
-                <h2 class="ranking-title">@Localizer["RankingOfDebtInstruments"]</h2>
-                <table class="ranking-table">
-                    <thead>
-                        <tr>
-                            <th>@Localizer["BondCode"]</th>
-                            <th>@Localizer["OpinionType"]</th>
-                            <th>@Localizer["PublicationDate"]</th>
-                            <th>@Localizer["RatingScore"]</th>
-                            <th>@Localizer["Report"]</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bindTTPHDebit">
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Xác nhận tài chính bền vững -->
-            <div class="ranking-block">
-                <h2 class="ranking-title">@Localizer["SustainableFinanceConfirmation"]</h2>
-                <table class="ranking-table">
-                    <thead>
-                        <tr>
-                            <th>@Localizer["OpinionType"]</th>
-                            <th>@Localizer["PublicationDate"]</th>
-                            <th>@Localizer["SustainabilityLevel"]</th>
-                            <th>@Localizer["Report"]</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bindSustainableFinance"></tbody>
-                </table>
-            </div>
-        </div>
-        <div id="topNewsContainer1"></div>
-    </div>
-</section>
-<section id="RatingCharts" class="py-5">
-    <style>
-
-    </style>
-    <div class="container">
-        <div class="rating-grid">
-            <!-- Xếp hạng dài hạn -->
-            <div class="chart-box">
-                <h3 class="chart-title">Xếp hạng dài hạn</h3>
-
-                <div class="chart-filters">
-                    <select class="filter-select">
-                        <option>Loại xếp hạng</option>
-                        <option>Tổ chức phát hành</option>
-                        <option>Công cụ nợ</option>
-                    </select>
-                    <input type="date" class="filter-date">
-                </div>
-                <img src="/Data/FR/chart-long.png" class="chart-img d-block w-100" alt="chart-long">
-                <!-- <div id="longTermChart"></div> -->
-
-                <div class="chart-legend">
-                    <span><i class="legend-square blue"></i> Xếp hạng Tổ chức phát hành</span>
-                    <span><i class="legend-square dark"></i> Xếp hạng Công cụ nợ</span>
-                </div>
-            </div>
-
-            <!-- Xếp hạng ngắn hạn -->
-            <div class="chart-box">
-                <h3 class="chart-title">Xếp hạng ngắn hạn</h3>
-
-                <div class="chart-filters">
-                    <select class="filter-select">
-                        <option>Loại xếp hạng</option>
-                        <option>Tổ chức phát hành</option>
-                        <option>Công cụ nợ</option>
-                    </select>
-                    <input type="date" class="filter-date">
-                </div>
-                <img src="/Data/FR/chart-short.png" class="chart-img d-block w-100" alt="chart-short">
-
-                <!-- <div id="shortTermChart"></div> -->
-
-                <div class="chart-legend">
-                    <span><i class="legend-square blue"></i> Xếp hạng Tổ chức phát hành</span>
-                    <span><i class="legend-square dark"></i> Xếp hạng Công cụ nợ</span>
-                </div>
+            <div class="col-md-4">
+                <div id="topNewsContainer"></div>
+                <div id="topNewsContainer1"></div>
             </div>
         </div>
     </div>
 </section>
 
 @await Component.InvokeAsync("ViewModule", new { type = ModuleType.StaticInformation, code = "FRAboutUsLienHe", language = language, portalId = portalId })
-
-
+<script src="~/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<link href="~/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+<script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.en-au.min.js"></script>
+<script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js"></script>
 <script>
-        function showRatingInfoPopup(element) {
+    $(function(){
+            var lang = '@language';
+            $('.dhStartDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true
+            });
+
+            $('.dhEndDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true
+            });
+
+            $('.nhStartDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true
+            });
+
+            $('.nhEndDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true
+            });
+    });
+    function showRatingInfoPopup(element) {
         var rating = $(element).data('rating');
         var issuer = $(element).data('issuer');
         // Update modal header with company name and rating
@@ -816,20 +838,20 @@
             }
         });
     }
-
+     $(".company-title").html('@cname');
     // ============================================
     // BIND DETAIL DATA TO COMPANY INFO BOX
     // ============================================
     window.bindDetail = function(data) {
         try {
             if (!data) {
-                console.warn('[bindDetail] No data provided');
-                $(".company-grid").addClass('d-none');
+                $(".company-info-box").addClass('d-none');
+                $(".company-title").html('@cname');
                 return;
             }
             else
             {
-                $(".company-grid").removeClass('d-none');
+                $(".company-info-box").removeClass('d-none');
             }
 
             // Map fields to DOM elements
