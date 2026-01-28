@@ -1,4 +1,5 @@
 ﻿@using Microsoft.Extensions.Options
+@using PT.Shared
 @inject PT.Infrastructure.Interfaces.IContactRepository _iContactRepository;
 @inject IOptions<BaseSettings> _baseSettings;
 @inject IViewLocalizer Localizer;
@@ -11,67 +12,19 @@
     @inject PT.Infrastructure.Interfaces.IContentPageRepository _iContentPageRepository;
     var dlLanguage = listLanguage.FirstOrDefault(x => x.Id == language);
     var portalId = _baseSettings.Value.PortalId;
+
+    
     
     // ============================================
-    // HARDCODED SECTOR EXPERTISE LIST
+    // HARDCODED SECTOR EXPERTISE LIST (REPLACED BY FUNCTIONS)
     // ============================================
-    var sectorExpertiseList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
-    
-    if (language == "vi")
-    {
-        sectorExpertiseList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
-        {
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "1", Text = "Ngân hàng/Dịch vụ Tài chính" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "2", Text = "Chứng khoán" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "3", Text = "Quản lý Quỹ" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "4", Text = "Doanh nghiệp FDI" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "5", Text = "Tập đoàn lớn" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "6", Text = "Tư vấn/Kiểm toán" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "7", Text = "Pháp lý" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "8", Text = "Giáo dục và Nghiên cứu" }
-        };
-    }
-    else // English
-    {
-        sectorExpertiseList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
-        {
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "1", Text = "Banking/Financial Services" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "2", Text = "Securities" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "3", Text = "Fund Management" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "4", Text = "FDI Enterprises" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "5", Text = "Large Corporations" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "6", Text = "Consulting & Audit" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "7", Text = "Legal Services" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "8", Text = "Education & Research" }
-        };
-    }
-    
-    // ============================================
-    // HARDCODED PRODUCTS & SERVICES LIST
-    // ============================================
-    var productsServicesList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
-    
-    if (language == "vi")
-    {
-        productsServicesList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
-        {
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "1", Text = "Xếp hạng tín nhiệm Tổ chức phát hành" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "2", Text = "Xếp hạng tín nhiệm Công cụ nợ" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "3", Text = "Dịch vụ cho Nhà đầu tư" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "4", Text = "Dịch vụ Tài chính bền vững" }
-        };
-    }
-    else // English
-    {
-        productsServicesList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>
-        {
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "1", Text = "Issuer Credit Rating" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "2", Text = "Issue Credit Rating" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "3", Text = "Investor Services" },
-            new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = "4", Text = "Sustainable Finance" }
-        };
-    }
-}
+    // Use Functions to get data lists (DataItem) then map to SelectListItem for asp-items
+    var sectorExpertiseData = PT.Shared.Functions.GetSectorExpertiseList(language);
+    var sectorExpertiseList = sectorExpertiseData.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = x.Id.ToString(), Text = x.Text }).ToList();
+
+   var productsServicesData = PT.Shared.Functions.GetProductsServicesList(language);
+   var productsServicesList = productsServicesData.Select(x => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem { Value = x.Id.ToString(), Text = x.Text }).ToList();
+ }
 <style>
 
 </style>

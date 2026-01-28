@@ -11,9 +11,73 @@ using System.Text.RegularExpressions;
 
 namespace PT.Shared
 {
+    public class DataItem
+    {
+        public int Id { get; set; }
+        public string Text { get; set; }
+    }   
 
     public class Functions
     {
+        /// <summary>
+        /// Returns a list of sector expertise items based on language (`"vi"` for Vietnamese, otherwise English).
+        /// Uses `DataItem` model (Id, Text).
+        /// </summary>
+        public static List<DataItem> GetSectorExpertiseList(string language)
+        {
+            if (string.Equals(language, "vi", StringComparison.OrdinalIgnoreCase))
+            {
+                return new List<DataItem>
+                {
+                    new DataItem { Id = 1, Text = "Ngân hàng/Dịch vụ Tài chính" },
+                    new DataItem { Id = 2, Text = "Chứng khoán" },
+                    new DataItem { Id = 3, Text = "Quản lý Quỹ" },
+                    new DataItem { Id = 4, Text = "Doanh nghiệp FDI" },
+                    new DataItem { Id = 5, Text = "Tập đoàn lớn" },
+                    new DataItem { Id = 6, Text = "Tư vấn/Kiểm toán" },
+                    new DataItem { Id = 7, Text = "Pháp lý" },
+                    new DataItem { Id = 8, Text = "Giáo dục và Nghiên cứu" }
+                };
+            }
+
+            return new List<DataItem>
+            {
+                new DataItem { Id = 1, Text = "Banking/Financial Services" },
+                new DataItem { Id = 2, Text = "Securities" },
+                new DataItem { Id = 3, Text = "Fund Management" },
+                new DataItem { Id = 4, Text = "FDI Enterprises" },
+                new DataItem { Id = 5, Text = "Large Corporations" },
+                new DataItem { Id = 6, Text = "Consulting & Audit" },
+                new DataItem { Id = 7, Text = "Legal Services" },
+                new DataItem { Id = 8, Text = "Education & Research" }
+            };
+        }
+
+        /// <summary>
+        /// Returns a list of products & services select items based on language (`"vi"` for Vietnamese, otherwise English).
+        /// </summary>
+        public static List<DataItem> GetProductsServicesList(string language)
+        {
+            if (string.Equals(language, "vi", StringComparison.OrdinalIgnoreCase))
+            {
+                return new List<DataItem>
+                {
+                    new DataItem { Id = 1, Text = "Xếp hạng tín nhiệm Tổ chức phát hành" },
+                    new DataItem { Id = 2, Text = "Xếp hạng tín nhiệm Công cụ nợ" },
+                    new DataItem { Id = 3, Text = "Dịch vụ cho Nhà đầu tư" },
+                    new DataItem { Id = 4, Text = "Dịch vụ Tài chính bền vững" }
+                };
+            }
+
+            return new List<DataItem>
+            {
+                new DataItem { Id = 1, Text = "Issuer Credit Rating" },
+                new DataItem { Id = 2, Text = "Issue Credit Rating" },
+                new DataItem { Id = 3, Text = "Investor Services" },
+                new DataItem { Id = 4, Text = "Sustainable Finance" }
+            };
+        }
+
         /// <summary>
         /// Thiết lập và trả về đường dẫn vật lý và đường dẫn public cho thư mục chia sẻ /Data.
         /// - Nếu <paramref name="configuredDataPath"/> được cung cấp sẽ được ưu tiên. Hỗ trợ đường dẫn tuyệt đối và tương đối (so với webRootPath).
