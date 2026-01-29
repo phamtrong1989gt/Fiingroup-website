@@ -3003,7 +3003,8 @@ $.richFilemanagerPlugin = function(element, pluginOptions)
     var buildConnectorUrl = function (params) {
         var urlLa = "";
 		var defaults = {
-			time: new Date().getTime()
+			time: new Date().getTime(),
+			portalId: (_url_ && typeof _url_.param === 'function' && _url_.param('portalId')) ? _url_.param('portalId') : getUrlParameter('portalId')
 		};
         var queryParams = $.extend({}, params || {}, defaults);
         urlLa = apiConnector + '?' + $.param(queryParams);

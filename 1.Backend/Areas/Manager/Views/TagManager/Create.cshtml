@@ -5,13 +5,13 @@
 	Layout = null;
 
 	string altId = Guid.NewGuid().ToString();
-	string pathUpload = Url.Action("UploadImage", new { altId, type = 1, id = 0 });
+	string pathUpload = Url.Action("UploadImage", new { altId, type = 1, id = 0, portalId = Model.PortalId });
 	var fileUploadSingleBanner = new PT.Domain.Model.PluginFileUploadModel
 	{
 		Extention = _baseSettings.Value.ImagesType + ",.webp",
 		InputName = "Banner",
 		MaxSize = _baseSettings.Value.DocumentsMaxSize,
-		UrlUpload = Url.Action("UploadImage", new { id = Model.Id, altId }),
+		UrlUpload = Url.Action("UploadImage", new { id = Model.Id, altId, portalId = Model.PortalId }),
 		ParentTagName = "file-parent-photos-2",
 		FileDataString = Model.Banner,
 		IsS = true,

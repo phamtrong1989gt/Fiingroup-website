@@ -8,7 +8,7 @@
         Extention = _baseSettings.Value.ImagesType + ",.webp",
         InputName = "Banner",
         MaxSize = _baseSettings.Value.DocumentsMaxSize,
-        UrlUpload = Url.Action("UploadImage", new { id = Model.Id, oldPath = Model.Banner }),
+        UrlUpload = Url.Action("UploadImage", new { id = Model.Id, oldPath = Model.Banner, portalId = Model.PortalId }),
         UrlDelete = Url.Action("DeleteFile"),
         ParentTagName = "file-parent-photos-1",
         FileDataString = Model.Banner,
@@ -243,7 +243,7 @@
 <script>
     paseRelated(@Html.Raw(Model.RelatedString));
     paseReference(@Html.Raw(Model.ReferenceString));
-    initRickText("@Url.Action("UploadImage", new { type = 1, id = Model.Id})");
+    initRickText("@Url.Action("UploadImage", new { type = 1, id = Model.Id, portalId=Model.PortalId })");
     getTreeCategory($("[form-edit] [name='Language']").val(),@(Model.Id),@(Model.PortalId ?? 1));
     $("[name='DatePosted']").toDateTimePicker();
     $("[name='StartDate']").toDateTimePicker();

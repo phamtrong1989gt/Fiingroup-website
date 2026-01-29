@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +7,24 @@ using Microsoft.Extensions.Options;
 using PT.Base;
 using PT.Domain.Model;
 using PT.Shared;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing.Printing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PT.BE.Areas.Base.Controllers
 {
     [Area("Base")]
     public class FileManagerController : Controller
     {
-        private readonly string _webRootPath;
+        private string _webRootPath;
         private readonly string _webPath;
         private readonly List<string> _allowedExtensions;
         private readonly List<string> _allowedPhoteExtensions;
@@ -35,15 +36,19 @@ namespace PT.BE.Areas.Base.Controllers
             // FileManager Content Folder Path (sử dụng thư mụcảo /Data)
             _webPath = "Data";
             // Lấy đường dẫn vật lý từ cấu hình DataPath (nếu có), helper sẽ tạo thư mục nếu cần
-            _webRootPath = baseSettings?.Value?.DataPath;
             _baseSettings = baseSettings.Value;
-            _allowedPhoteExtensions = [".jpg", ".jpe", ".jpeg", ".gif", ".png" , ".webp"];
-            _allowedExtensions = ["jpg", "jpe", "jpeg", "webp", "gif", "png", "svg", "txt", "pdf", "odp", "ods", "odt", "rtf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "csv", "ogv", "avi", "mkv", "mp4", "webm", "m4v", "ogg", "mp3", "wav", "zip", "rar", "md", "xml"];
+            _webRootPath = baseSettings?.Value?.DataPath;
+            _allowedPhoteExtensions = new List<string> { ".jpg", ".jpe", ".jpeg", ".gif", ".png", ".webp" };
+            _allowedExtensions = new List<string> {
+                "jpg", "jpe", "jpeg", "webp", "gif", "png", "svg", "txt", "pdf", "odp", "ods", "odt", "rtf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "csv", "ogv", "avi", "mkv", "mp4", "webm", "m4v", "ogg", "mp3", "wav", "zip", "rar", "md", "xml"
+            };
         }
+
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult Manager()
+        public IActionResult Manager(int portalId)
         {
+            ViewBag.PortalId = portalId;
             return View();
         }
 
@@ -54,8 +59,13 @@ namespace PT.BE.Areas.Base.Controllers
         }
 
         [Authorize]
-        public IActionResult Index(string mode, string path, string name, List<IFormFile> files, string old, string @new, string source, string target, string content, bool thumbnail, int dataSize = 0)
+        public IActionResult Index(string mode, string path, string name, List<IFormFile> files, string old, string @new, string source, string target, string content, bool thumbnail, int dataSize = 0, int portalId = 1)
         {
+            if(portalId == 1)
+            {
+                _webRootPath = _baseSettings.DataPathFR;
+            }    
+
             if (!string.IsNullOrWhiteSpace(path) && path.StartsWith("/"))
                 path = path.Substring(1);
             if (!string.IsNullOrWhiteSpace(@new) && @new.StartsWith("/"))

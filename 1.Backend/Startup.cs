@@ -278,36 +278,60 @@ namespace PT.UI
             // Ánh xạ thư mục vật lý dùng chung cho Data (/Data)
             try
             {
-                // Đọc DataPath từ cấu hình BaseSettings
+                // Đọc DataPath và DataPathFR từ cấu hình BaseSettings
                 var configuredDataPath = Configuration["BaseSettings:DataPath"];
+                var configuredDataPathFR = Configuration["BaseSettings:DataPathFR"];
 
-                string dataPath;
-                if (string.IsNullOrWhiteSpace(configuredDataPath))
-                {
-                    // fallback to ContentRootPath/SharedData/Data
-                    dataPath = Path.Combine(env.ContentRootPath, "SharedData", "Data");
-                }
-                else
-                {
-                    // Nếu là đường dẫn tương đối, kết hợp với ContentRootPath
-                    dataPath = Path.IsPathRooted(configuredDataPath) ? configuredDataPath : Path.GetFullPath(Path.Combine(env.ContentRootPath, configuredDataPath));
-                }
+                // Nếu cả hai cùng tồn tại, ưu tiên DataPath (primary) — đảm bảo provider của DataPath được thêm trước
+                var providers = new List<IFileProvider>();
 
-                // Kiểm tra và tạo thư mục nếu chưa tồn tại
-                if (!Directory.Exists(dataPath))
+                if (!string.IsNullOrEmpty(configuredDataPath))
                 {
-                    Directory.CreateDirectory(dataPath);
-                }
+                    string dataPath = Path.IsPathRooted(configuredDataPath)
+                        ? configuredDataPath
+                        : Path.GetFullPath(Path.Combine(env.ContentRootPath, configuredDataPath));
 
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    FileProvider = new PhysicalFileProvider(dataPath),
-                    RequestPath = "/Data",
-                    OnPrepareResponse = ctx =>
+                    if (!Directory.Exists(dataPath))
                     {
-                        ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800 * 58}");
+                        Directory.CreateDirectory(dataPath);
                     }
-                });
+
+                    // Thêm primary provider trước để ưu tiên
+                    providers.Add(new PhysicalFileProvider(dataPath));
+                    Serilog.Log.Information("Mapped DataPath to physical folder: {0}", dataPath);
+                }
+
+                if (!string.IsNullOrEmpty(configuredDataPathFR))
+                {
+                    string dataPathFr = Path.IsPathRooted(configuredDataPathFR)
+                        ? configuredDataPathFR
+                        : Path.GetFullPath(Path.Combine(env.ContentRootPath, configuredDataPathFR));
+
+                    if (!Directory.Exists(dataPathFr))
+                    {
+                        Directory.CreateDirectory(dataPathFr);
+                    }
+
+                    // Thêm secondary provider sau để chỉ dùng khi file không tồn tại ở DataPath
+                    providers.Add(new PhysicalFileProvider(dataPathFr));
+                    Serilog.Log.Information("Mapped DataPathFR to physical folder: {0}", dataPathFr);
+                }
+
+                if (providers.Any())
+                {
+                    // CompositeFileProvider sẽ tìm file theo thứ tự providers đã thêm — do đó DataPath sẽ được ưu tiên
+                    var composite = new CompositeFileProvider(providers.ToArray());
+
+                    app.UseStaticFiles(new StaticFileOptions
+                    {
+                        FileProvider = composite,
+                        RequestPath = "/Data",
+                        OnPrepareResponse = ctx =>
+                        {
+                            ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={604800 * 58}");
+                        }
+                    });
+                }
             }
             catch (Exception ex)
             {

@@ -150,6 +150,7 @@ namespace PT.Domain.Model
 
         public NewAPISettings NewAPI { get; set; }
         public NewAPISettings RatingAPI { get; set; }
+        public string DataPathFR { get; set; }
     }
 
     public class AsyncNewsSettings

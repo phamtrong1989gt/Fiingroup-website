@@ -638,12 +638,14 @@ namespace PT.BE.Areas.Manager.Controllers
         #region [CreateItem]
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult CreateItem(int menuId = 0)
+        public async Task<IActionResult> CreateItem(int menuId = 0)
         {
             var dl = new MenuItemModel
             {
                 MenuId = menuId
             };
+            var menu = await  _iMenuRepository.SingleOrDefaultAsync(true, x => x.Id == menuId);
+            ViewBag.PortalId = menu?.PortalId ?? 2;
             return View(dl);
         }
         /// <summary>
@@ -744,7 +746,10 @@ namespace PT.BE.Areas.Manager.Controllers
             {
                 var dataLink = await _iLinkRepository.SearchAsync(true, 0, 1, x => x.Id == model.LinkId, null, x=> new Link { Id = x.Id , Name = $"({x.Language}|{x.Type.GetDisplayName()}) / {x.Name}" });
                 model.LinkSelectList = new SelectList(dataLink, "Id", "Name");
-            }    
+            }
+
+            var menu = await _iMenuRepository.SingleOrDefaultAsync(true, x => x.Id == dl.MenuId);
+            ViewBag.PortalId = menu?.PortalId ?? 2;
             return View(model);
         }
         /// <summary>

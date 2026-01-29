@@ -604,13 +604,15 @@ namespace PT.BE.Areas.Manager.Controllers
         /// <param name="bannerId">ID banner cần thêm item.</param>
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult CreateItem2(int bannerId = 0)
+        public async Task<IActionResult> CreateItem2(int bannerId = 0)
         {
             // Khởi tạo model item với bannerId truyền vào
             var dl = new BannerItemModel
             {
                 BannerId = bannerId
             };
+            var banner = await  _iBannerRepository.SingleOrDefaultAsync(true, x => x.Id == bannerId);
+            ViewBag.PortalId = banner?.PortalId ?? 2;
             // Trả về view tạo mới item
             return View(dl);
         }
@@ -704,6 +706,8 @@ namespace PT.BE.Areas.Manager.Controllers
             }
             // Map dữ liệu sang model để hiển thị lên view
             var model = MapModel<BannerItemModel>.Go(dl);
+            var banner = await _iBannerRepository.SingleOrDefaultAsync(true, x => x.Id == dl.BannerId);
+            ViewBag.PortalId = banner?.PortalId ?? 2;
             return View(model);
         }
 

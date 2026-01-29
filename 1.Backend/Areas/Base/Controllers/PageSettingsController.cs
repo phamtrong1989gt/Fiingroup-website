@@ -83,12 +83,16 @@ namespace PT.BE.Areas.Setting.Controllers
         {
             page = page < 0 ? 1 : page;
             limit = (limit > 100 || limit < 10) ? 10 : limit;
+            if(!string.IsNullOrEmpty(key))
+            {
+                key= key.ToLower();
+            }    
             var data = await _iLinkRepository.SearchPagedListAsync(
                 page ?? 1,
                 limit ?? 10,
                     m =>
                         (m.Language == language) &&
-                        (m.Slug.Contains(key) || m.Name.Contains(key) ||  m.Title.Contains(key) || m.Description.Contains(key) || m.Keywords.Contains(key) || m.FocusKeywords.Contains(key) || key == null) &&
+                        (m.Slug.ToLower().Contains(key) || m.Name.ToLower().Contains(key) ||  m.Title.ToLower().Contains(key) || m.Description.ToLower().Contains(key) || m.Keywords.ToLower().Contains(key) || m.FocusKeywords.ToLower().Contains(key) || key == null) &&
                         m.Status &&
                         (m.Type == type || type == null) &&
                         (m.Status == status || status == null) &&

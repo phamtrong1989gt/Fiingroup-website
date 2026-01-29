@@ -1139,11 +1139,10 @@ $.fn.toButtonOpenFile = function () {
     var thisSelector = this.selector;
     $(document).on("click", thisSelector, function (e) {
         e.preventDefault();
-        window.open('/Admin/Base/FileManager/Manager?path=&field_input=' + $(this).attr("data-target") + '&field_img=' + $(this).attr("data-img") + '&langCode=vn', "", "width=1200,height=500");
+        var portalId = $(thisSelector).attr("data-portalId");
+        window.open('/Admin/Base/FileManager/Manager?path=&field_input=' + $(this).attr("data-target") + '&field_img=' + $(this).attr("data-img") + '&langCode=vn' + '&portalId=' + portalId, "", "width=1200,height=500");
     });
 };
-
-
 
 function onCopyClipboard(text) {
     if (window.clipboardData && window.clipboardData.setData) {

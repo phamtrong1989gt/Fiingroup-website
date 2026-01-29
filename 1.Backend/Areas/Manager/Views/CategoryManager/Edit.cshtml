@@ -8,7 +8,7 @@
         Extention = _baseSettings.Value.ImagesType + ",.webp",
         InputName = "Banner",
         MaxSize = _baseSettings.Value.DocumentsMaxSize,
-        UrlUpload = Url.Action("UploadImage", new { id = Model.Id, oldPath = Model.Banner }),
+        UrlUpload = Url.Action("UploadImage", new { id = Model.Id, oldPath = Model.Banner, portalId = Model.PortalId }),
         UrlDelete = Url.Action("DeleteFile"),
         ParentTagName = "file-parent-photos-1",
         FileDataString = Model.Banner,
@@ -163,7 +163,7 @@
     </div>
 </form>
 <script>
-    initRickText("@Url.Action("UploadImage", new { type = 1, id = Model.Id})");
+    initRickText("@Url.Action("UploadImage", new { type = 1, id = Model.Id, portalId = Model.PortalId })");
     
     // Initialize tree with pre-selected nodes based on ExCategoryIds
     getTreeDCCategory('@Model.Language', @Model.Id);

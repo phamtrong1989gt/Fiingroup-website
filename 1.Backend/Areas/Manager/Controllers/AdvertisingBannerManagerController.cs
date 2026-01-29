@@ -427,8 +427,12 @@ namespace PT.BE.Areas.Manager.Controllers
 
         [HttpGet]
         [AuthorizePermission("Index")]
-        public IActionResult CreateItem(int BannerId = 0) =>
-            View(new BannerItemModel { BannerId = BannerId });
+        public async Task<IActionResult> CreateItem(int BannerId = 0)
+        {
+            var banner = await _bannerRepository.SingleOrDefaultAsync(true, x => x.Id == BannerId);
+            ViewBag.PortalId = banner?.PortalId ?? 2;
+            return View(new BannerItemModel { BannerId = BannerId }); 
+        }
 
         [HttpPost, ActionName("CreateItem")]
         [AuthorizePermission("Index")]
@@ -496,6 +500,9 @@ namespace PT.BE.Areas.Manager.Controllers
                 return View("404");
 
             var model = MapModel<BannerItemModel>.Go(item);
+
+            var banner = await _bannerRepository.SingleOrDefaultAsync(true, x => x.Id == item.BannerId);
+            ViewBag.PortalId = banner?.PortalId ?? 2;
             return View(model);
         }
 

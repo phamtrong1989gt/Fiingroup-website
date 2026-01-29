@@ -1077,7 +1077,10 @@ namespace PT.BE.Areas.Manager.Controllers
                 }
                 var folderByDate = Functions.GenFolderByDate();
                 string configuredDataPath = _baseSettings.Value.DataPath;
-
+                if(portalId == 1)
+                {
+                    configuredDataPath = _baseSettings.Value.DataPathFR;
+                }    
                 // Lấy đường dẫn vật lý và public base url, helper đã tạo và đảm bảo thư mục tồn tại
                 var (physicalPath, publicUrlBase) = Functions.SetupSharedDataFolder(configuredDataPath, folderByDate);
 
