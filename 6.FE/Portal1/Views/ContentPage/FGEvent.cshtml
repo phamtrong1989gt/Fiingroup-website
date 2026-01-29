@@ -209,6 +209,657 @@
         font-size: 15px !important
     }
 </style>
+<style>
+    #newsDetail {
+        background-color: #f8fbff;
+        font-family: "Inter", sans-serif;
+        color: #093461;
+    }
+
+    .news-meta {
+        display: flex;
+        gap: 20px;
+        color: #0066CC;
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+
+        .news-meta p {
+            margin: 0;
+            position: relative;
+        }
+
+    .news-sers {
+        color: #093461;
+    }
+
+        .news-sers i {
+            color: #0066CC;
+            font-size: 7px;
+            vertical-align: middle;
+        }
+
+    .news-banner img {
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+    .news-content p {
+        line-height: 1.7;
+        margin-bottom: 5px;
+        font-size: 16px;
+        text-align: justify;
+        color: #093461;
+    }
+
+    .news-content h3 {
+        color: #093461;
+        font-size: 18px;
+        margin: 30px 0 10px;
+    }
+
+    .news-content ul {
+        padding-left: 30px;
+        margin-bottom: 20px;
+    }
+
+        .news-content ul li {
+            list-style: disc;
+            /* hiện dấu chấm tròn mặc định */
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+    .news-footer {
+        margin-top: 30px;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+        .news-footer a {
+            color: #093461;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+            .news-footer a:hover {
+                text-decoration: underline;
+            }
+
+    .news-bottom {
+        margin-top: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #d6e4ff;
+        padding-top: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .download-link {
+        color: #093461;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+
+    .social-icons {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+        .social-icons span {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .social-icons a {
+            color: #0078d4;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+            .social-icons a:hover {
+                color: #034ea2;
+            }
+
+    .pd5 {
+        padding: 5px;
+    }
+
+    .pdt25 {
+        padding-top: 25px;
+    }
+
+    .dashed-line {
+        border: none;
+        border-top: 2px dashed #093461;
+        margin: 20px 0;
+        width: 330px;
+        opacity: 0.9;
+    }
+
+    .border-button {
+        border-bottom: 1px solid;
+    }
+
+    .show-all {
+        background-color: #ffffff;
+        color: #0066cc;
+        padding: 8px 60px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin-top: 20px;
+        display: inline-block;
+        border: 1px solid #0066cc;
+    }
+
+    #NewsFeatured .news-title a {
+        font-weight: 600;
+        font-size: 30px !important;
+    }
+
+    .title-h1 {
+        font-weight: 700;
+        font-size: 40px;
+        line-height: 150%;
+        color: #1D2939;
+    }
+
+    .news-img {
+        width: 100%;
+        aspect-ratio: 16/10;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+        border: 1px solid #eee
+    }
+
+    .news-title {
+        display: block;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #1d2939;
+        font-size: 20px;
+        line-height: 30px;
+        max-height: calc(30px * 3);
+        word-break: break-word;
+        font-weight: 600;
+    }
+
+    .tag {
+        font-size: 15px !important
+    }
+
+    #Banner a img {
+        aspect-ratio: 16 / 8;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 12px;
+        border: 1px solid #eee
+    }
+
+    .news-content {
+        font-family: "Work Sans",sans-serif
+    }
+
+        .news-content h1 {
+            line-height: 1.5em
+        }
+
+        .news-content .navbar-nav .nav-link.active, .news-content .navbar-nav .nav-link.show {
+            color: #2e5ed7;
+            font-weight: 600
+        }
+
+        .news-content .navbar {
+            padding: 24px 0;
+            background-color: #fff
+        }
+
+            .news-content .navbar .nav-item {
+                margin-right: 24px
+            }
+
+            .news-content .navbar .nav-link {
+                margin-right: 32px;
+                padding: 8px 0;
+                font-weight: 500
+            }
+
+        .news-content footer {
+            border-top: 1px solid rgba(46,94,215,.3)
+        }
+
+        .news-content .contact {
+            background-image: linear-gradient(to right,#0f45b8,#0b5cd2);
+            color: #fff
+        }
+
+        .news-content .new-event .accordion-button {
+            color: #2e5ed7;
+            font-weight: 600
+        }
+
+        .news-content .new-event .white-button {
+            background-color: #f5f5f5;
+            border-radius: 30px;
+            border: none;
+            color: #2e5ed7;
+            padding: 16px 40px;
+            font-weight: 700;
+            text-align: center
+        }
+
+        .news-content .new-event .white-box {
+            background-color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 24px;
+            margin-bottom: 24px
+        }
+
+        .news-content .new-event .blue-button {
+            background-color: #2e5ed7;
+            border-radius: 24px;
+            border: none;
+            color: #fff;
+            padding: 8px 32px;
+            font-weight: 700;
+            text-align: center
+        }
+
+        .news-content .new-event .extra-blue-button {
+            background-color: #11338b;
+            border-radius: 24px;
+            border: none;
+            color: #fff;
+            padding: 20px 32px;
+            font-weight: 700;
+            text-align: center
+        }
+
+        .news-content .new-event .blue-box {
+            background-color: #2e5ed7;
+            border-radius: 8px;
+            color: #fff
+        }
+
+        .news-content .new-event .grey-box {
+            background-color: #d9d9d9;
+            border-radius: 8px;
+            font-size: 14px;
+            padding: 24px
+        }
+
+        .news-content .new-event .semi-grey-box {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            font-size: 14px;
+            height: 450px
+        }
+
+        .news-content .new-event .img-rounded {
+            border-radius: 8px
+        }
+
+        .news-content .new-event .speaker-name {
+            font-size: 18px;
+            font-weight: 600
+        }
+
+        .news-content .new-event .speaker-title {
+            font-size: 14px;
+            font-weight: 400
+        }
+
+        .news-content .new-event .section {
+            padding: 72px 0
+        }
+
+        .news-content .new-event .section-name {
+            background-color: #11338b;
+            border-radius: 5px;
+            padding: 12px;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            width: 300px;
+            text-align: center;
+            margin-bottom: 24px
+        }
+
+        .news-content .new-event .hero {
+            background-size: cover !important
+        }
+
+            .news-content .new-event .hero h1 {
+                font-family: "Merriweather",serif
+            }
+
+        .news-content .new-event .event-agenda {
+            background-size: cover
+        }
+
+        .news-content .new-event .testimonial {
+            background-color: #2e5ed7
+        }
+
+        .news-content .new-event #carousel-Event .carousel-item:nth-child(1) {
+            color: #000
+        }
+
+            .news-content .new-event #carousel-Event .carousel-item:nth-child(1) [class*=col]:nth-child(1) .bgImg {
+                background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_1.jpg) center no-repeat;
+                background-size: cover
+            }
+
+            .news-content .new-event #carousel-Event .carousel-item:nth-child(1) [class*=col]:nth-child(2) .bgImg {
+                background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_2.jpg) center no-repeat;
+                background-size: cover
+            }
+
+        .news-content .new-event #carousel-Event .carousel-item:nth-child(2) [class*=col]:nth-child(1) .bgImg {
+            background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_3.jpg) center no-repeat;
+            background-size: cover
+        }
+
+        .news-content .new-event #carousel-Event .carousel-item:nth-child(2) [class*=col]:nth-child(2) .bgImg {
+            background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_4.jpg) center no-repeat;
+            background-size: cover
+        }
+
+        .news-content .new-event #carousel-Event .carousel-item .bgImg {
+            height: 400px;
+            display: flex;
+            flex-direction: column
+        }
+
+        .news-content .new-event #carousel-Event .keynote {
+            background-image: linear-gradient(to right,whitesmoke,rgba(245,245,245,.7));
+            height: 40%;
+            padding: 16px 60px
+        }
+
+        .news-content .new-event #carousel-Event .keynote-content {
+            font-weight: 600
+        }
+
+        .news-content .new-event #carousel-Event .carousel-control-prev, .news-content .new-event #carousel-Event .carousel-control-next, .news-content .new-event #carousel-event-content-modal .carousel-control-prev, .news-content .new-event #carousel-event-content-modal .carousel-control-next, .news-content .new-event #carousel-speakers-modal .carousel-control-prev, .news-content .new-event #carousel-speakers-modal .carousel-control-next, .news-content .new-event #carousel-speakers-mobile .carousel-control-prev, .news-content .new-event #carousel-speakers-mobile .carousel-control-next, .news-content .new-event #carousel-Event-mobile .carousel-control-prev, .news-content .new-event #carousel-Event-mobile .carousel-control-next {
+            width: 10%
+        }
+
+        .news-content .new-event #carousel-Event .carousel-control-next, .news-content .new-event #carousel-Event .carousel-control-prev, .news-content .new-event #carousel-event-content-modal .carousel-control-next, .news-content .new-event #carousel-event-content-modal .carousel-control-prev, .news-content .new-event #carousel-speakers-modal .carousel-control-next, .news-content .new-event #carousel-speakers-modal .carousel-control-prev, .news-content .new-event #carousel-speakers-mobile .carousel-control-next, .news-content .new-event #carousel-speakers-mobile .carousel-control-prev, .news-content .new-event #carousel-Event-mobile .carousel-control-next, .news-content .new-event #carousel-Event-mobile .carousel-control-prev {
+            opacity: 1
+        }
+
+        .news-content .new-event #carousel-Event .carousel-control-prev-icon, .news-content .new-event #carousel-Event .carousel-control-next-icon, .news-content .new-event #carousel-event-content-modal .carousel-control-prev-icon, .news-content .new-event #carousel-event-content-modal .carousel-control-next-icon, .news-content .new-event #carousel-speakers-modal .carousel-control-prev-icon, .news-content .new-event #carousel-speakers-modal .carousel-control-next-icon, .news-content .new-event #carousel-speakers-mobile .carousel-control-prev-icon, .news-content .new-event #carousel-speakers-mobile .carousel-control-next-icon, .news-content .new-event #carousel-Event-mobile .carousel-control-prev-icon, .news-content .new-event #carousel-Event-mobile .carousel-control-next-icon {
+            background-image: none;
+            background: #2e5ed7;
+            color: #fff;
+            border-radius: 50%
+        }
+
+        .news-content .new-event #carousel-Event .carousel-indicators [data-bs-target], .news-content .new-event #carousel-event-content-modal .carousel-indicators [data-bs-target], .news-content .new-event #carousel-speakers-modal .carousel-indicators [data-bs-target], .news-content .new-event #carousel-speakers-mobile .carousel-indicators [data-bs-target], .news-content .new-event #carousel-Event-mobile .carousel-indicators [data-bs-target] {
+            width: 10px;
+            height: 10px;
+            border: none;
+            border-radius: 50%;
+            background-color: #d9d9d9
+        }
+
+        .news-content .new-event #carousel-Event .carousel-indicators .active, .news-content .new-event #carousel-event-content-modal .carousel-indicators .active, .news-content .new-event #carousel-speakers-modal .carousel-indicators .active, .news-content .new-event #carousel-speakers-mobile .carousel-indicators .active, .news-content .new-event #carousel-Event-mobile .carousel-indicators .active {
+            background-color: #2e5ed7
+        }
+
+        .news-content .new-event #carousel-gallery .carousel-control-next, .news-content .new-event #carousel-gallery .carousel-control-prev, .news-content .new-event #carousel-gallery-mobile .carousel-control-next, .news-content .new-event #carousel-gallery-mobile .carousel-control-prev, .news-content .new-event #carousel-image-modal .carousel-control-next, .news-content .new-event #carousel-image-modal .carousel-control-prev {
+            opacity: 1
+        }
+
+        .news-content .new-event #carousel-gallery .carousel-control-prev-icon, .news-content .new-event #carousel-gallery .carousel-control-next-icon, .news-content .new-event #carousel-gallery-mobile .carousel-control-prev-icon, .news-content .new-event #carousel-gallery-mobile .carousel-control-next-icon, .news-content .new-event #carousel-image-modal .carousel-control-prev-icon, .news-content .new-event #carousel-image-modal .carousel-control-next-icon {
+            background-image: none;
+            background: #2e5ed7;
+            color: #fff;
+            border-radius: 50%
+        }
+
+        .news-content .new-event #carousel-gallery .carousel-indicators [data-bs-target], .news-content .new-event #carousel-gallery-mobile .carousel-indicators [data-bs-target], .news-content .new-event #carousel-image-modal .carousel-indicators [data-bs-target] {
+            width: 10px;
+            height: 10px;
+            border: none;
+            border-radius: 50%;
+            background-color: #d9d9d9
+        }
+
+        .news-content .new-event #carousel-gallery .carousel-indicators .active, .news-content .new-event #carousel-gallery-mobile .carousel-indicators .active, .news-content .new-event #carousel-image-modal .carousel-indicators .active {
+            background-color: #2e5ed7
+        }
+
+        .news-content .new-event #carousel-image-modal .carousel-control-prev, .news-content .new-event #carousel-image-modal .carousel-control-next {
+            width: 5%
+        }
+
+        .news-content .new-event #carousel-gallery .carousel-control-prev, .news-content .new-event #carousel-gallery .carousel-control-next {
+            width: 5%
+        }
+
+        .news-content .new-event #carousel-gallery img:hover {
+            cursor: pointer
+        }
+
+        .news-content .new-event #carousel-gallery-mobile .carousel-control-prev, .news-content .new-event #carousel-gallery-mobile .carousel-control-next {
+            width: 10%
+        }
+
+        .news-content .new-event .carousel-indicators {
+            margin-bottom: -1rem
+        }
+
+        .news-content #navigator-btn {
+            border-radius: 16px;
+            padding: 20px 24px;
+            color: #fff;
+            background-color: #11338b;
+            position: fixed;
+            right: 40px;
+            bottom: 300px
+        }
+
+        .news-content #countdown {
+            color: #2e5ed7;
+            border-radius: 30px;
+            margin-bottom: 0
+        }
+
+            .news-content #countdown .days, .news-content #countdown .hours, .news-content #countdown .minutes, .news-content #countdown .seconds {
+                color: #2e5ed7;
+                font-size: 80px;
+                font-weight: 700;
+                line-height: 1em
+            }
+
+        .news-content #exampleModal .container, .news-content #exampleModal1 .container {
+            padding: 5px 80px;
+            height: 75%
+        }
+
+        .news-content .bg-img {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover
+        }
+
+    @@media screen and (min-device-width:320px) and (max-device-width:812px) {
+        #menuItems .nav-link {
+            font-size: 14px;
+            margin-right: 16px
+        }
+
+        h1 {
+            font-size: 24px
+        }
+
+        .news-content .new-event .hero, .news-content .new-event .event-agenda {
+            height: 800px;
+            background-size: cover
+        }
+
+        .news-content .new-event .section-name {
+            font-size: 14px
+        }
+
+        .news-content .new-event .white-box {
+            padding: 12px;
+            margin-left: 0;
+            margin-right: 0;
+            font-size: 12px
+        }
+
+        .news-content .new-event .white-button {
+            font-size: 14px
+        }
+
+        .news-content .new-event .blue-button {
+            font-size: 10px
+        }
+
+        .news-content .new-event #countdown .days, .news-content .new-event #countdown .hours, .news-content .new-event #countdown .minutes, .news-content .new-event #countdown .seconds {
+            font-size: 28px
+        }
+
+        .news-content .new-event .section {
+            padding: 24px 0
+        }
+
+        .news-content .new-event #carousel-Event-mobile #carousel-inner-Event2 .carousel-item:nth-child(1) .bgImg {
+            background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_1.jpg) center no-repeat;
+            background-size: cover
+        }
+
+        .news-content .new-event #carousel-Event-mobile #carousel-inner-Event2 .carousel-item:nth-child(2) .bgImg {
+            background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_2.jpg) center no-repeat;
+            background-size: cover
+        }
+
+        .news-content .new-event #carousel-Event-mobile #carousel-inner-Event2 .carousel-item:nth-child(3) .bgImg {
+            background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_3.jpg) center no-repeat;
+            background-size: cover
+        }
+
+        .news-content .new-event #carousel-Event-mobile #carousel-inner-Event2 .carousel-item:nth-child(4) .bgImg {
+            background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_4.jpg) center no-repeat;
+            background-size: cover
+        }
+
+        .news-content .new-event #carousel-Event-mobile .carousel-item .bgImg {
+            height: 300px;
+            display: flex
+        }
+
+        .news-content .new-event #carousel-Event-mobile .keynote {
+            background-image: linear-gradient(to right,whitesmoke,rgba(245,245,245,.7));
+            height: 45%;
+            padding: 12px 36px;
+            width: 100%
+        }
+
+        .news-content .new-event .keynote-content {
+            font-size: 12px;
+            font-weight: 600
+        }
+
+        .news-content .new-event .accordion-button, .news-content .new-event .accordion-body {
+            font-size: 12px
+        }
+
+        .news-content .new-event .speaker-name {
+            font-size: 12px
+        }
+
+        .news-content .new-event .speaker-title {
+            font-size: 12px
+        }
+
+        .news-content .new-event .semi-grey-box {
+            font-size: 12px;
+            height: fit-content;
+            background-color: #fff
+        }
+
+        .news-content .event-paragraph {
+            font-size: 12px
+        }
+
+        .news-content .contact {
+            font-size: 12px
+        }
+
+        .news-content #exampleModal .container, .news-content #exampleModal1 .container {
+            padding: 12px 24px;
+            height: fit-content
+        }
+
+        .news-content #navigator-btn {
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #fff;
+            background-color: #2e5ed7;
+            position: fixed;
+            right: 10px;
+            bottom: 200px
+        }
+
+        #carousel-event-content-modal {
+            font-size: 12px
+        }
+
+            #carousel-event-content-modal .carousel-item:nth-child(1) .col-12 {
+                background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_1.jpg) center no-repeat;
+                background-size: cover;
+                padding: 0;
+                border-radius: 8px
+            }
+
+            #carousel-event-content-modal .carousel-item:nth-child(2) .col-12 {
+                background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_2.jpg) center no-repeat;
+                background-size: cover;
+                padding: 0;
+                border-radius: 8px
+            }
+
+            #carousel-event-content-modal .carousel-item:nth-child(3) .col-12 {
+                background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_3.jpg) center no-repeat;
+                background-size: cover;
+                padding: 0;
+                border-radius: 8px
+            }
+
+            #carousel-event-content-modal .carousel-item:nth-child(4) .col-12 {
+                background: url(../images/Event/InnovationsInBanking/Anh_Tham_Luan_4.jpg) center no-repeat;
+                background-size: cover;
+                padding: 0;
+                border-radius: 8px
+            }
+
+            #carousel-event-content-modal .keynote {
+                background-image: linear-gradient(to right,whitesmoke,rgba(245,245,245,.7));
+                padding: 16px 8px
+            }
+    }
+
+</style>
 
 <section id="newsDetail">
     <div>

@@ -133,7 +133,7 @@
     <value>View Details</value>
   </data>
   <data name="NoEvent" xml:space="preserve">
-    <value>There are currently no new events</value>
+    <value>There are currently no new news</value>
   </data>
   <data name="DownloadDocument" xml:space="preserve">
     <value>Event documents</value>
