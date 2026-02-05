@@ -63,8 +63,17 @@
 			</td>
 
 			<td data-label="@Localizer["Report"]">
+				<div style="display:none">
+					<div>@Newtonsoft.Json.JsonConvert.SerializeObject(item.Announcement)</div>
+					<div>@Newtonsoft.Json.JsonConvert.SerializeObject(item.FullReport)</div>
+				</div>
 				<div class="language-switch">
-					@if(item.Announcement  != null && !string.IsNullOrEmpty(item.Announcement.Vi))
+					@{
+						var reportVi = item.FullReport?.Vi ?? item.Announcement?.Vi;
+						var reportEn = item.FullReport?.En ?? item.Announcement?.En;
+					}
+					
+					@if (!string.IsNullOrEmpty(reportVi))
 					{
 						<label class="lang-option">
 							<input type="radio" name="@radioName" value="vi" checked>
@@ -72,19 +81,19 @@
 							VN
 						</label>
 					}
-					@if (item.Announcement != null && !string.IsNullOrEmpty(item.Announcement.En))
+					@if (!string.IsNullOrEmpty(reportEn))
 					{
 						<label class="lang-option">
-							<input type="radio" name="@radioName" value="en">
+							<input type="radio" name="@radioName" value="en" @(!string.IsNullOrEmpty(reportEn) && string.IsNullOrEmpty(reportVi) ? "checked" : "")>
 							<span class="radio"></span>
 							EN
 						</label>
 					}
 
-					@if((item.Announcement != null) && (!string.IsNullOrEmpty(item.Announcement.Vi) || !string.IsNullOrEmpty(item.Announcement.En)))
+					@if (!string.IsNullOrEmpty(reportVi) || !string.IsNullOrEmpty(reportEn))
 					{
 						<button class="btn-download"
-								onclick="downloadRatingReport('@(item.Announcement?.Vi)', '@(item.Announcement?.En)', '@radioName')"
+								onclick="downloadRatingReport('@reportVi', '@reportEn', '@radioName')"
 								title="@Localizer["DownloadReport"]">
 							<i class="fa fa-download"></i> @Localizer["Download"]
 						</button>

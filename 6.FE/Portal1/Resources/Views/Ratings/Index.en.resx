@@ -136,7 +136,7 @@
     <value>Search</value>
   </data>
   <data name="PublicationDate" xml:space="preserve">
-    <value>Publication Date</value>
+    <value>Date</value>
   </data>
   <data name="IssuingOrganization" xml:space="preserve">
     <value>Issuing Organization</value>

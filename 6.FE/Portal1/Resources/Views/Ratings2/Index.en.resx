@@ -133,22 +133,22 @@
     <value>Search</value>
   </data>
   <data name="PublicationDate" xml:space="preserve">
-    <value>Publication Date</value>
+    <value>Date</value>
   </data>
   <data name="Publisher" xml:space="preserve">
     <value>Publisher</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Title</value>
+    <value>Announcement</value>
   </data>
   <data name="Industry" xml:space="preserve">
     <value>Industry</value>
   </data>
   <data name="SustainabilityLevel" xml:space="preserve">
-    <value>Applicable Standards</value>
+    <value>Applicable Principles</value>
   </data>
   <data name="Report" xml:space="preserve">
-    <value>Detailed Report</value>
+    <value>Full Report</value>
   </data>
   <data name="Showing" xml:space="preserve">
     <value>Showing</value>

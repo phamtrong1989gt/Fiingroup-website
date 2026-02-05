@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using PT.Base.Services;
 using PT.Domain.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -114,6 +115,69 @@ namespace PT.UI.Controllers
             var data = await _newsAPIService.GetIssuerOrgansAsync(parameters.Keyword, parameters.Lang, _baseSettings.Value.PortalId);
             ViewBag.Language = parameters.Lang;
             return View("IssuerOrgansAsync", data);
+        }
+
+        [Route("{language}/Ratings/ChartData")]
+        public async Task<IActionResult> ChartData([FromQuery] ChartDataQueryParameters parameters, string language)
+        {
+            var outData = new ChartDataResult();
+            var data = new RatingResultsResponse();
+            var scores = await _newsAPIService.GetReportScoresAsync(_baseSettings.Value.PortalId);
+            if(parameters.Type == 2)
+            {
+                data = await _newsAPIService.GetRatingResultsAsync(new RatingResultsQueryParameters { FromDate = parameters.FromDate, ToDate = parameters.ToDate, OrganizationId = parameters.OrganizationId, IssuerTypesId = 2 }, _baseSettings.Value.PortalId);
+            }
+            else
+            {
+                data = await _newsAPIService.GetRatingResultsAsync(new RatingResultsQueryParameters { FromDate = parameters.FromDate, ToDate = parameters.ToDate, OrganizationId = parameters.OrganizationId, IssuerTypesId = 1 }, _baseSettings.Value.PortalId);
+               
+                var data2 = await _newsAPIService.GetRatingResultsAsync(new RatingResultsQueryParameters { FromDate = parameters.FromDate, ToDate = parameters.ToDate, OrganizationId = parameters.OrganizationId, IssuerTypesId = 3 }, _baseSettings.Value.PortalId);
+                if(data2 != null && data2.Data != null && data2.Data.Items != null && data2.Data.Items.Any())
+                {
+                    if(data != null && (data.Data == null || data.Data.Items == null))
+                    {
+                        data.Data = new RatingResultsData
+                        {
+                            Items = new List<RatingResultItem>()
+                        };
+                    }
+                    data.Data.Items.AddRange(data2.Data.Items);
+                }
+            }
+
+            outData.Data = data.Data.Items.OrderBy(x=>x.Date)
+                .Select(g => new ChartDataDataItem
+                {
+                    Label = language == "vi" ? $"{Convert.ToDateTime(g.Date):dd/MM/yyyy}" : $"{Convert.ToDateTime(g.Date):MM/dd/yyyy}",
+                    Value = g.Rating
+                })
+                .ToList();
+
+            outData.Scores = scores.Data.Select(s => new ChartDataScoreItem
+                {
+                    ScoreValue = s.ScoreValue,
+                    Value = s.ScoreId
+                }).ToList();
+
+            return Json(outData);
+        }
+
+        public class ChartDataResult
+        {
+            public List<ChartDataScoreItem> Scores { get; set; } = new List<ChartDataScoreItem>();
+            public List<ChartDataDataItem> Data { get; set; } = new List<ChartDataDataItem>();
+        }
+
+        public class ChartDataScoreItem
+        {
+            public string ScoreValue { get; set; }
+            public int Value { get; set; }
+        }
+
+        public class ChartDataDataItem
+        {
+            public string Label { get; set; }
+            public string Value { get; set; }
         }
     }
 }

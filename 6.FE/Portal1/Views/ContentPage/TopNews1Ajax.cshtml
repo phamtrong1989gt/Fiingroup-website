@@ -23,8 +23,8 @@
             {
                 string url = $"/{language}/news-fg/{item.FriendlyTitle}-id{item.Id}.html".ToLower();
 
-                <a class="points-item" style="color:#093461;" href="@url">
-                    @item.Title
+                <a class="points-item" style="color:#093461;" href="@url" title="@item.Title">
+                    <i class="fa fa-chevron-right me-2" aria-hidden="true" style="font-size:12px; margin-right: 0!important;"></i> @item.Title
                 </a>
             }
         </div>

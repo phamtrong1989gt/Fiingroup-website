@@ -18,7 +18,7 @@
     {
         pageIndex = int.TryParse(stPage, out var result) ? result : 1;  
     }
-    var bindContentTag = Context.Request.Query["bindContentTag"].ToString();
+    string bindContentTag = Context.Request.Query["bindContentTag"].ToString() == null || Context.Request.Query["bindContentTag"].ToString() == "" ? "getNewsAjax" : Context.Request.Query["bindContentTag"].ToString();
 }
 
 <div class="row mt-5">

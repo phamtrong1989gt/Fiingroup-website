@@ -25,13 +25,14 @@
 
 		var radioName = $"language_{i}";
 		<tr>
-			<td data-label="@Localizer["Title"]">@item.Title</td>
 			<td data-label="@Localizer["PublicationDate"]">
 				@if (!string.IsNullOrEmpty(item.PublicDate))
 				{
 					<div>@(Convert.ToDateTime(item.PublicDate).ToString(language == "en" ? "MM/dd/yyyy" : "dd/MM/yyyy"))</div>
 				}
 			</td>
+
+			<td data-label="@Localizer["Title"]">@item.Title</td>
 	
 			<td data-label="@Localizer["SustainabilityLevel"]">
 				@if (!string.IsNullOrEmpty(item.ApplicableStandardsName))
@@ -53,7 +54,7 @@
 					@if (item.Files != null && !string.IsNullOrEmpty(item.Files.En))
 					{
 						<label class="lang-option">
-							<input type="radio" name="@radioName" value="en">
+							<input type="radio" name="@radioName" value="en" checked>
 							<span class="radio"></span>
 							EN
 						</label>
@@ -76,7 +77,7 @@ else
 {
 	<tr>
 		<td colspan="10" class="no-data">
-			Hiện tại tổ chức phát hành chưa thực hiện xếp hạng tài chính bền vững
+            @Localizer["NoDataFound"]
 		</td>
 	</tr>
 }

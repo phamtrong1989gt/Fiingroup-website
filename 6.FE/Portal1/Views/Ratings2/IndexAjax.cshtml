@@ -36,12 +36,30 @@
 			</td>
 			<td data-label="@Localizer["Title"]">@item.Title</td>
 			<td data-label="@Localizer["Industry"]">@item.IndustryName</td>
-			<td data-label="@Localizer["SustainabilityLevel"]">
-				@if (!string.IsNullOrEmpty(item.ApplicableStandardsName))
-				{
+			@{
+				var standardsText = item.ApplicableStandardsName ?? string.Empty;
+				var parts = standardsText.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()).Where(p => !string.IsNullOrEmpty(p)).ToList();
+			}
+
+			@if (parts != null && parts.Count > 1)
+			{
+				<td data-label="@Localizer["SustainabilityLevel"]">
+					<span>@Localizer["Combined"]</span>
+					<button style="border: none;background: transparent;" type="button" class="btn-icon info-icon standards-popover" data-standards-id="standards-@item.OrganizationId" title="@Localizer["SustainabilityLevel"]">
+						<i style="color: #007bff;" class="fa fa-info-circle"></i>
+					</button>
+					<div id="standards-@item.OrganizationId" style="display:none">
+						@Html.Raw("<ul class=\"standards-list\">" + string.Join("", parts.Select(p => "<li>" + System.Net.WebUtility.HtmlEncode(p) + "</li>")) + "</ul>")
+					</div>
+				</td>
+			}
+			else
+			{
+				<td data-label="@Localizer["SustainabilityLevel"]">
 					<span>@item.ApplicableStandardsName</span>
-				}
-			</td>
+				</td>
+			}
+
 			<td data-label="@Localizer["Report"]">
 				<div class="language-switch">
 					@if(item.Files != null && !string.IsNullOrEmpty(item.Files.Vi))
@@ -55,7 +73,7 @@
 					@if (item.Files != null && !string.IsNullOrEmpty(item.Files.En))
 					{
 						<label class="lang-option">
-							<input type="radio" name="@radioName" value="en">
+							<input type="radio" name="@radioName" value="en" checked>
 							<span class="radio"></span>
 							EN
 						</label>
@@ -68,13 +86,32 @@
 								title="@Localizer["DownloadReport"]">
 							<i class="fa fa-download"></i> @Localizer["Download"]
 						</button>
-                    }
+					}
 				</div>
 			</td>
 		</tr>
 	}
+
+	// initialize popovers for standards (only once when this partial is rendered)
+	<script>
+		(function(){
+			if (typeof $ === 'undefined' || typeof $.fn.popover === 'undefined') return;
+			$('[data-standards-id]').each(function(){
+				var id = $(this).data('standards-id');
+				$(this).popover('dispose').popover({
+					html: true,
+					trigger: 'hover click',
+					placement: 'top',
+					content: function(){ return $('#' + id).html(); }
+				});
+			});
+		})();
+	</script>
+
 	<tr style="height:50px;">
+	
 		<td colspan="6" style="padding: 0; border: none;background: transparent;">
+		
 			<div class="page-table">
 				<div class="numberpage">
 					<div>
@@ -86,15 +123,15 @@
 				</div>
 				<div class="pagination">
 					@Html.Raw(PT.Shared.Functions.GenPageListAjax2("",
-								pageIndex,
-								Model.Data.TotalRecords,
-								Model.Data.PageSize,
-								$"&companyName={Context.Request.Query["companyName"]}" +
-								$"&industryId={Context.Request.Query["industryId"]}" +
-								$"&applicableStandardId={Context.Request.Query["applicableStandardId"]}",
-								"page-active",
-								null,
-								"getRakingsAjax"
+									pageIndex,
+									Model.Data.TotalRecords,
+									Model.Data.PageSize,
+									$"&companyName={Context.Request.Query["companyName"]}" +
+									$"&industryId={Context.Request.Query["industryId"]}" +
+									$"&applicableStandardId={Context.Request.Query["applicableStandardId"]}",
+									"page-active",
+									null,
+									"getRakingsAjax"
 					))
 			</div>
 		</div>

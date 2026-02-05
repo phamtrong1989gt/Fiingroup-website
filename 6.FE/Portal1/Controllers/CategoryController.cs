@@ -148,7 +148,7 @@ namespace PT.UI.Controllers
             objectLink.Title = string.IsNullOrEmpty(objectLink.Title) ? objectLink.Name : objectLink.Title;
 
             string viewName = "_404";
-            var Type = ECategoryType.ContentPage_Blog;
+            var type = ECategoryType.ContentPage_Blog;
             var dl = await _iCategoryRepository.SingleOrDefaultAsync(true, x => x.Id == id && x.Status);
             if (dl == null)
             {
@@ -156,7 +156,7 @@ namespace PT.UI.Controllers
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Blog)
             {
-                Type = ECategoryType.ContentPage_Blog;
+                type = ECategoryType.ContentPage_Blog;
                 if (string.IsNullOrEmpty(dl.ExCategoryIds))
                 {
                     dl.DataAPI = new NewsListResponse() { Items = new List<NewsItem>() };
@@ -215,7 +215,7 @@ namespace PT.UI.Controllers
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Event)
             {
-                Type = ECategoryType.ContentPage_Event;
+                type = ECategoryType.ContentPage_Event;
                 if (string.IsNullOrEmpty(dl.ExCategoryIds))
                 {
                     dl.DataAPI = new NewsListResponse() { Items = new List<NewsItem>() };
@@ -258,7 +258,7 @@ namespace PT.UI.Controllers
             }
             else if (dl.CategoryType == ECategoryType.ContentPage_Publications)
             {
-                Type = ECategoryType.ContentPage_Publications;
+                type = ECategoryType.ContentPage_Publications;
                 if (string.IsNullOrEmpty(dl.ExCategoryIds))
                 {
                     dl.DataAPI = new NewsListResponse() { Items = new List<NewsItem>() };

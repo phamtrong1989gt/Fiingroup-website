@@ -12,7 +12,7 @@
     Layout = null;
     string language = PT.Base.CultureHelper.GetCurrentCulture.Id;
     var stPage = Context.Request.Query["page"].ToString();
-    var bindContentTag = Context.Request.Query["bindContentTag"].ToString();
+    string bindContentTag = Context.Request.Query["bindContentTag"].ToString() == null || Context.Request.Query["bindContentTag"].ToString() == "" ? "getNewsAjax" : Context.Request.Query["bindContentTag"].ToString();
     // Lấy pageIndex từ query string nếu có, mặc định =1
     var pageIndex = 1;
     if (stPage != null)

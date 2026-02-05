@@ -168,4 +168,7 @@
   <data name="RankingOfDebtInstruments" xml:space="preserve">
     <value>Xếp hạng công cụ nợ</value>
   </data>
+  <data name="NoDataFound" xml:space="preserve">
+    <value>Hiện tại, tổ chức phát hành chưa thực hiện xếp hạng tín nhiệm với FiinRatings.</value>
+  </data>
 </root>

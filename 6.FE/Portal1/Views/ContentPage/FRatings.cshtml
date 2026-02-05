@@ -276,6 +276,29 @@
         background: #fff;
         border-radius: 12px;
         padding: 20px 25px;
+        position: relative;
+    }
+
+    .chart-loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        text-align: center;
+    }
+
+    .chart-loading .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        border-width: 0.3em;
+        color: #0066cc;
+    }
+
+    .chart-loading-text {
+        margin-top: 10px;
+        color: #666;
+        font-size: 14px;
     }
 
     .chart-title {
@@ -306,10 +329,19 @@
             border-color: #06c;
         }
 
+        .filter-date[readonly] {
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+    .calendar-icon {
+        pointer-events: auto;
+    }
+
     .chart-legend {
         display: flex;
         justify-content: center;
-        gap: 20px;
+        gap: 5px;
         margin-top: 10px;
         font-size: 14px;
         color: #093461;
@@ -343,6 +375,12 @@
     .skeleton-text {
         border-radius: 4px;
         display: inline-block;
+    }
+
+    .skeleton-cell {
+        height: 20px;
+        width: 100%;
+        border-radius: 4px;
     }
 
     @@keyframes skeleton-loading {
@@ -579,6 +617,22 @@
         padding: 20px;
     }
 
+    .points-list a
+    {
+        margin-right: 24px;
+        line-height: 30px;
+    }
+
+    .points-list a:hover
+    {
+        text-decoration: underline;
+            color: darkblue;
+    }
+
+    .language-switch {
+        gap: 10px;
+        justify-content: flex-end;
+    }
 </style>
 
 <section id="CompanyOverview" class="pt-5">
@@ -595,13 +649,13 @@
                             <div class="info-item">
                                 <p class="label">@Localizer["StatusRating"]</p>
                                 <p class="value" id="detail_OpinionType">
-                                    <span class="skeleton-text" style="display:inline-block;width:120px;height:20px;"></span>
+                                    <span class="skeleton-text" style="display:inline-block;width=120px;height=20px;"></span>
                                 </p>
                             </div>
                             <div class="info-item">
                                 <p class="label">@Localizer["RatingScore"]</p>
                                 <p class="value" id="detail_RatingScore">
-                                    <span class="skeleton-text" style="display:inline-block;width:80px;height:20px;"></span>
+                                    <span class="skeleton-text" style="display:inline-block;width=80px;height=20px;"></span>
                                 </p>
                             </div>
                         </div>
@@ -610,14 +664,14 @@
                             <div class="info-item">
                                 <p class="label">@Localizer["Industry"]</p>
                                 <p class="value" id="detail_Industry">
-                                    <span class="skeleton-text" style="display:inline-block;width:150px;height:20px;"></span>
+                                    <span class="skeleton-text" style="display:inline-block;width=150px;height=20px;"></span>
                                 </p>
                             </div>
 
                             <div class="info-item">
                                 <p class="label">@Localizer["Outlook"]</p>
                                 <p class="value status" id="detail_Rating">
-                                    <span class="skeleton-text" style="display:inline-block;width:100px;height:20px;"></span>
+                                    <span class="skeleton-text" style="display:inline-block;width=100px;height=20px;"></span>
                                 </p>
                             </div>
                         </div>
@@ -626,13 +680,13 @@
                             <div class="info-item">
                                 <p class="label">@Localizer["OpinionType"]</p>
                                 <p class="value" id="detail_OpinionType_lyk">
-                                    <span class="skeleton-text" style="display:inline-block;width:140px;height:20px;"></span>
+                                    <span class="skeleton-text" style="display:inline-block;width=140px;height=20px;"></span>
                                 </p>
                             </div>
                             <div class="info-item">
                                 <p class="label">@Localizer["PublicationDate"]</p>
                                 <p class="value" id="detail_PublicationDate">
-                                    <span class="skeleton-text" style="display:inline-block;width:100px;height:20px;"></span>
+                                    <span class="skeleton-text" style="display:inline-block;width=100px;height=20px;"></span>
                                 </p>
                             </div>
                         </div>
@@ -641,7 +695,7 @@
                             <div class="info-item mb-0">
                                 <p class="label">@Localizer["BondCode"]</p>
                                 <p class="value" id="detail_BondCode">
-                                    <span class="skeleton-text" style="display:inline-block;width:140px;height:20px;"></span>
+                                    <span class="skeleton-text" style="display:inline-block;width=140px;height=20px;"></span>
                                 </p>
                             </div>
                             <div class="info-item">
@@ -660,8 +714,8 @@
                                 <table class="ranking-table">
                                     <thead>
                                         <tr>
-                                            <th style="width: 189px;">@Localizer["OpinionType"]</th>
                                             <th>@Localizer["PublicationDate"]</th>
+                                            <th style="width: 189px;">@Localizer["OpinionType"]</th>
                                             <th>@Localizer["RatingScore"]</th>
                                             <th>@Localizer["Outlook"]</th>
                                             <th>@Localizer["Report"]</th>
@@ -670,7 +724,7 @@
                                     <tbody id="bindTTPH"></tbody>
                                 </table>
                             </div>
-                         
+                        
 
                         </div>
 
@@ -681,9 +735,9 @@
                                 <table class="ranking-table">
                                     <thead>
                                         <tr>
+                                            <th>@Localizer["PublicationDate"]</th>
                                             <th>@Localizer["BondCode"]</th>
                                             <th>@Localizer["OpinionType"]</th>
-                                            <th>@Localizer["PublicationDate"]</th>
                                             <th>@Localizer["RatingScore"]</th>
                                             <th>@Localizer["Report"]</th>
                                         </tr>
@@ -701,10 +755,10 @@
                                 <table class="ranking-table">
                                     <thead>
                                         <tr>
-                                            <th>@Localizer["OpinionType"]</th>
                                             <th>@Localizer["PublicationDate"]</th>
-                                            <th>@Localizer["SustainabilityLevel"]</th>
-                                            <th>@Localizer["Report"]</th>
+                                            <th>@Localizer["Announcement"]</th>
+                                            <th>@Localizer["ApplicablePrinciples"]</th>
+                                            <th>@Localizer["Report2"]</th>
                                         </tr>
                                     </thead>
                                     <tbody id="bindSustainableFinance"></tbody>
@@ -721,21 +775,33 @@
                             <!-- Xếp hạng dài hạn -->
                             <div class="chart-box">
                                 <h3 class="chart-title">@Localizer["ChartLong_Title"]</h3>
-
+                                <select id="longFilterSelect" class="filter-select" style="width:100%; margin-bottom:5px;">
+                                    <option selected value="1">@Localizer["Filter_TypeIssuer"]</option>
+                                    <option value="2">@Localizer["Filter_TypeDebtInstrument"]</option>
+                                </select>
                                 <div class="chart-filters">
-                                    <select class="filter-select">
-                                        <option>@Localizer["Filter_SelectDefault"]</option>
-                                        <option value="1">@Localizer["Filter_TypeIssuer"]</option>
-                                        <option value="2">@Localizer["Filter_TypeDebtInstrument"]</option>
-                                    </select>
-                                    <input type="text" name="dhStartDate" class="dhStartDate form-control form-control-sm" placeholder="@Localizer["StartDate_Placeholder"]">
-                                    <input type="text" name="dhEndDate" class="dhEndDate form-control form-control-sm" placeholder="@Localizer["EndDate_Placeholder"]">
+                                    <div style="position: relative; width: 50%;">
+                                        <input type="text" name="dhStartDate" class="dhStartDate form-control form-control-sm" placeholder="@Localizer["StartDate_Placeholder"]" readonly>
+                                        <i class="fa fa-calendar calendar-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #034ea2;"></i>
+                                    </div>
+                                    <div style="position: relative; width: 50%;">
+                                        <input type="text" name="dhEndDate" class="dhEndDate form-control form-control-sm" placeholder="@Localizer["EndDate_Placeholder"]" readonly>
+                                        <i class="fa fa-calendar calendar-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #034ea2;"></i>
+                                    </div>
                                 </div>
-                                <canvas id="longTermChart" class="chart-img d-block w-100" aria-label="@Localizer["Img_Alt_Long"]" role="img"></canvas>
+                                
+                                <!-- Loading Spinner -->
+                                <div id="longChartLoading" class="chart-loading" style="display:none;">
+                                    <div class="spinner-border" role="status"></div>
+                                </div>
+                                
+                                <div style="height: 400px; position: relative;">
+                                    <canvas id="longTermChart" class="chart-img d-block w-100" aria-label="@Localizer["Img_Alt_Long"]" role="img"></canvas>
+                                </div>
 
                                 <div class="chart-legend">
                                     <span><i class="legend-square blue"></i> @Localizer["Legend_Issuer"]</span>
-                                    <span><i class="legend-square.dark"></i> @Localizer["Legend_DebtInstrument"]</span>
+                                    <span><i class="legend-square dark"></i> @Localizer["Legend_DebtInstrument"]</span>
                                 </div>
                             </div>
                         </div>
@@ -743,21 +809,32 @@
                             <!-- Xếp hạng ngắn hạn -->
                             <div class="chart-box">
                                 <h3 class="chart-title">@Localizer["ChartShort_Title"]</h3>
-
+                                <select id="shortFilterSelect" class="filter-select" style="width:100%; margin-bottom:5px;" >
+                                    <option selected value="1">@Localizer["Filter_TypeIssuer"]</option>
+                                    <option value="2">@Localizer["Filter_TypeDebtInstrument"]</option>
+                                </select>
                                 <div class="chart-filters">
-                                    <select class="filter-select">
-                                        <option>@Localizer["Filter_SelectDefault"]</option>
-                                        <option value="1">@Localizer["Filter_TypeIssuer"]</option>
-                                        <option value="2">@Localizer["Filter_TypeDebtInstrument"]</option>
-                                    </select>
-                                    <input type="text" name="nhStartDate" class="nhStartDate form-control form-control-sm" placeholder="@Localizer["StartDate_Placeholder"]">
-                                    <input type="text" name="nhEndDate" class="nhEndDate form-control form-control-sm" placeholder="@Localizer["EndDate_Placeholder"]">
+                                    <div style="position: relative; width: 50%;">
+                                        <input type="text" name="nhStartDate" class="nhStartDate form-control form-control-sm" placeholder="@Localizer["StartDate_Placeholder"]" readonly>
+                                        <i class="fa fa-calendar calendar-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #034ea2;"></i>
+                                    </div>
+                                    <div style="position: relative; width: 50%;">
+                                        <input type="text" name="nhEndDate" class="nhEndDate form-control form-control-sm" placeholder="@Localizer["EndDate_Placeholder"]" readonly>
+                                        <i class="fa fa-calendar calendar-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #034ea2;"></i>
+                                    </div>
                                 </div>
-                                <canvas id="shortTermChart" class="chart-img d-block w-100" aria-label="@Localizer["Img_Alt_Short"]" role="img"></canvas>
+                                
+                                <!-- Loading Spinner -->
+                                <div id="shortChartLoading" class="chart-loading" style="display:none;">
+                                    <div class="spinner-border" role="status"></div>
+                                </div>
+                                
+                                <div style="height: 400px; position: relative;">
+                                </div>
 
                                 <div class="chart-legend">
                                     <span><i class="legend-square blue"></i> @Localizer["Legend_Issuer"]</span>
-                                    <span><i class="legend-square.dark"></i> @Localizer["Legend_DebtInstrument"]</span>
+                                    <span><i class="legend-square dark"></i> @Localizer["Legend_DebtInstrument"]</span>
                                 </div>
                             </div>
                         </div>
@@ -766,6 +843,7 @@
             </div>
             <div class="col-md-4">
                 <div id="topNewsContainer"></div>
+                <div class="mb-5"></div>
                 <div id="topNewsContainer1"></div>
             </div>
         </div>
@@ -780,39 +858,359 @@
     <script src="~/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js"></script>
     <script src="~/plugins/chart.umd.min.js"></script>
     <script>
+        // ============================================
+        // CHART INITIALIZATION
+        // ============================================
         $(function(){
-                var lang = '@language';
-                $('.dhStartDate').datepicker({
-                    format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
-                    language: lang,
-                    todayHighlight: true
-                });
+            var lang = '@language';
+            window.scoreMap = window.scoreMap || {};
+            window.longTermChart = null;
+            window.shortTermChart = null;
+            
+            window.formatDateForApi = function(d) {
+                if (!d) return '';
+                var year = d.getFullYear();
+                var month = String(d.getMonth() + 1).padStart(2, '0');
+                var day = String(d.getDate()).padStart(2, '0');
+                return year + '-' + month + '-' + day;
+            };
+            
+            var defaultStartDate = new Date(2020, 0, 1);
+            var defaultEndDate = new Date();
 
-                $('.dhEndDate').datepicker({
-                    format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
-                    language: lang,
-                    todayHighlight: true
-                });
+            // Initialize LONG TERM datepickers WITHOUT event handlers
+            $('.dhStartDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true,
+                autoclose: true
+            });
 
-                $('.nhStartDate').datepicker({
-                    format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
-                    language: lang,
-                    todayHighlight: true
-                });
+            $('.dhEndDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true,
+                autoclose: true
+            });
 
-                $('.nhEndDate').datepicker({
-                    format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
-                    language: lang,
-                    todayHighlight: true
-                });
+            // Initialize SHORT TERM datepickers WITHOUT event handlers
+            $('.nhStartDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true,
+                autoclose: true
+            });
+
+            $('.nhEndDate').datepicker({
+                format: lang == "vi" ? "dd/mm/yyyy" : "mm/dd/yyyy",
+                language: lang,
+                todayHighlight: true,
+                autoclose: true
+            });
+
+            // Set defaults for LONG TERM
+            try {
+                if (!$('.dhStartDate').val()) {
+                    $('.dhStartDate').datepicker('setDate', defaultStartDate);
+                }
+                if (!$('.dhEndDate').val()) {
+                    $('.dhEndDate').datepicker('setDate', defaultEndDate);
+                }
+            } catch (ex) {
+                console.warn('Long term datepicker set default failed', ex);
+            }
+
+            // Set defaults for SHORT TERM
+            try {
+                if (!$('.nhStartDate').val()) {
+                    $('.nhStartDate').datepicker('setDate', defaultStartDate);
+                }
+                if (!$('.nhEndDate').val()) {
+                    $('.nhEndDate').datepicker('setDate', defaultEndDate);
+                }
+            } catch (ex) {
+                console.warn('Short term datepicker set default failed', ex);
+            }
+
+            // NOW add event handlers AFTER setting defaults - LONG TERM
+            $('.dhStartDate').on('changeDate', function() {
+                loadLongTermChart();
+            });
+
+            $('.dhEndDate').on('changeDate', function() {
+                loadLongTermChart();
+            });
+
+            // Handle calendar icon clicks - LONG TERM
+            $('.dhStartDate').siblings('.calendar-icon').on('click', function() {
+                $('.dhStartDate').datepicker('show');
+            });
+
+            $('.dhEndDate').siblings('.calendar-icon').on('click', function() {
+                $('.dhEndDate').datepicker('show');
+            });
+
+            // NOW add event handlers AFTER setting defaults - SHORT TERM
+            $('.nhStartDate').on('changeDate', function() {
+                // loadShortTermChart(); // Uncomment when API ready
+            });
+
+            $('.nhEndDate').on('changeDate', function() {
+                // loadShortTermChart(); // Uncomment when API ready
+            });
+
+            // Handle calendar icon clicks - SHORT TERM
+            $('.nhStartDate').siblings('.calendar-icon').on('click', function() {
+                $('.nhStartDate').datepicker('show');
+            });
+
+            $('.nhEndDate').siblings('.calendar-icon').on('click', function() {
+                $('.nhEndDate').datepicker('show');
+            });
+
+            // Bind filter change
+            $('#longFilterSelect').on('change', function() {
+                loadLongTermChart();
+            });
+
+            // Initialize chart
+            loadLongTermChart();
         });
+
+        // Build score map
+        function buildScoreMap(scores) {
+            if (!scores || !Array.isArray(scores)) return {};
+            
+            var map = {};
+            scores.forEach(function(item) {
+                map[item.scoreValue] = item.value;
+            });
+            
+            window.scoreMap = map;
+            return map;
+        }
+
+        // Get numeric score
+        function getNumericScore(scoreValue) {
+            return window.scoreMap[scoreValue] || null;
+        }
+
+        // Show loading
+        function showChartLoading(chartId) {
+            if (chartId === 'longTermChart') {
+                $('#longChartLoading').show();
+                $('#longTermChart').css('opacity', '0.3');
+            }
+        }
+
+        // Hide loading
+        function hideChartLoading(chartId) {
+            if (chartId === 'longTermChart') {
+                $('#longChartLoading').hide();
+                $('#longTermChart').css('opacity', '1');
+            }
+        }
+
+        // Load long term chart
+        function loadLongTermChart() {
+            console.log('[Long Term] Loading chart...');
+            var start = $('.dhStartDate').datepicker('getDate') || new Date(2020, 0, 1);
+            var end = $('.dhEndDate').datepicker('getDate') || new Date();
+            if (start > end) { var t = start; start = end; end = t; }
+            var type = $('#longFilterSelect').val() || '1';
+            
+            // Show loading
+            showChartLoading('longTermChart');
+            
+            // Call API
+            var chartDataUrl = '/@(language)/Ratings/ChartData';
+            var params = {
+                organizationId: '@ViewBag.Id',
+                lang: '@language',
+                type: type,
+                fromDate: window.formatDateForApi(start),
+                toDate: window.formatDateForApi(end)
+            };
+
+            $.ajax({
+                url: chartDataUrl,
+                method: 'GET',
+                data: params,
+                dataType: 'json'
+            })
+            .done(function(apiData) {
+                console.log('[Long Term] API data received:', apiData);
+                
+                if (apiData && apiData.scores) {
+                    buildScoreMap(apiData.scores);
+                }
+                
+                if (apiData && apiData.data) {
+                    renderChart('longTermChart', apiData.data, 'Long Term Rating');
+                } else {
+                    console.warn('[Long Term] No data received');
+                    renderChart('longTermChart', [], 'Long Term Rating');
+                }
+            })
+            .fail(function(xhr, status, error) {
+                console.error('[Long Term] Failed to load chart:', error);
+                renderChart('longTermChart', [], 'Long Term Rating');
+            })
+            .always(function() {
+                // Always hide loading
+                hideChartLoading('longTermChart');
+            });
+        }
+
+        // Render chart
+        function renderChart(canvasId, data, label) {
+            try {
+                var labels = [];
+                var values = [];
+                var stringValues = [];
+
+                if (data && Array.isArray(data) && data.length > 0) {
+                    data.forEach(function(item) {
+                        labels.push(item.label);
+                        var numericValue = getNumericScore(item.value);
+                        values.push(numericValue);
+                        stringValues.push(item.value);
+                    });
+                }
+
+                console.log('[renderChart] Preparing:', canvasId, labels, values);
+
+                var ctx = document.getElementById(canvasId);
+                if (!ctx) {
+                    console.error('[renderChart] Canvas not found:', canvasId);
+                    return;
+                }
+                ctx = ctx.getContext('2d');
+
+                // Destroy existing chart
+                if (canvasId === 'longTermChart' && window.longTermChart) {
+                    window.longTermChart.destroy();
+                }
+
+                // Create reverse scoreMap
+                var reverseScoreMap = {};
+                Object.keys(window.scoreMap).forEach(function(key) {
+                    reverseScoreMap[window.scoreMap[key]] = key;
+                });
+
+                // Get min/max scores
+                var allScoreValues = Object.values(window.scoreMap);
+                var minScore = Math.min.apply(null, allScoreValues);
+                var maxScore = Math.max.apply(null, allScoreValues);
+
+                // Create chart
+                var chartConfig = {
+                    type: 'line',
+                    data: {
+                        labels: labels.length > 0 ? labels : [''],
+                        datasets: [{
+                            label: label,
+                            data: values,
+                            borderColor: '#0066cc',
+                            backgroundColor: 'rgba(0, 102, 204, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#0066cc',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 6,
+                            tension: 0.1,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: values.length > 0,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                padding: 12,
+                                titleFont: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                bodyFont: {
+                                    size: 13
+                                },
+                                callbacks: {
+                                    label: function(context) {
+                                        var index = context.dataIndex;
+                                        var rating = stringValues[index];
+                                        return label + ': ' + rating;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 11
+                                    },
+                                    maxRotation: 45,
+                                    minRotation: 0
+                                }
+                            },
+                            y: {
+                                reverse: true,
+                                min: minScore,
+                                max: maxScore,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 11
+                                    },
+                                    callback: function(value) {
+                                        return reverseScoreMap[value] || '';
+                                    },
+                                    stepSize: 1,
+                                    autoSkip: false
+                                }
+                            }
+                        }
+                    }
+                };
+
+                var chart = new Chart(ctx, chartConfig);
+                
+                if (canvasId === 'longTermChart') {
+                    window.longTermChart = chart;
+                }
+
+                console.log('[renderChart] Chart created successfully:', canvasId);
+
+            } catch (error) {
+                console.error('[renderChart] Error:', error);
+            }
+        }
+
+        // ============================================
+        // OTHER FUNCTIONS
+        // ============================================
+
         function showRatingInfoPopup(element) {
             var rating = $(element).data('rating');
             var issuer = $(element).data('issuer');
-            // Update modal header with company name and rating
             $('#modal-issuer').text(issuer);
             $('#modal-rating').text(rating);
-            // Show modal
             $('#ratingInfoModal').fadeIn(300);
         }
 
@@ -823,40 +1221,29 @@
                 type: 'GET',
                 dataType: 'html',
                 success: function (response) {
-                    console.log('Response received successfully');
                     $(containerId).html(response);
                 },
                 error: function (xhr, status, error) {
-                    console.error('Error details:', {
-                        status: xhr.status,
-                        statusText: xhr.statusText,
-                        responseText: xhr.responseText,
-                        error: error
-                    });
-                    $(containerId).html('<div class="alert alert-danger">Không thể tải tin tức. Status: ' + xhr.status + '</div>');
+                    console.error('Error loading news:', error);
+                    $(containerId).html('<div class="alert alert-danger">Không thể tải tin tức</div>');
                 }
             });
         }
-         $(".company-title").html('@cname');
-        // ============================================
-        // BIND DETAIL DATA TO COMPANY INFO BOX
-        // ============================================
+         
+        $(".company-title").html('@cname');
+        
         window.bindDetail = function(data) {
             try {
                 if (!data) {
                     $(".company-info-box").addClass('d-none');
                     $(".company-title").html('@cname');
                     return;
-                }
-                else
-                {
+                } else {
                     $(".company-info-box").removeClass('d-none');
                 }
 
-                // Map fields to DOM elements
                 const mappings = {
                     'detail_IssuingOrganization': data.IssuingOrganization || data.issuingOrganization || '---',
-                    'detail_OrganizationType': '---', // Placeholder - add actual field if available
                     'detail_RatingScore': data.RatingScore || data.ratingScore || '---',
                     'detail_Industry': data.Industry || data.industry || '---',
                     'detail_Rating': data.Rating || data.rating || data.Prospects || data.prospects || '---',
@@ -866,41 +1253,23 @@
                     'detail_BondCode': data.BondCode || data.bondCode || '---'
                 };
 
-                // Bind data to elements with animation
                 Object.keys(mappings).forEach(function(id) {
                     const $element = $('#' + id);
                     const value = mappings[id];
 
                     if ($element.length) {
-                        // ✅ FADE OUT skeleton, then FADE IN content
                         const $skeleton = $element.find('.skeleton-text');
-
                         if ($skeleton.length) {
-                            // Fade out skeleton
                             $skeleton.fadeOut(200, function() {
                                 $skeleton.remove();
-
-                                // Set text content
                                 if (id.includes('Date') && value !== '---') {
                                     const formattedDate = formatDate(value);
                                     $element.text(formattedDate);
                                 } else {
                                     $element.text(value);
                                 }
-
-                                // Add fade-in + highlight animation
-                                $element.addClass('fade-in-content highlight-update');
-
-                                setTimeout(function() {
-                                    $element.removeClass('highlight-update');
-                                }, 1000);
-
-                                setTimeout(function() {
-                                    $element.removeClass('fade-in-content');
-                                }, 500);
                             });
                         } else {
-                            // No skeleton, just update text
                             if (id.includes('Date') && value !== '---') {
                                 const formattedDate = formatDate(value);
                                 $element.text(formattedDate);
@@ -908,34 +1277,23 @@
                                 $element.text(value);
                             }
                         }
-                    } else {
-                        console.warn('[bindDetail] Element not found:', id);
                     }
                 });
-
-                console.log('[bindDetail] Data binding completed');
             } catch (error) {
                 console.error('[bindDetail] Error:', error);
             }
         };
 
-        // Helper function to format date
         function formatDate(dateString) {
             if (!dateString || dateString === '---') return '---';
-
             try {
-                // Try to parse date
                 const date = new Date(dateString);
                 if (isNaN(date.getTime())) return dateString;
-
-                // Format as DD/MM/YYYY
                 const day = String(date.getDate()).padStart(2, '0');
                 const month = String(date.getMonth() + 1).padStart(2, '0');
                 const year = date.getFullYear();
-
                 return `${day}/${month}/${year}`;
             } catch (error) {
-                console.error('[formatDate] Error:', error);
                 return dateString;
             }
         }
@@ -945,126 +1303,63 @@
              loadTopNews('#topNewsContainer1','/@(language)/ContentPage/TopNewsAjax?parameter=RatingDetail_TopNews_DiemXHTN&view=TopNews1Ajax&pageSize=3');
         });
 
-                function downloadRatingReport(viUrl, enUrl, radioName) {
-                        var selectedLang = $('input[name="' + radioName + '"]:checked').val();
-                        var reportUrl = selectedLang === 'en' ? enUrl : viUrl;
-
-                        if (reportUrl && reportUrl !== '' && reportUrl !== 'null') {
-                            window.open(reportUrl, '_blank');
-                        } else {
-                            alert(reportNotAvailableMsg);
-                        }
-                    }
+       function downloadRatingReport(viUrl, enUrl, radioName) {
+            var selectedLang = $('input[name="' + radioName + '"]:checked').val();
+            var reportUrl = selectedLang === 'en' ? enUrl : viUrl;
+            if (reportUrl && reportUrl !== '' && reportUrl !== 'null') {
+                window.open(reportUrl, '_blank');
+            } else {
+                alert(reportNotAvailableMsg);
+            }
+        }
 
         this.getRakingsAjax();
         this.getSustainableFinanceAjax();
-          this.getDebitAjax();
-            function getRakingsAjax() {
-                         var rakingsAjaxUrl = '/@(language)/Ratings/RatingsAjax';
-                         var params = { organizationId: '@ViewBag.Id'};
-                                      $('#bindTTPH').html(`
-                                            ${Array(3).fill().map(() => `
-                                                        <tr class="skeleton-row">
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                        </tr>
-                                                    `).join('')}
-                            `);
+        this.getDebitAjax();
+        
+        function getRakingsAjax() {
+            var rakingsAjaxUrl = '/@(language)/Ratings/RatingsAjax';
+            var params = { organizationId: '@ViewBag.Id'};
+            $('#bindTTPH').html(`${Array(3).fill().map(() => `<tr class="skeleton-row"><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td></tr>`).join('')}`);
+            $.get(rakingsAjaxUrl, params).done(function(html) {
+                $('#bindTTPH').html(html);
+            }).fail(function() {
+                $('#bindTTPH').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">...</p></div></td></tr>');
+            });
+        };
 
-                            $.get(rakingsAjaxUrl, params)
-                                .done(function(html) {
-                                        $('#bindTTPH').html(html);
-                                })
-                                .fail(function() {
-                                        $('#bindTTPH').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">Không thể tải dữ liệu</p></div></td></tr>');
-                                })
-                                .always(function() {
-                                });
-             };
+        function getDebitAjax() {
+            var debitAjaxUrl = '/@(language)/Ratings/DebitAjax';
+            var params = { organizationId: '@ViewBag.Id'};
+            $('#bindTTPHDebit').html(`${Array(3).fill().map(() => `<tr class="skeleton-row"><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td></tr>`).join('')}`);
+            $.get(debitAjaxUrl, params).done(function(html) {
+                $('#bindTTPHDebit').html(html);
+            }).fail(function() {
+                $('#bindTTPHDebit').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">...</p></div></td></tr>');
+            });
+        };
 
-                 function getDebitAjax() {
-                         var debitAjaxUrl = '/@(language)/Ratings/DebitAjax';
-                         var params = { organizationId: '@ViewBag.Id'};
-                             $('#bindTTPHDebit').html(`
-                                            ${Array(3).fill().map(() => `
-                                                        <tr class="skeleton-row">
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                            <td><div class="skeleton skeleton-cell"></div></td>
-                                                        </tr>
-                                                    `).join('')}
-                            `);
-
-                            $.get(debitAjaxUrl, params)
-                                .done(function(html) {
-                                        $('#bindTTPHDebit').html(html);
-                                })
-                                .fail(function() {
-                                        $('#bindTTPHDebit').html('<tr><td colspan="10"><div class="text-center py-5"><p class="text-danger">Không thể tải dữ liệu</p></div></td></tr>');
-                                })
-                                .always(function() {
-                                });
-             };
-
-            // ============================================
-            // LOAD SUSTAINABLE FINANCE DATA
-            // ============================================
-            function getSustainableFinanceAjax() {
-                var sustainableAjaxUrl = '/@(language)/Ratings2/RatingsAjax';
-                var params = {
-                    organizationId: '@ViewBag.Id',
-                    lang: '@language'
-                };
-
-                // Show skeleton loading
-                $('#bindSustainableFinance').html(`
-                    ${Array(3).fill().map(() => `
-                        <tr class="skeleton-row">
-                            <td><div class="skeleton skeleton-cell"></div></td>
-                            <td><div class="skeleton skeleton-cell"></div></td>
-                            <td><div class="skeleton skeleton-cell"></div></td>
-                            <td><div class="skeleton skeleton-cell"></div></td>
-                        </tr>
-                    `).join('')}
-                `);
-
-                $.get(sustainableAjaxUrl, params)
-                    .done(function(html) {
-                        console.log('[Sustainable Finance] Data loaded successfully');
-                        $('#bindSustainableFinance').html(html);
-                    })
-                    .fail(function(xhr, status, error) {
-                        console.error('[Sustainable Finance] Error:', {
-                            status: xhr.status,
-                            error: error
-                        });
-                        $('#bindSustainableFinance').html(`
-                            <tr>
-                                <td colspan="6" class="no-data">
-                                    Hiện tại tổ chức phát hành chưa thực hiện xác nhận tài chính bền vững
-                                </td>
-                            </tr>
-                        `);
-                    });
-                }
+        function getSustainableFinanceAjax() {
+            var sustainableAjaxUrl = '/@(language)/Ratings2/RatingsAjax';
+            var params = { organizationId: '@ViewBag.Id', lang: '@language' };
+            $('#bindSustainableFinance').html(`${Array(3).fill().map(() => `<tr class="skeleton-row"><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td><td><div class="skeleton skeleton-cell"></div></td></tr>`).join('')}`);
+            $.get(sustainableAjaxUrl, params).done(function(html) {
+                $('#bindSustainableFinance').html(html);
+            }).fail(function(xhr, status, error) {
+                $('#bindSustainableFinance').html(`<tr><td colspan="6" class="no-data">...</td></tr>`);
+            });
+        }
 
         function closeRatingInfoPopup() {
             $('#ratingInfoModal').fadeOut(300);
         }
 
-        // Close modal when clicking outside
         $(document).on('click', function (e) {
             if ($(e.target).is('#ratingInfoModal')) {
                 closeRatingInfoPopup();
             }
         });
 
-        // Close modal with ESC key
         $(document).on('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeRatingInfoPopup();
@@ -1072,8 +1367,6 @@
         });
     </script>
 }
-
-
 <!-- Rating Info Modal -->
 <div id="ratingInfoModal" class="rating-info-modal">
     <div class="rating-info-content">

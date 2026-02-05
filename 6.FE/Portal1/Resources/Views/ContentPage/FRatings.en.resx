@@ -136,7 +136,7 @@
     <value>Search</value>
   </data>
   <data name="PublicationDate" xml:space="preserve">
-    <value>Publication Date</value>
+    <value>Date</value>
   </data>
   <data name="IssuingOrganization" xml:space="preserve">
     <value>Issuing Organization</value>
@@ -169,10 +169,10 @@
     <value>Status Rating</value>
   </data>
   <data name="AllIssuerTypes" xml:space="preserve">
-    <value>All Issuer Type</value>
+    <value>All Issuer Types</value>
   </data>
   <data name="AllOpinionTypes" xml:space="preserve">
-    <value>All Opinion Type</value>
+    <value>All Opinion Types</value>
   </data>
   <data name="RankingOfIssuingOrganizations" xml:space="preserve">
     <value>Issuer Credit Ratings</value>
@@ -188,5 +188,47 @@
   </data>
   <data name="SustainabilityLevel" xml:space="preserve">
     <value>Applicable Standards</value>
+  </data>
+  <data name="ChartLong_Title" xml:space="preserve">
+    <value>Long-term Ratings</value>
+  </data>
+  <data name="ChartShort_Title" xml:space="preserve">
+    <value>Short-term Ratings</value>
+  </data>
+  <data name="Filter_SelectDefault" xml:space="preserve">
+    <value>Rating Type</value>
+  </data>
+  <data name="Filter_TypeIssuer" xml:space="preserve">
+    <value>Issuer</value>
+  </data>
+  <data name="Filter_TypeDebtInstrument" xml:space="preserve">
+    <value>Debt Instrument</value>
+  </data>
+  <data name="StartDate_Placeholder" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="EndDate_Placeholder" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Img_Alt_Long" xml:space="preserve">
+    <value>long-term chart</value>
+  </data>
+  <data name="Img_Alt_Short" xml:space="preserve">
+    <value>short-term chart</value>
+  </data>
+  <data name="Legend_Issuer" xml:space="preserve">
+    <value>Issuer Ratings</value>
+  </data>
+  <data name="Legend_DebtInstrument" xml:space="preserve">
+    <value>Debt Instrument Ratings</value>
+  </data>
+  <data name="Report2" xml:space="preserve">
+    <value>Full Report</value>
+  </data>
+  <data name="ApplicablePrinciples" xml:space="preserve">
+    <value>Applicable Principles</value>
+  </data>
+  <data name="Announcement" xml:space="preserve">
+    <value>Announcement</value>
   </data>
 </root>

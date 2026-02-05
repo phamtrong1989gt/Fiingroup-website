@@ -168,4 +168,7 @@
   <data name="RankingOfDebtInstruments" xml:space="preserve">
     <value>Debt Instrument Ratings</value>
   </data>
+  <data name="NoDataFound" xml:space="preserve">
+    <value>To date, the issuer has not requested FiinRatings to assign ratings to any of its debt instruments.</value>
+  </data>
 </root>

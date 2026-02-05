@@ -101,9 +101,6 @@
     clear: both
 }
 
-#TableRank {
-    background: url(../Data/ranking_bgtable.png) 0 0/contain
-}
 
     #TableRank .head-table th, #TableRank td {
         padding: 12px;
@@ -530,3 +527,17 @@
         top: 22px;
     }
 }
+
+.language-switch {
+    gap: 10px;
+    justify-content: flex-end;
+}
+.standards-list {
+    margin: 0;
+    padding-left: 18px;
+}
+
+    .standards-list li {
+        margin-bottom: 4px;
+        list-style: disc;
+    }

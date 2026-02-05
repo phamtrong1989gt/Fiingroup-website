@@ -391,8 +391,38 @@ namespace PT.Domain.Model
             return string.Join("&", queryParams);
         }
     } 
-  
-             
+
+    public class ChartDataQueryParameters
+    {
+        public int? OrganizationId { get; set; }
+        public int? IssuerTypesId { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public int Type { get; set; } = 1;
+        public string ToQueryString()
+        {
+            var queryParams = new List<string>();
+            if (IssuerTypesId.HasValue)
+            {
+                queryParams.Add($"issuerTypesId={IssuerTypesId.Value}");
+            }
+            if (!string.IsNullOrWhiteSpace(FromDate))
+            {
+                queryParams.Add($"fromDate={Uri.EscapeDataString(FromDate)}");
+            }
+            if (!string.IsNullOrWhiteSpace(ToDate))
+            {
+                queryParams.Add($"toDate={Uri.EscapeDataString(ToDate)}");
+            }
+            if(OrganizationId.HasValue)
+            {
+                queryParams.Add($"organizationId={OrganizationId.Value}");
+            }
+            return string.Join("&", queryParams);
+        }
+    }
+
+
     // Query Parameters for Rating Results
     public class RatingResultsQueryParameters
     {
@@ -462,6 +492,14 @@ namespace PT.Domain.Model
             if (!string.IsNullOrWhiteSpace(Lang))
             {
                 queryParams.Add($"lang={Lang}");
+            }
+            if (!string.IsNullOrWhiteSpace(FromDate))
+            {
+                queryParams.Add($"fromDate={Uri.EscapeDataString(FromDate)}");
+            }
+            if (!string.IsNullOrWhiteSpace(ToDate))
+            {
+                queryParams.Add($"toDate={Uri.EscapeDataString(ToDate)}");
             }
             return string.Join("&", queryParams);
         }

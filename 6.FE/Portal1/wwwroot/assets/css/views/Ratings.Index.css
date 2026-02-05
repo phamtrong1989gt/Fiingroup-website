@@ -530,3 +530,8 @@
         top: 10px;
     }
 }
+
+.language-switch {
+    gap: 10px;
+    justify-content: flex-end;
+}

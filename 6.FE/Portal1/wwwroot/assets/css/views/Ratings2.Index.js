@@ -106,16 +106,37 @@
             }
         });
     });
-    function downloadRatingReport(viUrl, enUrl, radioName) {
-        var selectedLang = $('input[name="' + radioName + '"]:checked').val();
-        var reportUrl = selectedLang === 'en' ? enUrl : viUrl;
 
-        if (reportUrl && reportUrl !== '' && reportUrl !== 'null') {
+    // Expose downloadRatingReport globally so onclicks in dynamically loaded partials can call it
+    window.downloadRatingReport = function (viUrl, enUrl, radioName) {
+        try {
+            var selectedLang = $('input[name="' + radioName + '"]:checked').val();
+        } catch (ex) {
+            selectedLang = null;
+        }
+
+        var reportUrl = (selectedLang === 'en') ? enUrl : viUrl;
+
+        // normalize strings like 'null'/'undefined'
+        if (typeof reportUrl === 'string') {
+            var trimmed = reportUrl.trim().toLowerCase();
+            if (trimmed === 'null' || trimmed === 'undefined' || trimmed === '') {
+                reportUrl = null;
+            }
+        }
+
+        if (reportUrl) {
+            // open in new tab
             window.open(reportUrl, '_blank');
         } else {
-            alert(reportNotAvailableMsg);
+            // fallback message, variable set in page script
+            if (typeof reportNotAvailableMsg !== 'undefined') {
+                alert(reportNotAvailableMsg);
+            } else {
+                alert('Report is not available.');
+            }
         }
-    }
+    };
 
     // Rating Info Popup Functions
     function showRatingInfoPopup(element) {
