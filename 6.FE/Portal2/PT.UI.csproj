@@ -133,4 +133,20 @@
     <ProjectReference Include="..\..\5.Base\PT.Base\PT.Base.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Update="EmailTemplates\ConsultationRequest_en.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\ConsultationRequest_vi.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\NewsletterSubscription_en.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\NewsletterSubscription_vi.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -28,6 +28,7 @@
                     <form id="formLienHe2" method="post">
                         @Html.AntiForgeryToken()
                         <div class="row">
+                            <input type="hidden" asp-for="Language" value="@language" />
                             <div class="col-sm-6 mb-2"><label class="form-label" for="hoTen" asp-for="FullName"></label> <strong class="error">*</strong><input type="text" class="form-control" id="hoTen" asp-for="FullName" placeholder=""><span class="validate-style" asp-validation-for="FullName"></span></div>
                             <div class="col-sm-6 mb-2"><label asp-for="Phone" for="soDienThoai" class="form-label"></label><span class="error">*</span><input type="text" class="form-control" id="soDienThoai" asp-for="Phone" placeholder=""><span class="validate-style" asp-validation-for="Phone"></span></div>
                             <div class="col-sm-12 mb-2"><label asp-for="Email" for="email" class="form-label"></label><span class="error">*</span><input type="email" class="form-control" id="email" asp-for="Email" placeholder=""><span class="validate-style" asp-validation-for="Email"></span></div>

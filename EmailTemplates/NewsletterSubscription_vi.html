@@ -1,0 +1,155 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Newsletter Subscription Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .header {
+            padding: 20px;
+            background-color: #0066cc;
+            color: #ffffff;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content p {
+            margin: 0 0 15px;
+            line-height: 1.6;
+            color: #333333;
+        }
+        .content a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .content a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            padding: 15px;
+            background-color: #f1f1f1;
+            text-align: center;
+            font-size: 12px;
+            color: #777777;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0066cc;
+            color: #ffffff;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #005bb5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Xác Nh?n ??ng Ký Nh?n Tin</h1>
+        </div>
+        <div class="content">
+            <!-- Greeting Title -->
+            <p>Kính g?i Quý khách <strong>{{CustomerName}}</strong>,</p>
+            
+            <!-- Content -->
+            <p>C?m ?n Quý khách ?ã ??ng ký nh?n tin.</p>
+            
+            <p><span style="color: #0066cc; font-weight: bold;">FiinGroup</span> xin chân thành c?m ?n Quý khách ?ã quan tâm và ??ng ký nh?n tin t?c, báo cáo và s?n ph?m phân tích thông qua website c?a chúng tôi.</p>
+            
+            <!-- Benefit List Box -->
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background: linear-gradient(to right, #f0f8ff 0%, #e6f2ff 100%); border-left: 4px solid #0066cc; border-radius: 5px; margin: 25px 0;">
+                <tr>
+                    <td style="padding: 25px;">
+                        <p style="margin: 0 0 15px 0; font-family: Arial, Helvetica, sans-serif; font-size: 15px; line-height: 1.6; color: #333333; font-weight: bold;">
+                            Chúng tôi s? g?i t?i Quý khách nh?ng n?i dung ch?n l?c:
+                        </p>
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                                <td style="padding: 8px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.7; color: #333333;">
+                                    <span style="color: #0066cc; font-weight: bold;">?</span> Tin t?c và s? ki?n th? tr??ng n?i b?t.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.7; color: #333333;">
+                                    <span style="color: #0066cc; font-weight: bold;">?</span> Báo cáo, s?n ph?m nghiên c?u chuyên sâu v? các ngành,qu?c gia và th? tr??ng trái phi?u doanh nghi?p.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.7; color: #333333;">
+                                    <span style="color: #0066cc; font-weight: bold;">?</span> Thông tin v? h?i th?o, s? ki?n m?i nh?t do FiinGroup t? ch?c.
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+            <p style="margin: 25px 0 20px 0; font-family: Arial, Helvetica, sans-serif; font-size: 15px; line-height: 1.7; color: #333333;">
+                Các n?i dung này ???c xây d?ng d?a trên h? sinh thái d? li?u tài chính công ngh? c?a <span style="color: #0066cc; font-weight: bold;">FiinGroup</span>, nh?m h? tr? Quý khách ti?p c?n thông tin có ch?t l??ng, k?p th?i và ?áng tin c?y.
+            </p>
+            
+            <p style="margin: 25px 0 20px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.7; color: #666666;">
+                N?u Quý khách không còn mong mu?n nh?n thông tin, vui lòng liên h?:
+            </p>
+            
+            <!-- Contact Info Box -->
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f8f9fa; border-left: 4px solid #0066cc; border-radius: 5px; margin: 20px 0;">
+                <tr>
+                    <td style="padding: 20px 25px;">
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tr>
+                                <td style="padding: 8px 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.6; color: #333333;">
+                                    <span style="color: #0066cc; font-size: 16px; margin-right: 8px;">&#9993;</span>
+                                    <strong>Email:</strong> <a href="mailto:support@fiingroup.vn" style="color: #0066cc; text-decoration: none;">support@fiingroup.vn</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0 0 0; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.6; color: #333333;">
+                                    <span style="color: #0066cc; font-size: 16px; margin-right: 8px;">&#128222;</span>
+                                    <strong>Hotline:</strong> (+84) 24 3562 6962
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+            <!-- Signature -->
+            <p style="margin: 30px 0 0 0; font-family: Arial, Helvetica, sans-serif; font-size: 15px; line-height: 1.6; color: #333333;">
+                Trân tr?ng,<br/>
+                <span style="color: #0066cc; font-weight: bold;">FiinGroup</span>
+            </p>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p style="margin: 0 0 8px 0; font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #777777;">
+                &copy; {{Year}} FiinGroup. All rights reserved.
+            </p>
+            <p style="margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #999999;">
+                Email này ???c g?i t? ??ng, vui lòng không tr? l?i tr?c ti?p.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

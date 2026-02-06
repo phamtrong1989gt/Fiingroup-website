@@ -79,6 +79,8 @@ namespace PT.Domain.Model
         public string Input13 { get; set; }
         public string Input14 { get; set; }
         public string Input15 { get; set; }
+
+        public string Emails { get; set; }
         public bool? IsShowHeaderContent { get; set; } = true;
         public int? Order { get; set; } = 1;
 
