@@ -272,6 +272,9 @@ namespace PT.Domain.Model
         public string ContentPageRelatedOrders { get; set; }
         public string ContentPageRelatedNotes { get; set; }
 
+
+        [Display(Name = "Liên kết gửi Email")]
+        public string Emails { get; set; }
     }
   
     public class FAQModel:SeoModel

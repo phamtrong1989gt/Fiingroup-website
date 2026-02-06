@@ -69,6 +69,13 @@
                         <input type="checkbox" asp-for="Status" class="filled-in chk-col-green" />
                         <label for="Status" asp-for="Status"></label>
                     </div>
+                    <div class="pt-5"></div>
+                    <div class="form-group">
+                        <label class="form-label" asp-for="Emails"></label> <span asp-validation-for="Emails"></span>
+                        <div class="controls">
+                            <input type="text" class="form-control input-sm form-control-t" placeholder="" asp-for="Emails">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-9">
                     <div class="panel-group panel-website full-body" id="accordion_19" role="tablist" aria-multiselectable="true">
