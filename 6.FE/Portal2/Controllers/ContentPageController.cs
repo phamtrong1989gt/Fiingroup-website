@@ -4,6 +4,7 @@ using PT.Base.Services;
 using PT.Domain.Model;
 using PT.Infrastructure.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -17,6 +18,14 @@ namespace PT.UI.Controllers
         private readonly INewsAPIService _iNewsAPIService;
         private readonly ILinkRepository _iLinkRepository;
         private readonly IOptions<BaseSettings> _baseSettings;
+        private readonly Dictionary<string, string> customRoutes = new()
+        {
+                    { "tin-tuc-fg", "FGNews" },
+                    { "news-fg", "FGNews" },
+                    { "su-kien-fg", "FGEvent" },
+                    { "event-fg", "FGEvent" },
+                    { "ratings-fr", "FRatings" },
+         };
 
         public ContentPageController(IContentPageRepository iContentPageRepository,
             IContentPageTagRepository iContentPageTagRepository,
@@ -60,6 +69,8 @@ namespace PT.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> FGNews(int id, string language, string linkData, int portalId)
         {
+           
+
             ViewData["linkData"] = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
             var dl = await _iNewsAPIService.GetNewsByIdAsync(id, language, portalId);
             if(dl == null || dl.Success == false)
@@ -67,6 +78,8 @@ namespace PT.UI.Controllers
                 return View("_Home404");
             }
             string viewName = "FGNews";
+            ViewBag.newId = id;
+            ViewBag.action = language == "en" ? "tin-tuc-fg": "news-fg";
             return View(viewName, dl.Data);
         }
 
@@ -80,6 +93,8 @@ namespace PT.UI.Controllers
                 return View("_Home404");
             }
             string viewName = "FGEvent";
+            ViewBag.newId = id;
+            ViewBag.action = language == "en" ? "su-kien-fg" : "event-fg";
             return View(viewName, dl.Data);
         }
 

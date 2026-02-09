@@ -230,17 +230,47 @@ namespace PT.UI.Controllers
             return View(data);
         }
 
-        public async Task<IActionResult> ChangeLanguage(string language = "vi", int linkId = 0)
+        public async Task<IActionResult> ChangeLanguage(string language = "vi", int linkId = 0, int newId = 0, string action2 = null)
         {
-            var url = await _iLinkReferenceRepository.GetLink(language, linkId);
-            if (url == null)
+            if(newId > 0)
             {
-                return LocalRedirect($"/{language}");
+                // Lấy ra content page có newId
+                var contentPage = await _iContentPageRepository.SingleOrDefaultAsync(true, x =>  x.NewsId == newId && x.Status  && x.PortalId == _baseSettings.Value.PortalId);
+                if (contentPage == null)
+                {
+                    return LocalRedirect($"/{language}");
+                }
+                var linkContentPage = await _iLinkRepository.SingleOrDefaultAsync(true, x => x.Type == ESlugType.ContentPage && x.PortalId == _baseSettings.Value.PortalId && x.ObjectId == contentPage.Id );
+                if (linkContentPage == null)
+                {
+                    return LocalRedirect($"/{language}");
+                }
+                // ta có đc link rồi thì ta có thể lấy đc link reference
+                var linkRef = await _iLinkReferenceRepository.GetLinkReferences(language, linkContentPage.Id);
+                if (linkRef == null)
+                {
+                    return LocalRedirect($"/{language}");
+                }
+                // Từ link reference ta lấy đc id content page, từ content page ta lấy dc id news
+                var contentPageReference = await _iContentPageRepository.SingleOrDefaultAsync(true, x => x.Id == linkRef.ObjectId && x.Status && x.PortalId == _baseSettings.Value.PortalId);
+                if (contentPageReference == null)
+                {
+                    return LocalRedirect($"/{language}");
+                }
+                return LocalRedirect($"/{language}/{action2}/{Functions.ToUrlSlug(contentPageReference.Name)}-id{contentPageReference.NewsId}.html");
             }
             else
             {
-                return LocalRedirect(url);
-            }
+                var url = await _iLinkReferenceRepository.GetLink(language, linkId);
+                if (url == null)
+                {
+                    return LocalRedirect($"/{language}");
+                }
+                else
+                {
+                    return LocalRedirect(url);
+                }
+            }    
         }
 
         // ✅ POST REQUEST - Tự động BỎ QUA cache (không cần config gì)

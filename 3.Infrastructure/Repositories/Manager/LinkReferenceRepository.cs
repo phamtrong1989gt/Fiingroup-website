@@ -19,6 +19,12 @@ namespace PT.Infrastructure.Repositories
             var query = _context.Links.Where(m => _context.LinkReferences.Any(x => x.LinkId1==linkId &&x.LinkId2==m.Id) && !m.Delete).AsQueryable();
             return await query.ToListAsync();
         }
+
+        public async Task<Link> GetLinkReferences(string language, int linkId)
+        {
+            return await _context.Links.FirstOrDefaultAsync(x => _context.LinkReferences.Any(m => m.LinkId1 == linkId && m.LinkId2 == x.Id && x.Language == language));
+        }
+
         public async Task<string> GetLink(string language, int linkId)
         {
             var dl = await _context.Links.FirstOrDefaultAsync(x => _context.LinkReferences.Any(m => m.LinkId1 == linkId && m.LinkId2 == x.Id && x.Language == language));

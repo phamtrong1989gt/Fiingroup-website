@@ -534,11 +534,13 @@ function prepareManualSlides($carousel) {
 
 $(document).ready(function () {
 	var linkId = $('#linkId').val() || '0';
+    var newId = $('#newId').val() || '0';
+    var action = $('#action').val() || '';
 	$('.btn-lang .dropdown-menu a').each(function () {
 		var $link = $(this);
 		var currentHref = $link.attr('href');
 		var language = currentHref.replace('/', '');
-		var newHref = '/Home/ChangeLanguage?language=' + language + '&linkId=' + linkId;
+        var newHref = '/Home/ChangeLanguage?language=' + language + '&linkId=' + linkId + '&newId=' + newId + '&action2=' + action;
 		$link.attr('href', newHref)
 	})
 })
