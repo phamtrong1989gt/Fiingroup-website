@@ -138,4 +138,14 @@
     <Folder Include="Views\Shared\Components\TopNews\" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Update="EmailTemplates\FR_ContactRequest_en.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\FR_ContactRequest_vi.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

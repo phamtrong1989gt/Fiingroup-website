@@ -10,5 +10,6 @@ namespace PT.Infrastructure.Interfaces
         Task<List<Link>> SearchByLink(int linkId);
         Task<string> GetLink(string language, int linkId);
         Task ReferenceUpdate(SeoModel seoModel);
+        Task<Link> GetLinkReferences(string language, int linkId);
     }
 }

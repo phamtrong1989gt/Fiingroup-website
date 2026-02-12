@@ -79,6 +79,8 @@ namespace PT.Domain.Model
         public string Input13 { get; set; }
         public string Input14 { get; set; }
         public string Input15 { get; set; }
+
+        public string Emails { get; set; }
         public bool? IsShowHeaderContent { get; set; } = true;
         public int? Order { get; set; } = 1;
 
@@ -270,6 +272,9 @@ namespace PT.Domain.Model
         public string ContentPageRelatedOrders { get; set; }
         public string ContentPageRelatedNotes { get; set; }
 
+
+        [Display(Name = "Liên kết gửi Email")]
+        public string Emails { get; set; }
     }
   
     public class FAQModel:SeoModel

@@ -39,7 +39,7 @@ namespace PT.UI.Controllers
         public IActionResult FRatings(int id, string language, string linkData, int portalId)
         {
             var link = Newtonsoft.Json.JsonConvert.DeserializeObject<Link>(linkData);
-            link.Title = "FG Ratings";
+            link.Title = "FiinRatings";
             ViewData["linkData"] = link;
             ViewBag.Id = id;
             return View("FRatings");

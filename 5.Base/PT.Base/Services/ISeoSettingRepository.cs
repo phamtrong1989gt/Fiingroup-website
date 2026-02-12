@@ -14,6 +14,7 @@ namespace PT.Base.Services
         void RefreshByKey(string cacheKey);
         Task<BindContentSetting> BindContentSettingGet(int portalId);
         Task<Parameter> ParameterGet(string id, int portalId, string language);
+        Task<EmailSetting> EmailSettingGet(int portalId);
     }
 
     public class SettingService :  ISettingService

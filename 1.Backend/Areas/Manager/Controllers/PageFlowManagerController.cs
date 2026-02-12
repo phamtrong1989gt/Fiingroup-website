@@ -216,7 +216,8 @@ namespace PT.BE.Areas.Manager.Controllers
                         Input14 = use.Input14,
                         Input15 = use.Input15,
                         IsShowHeaderContent = use.IsShowHeaderContent,
-                        Order = use.Order
+                        Order = use.Order,
+                        Emails = use.Emails
                     };
                     await _iContentPageRepository.AddAsync(data);
                     await _iContentPageRepository.CommitAsync();
@@ -333,6 +334,7 @@ namespace PT.BE.Areas.Manager.Controllers
                     dl.Input14 = use.Input14;
                     dl.Input15 = use.Input15;
                     dl.Order = use.Order;
+                    dl.Emails = use.Emails;
                     dl.IsShowHeaderContent = use.IsShowHeaderContent;
                     
                     _iContentPageRepository.Update(dl);

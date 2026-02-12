@@ -36,6 +36,7 @@
                 <input type="hidden" id="languageId" value="@language" />
                 <form id="formLienHe" method="post">
                     @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Language" value="@language" />
                     <div class="row">
                         <div class="col-sm-12 mb-2"><label class="form-label" asp-for="FullName"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="FullName" placeholder=""><span class="validate-style" asp-validation-for="FullName"></span></div>
                         <div class="col-sm-6 mb-2"><label class="form-label" asp-for="Phone"></label> <strong class="error">*</strong><input type="text" class="form-control" asp-for="Phone" placeholder=""><span class="validate-style" asp-validation-for="Phone"></span></div>
